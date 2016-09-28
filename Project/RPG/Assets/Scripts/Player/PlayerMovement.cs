@@ -78,8 +78,16 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 케릭터 이동
-    public void AnimationMove(float v, float h)
+    public void AnimationMove(float v, float h, bool isSkill)
     {
+        // 스킬사용중에 입력신호가 스킬이 아닐때(이동신호이면)
+        if (isIdle && !isSkill)
+        {
+            return;
+        }
+
+        PlayerState.Instance.nextState = TypeData.State.이동;
+
         animator.SetFloat(animationSettings.moveVFloat, v);
         animator.SetFloat(animationSettings.moveHFloat, h);
     }

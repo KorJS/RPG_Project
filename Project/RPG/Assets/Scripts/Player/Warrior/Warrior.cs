@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Warrior : MonoBehaviour
 {
@@ -22,16 +23,6 @@ public class Warrior : MonoBehaviour
     [SerializeField]
     public WarriorAniSettings warriorAniSettings;
 
-    // 스킬 쿨다운 설정
-    [System.Serializable]
-    public class CoolDownSettings
-    {
-
-    }
-
-    [SerializeField]
-    public CoolDownSettings coolDownSettings;
-
     public enum SkillType
     {
         없음 = -1,
@@ -43,6 +34,8 @@ public class Warrior : MonoBehaviour
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
 
+    Dictionary<int, SKillData.SkillInfo> skillInfos = null; // 스킬 정보 받아옴
+
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
     private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
 
@@ -52,7 +45,7 @@ public class Warrior : MonoBehaviour
 
     public float rushTimer = RUSHTIME;      // 난폭한 돌진 지속타이머
     public bool isRush = false;             // 난폭한 돌진 중인지
-    public bool isblock = false;            // 방패막기 중인지
+    public bool isBlock = false;            // 방패막기 중인지
 
     // TODO : 공격 범위. 몬스터 피격. 각 직업 스크립트에서 처리
 
@@ -62,6 +55,8 @@ public class Warrior : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
 
         currentSkillTpye = SkillType.없음;
+
+        skillInfos = SKillData.Instance.CheckPlayerType(TypeData.PlayerType.기사); // 기사 스킬 정보
     }
 
     void Update()
@@ -86,12 +81,12 @@ public class Warrior : MonoBehaviour
             return;
         }
 
-        if (isblock)
+        if (isBlock)
         {
             if (Input.GetMouseButtonUp(1))
             {
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
-                isblock = false;
+                isBlock = false;
             }
         }
     }
@@ -195,7 +190,7 @@ public class Warrior : MonoBehaviour
     {
         playerMovement.AnimationSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
-        isblock = true;
+        isBlock = true;
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
     }

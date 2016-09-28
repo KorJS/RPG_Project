@@ -6,7 +6,9 @@ public class Equipment : MonoBehaviour
     public enum EquipmentType
     {
         없음 = -1,
-        무기 = 0,
+        검 = 0,
+        마법책,
+        지팡이,
         방패
     };
 
@@ -29,9 +31,8 @@ public class Equipment : MonoBehaviour
     [SerializeField]
     public LocationSettings locationSettings;
 
-    // TODO : 장비 능력치 정보 클래스 만들자
-
     // TODO : 이팩트. 등등 
+    public GameObject slashEffect = null;
 
     public EquipmentHandler equipHandler = null;
 
@@ -39,6 +40,15 @@ public class Equipment : MonoBehaviour
 
     private bool isEquipeed = false;
     private bool isChangMode = false;
+    private bool isEffect = false;
+
+    void Awake()
+    {
+        if (eqType == EquipmentType.검)
+        {
+            slashEffect = this.transform.FindChild("Slash").gameObject;
+        }
+    }
 
     void Update()
     {
@@ -46,6 +56,17 @@ public class Equipment : MonoBehaviour
         if (isChangMode && equipHandler && isEquipeed)
         {
             SetLocation(); // 장비 위치 설정
+        }
+
+        if (eqType == EquipmentType.검 && PlayerState.Instance.currentState == TypeData.State.스킬)
+        {
+            slashEffect.SetActive(true);
+            isEffect = true;
+        }
+        else if (isEffect && eqType == EquipmentType.검 && PlayerState.Instance.currentState != TypeData.State.스킬)
+        {
+            slashEffect.SetActive(false);
+            isEffect = false;
         }
     }
 

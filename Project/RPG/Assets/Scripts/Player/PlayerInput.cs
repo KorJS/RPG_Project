@@ -114,6 +114,7 @@ public class PlayerInput : MonoBehaviour
 
         // Test
         InputKey();
+
     }
 
     // 방향키 입력
@@ -122,13 +123,7 @@ public class PlayerInput : MonoBehaviour
         float inputV = Input.GetAxis(inputKey.vertical);
         float inputH = Input.GetAxis(inputKey.horizontal);
 
-        if (inputV != 0 || inputH != 0)
-        {
-            PlayerState.Instance.nextState = TypeData.State.이동;
-        }
-
-        playerMovement.AnimationMove(inputV, inputH);
-
+        playerMovement.AnimationMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
 

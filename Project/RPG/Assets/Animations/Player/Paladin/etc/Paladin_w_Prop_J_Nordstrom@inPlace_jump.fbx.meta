@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 7b8cca662cc84824db6b84cb3e59a621
-timeCreated: 1474249386
+guid: eb6344e0b7e024149b267dc9a7d206b3
+timeCreated: 1475220272
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -141,7 +141,7 @@ ModelImporter:
     400130: Spine1
     400132: Spine2
     400134: Sword_joint
-    7400000: jump_inPlace
+    7400000: inPlace_jump
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -168,10 +168,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: jump_inPlace
+      name: inPlace_jump
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 29
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -184,9 +184,9 @@ ModelImporter:
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 0
+      keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
-      heightFromFeet: 1
+      heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []

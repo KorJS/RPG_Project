@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 7b8cca662cc84824db6b84cb3e59a621
-timeCreated: 1474249386
+guid: 8fb0dbfbe9232c34c8c649895b5bdf73
+timeCreated: 1475220271
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -141,7 +141,7 @@ ModelImporter:
     400130: Spine1
     400132: Spine2
     400134: Sword_joint
-    7400000: jump_inPlace
+    7400000: sprinting_forward_roll
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -168,10 +168,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: jump_inPlace
+      name: sprinting_forward_roll
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

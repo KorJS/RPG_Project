@@ -35,9 +35,7 @@ public class EffectSetting : MonoBehaviour
     void OnEnable()
     {
         SetInfo();
-
         CheckType();
-
         StartCoroutine(SetActiveAndHolder());
     }
 
@@ -69,6 +67,7 @@ public class EffectSetting : MonoBehaviour
         transform.SetParent(null);
     }
 
+    // 지정된 활성화시간 지난후에 비활성화.
     IEnumerator SetActiveAndHolder()
     {
         yield return new WaitForSeconds(infoSettings.activeTime);

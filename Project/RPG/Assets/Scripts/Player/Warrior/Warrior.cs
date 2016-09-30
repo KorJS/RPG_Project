@@ -180,7 +180,6 @@ public class Warrior : MonoBehaviour
             comboTimer = COMBOTIME;
             isComboTime = false;
             isCombo = false; // 1콤보에서 끊겨서 다음 모션초기화 1콤으로
-
             PlayerState.Instance.nextState = TypeData.State.대기;
         }
     }

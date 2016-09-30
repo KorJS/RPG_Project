@@ -48,13 +48,14 @@ public class PlayerMovement : MonoBehaviour
         // 공격해 맞혔으면 true
         animator.SetBool(animationSettings.hitBool, isHit);
 
-        if (isDamage)
-        {
-            animator.SetTrigger(animationSettings.isDamageTrigger);
-            isDamage = false;
-        }
         // 현재 애니메이션 상태 확인
         CheckCurrentAnimation();
+    }
+
+    public void Damage()
+    {
+        animator.SetTrigger(animationSettings.isDamageTrigger);
+        isDamage = true;
     }
 
     // 모드
@@ -86,7 +87,10 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        PlayerState.Instance.nextState = TypeData.State.이동;
+        if (v != 0 || h != 0)
+        {
+            PlayerState.Instance.nextState = TypeData.State.이동;
+        }
 
         animator.SetFloat(animationSettings.moveVFloat, v);
         animator.SetFloat(animationSettings.moveHFloat, h);

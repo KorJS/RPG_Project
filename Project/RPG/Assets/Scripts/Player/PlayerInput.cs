@@ -188,7 +188,6 @@ public class PlayerInput : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.V))
         {
             PlayerState.Instance.nextMode = TypeData.MODE.전투;
-            playerMovement.isDamage = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -236,7 +235,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             PlayerState.Instance.nextMode = TypeData.MODE.전투;
-            playerMovement.isDamage = true;
+            playerMovement.Damage();
         }
     }
 

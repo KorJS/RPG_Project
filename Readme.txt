@@ -6,5 +6,5 @@
 
 <UnityPackage>
 Elven Weapons
-XWeaponTrail
+X Weapon Trail
 네이버클라우드 > 개인프로젝트 > ActionRPG > effect.unitypackage

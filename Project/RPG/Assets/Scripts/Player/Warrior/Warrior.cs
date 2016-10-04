@@ -47,7 +47,8 @@ public class Warrior : MonoBehaviour
     public bool isRush = false;             // 난폭한 돌진 중인지
     public bool isBlock = false;            // 방패막기 중인지
 
-    // TODO : 공격 범위. 몬스터 피격. 각 직업 스크립트에서 처리
+    // TODO : 공격 범위.
+    public float skillAngle = 0f;
 
     void Awake()
     {
@@ -71,6 +72,14 @@ public class Warrior : MonoBehaviour
         SwitchSkill();
         CheckComboTime();
         ChekRuchTime();
+
+        SeachTest();
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(this.transform.position, 5f);
     }
 
     private void CheckCurrentAnimation()
@@ -89,6 +98,30 @@ public class Warrior : MonoBehaviour
                 isBlock = false;
             }
         }
+    }
+
+    public void SeachTest()
+    {
+        Collider[] colls = Physics.OverlapSphere(transform.position, 5f);
+
+        foreach (Collider col in colls)
+        {
+            if (string.Compare(col.tag, "Enemy") == 0)
+            {
+                Debug.Log(col.name);
+            }
+        }
+    }
+
+    private void CheckRange()
+    {
+        // 클릭한 곳에 스킬이 없거나 / 스킬 상태가 아닐때
+        if (playerInput.index < 0 && PlayerState.Instance.currentState != TypeData.State.스킬)
+        {
+            return;
+        }
+
+        //Collider[] cols = Physics.OverlapSphere(transform.position, )
     }
 
     private void SwitchSkill()

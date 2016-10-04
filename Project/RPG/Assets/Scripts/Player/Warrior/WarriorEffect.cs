@@ -56,6 +56,8 @@ public class WarriorEffect : MonoBehaviour
 
         obj = Resources.Load(effectPath + effectSettings.rush) as GameObject;
         effectSettings.rushObj = CreateEffectObj(obj, effectSettings.rush);
+
+        obj = null;
     }
 
     // 이펙트 오브젝트 생성

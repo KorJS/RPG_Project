@@ -49,6 +49,7 @@ public class Warrior : MonoBehaviour
 
     // TODO : 공격 범위.
     public float skillAngle = 0f;
+    public float skillRange = 0f;
 
     void Awake()
     {
@@ -72,14 +73,12 @@ public class Warrior : MonoBehaviour
         SwitchSkill();
         CheckComboTime();
         ChekRuchTime();
-
-        SeachTest();
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(this.transform.position, 5f);
+        Gizmos.DrawWireSphere(this.transform.position, skillRange);
     }
 
     private void CheckCurrentAnimation()
@@ -100,28 +99,27 @@ public class Warrior : MonoBehaviour
         }
     }
 
-    public void SeachTest()
+    // 각 스킬별로 공격범위에 있는 적 검색
+    public void SeachSkillRange()
     {
-        Collider[] colls = Physics.OverlapSphere(transform.position, 5f);
+        Vector3 playerPos = transform.position;
+        
+        Collider[] colls = Physics.OverlapSphere(playerPos, skillRange);
 
         foreach (Collider col in colls)
         {
             if (string.Compare(col.tag, "Enemy") == 0)
             {
-                Debug.Log(col.name);
+                Vector3 enemyPos = col.transform.position - transform.position;
+
+                float angle = Vector3.Angle(transform.forward, enemyPos);
+
+                if (angle <= skillAngle)
+                {
+                    Debug.Log(angle);
+                }
             }
         }
-    }
-
-    private void CheckRange()
-    {
-        // 클릭한 곳에 스킬이 없거나 / 스킬 상태가 아닐때
-        if (playerInput.index < 0 && PlayerState.Instance.currentState != TypeData.State.스킬)
-        {
-            return;
-        }
-
-        //Collider[] cols = Physics.OverlapSphere(transform.position, )
     }
 
     private void SwitchSkill()
@@ -169,7 +167,11 @@ public class Warrior : MonoBehaviour
 
     // 연속공격
     private void ComboAttack()
-    { 
+    {
+        skillAngle = 60f;
+        skillRange = 3f;
+        SeachSkillRange();
+
         playerMovement.AnimationSkill((int)currentSkillTpye);
 
         // 콤보 공격 방향 성정
@@ -220,6 +222,11 @@ public class Warrior : MonoBehaviour
     // 방패 막기
     private void ShieldBlock()
     {
+        // TODO : 나중에 변경
+        skillAngle = 90f;
+        skillRange = 2f;
+        SeachSkillRange();
+
         playerMovement.AnimationSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
         isBlock = true;
@@ -239,6 +246,10 @@ public class Warrior : MonoBehaviour
     // 난폭한 돌진
     private void Rush()
     {
+        skillAngle = 90f;
+        skillRange = 4f;
+        SeachSkillRange();
+
         playerMovement.AnimationSkill((int)currentSkillTpye);
         isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);

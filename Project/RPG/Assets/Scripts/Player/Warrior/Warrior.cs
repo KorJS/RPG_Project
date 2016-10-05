@@ -47,9 +47,13 @@ public class Warrior : MonoBehaviour
     public bool isRush = false;             // 난폭한 돌진 중인지
     public bool isBlock = false;            // 방패막기 중인지
 
+<<<<<<< HEAD
     // TODO : 공격 범위.
     public float skillAngle = 0f;
     public float skillRange = 0f;
+=======
+    // TODO : 공격 범위. 몬스터 피격. 각 직업 스크립트에서 처리
+>>>>>>> parent of 0837e5c... 공격 범위 테스트
 
     void Awake()
     {
@@ -73,12 +77,15 @@ public class Warrior : MonoBehaviour
         SwitchSkill();
         CheckComboTime();
         ChekRuchTime();
+<<<<<<< HEAD
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(this.transform.position, skillRange);
+=======
+>>>>>>> parent of 0837e5c... 공격 범위 테스트
     }
 
     private void CheckCurrentAnimation()
@@ -99,6 +106,7 @@ public class Warrior : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     // 각 스킬별로 공격범위에 있는 적 검색
     public void SeachSkillRange()
     {
@@ -122,6 +130,8 @@ public class Warrior : MonoBehaviour
         }
     }
 
+=======
+>>>>>>> parent of 0837e5c... 공격 범위 테스트
     private void SwitchSkill()
     {
         // 특정스킬 사용중에는 입력 안들어오게 막기

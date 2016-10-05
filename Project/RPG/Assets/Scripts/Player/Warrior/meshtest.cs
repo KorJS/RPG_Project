@@ -4,7 +4,6 @@ using System.Collections;
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshCollider))]
 public class meshtest : MonoBehaviour
 {
     public float degree = 180;
@@ -14,8 +13,6 @@ public class meshtest : MonoBehaviour
 
     Mesh mesh;
     MeshFilter meshFilter;
-
-    public MeshCollider col;
 
     Vector3[] vertices;
     int[] triangles;
@@ -47,7 +44,6 @@ public class meshtest : MonoBehaviour
     {
         mesh = new Mesh();
         meshFilter = (MeshFilter)GetComponent("MeshFilter");
-        col = GetComponent<MeshCollider>();
     }
 
     // Update is called once per frame
@@ -152,9 +148,6 @@ public class meshtest : MonoBehaviour
 
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-
-        col.sharedMesh = mesh;
-        col.sharedMesh.name = "CircularSectorMesh";
 
         meshFilter.sharedMesh = mesh;
         meshFilter.sharedMesh.name = "CircularSectorMesh";

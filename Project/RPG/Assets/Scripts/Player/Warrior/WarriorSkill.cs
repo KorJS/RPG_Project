@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MonsterMovement : MonoBehaviour
+public class WarriorSkill : MonoBehaviour
 {
 
 }

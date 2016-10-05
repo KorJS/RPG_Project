@@ -169,7 +169,7 @@ public class Warrior : MonoBehaviour
     private void ComboAttack()
     {
         skillAngle = 60f;
-        skillRange = 3f;
+        skillRange = 2.2f;
         SeachSkillRange();
 
         playerMovement.AnimationSkill((int)currentSkillTpye);

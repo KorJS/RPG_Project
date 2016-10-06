@@ -108,7 +108,7 @@ public class Warrior : MonoBehaviour
 
         foreach (Collider col in colls)
         {
-            if (string.Compare(col.tag, "Enemy") == 0)
+            if (col.gameObject.layer == LayerMask.NameToLayer("Monster"))
             {
                 Vector3 enemyPos = col.transform.position - transform.position;
 
@@ -116,6 +116,7 @@ public class Warrior : MonoBehaviour
 
                 if (angle <= skillAngle)
                 {
+                    // 범위 안에 있으면 Hit
                     Debug.Log(angle);
                 }
             }

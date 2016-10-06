@@ -66,7 +66,7 @@ public class PlayerInput : MonoBehaviour
 
     public Dictionary<KeyCode, SlotInfo> slotInfos = null; // 모든 슬롯 정보
 
-    public int  index = -1;             // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
+    public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
 
     public bool isUIMode = false;
 
@@ -106,7 +106,7 @@ public class PlayerInput : MonoBehaviour
         // UI 모드가 아닐때
         if(!isUIMode)
         {
-            InputMove();
+            InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
             InputShortCutkey();
         }
 
@@ -118,11 +118,8 @@ public class PlayerInput : MonoBehaviour
     }
 
     // 방향키 입력
-    private void InputMove()
+    private void InputMove(float inputV, float inputH)
     {
-        float inputV = Input.GetAxis(inputKey.vertical);
-        float inputH = Input.GetAxis(inputKey.horizontal);
-
         playerMovement.AnimationMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
@@ -167,6 +164,8 @@ public class PlayerInput : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 isUIMode = true;
+
+                InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
             }
             // UI 모드 해제
             else if(isUIMode)

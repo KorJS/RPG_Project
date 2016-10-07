@@ -32,7 +32,7 @@ public class EquipmentHandler : MonoBehaviour
     void Update()
     {
         // 스킬을 사용할때 장비 전투모드 위치로.
-        if (PlayerState.Instance.currentState == TypeData.State.스킬)
+        if (playerState.currentState == TypeData.State.스킬)
         {
             if (weapon != null)
             {
@@ -77,7 +77,7 @@ public class EquipmentHandler : MonoBehaviour
 
             weapon.SetEquipeed(_isWeapon);
             weapon.SetEquipHandler(this);
-            weapon.CheckActive(PlayerState.Instance.currentMode); // 장비에 모드 설정
+            weapon.CheckActive(playerState.currentMode); // 장비에 모드 설정
             weapon.SetLocation(); // 장비 위치 설정
         }
     }
@@ -106,7 +106,7 @@ public class EquipmentHandler : MonoBehaviour
 
             shield.SetEquipeed(_isShield);
             shield.SetEquipHandler(this);
-            shield.CheckActive(PlayerState.Instance.currentMode); // 장비에 모드 설정
+            shield.CheckActive(playerState.currentMode); // 장비에 모드 설정
             shield.SetLocation(); // 장비 위치 설정
         }
     }

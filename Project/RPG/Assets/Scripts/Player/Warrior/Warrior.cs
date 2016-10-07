@@ -6,6 +6,7 @@ public class Warrior : MonoBehaviour
 {
     private PlayerMovement playerMovement = null;
     private PlayerInput playerInput = null;
+    private PlayerState playerState = null;
 
     // 워리어 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -55,6 +56,7 @@ public class Warrior : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         playerInput = GetComponent<PlayerInput>();
+        playerState = GetComponent<PlayerState>();
 
         currentSkillTpye = SkillType.없음;
 
@@ -122,7 +124,9 @@ public class Warrior : MonoBehaviour
             }
         }
     }
-
+    
+    // TODO : 다음에는 Queue와 입력시간 Timer를 사용해서 지정한 Time 안에 입력이 없을시 연속으로 안나가게 막하볼까..
+    // Queue를 사용해서 입력한것을 순서대로 넣고 빼서 스킬 시전을 하면.. 이상하려나..
     private void SwitchSkill()
     {
         // 특정스킬 사용중에는 입력 안들어오게 막기
@@ -133,7 +137,7 @@ public class Warrior : MonoBehaviour
         }
 
         // 클릭한 곳에 스킬이 없거나 / 스킬 상태가 아닐때
-        if (playerInput.index < 0 && PlayerState.Instance.currentState != TypeData.State.스킬)
+        if (playerInput.index < 0 && playerState.currentState != TypeData.State.스킬)
         {
             return;
         }
@@ -173,7 +177,7 @@ public class Warrior : MonoBehaviour
         skillRange = 2.2f;
         SeachSkillRange();
 
-        playerMovement.AnimationSkill((int)currentSkillTpye);
+        playerMovement.SetAniSkill((int)currentSkillTpye);
 
         // 콤보 공격 방향 성정
         float h = Input.GetAxisRaw(playerInput.inputKey.horizontal);
@@ -201,7 +205,7 @@ public class Warrior : MonoBehaviour
     private void CheckComboTime()
     {
         // 콤보타임중이 아닐때 / 스킬이 끝나고 idle(서브상태머신 안에있는) 상태일떄 / 스킬상태가 아닐때
-        if (!isComboTime || playerMovement.isIdle || PlayerState.Instance.currentState != TypeData.State.스킬)
+        if (!isComboTime || playerMovement.isIdle || playerState.currentState != TypeData.State.스킬)
         {
             comboTimer = COMBOTIME; // 콤보타임 초기화
             return;
@@ -216,7 +220,7 @@ public class Warrior : MonoBehaviour
             comboTimer = COMBOTIME;
             isComboTime = false;
             isCombo = false; // 1콤보에서 끊겨서 다음 모션초기화 1콤으로
-            PlayerState.Instance.nextState = TypeData.State.대기;
+            playerState.nextState = TypeData.State.대기;
         }
     }
 
@@ -228,7 +232,7 @@ public class Warrior : MonoBehaviour
         skillRange = 2f;
         SeachSkillRange();
 
-        playerMovement.AnimationSkill((int)currentSkillTpye);
+        playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
         isBlock = true;
 
@@ -242,7 +246,7 @@ public class Warrior : MonoBehaviour
         skillRange = 4f;
         SeachSkillRange();
 
-        playerMovement.AnimationSkill((int)currentSkillTpye);
+        playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isOverpowerTrigger);
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
@@ -255,7 +259,7 @@ public class Warrior : MonoBehaviour
         skillRange = 4f;
         SeachSkillRange();
 
-        playerMovement.AnimationSkill((int)currentSkillTpye);
+        playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);
     }

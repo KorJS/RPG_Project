@@ -6,6 +6,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerInput playerInput = null;
+    private PlayerState playerState = null;
 
     // 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -18,12 +19,13 @@ public class PlayerMovement : MonoBehaviour
         public string skillTpyeInt          = "SkillType";
         public string hitBool               = "isHit";
         public string isDamageTrigger       = "isDamage";
+        public string isDeathTrigger        = "isDeath";
     }
 
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    public CharacterController characterController = null;
+    public CharacterController charCtrl = null;
     public Animator animator = null;
     private Camera camera = null;
     private Vector3 rotation = Vector3.zero;
@@ -36,9 +38,12 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        characterController = this.GetComponent<CharacterController>();
-        animator = this.GetComponent<Animator>();
+        playerState = GetComponent<PlayerState>();
+        charCtrl = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
         camera = Camera.main;
+
+        isHit = isDamage = isIdle = isEndSkillPoint = false;           
 
         SetAnimator();
     }
@@ -52,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         CheckCurrentAnimation();
     }
 
+    // 데미지
     public void Damage()
     {
         animator.SetTrigger(animationSettings.isDamageTrigger);
@@ -59,19 +65,19 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 모드
-    public void AnimationMode(TypeData.MODE mode)
+    public void SetAniMode(TypeData.MODE mode)
     {
         animator.SetInteger(animationSettings.modeInt, (int)mode);
     }
 
     // 상태
-    public void AnimationState(TypeData.State state)
+    public void SetAniState(TypeData.State state)
     {
         animator.SetInteger(animationSettings.stateInt, (int)state);
     }
 
     // 스킬
-    public void AnimationSkill(int skillTpye)
+    public void SetAniSkill(int skillTpye)
     {
         isEndSkillPoint = false; // 스킬 서브상태머신 안에 있으므로 false
         isIdle = true; // 스킬 중일때 회전 막기.
@@ -79,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 케릭터 이동
-    public void AnimationMove(float v, float h, bool isSkill)
+    public void SetAniMove(float v, float h, bool isSkill)
     {
         // 스킬사용중에 입력신호가 스킬이 아닐때(이동신호이면)
         if (isIdle && !isSkill)
@@ -89,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (v != 0 || h != 0)
         {
-            PlayerState.Instance.nextState = TypeData.State.이동;
+            playerState.nextState = TypeData.State.이동;
         }
 
         animator.SetFloat(animationSettings.moveVFloat, v);
@@ -124,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
         // 현재 실행 중인 애니메이터가 "Skill_End_Point" 인지

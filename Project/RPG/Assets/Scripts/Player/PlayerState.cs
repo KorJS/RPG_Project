@@ -3,20 +3,6 @@ using System.Collections;
 
 public class PlayerState : MonoBehaviour
 {
-    // 싱글톤
-    private static PlayerState playerState = null;
-    public static PlayerState Instance
-    {
-        get
-        {
-            if (playerState == null)
-            {
-                Debug.Log("PlayerState Instance Null");
-            }
-            return playerState;
-        }
-    }
-
     private PlayerMovement playerMovement = null;   // 주인공 동작 관련
     private EquipmentHandler equipHandler = null;   // 장비핸들러
 
@@ -31,7 +17,6 @@ public class PlayerState : MonoBehaviour
 
     void Awake()
     {
-        playerState = this; // 싱글톤
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
 
@@ -41,7 +26,7 @@ public class PlayerState : MonoBehaviour
         currentState = TypeData.State.없음;
         nextState = TypeData.State.없음;
 
-        playerMovement.AnimationMode(currentMode);
+        playerMovement.SetAniMode(currentMode);
         equipHandler.ChangeMode(currentMode);
     }
 
@@ -62,7 +47,7 @@ public class PlayerState : MonoBehaviour
         currentState = nextState;
         nextState = TypeData.State.없음;
 
-        playerMovement.AnimationState(currentState);
+        playerMovement.SetAniState(currentState);
     }
 
     private void CheckMode()
@@ -75,7 +60,7 @@ public class PlayerState : MonoBehaviour
         currentMode = nextMode;
         nextMode = TypeData.MODE.없음;
 
-        playerMovement.AnimationMode(currentMode);
+        playerMovement.SetAniMode(currentMode);
         equipHandler.ChangeMode(currentMode);
     }
 

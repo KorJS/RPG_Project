@@ -35,6 +35,7 @@ public class Equipment : MonoBehaviour
     public GameObject slashEffect = null;
 
     public EquipmentHandler equipHandler = null;
+    private PlayerState playerState = null;
 
     private TypeData.MODE currentMode = TypeData.MODE.평화;
 
@@ -48,6 +49,11 @@ public class Equipment : MonoBehaviour
         {
             slashEffect = this.transform.FindChild("Slash").gameObject;
         }
+
+        if (GameObject.FindGameObjectWithTag("Player"))
+        {
+            playerState = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerState>();
+        }
     }
 
     void Update()
@@ -58,12 +64,12 @@ public class Equipment : MonoBehaviour
             SetLocation(); // 장비 위치 설정
         }
 
-        if (eqType == EquipmentType.검 && PlayerState.Instance.currentState == TypeData.State.스킬)
+        if (eqType == EquipmentType.검 && playerState.currentState == TypeData.State.스킬)
         {
             slashEffect.SetActive(true);
             isEffect = true;
         }
-        else if (isEffect && eqType == EquipmentType.검 && PlayerState.Instance.currentState != TypeData.State.스킬)
+        else if (isEffect && eqType == EquipmentType.검 && playerState.currentState != TypeData.State.스킬)
         {
             slashEffect.SetActive(false);
             isEffect = false;

@@ -3,20 +3,6 @@ using System.Collections;
 
 public class MonsterState : MonoBehaviour
 {
-    // 싱글톤
-    private static MonsterState monsterState = null;
-    public static MonsterState Instance
-    {
-        get
-        {
-            if (monsterState == null)
-            {
-                Debug.Log("MonsterState Instance Null");
-            }
-            return monsterState;
-        }
-    }
-
     private MonsterMovement monsterMovement = null;
 
     public TypeData.State currentState = TypeData.State.없음;
@@ -24,10 +10,27 @@ public class MonsterState : MonoBehaviour
 
     void Awake()
     {
-        monsterState = this; // 싱글톤
         monsterMovement = GetComponent<MonsterMovement>();
 
         currentState = TypeData.State.없음;
+        nextState = TypeData.State.대기;
+    }
+
+    void Update()
+    {
+        CheckState();
+    }
+
+    private void CheckState()
+    {
+        if (nextState == TypeData.State.없음)
+        {
+            return;
+        }
+
+        currentState = nextState;
         nextState = TypeData.State.없음;
+
+        monsterMovement.SetAniState(currentState);
     }
 }

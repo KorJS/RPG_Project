@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class PlayerInput : MonoBehaviour
 {
-    public PlayerMovement playerMovement = null;
-    public EquipmentHandler equipHandler = null;
+    private PlayerMovement playerMovement = null;
+    private PlayerState playerState = null;
+    private EquipmentHandler equipHandler = null;
 
     // 키 입력 정보
     [System.Serializable]
@@ -72,15 +73,9 @@ public class PlayerInput : MonoBehaviour
 
     void Awake()
     {
-        if (!playerMovement)
-        {
-            playerMovement = GetComponent<PlayerMovement>();
-        }
-
-        if (!equipHandler)
-        {
-            equipHandler = GetComponent<EquipmentHandler>();
-        }
+        playerMovement = GetComponent<PlayerMovement>();
+        equipHandler = GetComponent<EquipmentHandler>();
+        playerState = GetComponent<PlayerState>();
 
         slotInfos = new Dictionary<KeyCode, SlotInfo>();
 
@@ -120,7 +115,7 @@ public class PlayerInput : MonoBehaviour
     // 방향키 입력
     private void InputMove(float inputV, float inputH)
     {
-        playerMovement.AnimationMove(inputV, inputH, false);
+        playerMovement.SetAniMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
 
@@ -182,11 +177,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            PlayerState.Instance.nextMode = TypeData.MODE.평화;
+            playerState.nextMode = TypeData.MODE.평화;
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-            PlayerState.Instance.nextMode = TypeData.MODE.전투;
+            playerState.nextMode = TypeData.MODE.전투;
             playerMovement.Damage();
         }
 
@@ -225,7 +220,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            PlayerState.Instance.nextMode = TypeData.MODE.전투;
+            playerState.nextMode = TypeData.MODE.전투;
             playerMovement.isHit = true;
         }
         if (Input.GetKeyDown(KeyCode.G))
@@ -234,7 +229,7 @@ public class PlayerInput : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            PlayerState.Instance.nextMode = TypeData.MODE.전투;
+            playerState.nextMode = TypeData.MODE.전투;
             playerMovement.Damage();
         }
     }
@@ -254,8 +249,8 @@ public class PlayerInput : MonoBehaviour
             {
                 case SlotType.스킬:
                     {
-                        PlayerState.Instance.nextState = TypeData.State.스킬;
-                        PlayerState.Instance.nextMode = TypeData.MODE.전투;
+                        playerState.nextState = TypeData.State.스킬;
+                        playerState.nextMode = TypeData.MODE.전투;
                     }
                     break;
 

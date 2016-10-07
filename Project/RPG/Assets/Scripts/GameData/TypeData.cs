@@ -36,8 +36,6 @@
         죽음
     };
 
-
-
     public enum SlotType
     {
         없음 = -1,

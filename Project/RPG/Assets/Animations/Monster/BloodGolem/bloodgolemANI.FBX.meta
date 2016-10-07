@@ -195,9 +195,9 @@ ModelImporter:
     7400028: moveAtk01
     7400030: moveAtk02
     7400032: reactionAtk01
-    7400034: reactionEnd
-    7400036: reactionLoop
-    7400038: reactionStart
+    7400034: downEnd
+    7400036: downLoop
+    7400038: downStart
     7400040: roundAtk01
     7400042: roundAtk02
     7400044: roundAtk03
@@ -3199,7 +3199,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 4.91
     - serializedVersion: 16
-      name: reactionEnd
+      name: downEnd
       takeName: Take 001
       firstFrame: 2235
       lastFrame: 2326
@@ -3397,7 +3397,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 4.91
     - serializedVersion: 16
-      name: reactionLoop
+      name: downLoop
       takeName: Take 001
       firstFrame: 2327
       lastFrame: 2378
@@ -3595,7 +3595,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 4.91
     - serializedVersion: 16
-      name: reactionStart
+      name: downStart
       takeName: Take 001
       firstFrame: 2379
       lastFrame: 2470

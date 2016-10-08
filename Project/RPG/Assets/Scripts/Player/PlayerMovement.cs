@@ -84,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetInteger(animationSettings.skillTpyeInt, skillTpye);
     }
 
-    // 케릭터 이동
+    // 이동
     public void SetAniMove(float v, float h, bool isSkill)
     {
         // 스킬사용중에 입력신호가 스킬이 아닐때(이동신호이면)

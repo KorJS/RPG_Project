@@ -10,6 +10,7 @@
     // 몬스터 타입
     public enum MonsterType
     {
+        // Normal, Elite, Boss
         일반 = 0,
         정예,
         보스

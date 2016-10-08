@@ -64,6 +64,12 @@ public class MonsterMovement : MonoBehaviour
         isIdle = true;
     }
 
+    // 이동
+    public void SetAniMove()
+    {
+
+    }
+
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {

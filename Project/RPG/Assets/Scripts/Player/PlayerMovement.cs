@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
     public void SetAniSkill(int skillTpye)
     {
         isEndSkillPoint = false; // 스킬 서브상태머신 안에 있으므로 false
-        isIdle = true; // 스킬 중일때 회전 막기.
+        isIdle = false; // 스킬 중일때 회전 막기.
         animator.SetInteger(animationSettings.skillTpyeInt, skillTpye);
     }
 
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
     public void SetAniMove(float v, float h, bool isSkill)
     {
         // 스킬사용중에 입력신호가 스킬이 아닐때(이동신호이면)
-        if (isIdle && !isSkill)
+        if (!isIdle && !isSkill)
         {
             return;
         }
@@ -106,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
     public void Rotation(float v, float h, bool isSkill)
     {
         // 스킬사용중에 입력신호가 스킬이 아닐때(이동신호이면)
-        if (isIdle && !isSkill)
+        if (!isIdle && !isSkill)
         {
             return;
         }
@@ -143,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_Botton"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
-            isIdle = false;
+            isIdle = true;
         }
     }
 

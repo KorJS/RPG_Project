@@ -61,7 +61,7 @@ public class MonsterMovement : MonoBehaviour
     public void SetAniSkill(int skillType)
     {
         animator.SetInteger(animationSettings.skillTypeInt, skillType);
-        isIdle = true;
+        isIdle = false;
     }
 
     // 이동
@@ -77,7 +77,7 @@ public class MonsterMovement : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_Botton"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
-            isIdle = false;
+            isIdle = true;
         }
     }
 

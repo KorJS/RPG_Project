@@ -37,6 +37,8 @@ public class BloodGolem : MonoBehaviour
     public float skillAngle = 0f;
     public float skillRange = 0f;
 
+    public int normalCount = 0;
+
     void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();
@@ -48,13 +50,14 @@ public class BloodGolem : MonoBehaviour
 
     void Update()
     {
+        if (monsterState.currentState != TypeData.State.스킬)
+        {
+            return;
+        }
+
         SwitchSkill();
     }
 
-    // 블러드 골램 패턴
-    // 기본 패턴 : 평타 4 > 내려찍기스턴 > 후려치기 
-    // 30% 확률로 웅크리기 패턴
-    // HP 50%, 20% 가 되면 필살기 패턴
     private void SwitchSkill()
     {
         if (nextSkillType == SkillType.없음)
@@ -82,6 +85,12 @@ public class BloodGolem : MonoBehaviour
 
     private void NormalAttack()
     {
-        monsterMovement.SetAniSkill((int)currentSkillType);
+        if (normalCount > 3)
+        {
+            normalCount = 0;
+            return;
+        }
+
+        nextSkillType = SkillType.일반공격;
     }
 }

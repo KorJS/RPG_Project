@@ -163,7 +163,7 @@ public class Warrior : MonoBehaviour
         switch (currentSkillTpye)
         {
             case SkillType.압도:
-                isLock = playerMovement.isIdle;
+                isLock = !playerMovement.isIdle; // 스킬 사용중이므로 idle 상태가 아님 false !false == true
                 break;
         }
 

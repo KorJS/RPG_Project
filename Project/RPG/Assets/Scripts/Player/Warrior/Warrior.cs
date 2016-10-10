@@ -71,7 +71,7 @@ public class Warrior : MonoBehaviour
             isCombo = false;
         }
 
-        CheckCurrentAnimation();
+        CheckCurrentAniState();
         SwitchSkill();
         CheckComboTime();
         ChekRuchTime();
@@ -83,7 +83,7 @@ public class Warrior : MonoBehaviour
         Gizmos.DrawWireSphere(this.transform.position, skillRange);
     }
 
-    private void CheckCurrentAnimation()
+    private void CheckCurrentAniState()
     {
         if (!playerMovement.animator)
         {

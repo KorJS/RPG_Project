@@ -36,7 +36,7 @@ public class MonsterMovement : MonoBehaviour
 
     void Update()
     {
-
+        CheckCurrentAnimation();
     }
 
     // 데미지
@@ -74,7 +74,7 @@ public class MonsterMovement : MonoBehaviour
     private void CheckCurrentAnimation()
     {
         // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_Botton"))
+        if (!isIdle && animator.GetCurrentAnimatorStateInfo(0).IsName("idle_wait_Bottom"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
             isIdle = true;

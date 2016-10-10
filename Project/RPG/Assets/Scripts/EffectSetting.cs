@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// 비장착일 경우의 실행하는 스크립트
 public class EffectSetting : MonoBehaviour
 {
     public enum Type
@@ -26,6 +27,7 @@ public class EffectSetting : MonoBehaviour
     private ParticleSystem particleSys = null;
 
     public float debugTimer = 0;
+
     void Awake()
     {
         particleSys = GetComponent<ParticleSystem>();

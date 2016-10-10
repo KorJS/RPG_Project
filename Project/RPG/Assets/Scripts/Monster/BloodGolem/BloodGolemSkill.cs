@@ -5,6 +5,7 @@ public class BloodGolemSkill : MonoBehaviour
 {
     private MonsterMovement monsterMovement = null;
     private MonsterState monsterState = null;
+    private MonsterRange monsterRange = null;
 
     [System.Serializable]
     public class BloodGolemAniSettings
@@ -13,7 +14,7 @@ public class BloodGolemSkill : MonoBehaviour
         public string isStunTrigger = "isStunAtk";
         public string isHeavyTrigger = "isHeavyAtk01";
         public string isRoundTrigger = "isRoundAtk";
-        public string isUtraTrigger = "isUtraAtk";
+        public string isUltraTrigger = "isUltraAtk";
 
         public string normalAtkClip = "normalAtk";
         public string stunAtkClip = "stunAtk";
@@ -23,6 +24,39 @@ public class BloodGolemSkill : MonoBehaviour
 
     [SerializeField]
     public BloodGolemAniSettings bloodGolemAniSettings;
+
+    // 스킬 위치, 거리, 각도 지정
+    [System.Serializable]
+    public struct SkillRangeSettings
+    {
+        [Header("- Normal -")]
+        public Vector3 normalPos;
+        public float normalDistace;
+        public float normalAngle;
+
+        [Header("- Stun -")]
+        public Vector3 stunPos;
+        public float stunDistace;
+        public float stunAngle;
+
+        [Header("- Heavy01 -")]
+        public Vector3 heavyPos;
+        public float heavy01Distace;
+        public float heavy01Angle;
+
+        [Header("- Round -")]
+        public Vector3 roundPos;
+        public float roundDistace;
+        public float roundAngle;
+
+        [Header("- Ultra -")]
+        public Vector3 ultraPos;
+        public float ultraDistace;
+        public float ultraAngle;
+    }
+
+    [SerializeField]
+    public SkillRangeSettings skillRangeSettings;
 
     public enum SkillType
     {
@@ -47,6 +81,7 @@ public class BloodGolemSkill : MonoBehaviour
     {
         monsterMovement = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();
+        monsterRange = GetComponent<MonsterRange>();
 
         currentSkillType = SkillType.없음;
         nextSkillType = SkillType.일반공격;
@@ -135,7 +170,7 @@ public class BloodGolemSkill : MonoBehaviour
                 break;
             case SkillType.필살기:
                 {
-                    ActiveSkill(currentSkillType, bloodGolemAniSettings.isUtraTrigger);
+                    ActiveSkill(currentSkillType, bloodGolemAniSettings.isUltraTrigger);
                 }
                 break;
         }

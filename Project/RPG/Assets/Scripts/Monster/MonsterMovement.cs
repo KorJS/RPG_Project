@@ -9,6 +9,7 @@ public class MonsterMovement : MonoBehaviour
     [System.Serializable]
     public class AnimationSettings
     {
+        public string modeInt           = "Mode";
         public string stateInt          = "State";
         public string skillTypeInt      = "SkillType";
         public string isDwonTrigger     = "isDwon";
@@ -51,6 +52,12 @@ public class MonsterMovement : MonoBehaviour
         yield return new WaitForSeconds(destroyTime);
     }
 
+    // 모드
+    public void SetAniMode(TypeData.MODE mode)
+    {
+        animator.SetInteger(animationSettings.modeInt, (int)mode);
+    }
+
     // 상태
     public void SetAniState(TypeData.State state)
     {
@@ -79,6 +86,10 @@ public class MonsterMovement : MonoBehaviour
             // 스킬이 시전이 끝나면 회전 가능 하게.
             isIdle = true;
         }
+    }
+
+    private void Rotation()
+    {
     }
 
     // 자식에 아바타를 받아옴

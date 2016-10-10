@@ -43,7 +43,8 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         camera = Camera.main;
 
-        isHit = isDamage = isIdle = isEndSkillPoint = false;           
+        isHit = isDamage = isEndSkillPoint = false;
+        isIdle = true; // 대기상태
 
         SetAnimator();
     }

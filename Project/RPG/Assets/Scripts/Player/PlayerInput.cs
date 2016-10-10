@@ -115,6 +115,7 @@ public class PlayerInput : MonoBehaviour
     // 방향키 입력
     private void InputMove(float inputV, float inputH)
     {
+        Debug.Log(inputH);
         playerMovement.SetAniMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
@@ -152,9 +153,10 @@ public class PlayerInput : MonoBehaviour
         // UI 모드
         if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
-            // UI 모드로 전환
+            // UI 모드가 아닐때 UI모드로 전환
             if (!isUIMode)
             {
+                Debug.Log("1");
                 // 마우스 커서 상태
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -162,7 +164,7 @@ public class PlayerInput : MonoBehaviour
 
                 InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
             }
-            // UI 모드 해제
+            // UI 모드일때 UI 해제
             else if(isUIMode)
             {
                 Cursor.lockState = CursorLockMode.Locked;

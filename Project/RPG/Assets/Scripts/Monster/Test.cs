@@ -121,14 +121,15 @@ public class Test : MonoBehaviour
             return;
         }
 
-        dis = Vector3.Distance(monster.target.position, monster.monsterT.position);
+        Vector3 targetPos = monster.target.position;
+
+        dis = Vector3.Distance(targetPos, monster.monsterT.position);
         //Debug.Log(dis);
         if (dis > 13f)
         {
             return;
         }
 
-        Vector3 targetPos = monster.target.position;
         targetPos.y = 1f;
 
         Vector3 enemyPos = targetPos - monster.monsterT.position;

@@ -27,7 +27,9 @@ public class MonsterMovement : MonoBehaviour
     public CharacterController charCtrl = null;
     public Animator animator = null;
 
-    public Transform testT = null;
+
+    public float rotationTime = 1.5f;
+    public float rotationTimer = 0f;
 
     public bool isIdle = false;
     public bool isMove = false;
@@ -35,7 +37,6 @@ public class MonsterMovement : MonoBehaviour
 
     void Awake()
     {
-        testT = GameObject.FindGameObjectWithTag("Player").transform;
         monsterRange = GetComponent<MonsterRange>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -49,7 +50,7 @@ public class MonsterMovement : MonoBehaviour
     {
         CheckCurrentAnimation();
 
-        if (animator.GetInteger(animationSettings.stateInt) == (int)TypeData.State.이동)
+        if (isMove)
         {
             Move();
         }
@@ -94,12 +95,6 @@ public class MonsterMovement : MonoBehaviour
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
-        // 현재 실행 중인 애니메이터가 "idle_wait" 인지
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_wait"))
-        {
-            isRot = false;
-        }
-
         // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("walk"))
         {
@@ -129,36 +124,21 @@ public class MonsterMovement : MonoBehaviour
 
     private void Rotation()
     {
-        Vector3 targetPos = testT.position;
-        Vector3 monsterPos = transform.position;
+        Vector3 targetPos = monsterRange.tPos;
+        Vector3 monsterPos = monsterRange.mobPos;
 
         Vector3 pos = targetPos - monsterPos;
 
-        if (!isMove)
+        // 이동 중일때 회전
+        Quaternion q = Quaternion.LookRotation(pos);
+        transform.rotation = Quaternion.Lerp(transform.rotation, q, Time.deltaTime * 2f);
+
+        rotationTimer += Time.deltaTime;
+        if (rotationTimer > rotationTime)
         {
-            float angle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
-            if (Mathf.Abs(angle) > 90)
-            {
-                animator.SetTrigger(animationSettings.isRightTurnTrigger);
-            }
-            else if (Mathf.Abs(angle) < 90)
-            {
-                animator.SetTrigger(animationSettings.isLeftTurnTrigger);
-            }
-
-            Debug.Log(Mathf.Abs(angle));
-
-            return;
+            isRot = false;
+            rotationTimer = 0f;
         }
-
-        //// 이동 중일때 회전
-        //Quaternion q = Quaternion.LookRotation(pos);
-        //transform.rotation = Quaternion.Lerp(transform.rotation, q, Time.deltaTime);
-
-        //if (transform.rotation == q)
-        //{
-        //    isRot = false;
-        //}
     }
 
     // 자식에 아바타를 받아옴

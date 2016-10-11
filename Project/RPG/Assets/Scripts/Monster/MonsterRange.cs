@@ -85,7 +85,7 @@ public class MonsterRange : MonoBehaviour
             monsterState.nextState = TypeData.State.이동;
         }
 
-        if (moveDis < monster.atkDis)
+        if (moveDis < monster.atkDis && !monsterMovement.isRot)
         {
             monsterState.nextState = TypeData.State.스킬;
         }
@@ -146,6 +146,7 @@ public class MonsterRange : MonoBehaviour
             isTargetAggro = true;
             aggroTimer = 0f;
             monsterState.nextMode = TypeData.MODE.전투;
+            monsterState.nextState = TypeData.State.이동;
 
             return;
         }
@@ -183,7 +184,23 @@ public class MonsterRange : MonoBehaviour
 
         if (angle >= monster.rotRangeMax || (angle >= monster.rotRangeMin && distance > monster.rotRangDis))
         {
-            monsterMovement.isRot = true;
+            // 스킬 상태일때
+            if (monsterMovement.animator.GetInteger(monsterMovement.animationSettings.stateInt) 
+                == (int)TypeData.State.스킬)
+            {
+                // 스킬이 끝나면
+                if (monsterMovement.isIdle)
+                {
+                    monsterState.nextState = TypeData.State.대기;
+                    monsterMovement.isRot = true;
+                }
+            }
+            // 스킬 상태가 아닐때
+            else
+            {
+                monsterMovement.isRot = true;
+            }
+
             mobPos = monster.monsterT.position;
             tPos = monster.targetT.position;
         }

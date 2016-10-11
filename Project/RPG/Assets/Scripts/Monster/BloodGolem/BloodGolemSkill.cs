@@ -91,16 +91,19 @@ public class BloodGolemSkill : MonoBehaviour
             monsterState.nextState = TypeData.State.스킬;
         }
 
+        // 회전중일때 리턴
         if (monsterMovement.isRot)
         {
             return;
         }
 
+        // 이동중일때 리턴
         if (monsterState.currentState == TypeData.State.이동)
         {
             return;
         }
 
+        // 스킬상태가 아닐때 리턴
         if (monsterState.currentState != TypeData.State.스킬)
         {
             return;

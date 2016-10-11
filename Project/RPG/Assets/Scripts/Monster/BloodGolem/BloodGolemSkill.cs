@@ -14,12 +14,8 @@ public class BloodGolemSkill : MonoBehaviour
         public string isStunTrigger = "isStunAtk";
         public string isHeavyTrigger = "isHeavyAtk01";
         public string isRoundTrigger = "isRoundAtk";
+        public string isLongTrigger = "isLongAtk";
         public string isUltraTrigger = "isUltraAtk";
-
-        public string normalAtkClip = "normalAtk";
-        public string stunAtkClip = "stunAtk";
-        public string heavyAtk01Clip = "heavyAtk01";
-        public string roundAtkClip = "roundAtk01";
     }
 
     [SerializeField]
@@ -65,6 +61,7 @@ public class BloodGolemSkill : MonoBehaviour
         내려찍기스턴,
         후려치기,
         웅크리기,
+        포격,
         필살기
     };
 
@@ -94,11 +91,20 @@ public class BloodGolemSkill : MonoBehaviour
             monsterState.nextState = TypeData.State.스킬;
         }
 
-        if (monsterState.currentState != TypeData.State.스킬)
+        if (monsterMovement.isRot)
         {
             return;
         }
 
+        if (monsterState.currentState == TypeData.State.이동)
+        {
+            return;
+        }
+
+        if (monsterState.currentState != TypeData.State.스킬)
+        {
+            return;
+        }
 
         Pattern();
         SwitchSkill();
@@ -168,6 +174,13 @@ public class BloodGolemSkill : MonoBehaviour
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isRoundTrigger);
                 }
                 break;
+
+            case SkillType.포격:
+                {
+                    ActiveSkill(currentSkillType, bloodGolemAniSettings.isLongTrigger);
+                }
+                break;
+
             case SkillType.필살기:
                 {
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isUltraTrigger);

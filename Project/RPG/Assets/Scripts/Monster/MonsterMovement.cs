@@ -6,15 +6,19 @@ using System.Collections;
 [RequireComponent(typeof(MonsterState))]
 public class MonsterMovement : MonoBehaviour
 {
+    private MonsterRange monsterRange = null;
+
     [System.Serializable]
     public class AnimationSettings
     {
-        public string modeInt           = "Mode";
-        public string stateInt          = "State";
-        public string skillTypeInt      = "SkillType";
-        public string isDwonTrigger     = "isDwon";
-        public string isDamageTrigger   = "isDamage";
-        public string isDeathTrigger    = "isDeath";
+        public string modeInt               = "Mode";
+        public string stateInt              = "State";
+        public string skillTypeInt          = "SkillType";
+        public string isDwonTrigger         = "isDwon";
+        public string isDamageTrigger       = "isDamage";
+        public string isDeathTrigger        = "isDeath";
+        public string isLeftTurnTrigger     = "isLeftTurn";
+        public string isRightTurnTrigger    = "isRightTurn";
     }
 
     [SerializeField]
@@ -23,10 +27,16 @@ public class MonsterMovement : MonoBehaviour
     public CharacterController charCtrl = null;
     public Animator animator = null;
 
+    public Transform testT = null;
+
     public bool isIdle = false;
+    public bool isMove = false;
+    public bool isRot = false;
 
     void Awake()
     {
+        testT = GameObject.FindGameObjectWithTag("Player").transform;
+        monsterRange = GetComponent<MonsterRange>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         
@@ -38,6 +48,16 @@ public class MonsterMovement : MonoBehaviour
     void Update()
     {
         CheckCurrentAnimation();
+
+        if (animator.GetInteger(animationSettings.stateInt) == (int)TypeData.State.이동)
+        {
+            Move();
+        }
+
+        if (isRot)
+        {
+            Rotation();
+        }
     }
 
     // 데미지
@@ -71,15 +91,25 @@ public class MonsterMovement : MonoBehaviour
         isIdle = false;
     }
 
-    // 이동
-    public void SetAniMove()
-    {
-
-    }
-
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
+        // 현재 실행 중인 애니메이터가 "idle_wait" 인지
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_wait"))
+        {
+            isRot = false;
+        }
+
+        // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("walk"))
+        {
+            isMove = true;
+        }
+        else
+        {
+            isMove = false;
+        }
+
         // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
         if (!isIdle && animator.GetCurrentAnimatorStateInfo(0).IsName("idle_wait_Bottom"))
         {
@@ -88,8 +118,47 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
+    // 이동
+    private void Move()
+    {
+        if (isMove)
+        {
+            transform.Translate(0f, 0f, Time.deltaTime * 2f);
+        }
+    }
+
     private void Rotation()
     {
+        Vector3 targetPos = testT.position;
+        Vector3 monsterPos = transform.position;
+
+        Vector3 pos = targetPos - monsterPos;
+
+        if (!isMove)
+        {
+            float angle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
+            if (Mathf.Abs(angle) > 90)
+            {
+                animator.SetTrigger(animationSettings.isRightTurnTrigger);
+            }
+            else if (Mathf.Abs(angle) < 90)
+            {
+                animator.SetTrigger(animationSettings.isLeftTurnTrigger);
+            }
+
+            Debug.Log(Mathf.Abs(angle));
+
+            return;
+        }
+
+        //// 이동 중일때 회전
+        //Quaternion q = Quaternion.LookRotation(pos);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, q, Time.deltaTime);
+
+        //if (transform.rotation == q)
+        //{
+        //    isRot = false;
+        //}
     }
 
     // 자식에 아바타를 받아옴

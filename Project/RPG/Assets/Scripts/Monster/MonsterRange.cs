@@ -3,25 +3,39 @@ using System.Collections;
 
 public class MonsterRange : MonoBehaviour
 {
+    private MonsterMovement monsterMovement = null;
     private MonsterState monsterState = null;
 
     [System.Serializable]
     public class MonsterSettings
     {
+        [Header("- Object -")]
         public Transform    monsterT;           // 몬스터
         public Transform    targetT;            // 타겟
-        public LayerMask    monsterLayer;       // 몬스터 레이어
-        public LayerMask    targetLayer;        // 타겟 레이어
-
         public Vector3      originPos;          // 몬스터 스폰 위치
 
+        [Header("- Layer -")]
+        public int          monsterLayer;       // 몬스터 레이어
+        public int          targetLayer;        // 타겟 레이어
+
+        [Header("- Rotation -")]
+        public float        rotRangeMax;        // 전방 시야 Max(범위에 벗어나면 회전)
+        public float        rotRangeMin;        // 전방 시야 Min
+        public float        rotRangDis;         // 시야 거리
+
+        [Header("- Other -")]
         public float        aggroRange;         // 몬스터의 애드 범위
         public float        aggroTime;          // 공격을 시작하는 시간, 어글이펙트가 표시 되는 시간
         public float        inactiveAggroDis;   // 어글이 풀리는 거리
+        public float        moveDis;            // 일정거리를 벗어나면 상태(State) 이동으로 전환
+        public float        atkDis;             // 공격시작 거리
     }
 
     [SerializeField]
     public MonsterSettings monster;
+
+    public Vector3 mobPos = Vector3.zero;
+    public Vector3 tPos = Vector3.zero;
 
     // 어글 잡히는 시간을 체크하는 동안 범위안에 존재하면 범위를 벗어나도 타겟(어글)상태임
     public float aggroTimer = 0f; // 어글 타이머
@@ -29,6 +43,7 @@ public class MonsterRange : MonoBehaviour
 
     void Awake()
     {
+        monsterMovement = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();
 
         monster.monsterT = transform;
@@ -43,6 +58,7 @@ public class MonsterRange : MonoBehaviour
         SearchTarget();
         CheckAggro();
         CheckOriginDistance();
+        CheckForward();
     }
 
     // 스폰위치로부터 거리를 체크 - 지정된 거리가 되면 원위치로 돌아감 / 어글 풀림
@@ -53,15 +69,35 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        if (monsterState.currentMode == TypeData.MODE.평화)
+        {
+            return;
+        }
+
         Vector3 monsterPos = monster.monsterT.position;
         Vector3 targetPos = monster.targetT.position;
 
-        float distance = Vector3.Distance(targetPos, monsterPos);
+        // 일정거리를 벗어나면 상태를 이동으로 - 타겟과 몬스터의 거리
+        float moveDis = Vector3.Distance(targetPos, monsterPos);
 
-        if (distance > monster.inactiveAggroDis)
+        if (moveDis > monster.moveDis)
+        {
+            monsterState.nextState = TypeData.State.이동;
+        }
+
+        if (moveDis < monster.atkDis)
+        {
+            monsterState.nextState = TypeData.State.스킬;
+        }
+
+        // 어글이 풀리는 거리(평화모드로) - 스폰위치로부터 몬스터 현재 거리
+        float peaceDis = Vector3.Distance(monsterPos, monster.originPos);
+
+        if (peaceDis > monster.inactiveAggroDis)
         {
             monster.targetT = null;
             isTargetAggro = false;
+            monsterState.nextMode = TypeData.MODE.평화;
             // TODO : 어글이펙트 비활성화.
         }
     }
@@ -124,6 +160,32 @@ public class MonsterRange : MonoBehaviour
             isTargetAggro = false;
             aggroTimer = 0f;
             monsterState.nextMode = TypeData.MODE.평화;
+        }
+    }
+
+    public void CheckForward()
+    {
+        if (!isTargetAggro || !monster.targetT)
+        {
+            return;
+        }
+
+        Vector3 targetPos = monster.targetT.position;
+        Vector3 monsterPos = monster.monsterT.position;
+
+        targetPos.y = 1f;
+
+        Vector3 disPos = targetPos - monster.monsterT.position;
+        Vector3 monsterForward = monster.monsterT.forward;
+
+        float angle = Vector3.Angle(monsterForward, disPos);
+        float distance = Vector3.Distance(targetPos, monsterPos);
+
+        if (angle >= monster.rotRangeMax || (angle >= monster.rotRangeMin && distance > monster.rotRangDis))
+        {
+            monsterMovement.isRot = true;
+            mobPos = monster.monsterT.position;
+            tPos = monster.targetT.position;
         }
     }
 

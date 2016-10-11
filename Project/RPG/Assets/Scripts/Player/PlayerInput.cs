@@ -115,7 +115,6 @@ public class PlayerInput : MonoBehaviour
     // 방향키 입력
     private void InputMove(float inputV, float inputH)
     {
-        Debug.Log(inputH);
         playerMovement.SetAniMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
@@ -156,7 +155,6 @@ public class PlayerInput : MonoBehaviour
             // UI 모드가 아닐때 UI모드로 전환
             if (!isUIMode)
             {
-                Debug.Log("1");
                 // 마우스 커서 상태
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

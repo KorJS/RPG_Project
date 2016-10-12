@@ -8,7 +8,7 @@ public class WarriorEffect : MonoBehaviour
     private Warrior warrior = null;
 
     [System.Serializable]
-    public class Effectsettings
+    public class EffectSettings
     {
         public GameObject blockObj;
         public GameObject blockDamageObj;
@@ -21,7 +21,7 @@ public class WarriorEffect : MonoBehaviour
         public string rush          = "RushEffect";
     }
 
-    public Effectsettings effectSettings;
+    public EffectSettings effectSettings;
 
     private Transform skillHolder = null;
 

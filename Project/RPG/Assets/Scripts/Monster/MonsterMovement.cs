@@ -34,6 +34,7 @@ public class MonsterMovement : MonoBehaviour
     public bool isIdle = false;
     public bool isMove = false;
     public bool isRot = false;
+    public bool isPeace = false;
 
     void Awake()
     {
@@ -41,7 +42,7 @@ public class MonsterMovement : MonoBehaviour
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         
-        isIdle = false;
+        isIdle = true;
 
         SetAnimator();
     }
@@ -49,16 +50,8 @@ public class MonsterMovement : MonoBehaviour
     void Update()
     {
         CheckCurrentAnimation();
-
-        if (isMove)
-        {
-            Move();
-        }
-
-        if (isRot)
-        {
-            Rotation();
-        }
+        Move();
+        Rotation();
     }
 
     // 데미지
@@ -116,14 +109,21 @@ public class MonsterMovement : MonoBehaviour
     // 이동
     private void Move()
     {
-        if (isMove)
+        if (!isMove)
         {
-            transform.Translate(0f, 0f, Time.deltaTime * 2f);
+            return;
         }
+
+        transform.Translate(0f, 0f, Time.deltaTime * 2f);
     }
 
     private void Rotation()
     {
+        if (!isRot || !isIdle)
+        {
+            return;
+        }
+
         Vector3 targetPos = monsterRange.tPos;
         Vector3 monsterPos = monsterRange.mobPos;
 

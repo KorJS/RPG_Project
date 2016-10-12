@@ -70,10 +70,10 @@ public class BloodGolemSkill : MonoBehaviour
 
     // TODO : 몬스터의 공격력은 고정. 주인공쪽에서 들어온 데미지를 방어에 따라 데미지 변화를 주자
     public float skillAngle = 0f;
-    public float skillRange = 0f;
+    public float skillRange = 0f;   
 
     public int patternCount = 0;
-    public int test = 100;
+
     void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();

@@ -12,7 +12,8 @@ public class MonsterRange : MonoBehaviour
         [Header("- Object -")]
         public Transform    monsterT;           // 몬스터
         public Transform    targetT;            // 타겟
-        public Vector3      originPos;          // 몬스터 스폰 위치
+        public Vector3      originPos;          // 몬스터 스폰시 위치정보
+        public Quaternion   originRot;          // 몬스터 스폰시 회전정보
 
         [Header("- Layer -")]
         public int          monsterLayer;       // 몬스터 레이어
@@ -48,6 +49,7 @@ public class MonsterRange : MonoBehaviour
 
         monster.monsterT = transform;
         monster.originPos = transform.position;
+        monster.originRot = transform.rotation;
 
         monster.monsterLayer = LayerMask.NameToLayer("Monster");
         monster.targetLayer = LayerMask.NameToLayer("Player");
@@ -85,7 +87,7 @@ public class MonsterRange : MonoBehaviour
             monsterState.nextState = TypeData.State.이동;
         }
 
-        if (moveDis < monster.atkDis && !monsterMovement.isRot)
+        if (moveDis < monster.atkDis)
         {
             monsterState.nextState = TypeData.State.스킬;
         }
@@ -182,6 +184,7 @@ public class MonsterRange : MonoBehaviour
         float angle = Vector3.Angle(monsterForward, disPos);
         float distance = Vector3.Distance(targetPos, monsterPos);
 
+        Debug.Log("angle : " + angle + " distance : " + distance);
         if (angle >= monster.rotRangeMax || (angle >= monster.rotRangeMin && distance > monster.rotRangDis))
         {
             // 스킬 상태일때
@@ -191,7 +194,6 @@ public class MonsterRange : MonoBehaviour
                 // 스킬이 끝나면
                 if (monsterMovement.isIdle)
                 {
-                    monsterState.nextState = TypeData.State.대기;
                     monsterMovement.isRot = true;
                 }
             }
@@ -250,6 +252,7 @@ public class MonsterRange : MonoBehaviour
             if (angle <= skillAngle)
             {
                 // 주인공 Hit
+                target.GetComponent<PlayerMovement>().isHit = true;
             }
         }
     }

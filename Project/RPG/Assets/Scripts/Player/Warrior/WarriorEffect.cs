@@ -10,11 +10,6 @@ public class WarriorEffect : MonoBehaviour
     [System.Serializable]
     public class EffectSettings
     {
-        public GameObject blockObj;
-        public GameObject blockDamageObj;
-        public GameObject overpowerObj;
-        public GameObject rushObj;
-
         public string block         = "BlockEffect";
         public string blockDamage   = "BlockDamageEffect";
         public string overpower     = "OverpowerEffect";
@@ -23,14 +18,17 @@ public class WarriorEffect : MonoBehaviour
 
     public EffectSettings effectSettings;
 
+    public Dictionary<string, GameObject> effects = null;
+
     private Transform skillHolder = null;
 
-    public  string effectPath = "Effect/Warrior/";
+    public  string effectPath = "Effect/Player/Warrior/";
 
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         warrior = GetComponent<Warrior>();
+        effects = new Dictionary<string, GameObject>();
         skillHolder = transform.FindChild("SkillHolder");
 
         ResourceLoad();
@@ -46,16 +44,16 @@ public class WarriorEffect : MonoBehaviour
     private void ResourceLoad()
     {
         GameObject obj = Resources.Load(effectPath + effectSettings.block) as GameObject;
-        effectSettings.blockObj = CreateEffectObj(obj, effectSettings.block);
+        effects.Add(effectSettings.block, CreateEffectObj(obj, effectSettings.block));
 
         obj = Resources.Load(effectPath + effectSettings.blockDamage) as GameObject;
-        effectSettings.blockDamageObj = CreateEffectObj(obj, effectSettings.blockDamage);
+        effects.Add(effectSettings.blockDamage, CreateEffectObj(obj, effectSettings.blockDamage));
 
         obj = Resources.Load(effectPath + effectSettings.overpower) as GameObject;
-        effectSettings.overpowerObj = CreateEffectObj(obj, effectSettings.overpower);
+        effects.Add(effectSettings.overpower, CreateEffectObj(obj, effectSettings.overpower));
 
         obj = Resources.Load(effectPath + effectSettings.rush) as GameObject;
-        effectSettings.rushObj = CreateEffectObj(obj, effectSettings.rush);
+        effects.Add(effectSettings.rush, CreateEffectObj(obj, effectSettings.rush));
 
         obj = null;
     }
@@ -81,14 +79,14 @@ public class WarriorEffect : MonoBehaviour
         if (!warrior.isBlock)
         {
             // 이펙트가 활성화 상태이면
-            if (effectSettings.blockObj.activeSelf)
+            if (effects[effectSettings.block].activeSelf)
             {
-                effectSettings.blockObj.SetActive(false);
+                effects[effectSettings.block].SetActive(false);
             }
             return;
         }
 
-        effectSettings.blockObj.SetActive(true);
+        effects[effectSettings.block].SetActive(true);
     }
 
     // 방패막기중에 맞았을때 효과
@@ -100,11 +98,11 @@ public class WarriorEffect : MonoBehaviour
             return;
         }
 
-        effectSettings.blockDamageObj.SetActive(true);
+        effects[effectSettings.blockDamage].SetActive(true);
 
         // TODO : 검색.. 계속하게 되는데. 나중에 수정하자
         // 이펙트 발생하고 정지 상태이면 비활성화.
-        if (effectSettings.blockDamageObj.GetComponent<ParticleSystem>().isStopped)
+        if (effects[effectSettings.blockDamage].GetComponent<ParticleSystem>().isStopped)
         {
             playerMovement.isDamage = false;
         }

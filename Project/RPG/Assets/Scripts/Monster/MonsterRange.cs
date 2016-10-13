@@ -5,6 +5,7 @@ public class MonsterRange : MonoBehaviour
 {
     private MonsterMovement monsterMovement = null;
     private MonsterState monsterState = null;
+    private PlayerEffect playerEffect = null;
 
     [System.Serializable]
     public class MonsterSettings
@@ -97,10 +98,18 @@ public class MonsterRange : MonoBehaviour
 
         if (peaceDis > monster.inactiveAggroDis)
         {
+            // TODO : 어글이펙트 비활성화.
+            if (!playerEffect)
+            {
+                Debug.Log("PlayerEffect Script Null");
+            }
+            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
             monster.targetT = null;
             isTargetAggro = false;
+            monster.monsterT.position = monster.originPos;
+            monster.monsterT.rotation = monster.originRot;
+            monsterState.nextState = TypeData.State.대기;
             monsterState.nextMode = TypeData.MODE.평화;
-            // TODO : 어글이펙트 비활성화.
         }
     }
 
@@ -126,6 +135,7 @@ public class MonsterRange : MonoBehaviour
                 // TODO : 2명이상일 경우 거리에 따라 타겟 지정.
                 // 타겟 지정
                 monster.targetT = target.transform;
+                playerEffect = monster.targetT.GetComponent<PlayerEffect>();
             }
         }
     }
@@ -145,6 +155,12 @@ public class MonsterRange : MonoBehaviour
         // 타겟에 어글이 표시 되는 타임. ()
         if (aggroTimer >= monster.aggroTime)
         {
+            if (!playerEffect)
+            {
+                Debug.Log("PlayerEffect Script Null");
+            }
+            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
+
             isTargetAggro = true;
             aggroTimer = 0f;
             monsterState.nextMode = TypeData.MODE.전투;

@@ -52,5 +52,8 @@
         퀘스트템
     };
 
-
+    public enum PlayerEffect
+    {
+        Aggro = 0
+    };
 }

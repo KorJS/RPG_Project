@@ -37,6 +37,19 @@
         죽음
     };
 
+    public enum MonsterState
+    {
+        없음 = -1,
+        대기 = 0,
+        이동,
+        회전,
+        스킬,
+        데미지,
+        스턴,
+        다운,
+        죽음
+    };
+
     public enum SlotType
     {
         없음 = -1,

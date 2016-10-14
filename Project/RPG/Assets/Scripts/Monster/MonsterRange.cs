@@ -200,7 +200,7 @@ public class MonsterRange : MonoBehaviour
         float angle = Vector3.Angle(monsterForward, disPos);
         float distance = Vector3.Distance(targetPos, monsterPos);
 
-        Debug.Log("angle : " + angle + " distance : " + distance);
+        //Debug.Log("angle : " + angle + " distance : " + distance);
         if (angle >= monster.rotRangeMax || (angle >= monster.rotRangeMin && distance > monster.rotRangDis))
         {
             // 스킬 상태일때

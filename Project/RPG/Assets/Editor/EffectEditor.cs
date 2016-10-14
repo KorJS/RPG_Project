@@ -16,7 +16,8 @@ public class EffectEditor : Editor
         EditorGUILayout.LabelField("- Effect Helper -");
 
         // Enum형 팝업
-        effect.type = (EffectSetting.Type)EditorGUILayout.EnumPopup("EffectType", effect.type);
+        effect.equipType = (EffectSetting.EquipType)EditorGUILayout.EnumPopup("EquipType", effect.equipType);
+        effect.continueType = (EffectSetting.ContinueType)EditorGUILayout.EnumPopup("ContinueType", effect.continueType);
 
         // 새로 지정한 위치 저장
         if (GUILayout.Button("Save effect position"))

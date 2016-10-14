@@ -32,6 +32,8 @@ public class PlayerEffect : MonoBehaviour
     {
         GameObject obj = Resources.Load(effectPath + effectSettings.aggro) as GameObject;
         effects.Add(effectSettings.aggro, CreateEffectObj(obj, effectSettings.aggro));
+
+        obj = null;
     }
 
     // 이펙트 오브젝트 생성

@@ -3,7 +3,6 @@ using System.Collections;
 
 public class BloodGolemEffect : MonoBehaviour
 {
-    private BloodGolem bloodGolem = null;
     private BloodGolemSkill bloodGolemSkill = null;
 
     [System.Serializable]
@@ -17,7 +16,6 @@ public class BloodGolemEffect : MonoBehaviour
 
     void Awake()
     {
-        bloodGolem = GetComponent<BloodGolem>();
         bloodGolemSkill = GetComponent<BloodGolemSkill>();
     }
 

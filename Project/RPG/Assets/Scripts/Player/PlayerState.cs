@@ -90,6 +90,7 @@ public class PlayerState : MonoBehaviour
 
         if (combatTimer >= noHitCombatTime)
         {
+            playerMovement.isHit = false;
             nextMode = TypeData.MODE.평화;
             combatTimer = 0f;
         }

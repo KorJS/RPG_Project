@@ -22,10 +22,13 @@ public class SKillData
     {
         public int index;       // 인덱스
         public string name;     // 이름
-        public int level;       // 습득 필요레벨
+        public int level;       // 스킬레벨
+        public int learnLevel;  // 습득 필요레벨
         public float cooldown;  // 쿨다운
         public float attack;    // 공격력
         public float mp;        // 소모MP
+        public float angle;     // 각도
+        public float distance;  // 거리
 
     };
 
@@ -47,8 +50,6 @@ public class SKillData
 
     public Dictionary<int, SkillInfo> CheckPlayerType(TypeData.PlayerType playerType)
     {
-        Dictionary<int, SkillInfo> temp = typeSkillInfos[playerType];
-
-        return temp;
+        return typeSkillInfos[playerType];
     }
 }

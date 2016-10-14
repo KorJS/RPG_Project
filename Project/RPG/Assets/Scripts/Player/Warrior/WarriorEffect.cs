@@ -5,15 +5,15 @@ using System.Collections.Generic;
 public class WarriorEffect : MonoBehaviour
 {
     private PlayerMovement playerMovement = null;
-    private Warrior warrior = null;
+    private WarriorSkill warriorSkill = null;
 
     [System.Serializable]
     public class EffectSettings
     {
-        public string block         = "BlockEffect";
-        public string blockDamage   = "BlockDamageEffect";
-        public string overpower     = "OverpowerEffect";
-        public string rush          = "RushEffect";
+        public string block         = "Block";
+        public string blockDamage   = "BlockDamage";
+        public string overpower     = "Overpower";
+        public string rush          = "Rush";
     }
 
     public EffectSettings effectSettings;
@@ -27,7 +27,7 @@ public class WarriorEffect : MonoBehaviour
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
-        warrior = GetComponent<Warrior>();
+        warriorSkill = GetComponent<WarriorSkill>();
         effects = new Dictionary<string, GameObject>();
         skillHolder = transform.FindChild("SkillHolder");
 
@@ -64,6 +64,7 @@ public class WarriorEffect : MonoBehaviour
         GameObject obj = Instantiate(effectObj) as GameObject;
         obj.name = effectName;
         obj.transform.SetParent(skillHolder);
+        obj.GetComponent<EffectSetting>().infoSettings.effectHoler = skillHolder;
         obj.transform.localPosition = Vector3.zero;
         obj.SetActive(false);
 
@@ -76,7 +77,7 @@ public class WarriorEffect : MonoBehaviour
     private void BlockEffect()
     {
         // 방패막기가 아닐때 
-        if (!warrior.isBlock)
+        if (!warriorSkill.isBlock)
         {
             // 이펙트가 활성화 상태이면
             if (effects[effectSettings.block].activeSelf)
@@ -93,7 +94,7 @@ public class WarriorEffect : MonoBehaviour
     private void BlockDamageEffect()
     {
         // 방패막기가 아니거나 / 데미지를 안받았을때
-        if (!warrior.isBlock || !playerMovement.isDamage)
+        if (!warriorSkill.isBlock || !playerMovement.isDamage)
         {
             return;
         }
@@ -106,5 +107,16 @@ public class WarriorEffect : MonoBehaviour
         {
             playerMovement.isDamage = false;
         }
+    }
+
+    public void OverpowerEffect()
+    {
+        if (effects[effectSettings.overpower].activeSelf)
+        {
+            effects[effectSettings.overpower].transform.SetParent(skillHolder);
+            effects[effectSettings.overpower].SetActive(false);
+        }
+
+        effects[effectSettings.overpower].SetActive(true);
     }
 }

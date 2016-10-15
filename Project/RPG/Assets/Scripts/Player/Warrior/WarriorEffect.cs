@@ -37,7 +37,7 @@ public class WarriorEffect : MonoBehaviour
     void Update()
     {
         BlockEffect();
-        BlockDamageEffect();
+        //BlockDamageEffect();
     }
 
     // 이펙트 리소스 로드
@@ -91,13 +91,13 @@ public class WarriorEffect : MonoBehaviour
     }
 
     // 방패막기중에 맞았을때 효과
-    private void BlockDamageEffect()
+    public void BlockDamageEffect()
     {
-        // 방패막기가 아니거나 / 데미지를 안받았을때
-        if (!warriorSkill.isBlock || !playerMovement.isDamage)
-        {
-            return;
-        }
+        //// 방패막기가 아니거나 / 데미지를 안받았을때
+        //if (!warriorSkill.isBlock || !playerMovement.isDamage)
+        //{
+        //    return;
+        //}
 
         effects[effectSettings.blockDamage].SetActive(true);
 

@@ -36,7 +36,7 @@ public class WarriorSkill : MonoBehaviour
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
 
-    public Dictionary<int, SKillData.SkillInfo> skillInfos = null; // 스킬 정보 받아옴
+    public Dictionary<int, PlayerSkillData.SkillData> skillInfos = null; // 스킬 정보 받아옴
 
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
     private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
@@ -62,7 +62,7 @@ public class WarriorSkill : MonoBehaviour
 
         currentSkillTpye = SkillType.없음;
 
-        skillInfos = SKillData.Instance.CheckPlayerType(TypeData.PlayerType.기사); // 기사 스킬 정보
+        skillInfos = PlayerSkillData.Instance.skillDatas; // 스킬 정보
     }
 
     void Update()
@@ -106,25 +106,35 @@ public class WarriorSkill : MonoBehaviour
     // 각 스킬별로 공격범위에 있는 적 검색
     public void SeachSkillRange()
     {
-        Vector3 playerPos = transform.position;
+        Vector3 playerPos = transform.position; // 범위의 중점.
 
-        Collider[] colls = Physics.OverlapSphere(playerPos, skillDistance);
+        skillAngle = skillInfos[(int)currentSkillTpye].angle;
+        skillDistance = skillInfos[(int)currentSkillTpye].distance;
 
-        foreach (Collider col in colls)
+        Collider[] targets = Physics.OverlapSphere(playerPos, skillDistance);
+
+        foreach (Collider target in targets)
         {
-            if (col.gameObject.layer == LayerMask.NameToLayer("Monster"))
+            if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
             {
-                Vector3 enemyPos = col.transform.position - transform.position;
+                Vector3 enemyPos = target.transform.position - transform.position;
 
                 float angle = Vector3.Angle(transform.forward, enemyPos);
 
                 if (angle <= skillAngle)
                 {
                     // 범위 안에 있으면 Hit
-                    Debug.Log(angle);
+                    //Debug.Log(angle);
+                    Damage(target.gameObject);
                 }
             }
         }
+    }
+
+    private void Damage(GameObject enemyObj)
+    {
+        // TODO : SKillInfo의 데미지를 적용
+        Debug.Log((int)currentSkillTpye);
     }
 
     // TODO : 다음에는 Queue와 입력시간 Timer를 사용해서 지정한 Time 안에 입력이 없을시 연속으로 안나가게 막하볼까..
@@ -139,7 +149,7 @@ public class WarriorSkill : MonoBehaviour
         }
 
         // 클릭한 곳에 스킬이 없거나 / 스킬 상태가 아닐때
-        if (playerInput.index < 0 && playerState.currentState != TypeData.State.스킬)
+        if (playerInput.index < 0)// || playerState.currentState != TypeData.State.스킬)
         {
             return;
         }
@@ -147,6 +157,7 @@ public class WarriorSkill : MonoBehaviour
         // 어떤 스킬인지 알아옴
         currentSkillTpye = (SkillType)playerInput.index;
         playerInput.index = -1;
+        Debug.Log(currentSkillTpye);
 
         switch (currentSkillTpye)
         {
@@ -175,9 +186,8 @@ public class WarriorSkill : MonoBehaviour
     // 연속공격
     private void ComboAttack()
     {
-        skillAngle = 60f;
-        skillDistance = 2.2f;
-        SeachSkillRange();
+        
+        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
 
@@ -232,7 +242,7 @@ public class WarriorSkill : MonoBehaviour
         // TODO : 나중에 변경
         skillAngle = 90f;
         skillDistance = 2f;
-        SeachSkillRange();
+        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
@@ -246,7 +256,7 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 70f;
         skillDistance = 4f;
-        SeachSkillRange();
+        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isOverpowerTrigger);
@@ -261,7 +271,7 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 90f;
         skillDistance = 4f;
-        SeachSkillRange();
+        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;

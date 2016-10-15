@@ -125,7 +125,6 @@ public class BloodGolemSkill : MonoBehaviour
         float a = Random.Range(0f, 3000f);
         if (a > 10f && a < 15f)
         {
-            Debug.Log(a);
             nextSkillType = SkillType.내려찍기스턴;
             return;
         }

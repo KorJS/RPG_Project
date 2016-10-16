@@ -46,7 +46,7 @@ public class PlayerSkillData
         skillData.attack = 10f;
         skillData.mp = 5f;
         skillData.angle = 60f;
-        skillData.distance = 2.2f;
+        skillData.distance = 3.5f;
 
         skillDatas.Add(skillData.index, skillData);
     }

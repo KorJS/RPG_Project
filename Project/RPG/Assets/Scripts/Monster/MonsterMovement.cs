@@ -28,6 +28,7 @@ public class MonsterMovement : MonoBehaviour
     public CharacterController charCtrl = null;
     public Animator animator = null;
 
+    public GameObject skillHolderObj = null;
 
     public float rotationTime = 1.5f;
     public float rotationTimer = 0f;
@@ -42,7 +43,9 @@ public class MonsterMovement : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        
+
+        skillHolderObj = transform.FindChild("SkillHolder").gameObject;
+
         isIdle = true;
 
         SetAnimator();
@@ -156,6 +159,11 @@ public class MonsterMovement : MonoBehaviour
 
                 if (anim != animator)
                 {
+                    if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
+                    {
+                        continue;
+                    }
+
                     animator.avatar = av;
                     Destroy(anim);
                 }

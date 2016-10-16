@@ -24,7 +24,7 @@ public class BloodGolemSkill : MonoBehaviour
 
     // 스킬 위치, 거리, 각도 지정
     [System.Serializable]
-    public struct SkillRangeSettings
+    public struct SkillSettings
     {
         [Header("- Normal -")]
         public Vector3 normalPos;
@@ -53,7 +53,7 @@ public class BloodGolemSkill : MonoBehaviour
     }
 
     [SerializeField]
-    public SkillRangeSettings skillRangeSettings;
+    public SkillSettings skillSettings;
 
     public enum SkillType
     {

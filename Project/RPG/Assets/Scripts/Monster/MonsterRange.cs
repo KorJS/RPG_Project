@@ -272,4 +272,9 @@ public class MonsterRange : MonoBehaviour
             }
         }
     }
+
+    public void Damage()
+    {
+
+    }
 }

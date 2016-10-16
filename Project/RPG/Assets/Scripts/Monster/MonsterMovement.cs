@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(MonsterState))]
+[RequireComponent(typeof(MonsterRange))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterRange monsterRange = null;

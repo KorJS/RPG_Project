@@ -3,6 +3,9 @@ using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PlayerEffect))]
+[RequireComponent(typeof(PlayerState))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerInput playerInput = null;

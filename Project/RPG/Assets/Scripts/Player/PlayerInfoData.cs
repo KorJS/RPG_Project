@@ -20,7 +20,11 @@ public class PlayerInfoData
 
     public struct InfoData
     {
-
+        public string name;
+        public int level;
+        public string nick;
+        public float exp;
+        public int glod;
     }
 
     public InfoData infoData;

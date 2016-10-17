@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MonsterRange : MonoBehaviour
 {
+    private MonsterInfoData monsterInfoData = null;
     private MonsterMovement monsterMovement = null;
     private MonsterState monsterState = null;
     private PlayerEffect playerEffect = null;
@@ -45,6 +46,7 @@ public class MonsterRange : MonoBehaviour
 
     void Awake()
     {
+        monsterInfoData = GetComponent<MonsterInfoData>();
         monsterMovement = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();
 
@@ -58,6 +60,7 @@ public class MonsterRange : MonoBehaviour
 
     void Update()
     {
+        // TODO : 어글이 잡히기 전에 타켓이 있을경우 타겟을 바라보게.
         SearchTarget();
         CheckAggro();
         CheckOriginDistance();
@@ -106,8 +109,7 @@ public class MonsterRange : MonoBehaviour
             playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
             monster.targetT = null;
             isTargetAggro = false;
-            monster.monsterT.position = monster.originPos;
-            monster.monsterT.rotation = monster.originRot;
+            monsterInfoData.Reset();
             monsterState.nextState = TypeData.State.대기;
             monsterState.nextMode = TypeData.MODE.평화;
         }

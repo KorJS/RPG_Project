@@ -22,7 +22,7 @@ public class WarriorEffect : MonoBehaviour
 
     private Transform skillHolder = null;
 
-    public  string effectPath = "Effect/Player/Warrior/";
+    public string effectPath = "Effect/Player/Warrior/";
 
     void Awake()
     {

@@ -253,7 +253,6 @@ public class CameraControl : MonoBehaviour
             return;
         }
         
-        //TODO : 카메라 위치도 조정
         if (zoom > 0)
         {
             float newFieldOfView = Mathf.Lerp(mainCamera.fieldOfView, cameraSettings.zoomFieldOfView, Time.deltaTime * cameraSettings.zoomSpeed);

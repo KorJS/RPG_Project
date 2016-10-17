@@ -3,8 +3,6 @@ using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(MonsterState))]
-[RequireComponent(typeof(MonsterRange))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterRange monsterRange = null;
@@ -45,10 +43,14 @@ public class MonsterMovement : MonoBehaviour
         animator = GetComponent<Animator>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
-
         isIdle = true;
 
         SetAnimator();
+    }
+
+    void OnEnable()
+    {
+        isIdle = true;
     }
 
     void Update()
@@ -59,7 +61,13 @@ public class MonsterMovement : MonoBehaviour
     }
 
     // 데미지
-    public void Damage()
+    public void SetAniDamage()
+    {
+
+    }
+
+    // 다운
+    public void SetAniDown()
     {
 
     }

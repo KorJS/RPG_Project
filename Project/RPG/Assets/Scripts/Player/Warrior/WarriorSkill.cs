@@ -125,6 +125,7 @@ public class WarriorSkill : MonoBehaviour
                 {
                     // 범위 안에 있으면 Hit
                     //Debug.Log(angle);
+                    Debug.Log(target.name);
                     Damage(target.gameObject);
                 }
             }
@@ -134,6 +135,7 @@ public class WarriorSkill : MonoBehaviour
     private void Damage(GameObject enemyObj)
     {
         // TODO : SKillInfo의 데미지를 적용
+        enemyObj.GetComponent<MonsterInfoData>().SetCurrentHP(-100f);
         Debug.Log((int)currentSkillTpye);
     }
 
@@ -157,7 +159,6 @@ public class WarriorSkill : MonoBehaviour
         // 어떤 스킬인지 알아옴
         currentSkillTpye = (SkillType)playerInput.index;
         playerInput.index = -1;
-        Debug.Log(currentSkillTpye);
 
         switch (currentSkillTpye)
         {

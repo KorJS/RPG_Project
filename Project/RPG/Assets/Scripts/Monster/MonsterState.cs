@@ -22,6 +22,15 @@ public class MonsterState : MonoBehaviour
         nextMode = TypeData.MODE.평화;
     }
 
+    void OnEnable()
+    {
+        currentState = TypeData.State.없음;
+        nextState = TypeData.State.대기;
+
+        currentMode = TypeData.MODE.없음;
+        nextMode = TypeData.MODE.평화;
+    }
+
     void Update()
     {
         CheckState();

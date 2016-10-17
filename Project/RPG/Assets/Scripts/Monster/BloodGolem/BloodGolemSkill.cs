@@ -85,6 +85,12 @@ public class BloodGolemSkill : MonoBehaviour
         nextSkillType = SkillType.일반공격;
     }
 
+    void OnEnable()
+    {
+        currentSkillType = SkillType.없음;
+        nextSkillType = SkillType.일반공격;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))

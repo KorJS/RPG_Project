@@ -31,7 +31,6 @@ public class Equipment : MonoBehaviour
     [SerializeField]
     public LocationSettings locationSettings;
 
-    // TODO : 이팩트. 등등 
     public GameObject slashEffect = null;
 
     public EquipmentHandler equipHandler = null;

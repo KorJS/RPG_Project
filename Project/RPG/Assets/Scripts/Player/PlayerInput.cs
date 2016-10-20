@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerMovement playerMovement = null;
     private PlayerState playerState = null;
     private EquipmentHandler equipHandler = null;
+    private UIManager uiManager = null;
 
     // 키 입력 정보
     [System.Serializable]
@@ -14,14 +15,9 @@ public class PlayerInput : MonoBehaviour
     {
         public string vertical      = "Vertical";       // 상하
         public string horizontal    = "Horizontal";     // 좌우
-        public KeyCode jump         = KeyCode.Space;           // 점프
-        public KeyCode inventory    = KeyCode.I;      // 인벤토리 I
-        public KeyCode special      = KeyCode.F;        // 특수동작 F ( 대화, 줍기, 채집 )
-        public KeyCode questList    = KeyCode.L;      // 퀘스트일지 L
-        public KeyCode worldMap     = KeyCode.M;        // 월드맵 M
-        public KeyCode uiChangeLAlt = KeyCode.LeftAlt;  // UI 전환 LeftAlt
-        public KeyCode uiChangeESC  = KeyCode.Escape;   // UI 전환 ESC
 
+        public KeyCode jump         = KeyCode.Space;           // 점프
+        public KeyCode special      = KeyCode.F;        // 특수동작 F ( 대화, 줍기, 채집 )
         public KeyCode mouse0       = KeyCode.Mouse0;
         public KeyCode mouse1       = KeyCode.Mouse1;
         public KeyCode alpha1       = KeyCode.Alpha1;
@@ -69,13 +65,12 @@ public class PlayerInput : MonoBehaviour
 
     public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
 
-    public bool isUIMode = false;
-
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         slotInfos = new Dictionary<KeyCode, SlotInfo>();
 
@@ -98,23 +93,31 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
+
         // UI 모드가 아닐때
-        if(!isUIMode)
+        if (!uiManager.isUIMode)
         {
-            InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
             InputShortCutkey();
         }
 
-        InputSpecialkey();
-
         // Test
         InputKey();
-
     }
 
     // 방향키 입력
-    private void InputMove(float inputV, float inputH)
+    public void InputMove(float inputV, float inputH)
     {
+        // UI 모드에서 움직이면 UI모드 해제
+        if (inputH != 0 || inputV != 0)
+        {
+            if (uiManager.isUIMode)
+            {
+                uiManager.isUIMode = false;
+                uiManager.AllCloseWindow();
+            }
+        }
+
         playerMovement.SetAniMove(inputV, inputH, false);
         playerMovement.Rotation(inputV, inputH, false);
     }
@@ -122,8 +125,22 @@ public class PlayerInput : MonoBehaviour
     // 단축키 입력
     private void InputShortCutkey()
     {
+        if (Input.GetKeyDown(inputKey.alpha1))
+        {
+            index = CheckSlotType(inputKey.alpha1);
+        }
+
+        if (Input.GetKeyDown(inputKey.alpha2))
+        {
+            index = CheckSlotType(inputKey.alpha2);
+        }
+
         // TODO : UI On모드에서의 마우스 클릭처리랑. Off모드 에서 마우스 클릭처리 따로..(나중에)
         // 각 슬롯이 Swap 될수 있음(스킬,아이템, 없음) => 타입 체크.
+        if (UICamera.Raycast(Input.mousePosition))
+        {
+            return;
+        }
         if (Input.GetKeyDown(inputKey.mouse0))
         {
             // 타입 체크후 타입에 인덱스 값을 가져옴.( 어떤 스킬이고, 어떤 아이템인지.) = 스킬 정보자체를 넘겨서. 워리어가 알아서 할까.. 
@@ -134,52 +151,16 @@ public class PlayerInput : MonoBehaviour
         {
             index = CheckSlotType(inputKey.mouse1);
         }
-
-        if (Input.GetKeyDown(inputKey.alpha1))
-        {
-            index = CheckSlotType(inputKey.alpha1);
-        }
-
-        if (Input.GetKeyDown(inputKey.alpha2))
-        {
-            index = CheckSlotType(inputKey.alpha2);
-        }
-    }
-
-    // 특수키 입력
-    private void InputSpecialkey()
-    {
-        // UI 모드
-        if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
-        {
-            // UI 모드가 아닐때 UI모드로 전환
-            if (!isUIMode)
-            {
-                // 마우스 커서 상태
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                isUIMode = true;
-
-                InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
-            }
-            // UI 모드일때 UI 해제
-            else if(isUIMode)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                isUIMode = false;
-            }
-        }
     }
 
     // Test 
     private void InputKey()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             playerState.nextMode = TypeData.MODE.평화;
         }
-        else if (Input.GetKeyDown(KeyCode.V))
+        else if (Input.GetKeyDown(KeyCode.B))
         {
             playerState.nextMode = TypeData.MODE.전투;
             playerMovement.Damage();

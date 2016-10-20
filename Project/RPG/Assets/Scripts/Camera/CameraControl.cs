@@ -4,7 +4,7 @@ using System.Collections;
 [ExecuteInEditMode] // 게임 플레이를 하지 않아도 스크립트 내용이 적용되는 기능
 public class CameraControl : MonoBehaviour
 {
-    private PlayerInput playerInput = null;
+    private UIManager uiManager = null;
 
     [System.Serializable]
     public class CameraSettings
@@ -69,7 +69,7 @@ public class CameraControl : MonoBehaviour
 
         if (GameObject.FindGameObjectWithTag("Player"))
         {
-            playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
+            uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         }
     }
 
@@ -80,7 +80,7 @@ public class CameraControl : MonoBehaviour
             if (Application.isPlaying)
             {
                 // UI 모드가 아닐때 회전가능
-                if (!playerInput.isUIMode)
+                if (!uiManager.isUIMode)
                 {
                     RotateCamera();
                 }

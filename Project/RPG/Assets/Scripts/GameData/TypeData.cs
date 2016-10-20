@@ -7,6 +7,11 @@
         사제
     };
 
+    public enum PlayerEffect
+    {
+        Aggro = 0
+    };
+
     // 몬스터 타입
     public enum MonsterType
     {
@@ -59,14 +64,28 @@
 
     public enum ItemType
     {
+        없음 = -1,
         장비 = 0,
         소모품,
-        재료,
-        퀘스트템
+        재료
     };
 
-    public enum PlayerEffect
+    // 장비타입
+    public enum EquipmentType
     {
-        Aggro = 0
+        무기 = 0,
+        갑옷,
+        장갑,
+        신발,
+        반지,
+        목걸이,
+    };
+
+    // 재료타입
+    public enum MaterialType
+    {
+        없음 = -1,
+        퀘스트템,
+        강화,
     };
 }

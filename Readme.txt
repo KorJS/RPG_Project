@@ -11,3 +11,5 @@ Elven Weapons
 X Weapon Trail
 네이버클라우드 > 개인프로젝트 > ActionRPG > Package > effect.unitypackage
 네이버클라우드 > 개인프로젝트 > ActionRPG > Package > BloodGolem.unitypackage
+네이버클라우드 > 개인프로젝트 > ActionRPG > Package > RGP_UI.unitypackage
+네이버클라우드 > 개인프로젝트 > ActionRPG > Package > Icon_Item.unitypackage

@@ -1,5 +1,6 @@
 ﻿public class TypeData
-{   
+{
+    // Warrior, Magician, Priest
     public enum PlayerType
     {
         기사 = 0,
@@ -12,16 +13,15 @@
         Aggro = 0
     };
 
-    // 몬스터 타입
+    // Normal, Elite, Boss
     public enum MonsterType
     {
-        // Normal, Elite, Boss
         일반 = 0,
         정예,
         보스
     };
 
-    // 주인공
+    // Peace, Combat
     public enum MODE
     {
         없음 = -1,
@@ -29,7 +29,7 @@
         전투
     };
 
-    // 주인공 / 몬스터 상태
+    // idle, move, skill, damage, stun, down, death
     public enum State
     {
         없음 = -1,
@@ -42,6 +42,7 @@
         죽음
     };
 
+    // idle, move, rotate, skill, damage, stun, down, death
     public enum MonsterState
     {
         없음 = -1,
@@ -55,13 +56,7 @@
         죽음
     };
 
-    public enum SlotType
-    {
-        없음 = -1,
-        스킬 = 0,
-        아이템
-    };
-
+    // Equipment, Cusomable, Material
     public enum ItemType
     {
         없음 = -1,
@@ -70,7 +65,7 @@
         재료
     };
 
-    // 장비타입
+    // Weapon, armor, glove, shoes, ring, necklace
     public enum EquipmentType
     {
         무기 = 0,
@@ -78,14 +73,32 @@
         장갑,
         신발,
         반지,
-        목걸이,
+        목걸이
     };
 
-    // 재료타입
+    // QuestItem, UpgradeItem
     public enum MaterialType
     {
         없음 = -1,
         퀘스트템,
-        강화,
+        강화
+    };
+
+    // Inventory, ShortCut, Store, Storage
+    public enum SlotType
+    {
+        없음 = -1,
+        인벤토리 = 0,
+        단축키,
+        상점,
+        창고 
+    };
+
+    // Skill, Item
+    public enum SlotInfoType
+    {
+        없음 = -1,
+        스킬 = 0,
+        아이템
     };
 }

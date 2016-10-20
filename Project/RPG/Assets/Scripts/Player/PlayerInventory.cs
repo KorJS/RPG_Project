@@ -26,11 +26,11 @@ public class PlayerInventory
         public int cusomableIndex;
         public int materialIndex;
         public int quantity;
-    };
-
-    public Dictionary<int, InventoryInfo> inventoryInfos = null; // 인벤토리 데이터를 로드해서 저장
+    }
 
     public InventoryInfo inventoryInfo; // 인벤토리 정보
+
+    public Dictionary<int, InventoryInfo> inventoryInfos = null; // 인벤토리 데이터를 로드해서 저장
 
     public PlayerInventory()
     {
@@ -57,40 +57,41 @@ public class PlayerInventory
 
     }
 
-    public bool GetInventroyDate(int slotIndex, ref string itemName, ref InventoryInfo inventoryInfo)
+    public bool GetInventroyDate(int slotIndex, ref UISlotInfo.SlotInfo slotInfo)
     {
         // 해당 슬롯에 정보가 없으면 리턴
         if (!inventoryInfos.ContainsKey(slotIndex))
         {
             return false;
         }
-        int itemIndex = -1;
 
         switch (inventoryInfos[slotIndex].itemType)
         {
             case TypeData.ItemType.장비:
                 {
-                    itemIndex = inventoryInfos[slotIndex].equipmentIndex;
-                    itemName = ItemData.Instance.equipmentInfos[itemIndex].name;
+                    slotInfo.itemIndex = inventoryInfos[slotIndex].equipmentIndex;
+                    slotInfo.iconName = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].name;
                 }
                 break;
 
             case TypeData.ItemType.소모품:
                 {
-                    itemIndex = inventoryInfos[slotIndex].cusomableIndex;
-                    itemName = ItemData.Instance.cusomableInfos[itemIndex].name;
+                    slotInfo.itemIndex = inventoryInfos[slotIndex].cusomableIndex;
+                    slotInfo.iconName = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].name;
                 }
                 break;
 
             case TypeData.ItemType.재료:
                 {
-                    itemIndex = inventoryInfos[slotIndex].materialIndex;
-                    itemName = ItemData.Instance.materialInfos[itemIndex].name;
+                    slotInfo.itemIndex = inventoryInfos[slotIndex].materialIndex;
+                    slotInfo.iconName = ItemData.Instance.materialInfos[slotInfo.itemIndex].name;
                 }
                 break;
         }
 
-        inventoryInfo = inventoryInfos[slotIndex];
+        slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;
+        slotInfo.quantity = inventoryInfos[slotIndex].quantity;
+
         return true;
     }
 }

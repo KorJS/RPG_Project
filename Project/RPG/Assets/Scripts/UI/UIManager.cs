@@ -4,6 +4,20 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
+    private static UIManager uiManager = null;
+    public static UIManager Instance
+    {
+        get
+        {
+            if (uiManager == null)
+            {
+                Debug.Log("UIManager Script Null");
+            }
+
+            return uiManager;
+        }
+    }
+
     private PlayerInput playerInput = null;
 
     // 윈도우 정보
@@ -41,23 +55,32 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     public InputSettings inputKey;
-
+    
+    public Dictionary<int, GameObject> shortCuts = null;
     public List<GameObject> windows = null;
 
     public bool isUIMode = false;
     public bool isStore = false;
     public bool isNPC = false;
 
+    public GameObject tempDraggingPanel = null; // 드래그중인것 복사한거
+    public UITexture tempIcon = null; // 드래그중인 Icon
+
     void Awake()
     {
+        uiManager = this;
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
-        
+
+        shortCuts = new Dictionary<int, GameObject>();
+        // 단축 슬롯들 찾아 등록
+        //FindShortCut();
+
         // window
-        SetWindowObjList(ref windowSettings.characterObj, windowSettings.character);
-        SetWindowObjList(ref windowSettings.uiModeObj, windowSettings.uiMode);
-        SetWindowObjList(ref windowSettings.inventoryObj, windowSettings.inventory);
-        SetWindowObjList(ref windowSettings.questObj, windowSettings.quest);
-        SetWindowObjList(ref windowSettings.storeObj, windowSettings.store);
+        FindWindow(ref windowSettings.characterObj, windowSettings.character);
+        FindWindow(ref windowSettings.uiModeObj, windowSettings.uiMode);
+        FindWindow(ref windowSettings.inventoryObj, windowSettings.inventory);
+        FindWindow(ref windowSettings.questObj, windowSettings.quest);
+        FindWindow(ref windowSettings.storeObj, windowSettings.store);
     }
 
     void Update()
@@ -66,7 +89,25 @@ public class UIManager : MonoBehaviour
         InputSpecialkey();
     }
 
-    private void SetWindowObjList(ref GameObject obj, string objName)
+    private void FindShortCut()
+    {
+        //// 단축 슬롯 부모
+        //Transform shortCutHoler = GameObject.Find("H_Slots").transform;
+        //int count = shortCutHoler.childCount;
+
+        //// 등록 되어있다면.
+        //if (shortCuts.Count >= count )
+        //{
+        //    return;
+        //}
+
+        //for (int i = 0; i < count; i++)
+        //{
+        //    shortCuts.Add(shortCutHoler.GetChild(i)); // 단축슬롯 저장
+        //}
+    }
+
+    private void FindWindow(ref GameObject obj, string objName)
     {
         if (obj != null)
         {
@@ -96,34 +137,20 @@ public class UIManager : MonoBehaviour
         // 소지품
         if (Input.GetKeyDown(inputKey.inventory))
         {
-            CheckWindow(windowSettings.inventoryObj);
+            UIMode(windowSettings.inventoryObj);
         }
 
         // 소지품
         if (Input.GetKeyDown(inputKey.questList))
         {
-            CheckWindow(windowSettings.questObj);
+            UIMode(windowSettings.questObj);
         }
 
         // UI 모드
         if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
-            CheckWindow(windowSettings.uiModeObj);
+            UIMode(windowSettings.uiModeObj);
         }
-    }
-
-    private void CheckWindow(GameObject obj)
-    {
-        if (obj.activeSelf)
-        {
-            obj.SetActive(false);
-        }
-        else
-        {
-            obj.SetActive(true);
-        }
-
-        UIMode();
     }
 
     public void AllCloseWindow()
@@ -144,9 +171,9 @@ public class UIManager : MonoBehaviour
         windowSettings.storeObj.SetActive(true);
     }
 
-    private void UIMode()
+    private void UIMode(GameObject obj)
     {
-        // UI 모드가 아닐때 UI모드로 전환
+        // UI 모드 아니면 UI모드로
         if (!isUIMode)
         {
             // 마우스 커서 상태
@@ -155,14 +182,32 @@ public class UIManager : MonoBehaviour
             isUIMode = true;
 
             playerInput.InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
+            windowSettings.uiModeObj.SetActive(true);
+            obj.SetActive(true);
         }
-        // UI 모드일때 UI 해제
+        // UI 모드이면 UI 해제
         else if (isUIMode)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             isUIMode = false;
+
+            DisableDragIiem();
             AllCloseWindow();
+            windowSettings.uiModeObj.SetActive(false);
+            obj.SetActive(false);
         }
+    }
+
+    // UI 해제되면 드래그중인 아이템 처리
+    private void DisableDragIiem()
+    {
+        if (tempDraggingPanel == null)
+        {
+            return;
+        }
+
+        tempIcon.alpha = 1f;
+        Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
     }
 }

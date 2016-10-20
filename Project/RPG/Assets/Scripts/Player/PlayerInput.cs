@@ -125,18 +125,18 @@ public class PlayerInput : MonoBehaviour
     // 단축키 입력
     private void InputShortCutkey()
     {
+        // 각 슬롯이 Swap 될수 있음(스킬,아이템, 없음) => 타입 체크.
         if (Input.GetKeyDown(inputKey.alpha1))
         {
-            index = CheckSlotType(inputKey.alpha1);
+            index = CheckSlotType(1);
         }
 
         if (Input.GetKeyDown(inputKey.alpha2))
         {
-            index = CheckSlotType(inputKey.alpha2);
+            index = CheckSlotType(2);
         }
 
-        // TODO : UI On모드에서의 마우스 클릭처리랑. Off모드 에서 마우스 클릭처리 따로..(나중에)
-        // 각 슬롯이 Swap 될수 있음(스킬,아이템, 없음) => 타입 체크.
+        // 해결 : UI On모드에서의 마우스 클릭처리랑. Off모드 에서 마우스 클릭처리 따로..
         if (UICamera.Raycast(Input.mousePosition))
         {
             return;
@@ -144,12 +144,12 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(inputKey.mouse0))
         {
             // 타입 체크후 타입에 인덱스 값을 가져옴.( 어떤 스킬이고, 어떤 아이템인지.) = 스킬 정보자체를 넘겨서. 워리어가 알아서 할까.. 
-            index = CheckSlotType(inputKey.mouse0);
+            index = CheckSlotType(7);
         }
 
         if (Input.GetKeyDown(inputKey.mouse1))
         {
-            index = CheckSlotType(inputKey.mouse1);
+            index = CheckSlotType(8);
         }
     }
 
@@ -218,33 +218,35 @@ public class PlayerInput : MonoBehaviour
     // public SlotInfo slotinfo(string inputKey)
     // TODO : 마우스 클릭으로 하는건 UIManager에서 타입 확인
     // 단축키를 눌렀을때 타입 확인
-    public int CheckSlotType(KeyCode inputKeyCode)
+    public int CheckSlotType(int slotIndex)
     {
-        int index = 0;
+        int index = -1;
 
-        if (slotInfos.ContainsKey(inputKeyCode))
+        // 대상이 단축 슬롯에 없으면
+        if (!uiManager.shortCuts.ContainsKey(slotIndex))
         {
-            index = slotInfos[inputKeyCode].index;
-
-            switch (slotInfos[inputKeyCode].slotType)
-            {
-                case SlotType.스킬:
-                    {
-                        playerState.nextState = TypeData.State.스킬;
-                        playerState.nextMode = TypeData.MODE.전투;
-                    }
-                    break;
-
-                case SlotType.아이템:
-                    {
-                        // TODO : 아이템 이벤트 처리 직접적으로.
-                    }
-                    break;
-            }
-
-            return index;
+            return -1;
         }
 
-        return -1;
+        UISlotInfo uiSlotInfo = uiManager.shortCuts[slotIndex].GetComponent<UISlotInfo>();
+
+        switch (uiSlotInfo.slotInfo.slotInfoType)
+        {
+            case TypeData.SlotInfoType.스킬:
+                {
+                    index = uiSlotInfo.slotInfo.skillIndex;
+                    playerState.nextState = TypeData.State.스킬;
+                    playerState.nextMode = TypeData.MODE.전투;
+                }
+                break;
+
+            case TypeData.SlotInfoType.아이템:
+                {
+                    // TODO : 아이템 이벤트 처리 직접적으로.
+                }
+                break;
+        }
+
+        return index;
     }
 }

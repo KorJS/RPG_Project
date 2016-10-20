@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class WarriorSkill : MonoBehaviour
 {
+    private SkillData skillData = null;
+    private PlayerSkillData playerSkillData = null; // 스킬 정보 받아옴
     private PlayerMovement playerMovement = null;
     private PlayerInput playerInput = null;
     private PlayerState playerState = null;
@@ -25,18 +27,18 @@ public class WarriorSkill : MonoBehaviour
     [SerializeField]
     public WarriorAniSettings warriorAniSettings;
 
+    private SkillData.Skillinfo skillInfo; // 스킬 정보
+
     public enum SkillType
     {
         없음 = -1,
-        연속공격 = 0,
         방패막기,
         압도,
-        난폭한돌진
+        난폭한돌진,
+        연속공격 = 7
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
-
-    public Dictionary<int, PlayerSkillData.SkillData> skillInfos = null; // 스킬 정보 받아옴
 
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
     private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
@@ -55,14 +57,14 @@ public class WarriorSkill : MonoBehaviour
 
     void Awake()
     {
+        playerSkillData = PlayerSkillData.Instance; // 스킬 정보
+
         playerMovement = GetComponent<PlayerMovement>();
         playerInput = GetComponent<PlayerInput>();
         playerState = GetComponent<PlayerState>();
         warriorEffect = GetComponent<WarriorEffect>();
 
         currentSkillTpye = SkillType.없음;
-
-        skillInfos = PlayerSkillData.Instance.skillDatas; // 스킬 정보
     }
 
     void Update()
@@ -108,8 +110,8 @@ public class WarriorSkill : MonoBehaviour
     {
         Vector3 playerPos = transform.position; // 범위의 중점.
 
-        skillAngle = skillInfos[(int)currentSkillTpye].angle;
-        skillDistance = skillInfos[(int)currentSkillTpye].distance;
+        skillAngle = skillInfo.angle;
+        skillDistance = skillInfo.distance;
 
         Collider[] targets = Physics.OverlapSphere(playerPos, skillDistance);
 
@@ -143,6 +145,7 @@ public class WarriorSkill : MonoBehaviour
     // Queue를 사용해서 입력한것을 순서대로 넣고 빼서 스킬 시전을 하면.. 이상하려나..
     private void SwitchSkill()
     {
+        Debug.Log(playerInput.index);
         // 특정스킬 사용중에는 입력 안들어오게 막기
         if (LockSkill())
         {
@@ -157,7 +160,11 @@ public class WarriorSkill : MonoBehaviour
         }
 
         // 어떤 스킬인지 알아옴
-        currentSkillTpye = (SkillType)playerInput.index;
+        int index = playerInput.index;
+        
+        skillInfo = SkillData.Instance.skillInfos[index]; // 스킬 정보를 받아옴
+
+        currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
         playerInput.index = -1;
 
         switch (currentSkillTpye)

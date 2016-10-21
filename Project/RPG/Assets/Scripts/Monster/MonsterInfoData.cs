@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class MonsterInfoData : MonoBehaviour
 {
     // TODO : 몬스터 스폰될때 몬스터 정보을 이 스크립트에 저장 및 수치계산 관리
-    public MonsterManager.MonsterInfo monsterInfo;
+    public MonsterData.MonsterInfo monsterInfo;
     private Transform monsterT;
 
     public float currentHP = 0f;
@@ -31,7 +31,7 @@ public class MonsterInfoData : MonoBehaviour
     public void SetCurrentHP(float hp)
     {
         currentHP += hp;
-        Debug.Log(currentHP);
+        Debug.Log("현재 HP : " + currentHP);
     }
 
     public void Reset()

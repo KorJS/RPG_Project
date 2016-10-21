@@ -27,6 +27,8 @@ public class ItemData
         public int attack;                              // 공격력
         public int defence;                             // 방어력
         public int hp;                                  // 체력
+        public int buyGold;
+        public int SellGold;
     };
 
     // 소모품 정보 - 우선 hp만.. 
@@ -34,6 +36,8 @@ public class ItemData
     {
         public string name;                             // 이름
         public float increase;                          // 상승치
+        public int buyGold;
+        public int SellGold;
     };
 
     // 재료 정보
@@ -41,6 +45,8 @@ public class ItemData
     {
         public string name;                             // 이름
         public TypeData.MaterialType materialType;      // 재료 타입
+        public int buyGold;
+        public int SellGold;
     };
 
     public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 데이터를 로드해서 저장

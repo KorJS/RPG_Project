@@ -19,13 +19,14 @@ public class PlayerSkillData
         }
     }
 
+    // 주인공이 배운 스킬
     public Dictionary<int, int> skillInfos;
 
     public PlayerSkillData()
     {
         skillInfos = new Dictionary<int, int>();
 
-        skillInfos.Add(7, 7);
+        skillInfos.Add(0, 0);
     }
 
     public void SetSkillData()

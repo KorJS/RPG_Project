@@ -84,14 +84,15 @@
         강화
     };
 
-    // Inventory, ShortCut, Store, Storage
+    // Inventory, ShortCut, Store, Storage, Skill
     public enum SlotType
     {
         없음 = -1,
         인벤토리 = 0,
         단축키,
         상점,
-        창고 
+        창고,
+        스킬 
     };
 
     // Skill, Item
@@ -100,5 +101,13 @@
         없음 = -1,
         스킬 = 0,
         아이템
+    };
+
+    public enum StoreType
+    {
+        없음 = -1,
+        무기점 = 0,
+        방어구점,
+        소모품점
     };
 }

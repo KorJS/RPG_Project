@@ -32,10 +32,10 @@ public class WarriorSkill : MonoBehaviour
     public enum SkillType
     {
         없음 = -1,
+        연속공격 = 0,
         방패막기,
         압도,
-        난폭한돌진,
-        연속공격 = 7
+        난폭한돌진
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
@@ -145,7 +145,6 @@ public class WarriorSkill : MonoBehaviour
     // Queue를 사용해서 입력한것을 순서대로 넣고 빼서 스킬 시전을 하면.. 이상하려나..
     private void SwitchSkill()
     {
-        Debug.Log(playerInput.index);
         // 특정스킬 사용중에는 입력 안들어오게 막기
         if (LockSkill())
         {
@@ -161,7 +160,7 @@ public class WarriorSkill : MonoBehaviour
 
         // 어떤 스킬인지 알아옴
         int index = playerInput.index;
-        
+        Debug.Log(index);
         skillInfo = SkillData.Instance.skillInfos[index]; // 스킬 정보를 받아옴
 
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
@@ -224,7 +223,7 @@ public class WarriorSkill : MonoBehaviour
     private void CheckComboTime()
     {
         // 콤보타임중이 아닐때 / 스킬이 끝나고 idle(서브상태머신 안에있는) 상태일떄 / 스킬상태가 아닐때
-        if (!isComboTime || playerMovement.isIdle || playerState.currentState != TypeData.State.스킬)
+        if (!isComboTime || playerState.currentState != TypeData.State.스킬)
         {
             comboTimer = COMBOTIME; // 콤보타임 초기화
             return;

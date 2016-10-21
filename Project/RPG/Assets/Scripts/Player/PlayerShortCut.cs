@@ -37,7 +37,7 @@ public class PlayerShortCut
     {
         shortCutInfos = new Dictionary<int, ShortCutInfo>();
         shortCutInfo.itemType = TypeData.ItemType.없음;
-        shortCutInfo.skillIndex = 7;
+        shortCutInfo.skillIndex = 0;
         shortCutInfos.Add(7, shortCutInfo);
     }
 

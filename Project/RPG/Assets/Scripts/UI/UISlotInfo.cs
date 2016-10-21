@@ -4,13 +4,12 @@ using System.Collections;
 public class UISlotInfo : MonoBehaviour
 {
     private UIManager uiManager = null;
-    private PlayerInventory playerInventory = null;
-    private PlayerShortCut playerShortCut = null;
+    private PlayerSlotData playerSlotData = null;
 
-    public TypeData.SlotType slotTpye = TypeData.SlotType.없음;
+    public TypeData.SlotType slotType = TypeData.SlotType.없음;
 
     [System.Serializable]
-    public struct SlotInfo
+    public class SlotInfo
     {
         public int skillIndex;
         public int itemIndex;
@@ -20,7 +19,6 @@ public class UISlotInfo : MonoBehaviour
         public TypeData.SlotInfoType slotInfoType;
     }
 
-    [SerializeField]
     public SlotInfo slotInfo;
 
     [System.Serializable]
@@ -40,15 +38,18 @@ public class UISlotInfo : MonoBehaviour
     void Awake()
     {
         uiManager = UIManager.Instance;
-        playerInventory = PlayerInventory.Instance;
-        playerShortCut = PlayerShortCut.Instance;
+        playerSlotData = PlayerSlotData.Instance;
+
         isItemExist = false;
 
         SetSlotIndex(); // 슬롯 인덱스 설정
         SetSlotInfo(); // 슬롯 정보 설정
         SetSlotIcon(); // 슬롯 아이콘 설정
 
-        uiManager.shortCuts.Add(slotIndex, this.gameObject);
+        if (slotType == TypeData.SlotType.단축키)
+        {
+            uiManager.shortCuts.Add(slotIndex, this.gameObject);  // 키보드 단축키를 눌렀을때를 정보 확인.
+        }
     }
 
     // 슬롯 인덱스 설정
@@ -61,31 +62,11 @@ public class UISlotInfo : MonoBehaviour
     // 슬롯 정보 설정
     private void SetSlotInfo()
     {
-        switch (slotTpye)
+        isItemExist = playerSlotData.ConvertWindowSlotData(slotType, slotIndex, ref slotInfo);
+
+        if (!isItemExist)
         {
-            case TypeData.SlotType.인벤토리:
-                {
-                    isItemExist = playerInventory.GetInventroyDate(slotIndex, ref slotInfo);
-                }
-                break;
-
-            case TypeData.SlotType.단축키:
-                {
-                    isItemExist = playerShortCut.GetShortCutData(slotIndex, ref slotInfo);
-                }
-                break;
-
-            case TypeData.SlotType.상점:
-                {
-
-                }
-                break;
-
-            case TypeData.SlotType.창고:
-                {
-
-                }
-                break;
+            slotInfo = null;
         }
     }
 
@@ -99,5 +80,11 @@ public class UISlotInfo : MonoBehaviour
         }
 
         slotSettings.uiIcon.mainTexture = Resources.Load("Icon/" + slotInfo.iconName) as Texture2D;
+    }
+
+    public void ReSetting()
+    {
+        SetSlotInfo();
+        SetSlotIcon();
     }
 }

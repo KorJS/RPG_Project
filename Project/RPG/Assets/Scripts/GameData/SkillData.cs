@@ -39,7 +39,7 @@ public class SkillData
     {
         skillInfos = new Dictionary<int, Skillinfo>();
 
-        skillinfo.index = 7;
+        skillinfo.index = 0;
         skillinfo.name = "Combo";
         skillinfo.level = 1;
         skillinfo.coolTime = 1f;

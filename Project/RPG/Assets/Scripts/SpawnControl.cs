@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SpawnControl : MonoBehaviour
 {
+    private MonsterInfoData monsterInfoData = null;
+
     // TODO : 자식으로 있는 몬스터 리스폰 시간 체크
     private GameObject monsterObj = null;
 
@@ -13,7 +15,8 @@ public class SpawnControl : MonoBehaviour
     private string spawnTag = null;
     private float respawnTime = 0f;
     public float respawnTimer = 0f;
-    public bool isRespawn = false;
+
+    public bool isRespawn = false; // 몬스터가 죽으면 true가 되면서 리스폰 타이머 시작
 
     void Awake()
     {
@@ -30,6 +33,7 @@ public class SpawnControl : MonoBehaviour
     {
         child.transform.SetParent(transform);
         monsterObj = child;
+        monsterInfoData = monsterObj.GetComponent<MonsterInfoData>();
     }
 
     private void SetRespawnTime()

@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public InputSettings inputKey;
     
-    public Dictionary<int, GameObject> shortCuts = null;
+    public Dictionary<int, GameObject> shortCuts = null; // 키보드 단축키를 눌렀을때를 위해서.
     public List<GameObject> windows = null;
 
     public bool isUIMode = false;
@@ -69,12 +69,11 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         uiManager = this;
+        
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
         shortCuts = new Dictionary<int, GameObject>();
-        // 단축 슬롯들 찾아 등록
-        //FindShortCut();
-
+        
         // window
         FindWindow(ref windowSettings.characterObj, windowSettings.character);
         FindWindow(ref windowSettings.uiModeObj, windowSettings.uiMode);
@@ -89,23 +88,18 @@ public class UIManager : MonoBehaviour
         InputSpecialkey();
     }
 
-    private void FindShortCut()
-    {
-        //// 단축 슬롯 부모
-        //Transform shortCutHoler = GameObject.Find("H_Slots").transform;
-        //int count = shortCutHoler.childCount;
+    //private void FindShortCut()
+    //{
+    //    GameObject[] obj = GameObject.FindGameObjectsWithTag("ShortCut");
 
-        //// 등록 되어있다면.
-        //if (shortCuts.Count >= count )
-        //{
-        //    return;
-        //}
+    //    for (int i = 0; i < obj.Length; i++)
+    //    {
+    //        string[] strIndex = obj[i].name.Split(' ');
+    //        int index = int.Parse(strIndex[1]);
 
-        //for (int i = 0; i < count; i++)
-        //{
-        //    shortCuts.Add(shortCutHoler.GetChild(i)); // 단축슬롯 저장
-        //}
-    }
+    //        shortCuts.Add(index, obj[i]);
+    //    }
+    //}
 
     private void FindWindow(ref GameObject obj, string objName)
     {

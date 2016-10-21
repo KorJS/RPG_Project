@@ -112,7 +112,7 @@ public class UIDragAndDrop : MonoBehaviour
         // 스킬창 -> 스킬창 (삭제)
         if (this.uiSlotInfo.slotType == targetSlot.slotType)
         {
-            playerSlotData.SwapSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, targetSlot.slotIndex, targetSlot.isItemExist);
+            playerSlotData.SwapSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, targetSlot.slotIndex, uiSlotInfo.slotInfo.quantity, targetSlot.slotInfo.quantity, targetSlot.isItemExist);
             uiSlotInfo.ReSetting();
             targetSlot.ReSetting();
         }

@@ -18,31 +18,6 @@ public class PlayerSlotData
         }
     }
 
-    //[System.Serializable]
-    //public class InventoryInfo
-    //{
-    //    public TypeData.ItemType itemType;
-    //    public int equipmentIndex;
-    //    public int cusomableIndex;
-    //    public int materialIndex;
-    //    public int quantity;
-    //}
-
-    //public InventoryInfo inventoryInfo; // 인벤토리 정보
-
-    //[System.Serializable]
-    //public class ShortCutInfo
-    //{
-    //    public TypeData.ItemType itemType;
-    //    public int skillIndex;
-    //    public int equipmentIndex;
-    //    public int cusomableIndex;
-    //    public int materialIndex;
-    //    public int quantity;
-    //}
-
-    //public ShortCutInfo shortCutInfo;
-
     [System.Serializable]
     public struct SlotInfoData
     {
@@ -95,7 +70,7 @@ public class PlayerSlotData
     }
 
     // 인벤토리 정보 가져오기
-    public bool GetInventoryData(int slotIndex, ref SlotInfoData _slotInfoData)
+    public bool CheckInventoryData(int slotIndex, ref SlotInfoData _slotInfoData)
     {
         // 해당 슬롯에 정보가 없으면 리턴
         if (!inventoryInfos.ContainsKey(slotIndex))
@@ -109,7 +84,7 @@ public class PlayerSlotData
     }
 
     // 단축창 정보 가져오기
-    public bool GetShortCutData(int slotIndex, ref SlotInfoData _slotInfoData)
+    public bool CheckShortCutData(int slotIndex, ref SlotInfoData _slotInfoData)
     {
         // 해당 슬롯에 정보가 없으면 리턴
         if (!shortCutInfos.ContainsKey(slotIndex))
@@ -122,7 +97,7 @@ public class PlayerSlotData
     }
 
     // 창고 정보 가져오기
-    public bool GetStorageData(int slotIndex, ref SlotInfoData _slotInfoData)
+    public bool CheckStorageData(int slotIndex, ref SlotInfoData _slotInfoData)
     {
         // 해당 슬롯에 정보가 없으면 리턴
         if (!storageInfos.ContainsKey(slotIndex))
@@ -143,19 +118,19 @@ public class PlayerSlotData
         {
             case TypeData.SlotType.인벤토리:
                 {
-                    isExist = GetInventoryData(slotIndex, ref _slotInfoData);
+                    isExist = CheckInventoryData(slotIndex, ref _slotInfoData);
                 }
                 break;
 
             case TypeData.SlotType.단축키:
                 {
-                    isExist = GetShortCutData(slotIndex, ref _slotInfoData);
+                    isExist = CheckShortCutData(slotIndex, ref _slotInfoData);
                 }
                 break;
 
             case TypeData.SlotType.창고:
                 {
-                    isExist = GetStorageData(slotIndex, ref _slotInfoData);
+                    isExist = CheckStorageData(slotIndex, ref _slotInfoData);
                 }
                 break;
         }
@@ -163,7 +138,7 @@ public class PlayerSlotData
         return isExist;
     }
     
-    // 인벤토리, 창고 정보를 슬롯 정보에 맞게 변환
+    // 인벤토리, 단축키, 창고 정보를 슬롯 정보에 맞게 변환
     public bool ConvertWindowSlotData(TypeData.SlotType slotType, int slotIndex, ref UISlotInfo.SlotInfo slotInfo)
     {
         bool isExist = false;
@@ -234,7 +209,7 @@ public class PlayerSlotData
     }
     
     // 교환
-    public void SwapSlotData(TypeData.SlotType slotType, int currentIndex, int targetIndex, bool isTargetItemExist)
+    public void SwapSlotData(TypeData.SlotType slotType, int currentIndex, int targetIndex, int currentQuantity, int targetQuantity,  bool isTargetItemExist)
     {
         // TODO : 존재하지 않는경우.
 
@@ -242,24 +217,34 @@ public class PlayerSlotData
         {
             case TypeData.SlotType.인벤토리:
                 {
-                    currentSlotInfoData = inventoryInfos[currentIndex];
-                    if (isTargetItemExist)
+                    // 타겟 슬롯에 정보가 존재 하지않으면
+                    if (!isTargetItemExist)
                     {
-                        targetSlotInfoData = inventoryInfos[targetIndex];
-                        inventoryInfos[currentIndex] = targetSlotInfoData;
-                    }
-                    else
-                    {
+                        Debug.Log("?");
+                        inventoryInfos[targetIndex] = inventoryInfos[currentIndex];
                         inventoryInfos.Remove(currentIndex);
+                        return;
                     }
-                  
+
+                    // 타겟 슬롯에 정보가 있으면
+                    SlotInfoData currentSlotInfoData = inventoryInfos[currentIndex];
+                    SlotInfoData targetSlotInfoData = inventoryInfos[targetIndex];
+
+                    // 혹시나 데이터 수량과 슬롯에 수량이 다르다면 있다면.
+                    if ((currentSlotInfoData.quantity != currentQuantity) || (targetSlotInfoData.quantity != targetQuantity))
+                    {
+                        currentSlotInfoData.quantity = currentQuantity;
+                        targetSlotInfoData.quantity = targetQuantity;
+                    }
+
+                    inventoryInfos[currentIndex] = targetSlotInfoData;
                     inventoryInfos[targetIndex] = currentSlotInfoData;
                 }
                 break;
 
             case TypeData.SlotType.단축키:
                 {
-
+                    
                 }
                 break;
 
@@ -269,6 +254,5 @@ public class PlayerSlotData
                 }
                 break;
         }
-        
     }
 }

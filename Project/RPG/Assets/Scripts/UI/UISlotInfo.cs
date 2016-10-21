@@ -9,7 +9,7 @@ public class UISlotInfo : MonoBehaviour
     public TypeData.SlotType slotType = TypeData.SlotType.없음;
 
     [System.Serializable]
-    public class SlotInfo
+    public struct SlotInfo
     {
         public int skillIndex;
         public int itemIndex;

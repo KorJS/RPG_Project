@@ -40,6 +40,8 @@ public class PlayerSlotData
     public Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas;
     public Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas;
 
+    // TODO : Mark 만들자 아니면 더 좋은방법이 있을까.
+
     private UISlotInfo currentInfo = null;
     private UISlotInfo targetInfo = null;
 
@@ -142,9 +144,24 @@ public class PlayerSlotData
     }
 
     // 아이템 수량 검사
-    private void CheckQuantity(int currentIndex, int targetIndex, int currentQuantiry, int targetQuantity)
+    private void CheckQuantity(int currentIndex, int targetIndex, ref int currentQuantity, ref int targetQuantity, int quantityMAX)
     {
-        
+        int total = currentQuantity + targetQuantity;
+
+        // 90(current) + 10(target) = 100 > MAX : 1(current) 99(target)
+        // 10(current) + 92(target) = 102 > MAX : 3(current) 99(target)
+        if (total > quantityMAX)
+        {
+            currentQuantity = quantityMAX - targetQuantity;
+            targetQuantity = quantityMAX;
+        }
+        // 2(current) + 90(target) = 92 <= MAX : 0(current) 92(target)
+        // 9(current) + 90(target) = 99 <= MAX : 0(current) 99(target)
+        else if (total <= quantityMAX)
+        {
+            currentQuantity = 0;
+            targetQuantity = total;
+        }
     }
 
     // 슬롯에 변화가 생기면 슬롯의 정보로 재 설정 - 수량 변화
@@ -292,7 +309,21 @@ public class PlayerSlotData
     // 복사 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 빈곳
     public void CopySlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
     {
+        // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
+        if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
+        {
+            Debug.Log("현재슬롯에 정보가 없음");
+            return;
+        }
+        // 타겟슬롯에 정보가 존재하는가 / ref로 정보 가져옴
+        if (!CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas))
+        {
+            Debug.Log("타겟슬롯에 정보가 없음");
+            return;
+        }
 
+        // 현재를 타겟에 복사
+        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempTargetSlotInfoDatas[currentInfo.slotIndex];
     }
 
     // 추가 - 아이템 습득?
@@ -302,7 +333,7 @@ public class PlayerSlotData
     }
 
     // 합치기 - 같은 것이 있으면 결합(소모품, 퀘스트템)
-    public void CombineSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void CombineSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo, int quantityMAX)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
@@ -317,8 +348,20 @@ public class PlayerSlotData
             return;
         }
 
-        // 수량 검사
-        CheckQuantity(currentInfo.slotIndex, targetInfo.slotIndex, currentInfo.slotInfo.quantity, targetInfo.slotInfo.quantity);
+        int currentQuantity = currentInfo.slotInfo.quantity;
+        int targetQuantity = targetInfo.slotInfo.quantity;
+
+        CheckQuantity(currentInfo.slotIndex, targetInfo.slotIndex, ref currentQuantity, ref targetQuantity, quantityMAX);
+
+        SlotInfoData tempCurrentSlotInfoData = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
+        SlotInfoData tempTargetSlotInfoData = tempTargetSlotInfoDatas[targetInfo.slotIndex];
+
+        tempCurrentSlotInfoData.quantity = currentQuantity;
+        tempTargetSlotInfoData.quantity = targetQuantity;
+
+
+        tempCurrentSlotInfoDatas[currentInfo.slotIndex] = tempCurrentSlotInfoData;
+        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempTargetSlotInfoData;
     }
 
     // 나누다, 분리 - 아이템 분리(소모품, 퀘스트템)
@@ -329,9 +372,16 @@ public class PlayerSlotData
     }
 
     // 제거
-    public void RemoveSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void RemoveSlotData(UISlotInfo currentInfo)
     {
+        // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
+        if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempSlotInfoDatas))
+        {
+            Debug.Log("현재슬롯에 정보가 없음");
+            return;
+        }
 
+        tempSlotInfoDatas.Remove(currentInfo.slotIndex);
     }
 
 

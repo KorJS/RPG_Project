@@ -105,19 +105,19 @@ public class UIDragAndDrop : MonoBehaviour
         }
 
         UITexture targetTexture = targetObj.transform.GetChild(0).GetComponent<UITexture>(); // 타겟 아이콘
-        UISlotInfo targetSlot = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
+        UISlotInfo targetInfo = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
 
-        CheckSlotInfo(targetSlot);
+        CheckSlotInfo(targetInfo);
     }
 
     // (인벤,창고)인경우 놓았을떄 분리 창은 같은 슬롯타입에는 안뜸 
-    private void CheckSlotInfo(UISlotInfo targetSlot)
+    private void CheckSlotInfo(UISlotInfo targetInfo)
     {
         // 같은 아이템타입이면서 같은 아이템인덱스 : isItemIndex = true;
         // 같은 아이템타입이면서 다른 아이템인덱스 : isItemType = true, isItemIndex = false;
         // 다른 아이템타입이면                    : isItemType = false;
-        bool isItemType = uiSlotInfo.slotInfo.itemType == targetSlot.slotInfo.itemType ? true : false;
-        bool isItemIndex = isItemType & (uiSlotInfo.slotInfo.itemIndex == targetSlot.slotInfo.itemIndex ? true : false);
+        bool isItemType = uiSlotInfo.slotInfo.itemType == targetInfo.slotInfo.itemType ? true : false;
+        bool isItemIndex = isItemType & (uiSlotInfo.slotInfo.itemIndex == targetInfo.slotInfo.itemIndex ? true : false);
 
         // 인벤토리 -> 인벤토리 (교환) 
         //      빈 타겟 : 교체
@@ -132,37 +132,49 @@ public class UIDragAndDrop : MonoBehaviour
         // 단축키 -> 단축키
         //      타겟있음 : 교환
         //      빈 타겟 : 교체
-        if (uiSlotInfo.slotType == targetSlot.slotType)
+        if (uiSlotInfo.slotType == targetInfo.slotType)
         {
             switch (uiSlotInfo.slotType)
             {
                 case TypeData.SlotType.인벤토리:
                     {
-                        if (!targetSlot.isItemExist) // 빈 타겟이면
+                        if (!targetInfo.isItemExist) // 빈 타겟이면
                         {
-                            playerSlotData.ChangSlotData(uiSlotInfo, targetSlot);
+                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
                         else
                         {
-                            // 다른 아이템타입 : 교환
-                            if (!isItemType)
+                            // 장비이면 : 교환  - 다른 아이템타입 / 다른 인덱스(다른타입이면서) - 소모품,퀘스템
+                            if (!isItemType || !isItemIndex || (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비))
                             {
-                                playerSlotData.SwapSlotData(uiSlotInfo, targetSlot);
+                                playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
                             }
-                            // 같은 아이템타입이면서 같은 아이템인덱스 : 합치기
+                            // 같은 아이템타입이면서 같은 아이템인덱스 : 합치기 - 소모품, 퀘스트템
                             else if (isItemIndex)
                             {
-                                playerSlotData.CombineSlotData(uiSlotInfo, targetSlot);
+                                playerSlotData.CombineSlotData(uiSlotInfo, targetInfo, uiSlotInfo.QUANTITY_MAX);
+                            }
+                            else
+                            {
+                                Debug.Log("오류");
                             }
                         }
-
                     }
                     break;
 
                 case TypeData.SlotType.단축키:
                 case TypeData.SlotType.창고:
                     {
-
+                        // 타겟이 없으면 교체
+                        if (!targetInfo.isItemExist)
+                        {
+                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
+                        }
+                        // 타겟이 있으면 교환
+                        else
+                        {
+                            playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
+                        }
                     }
                     break;
             } // end swicth
@@ -179,10 +191,41 @@ public class UIDragAndDrop : MonoBehaviour
         // 단축창 -> 제거
         else
         {
-            
+            if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
+            {
+                playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+            }
+            else
+            {
+                // TODO : 분리창 On
+                switch (uiSlotInfo.slotType)
+                {
+                    case TypeData.SlotType.인벤토리:
+                    case TypeData.SlotType.창고:
+                        {
+                            if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
+                            {
+                                
+                            }
+
+                            // TODO : 분리창수량이 창고에 넣었을때 그 수량이 MAX 치 채우고 남으면 빈곳에 추가
+                        }
+                        break;
+
+                    case TypeData.SlotType.단축키:
+                        {
+                            playerSlotData.RemoveSlotData(uiSlotInfo);
+                        }
+                        break;
+                }
+            }
         }
 
         uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+
+        // 슬롯 재설정
+        uiSlotInfo.ReSetting();
+        targetInfo.ReSetting();
     }
 
     // 아이템을 드래그 할때 복제

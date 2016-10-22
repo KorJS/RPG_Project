@@ -32,6 +32,8 @@ public class UISlotInfo : MonoBehaviour
     [SerializeField]
     public SlotSettings slotSettings;
 
+    public readonly int QUANTITY_MAX = 99;
+
     public int slotIndex = 0; // 슬롯 인덱스
     public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
     public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능

@@ -102,11 +102,10 @@ public class UIDragAndDrop : MonoBehaviour
         UITexture targetTexture = targetObj.transform.GetChild(0).GetComponent<UITexture>(); // 타겟 아이콘
         UISlotInfo targetSlot = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
 
-        CheckSlotType(targetSlot);
+        CheckSlotInfo(targetSlot);
     }
 
-    // 인벤토리 -> 인벤토리 (교환) / 창고 -> 창고 (교환) / 단축키 -> 단축키 (교환)
-    private void CheckSlotType(UISlotInfo targetSlot)
+    private void CheckSlotInfo(UISlotInfo targetSlot)
     {
         // 인벤토리 -> 인벤토리 (교환) / 창고 -> 창고 (교환) / 단축키 -> 단축키 (교환)
         // 스킬창 -> 스킬창 (삭제)
@@ -116,7 +115,10 @@ public class UIDragAndDrop : MonoBehaviour
             uiSlotInfo.ReSetting();
             targetSlot.ReSetting();
         }
-        // 인벤토리 
+        // 인벤토리 -> 창고 / 상점 (놓인곳이 같은게 있으면 있는곳 없고 빈곳이면 놓은곳에 빈곳이 아니면 순차대로 빈곳으로) 
+        //            단축키 (인벤은 그대로 단축키는 교체)
+        // 창고 -> 인벤토리 (놓았을때 인벤정보중 같은게 있으면 겹치고(소모품,재료 : 수량이 넘으면 빈곳으로) 같은게 없으면 놓인곳이 빈곳이면 빈곳에 아니면 순차대로 빈곳으로)
+        // 단축창 -> 제거
         else
         {
 

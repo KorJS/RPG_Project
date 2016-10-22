@@ -62,12 +62,7 @@ public class UISlotInfo : MonoBehaviour
     // 슬롯 정보 설정
     private void SetSlotInfo()
     {
-        isItemExist = playerSlotData.ConvertWindowSlotData(slotType, slotIndex, ref slotInfo);
-
-        if (!isItemExist)
-        {
-            slotInfo = null;
-        }
+        isItemExist = playerSlotData.SetSlotData(slotType, slotIndex, ref slotInfo);
     }
 
     // 슬롯에 아이콘 설정
@@ -76,6 +71,7 @@ public class UISlotInfo : MonoBehaviour
         // 슬롯에 아이템이 없으면 리턴
         if (!isItemExist)
         {
+            slotSettings.uiIcon.mainTexture = null;
             return;
         }
 

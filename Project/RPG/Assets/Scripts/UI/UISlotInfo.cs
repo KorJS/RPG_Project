@@ -34,6 +34,7 @@ public class UISlotInfo : MonoBehaviour
 
     public int slotIndex = 0; // 슬롯 인덱스
     public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
+    public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
 
     void Awake()
     {
@@ -62,7 +63,24 @@ public class UISlotInfo : MonoBehaviour
     // 슬롯 정보 설정
     private void SetSlotInfo()
     {
-        isItemExist = playerSlotData.SetSlotData(slotType, slotIndex, ref slotInfo);
+        // 슬롯 정보에 맞게 변환하여 받아옴
+        isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+        
+        // 현재 슬롯 아이템타입이 소모품, 퀘스템이면 합치고 분리 가능.
+        switch (slotInfo.itemType)
+        {
+            case TypeData.ItemType.소모품:
+            case TypeData.ItemType.퀘스트템:
+                {
+                    isAddDiv = true;
+                }
+                break;
+            default:
+                {
+                    isAddDiv = false;
+                }
+                break;
+        }
     }
 
     // 슬롯에 아이콘 설정

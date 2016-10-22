@@ -27,6 +27,11 @@ public class UIDragAndDrop : MonoBehaviour
         root = NGUITools.FindInParents<UIRoot>(parent);
     }
 
+    void OnClick()
+    {
+        
+    }
+
     void OnDragStart()
     {
         // 눌린 곳에 아이템이 없으면 리턴
@@ -105,23 +110,76 @@ public class UIDragAndDrop : MonoBehaviour
         CheckSlotInfo(targetSlot);
     }
 
+    // (인벤,창고)인경우 놓았을떄 분리 창은 같은 슬롯타입에는 안뜸 
     private void CheckSlotInfo(UISlotInfo targetSlot)
     {
-        // 인벤토리 -> 인벤토리 (교환) / 창고 -> 창고 (교환) / 단축키 -> 단축키 (교환)
-        // 스킬창 -> 스킬창 (삭제)
-        if (this.uiSlotInfo.slotType == targetSlot.slotType)
+        // 같은 아이템타입이면서 같은 아이템인덱스 : isItemIndex = true;
+        // 같은 아이템타입이면서 다른 아이템인덱스 : isItemType = true, isItemIndex = false;
+        // 다른 아이템타입이면                    : isItemType = false;
+        bool isItemType = uiSlotInfo.slotInfo.itemType == targetSlot.slotInfo.itemType ? true : false;
+        bool isItemIndex = isItemType & (uiSlotInfo.slotInfo.itemIndex == targetSlot.slotInfo.itemIndex ? true : false);
+
+        // 인벤토리 -> 인벤토리 (교환) 
+        //      빈 타겟 : 교체
+        //      타겟있음
+        //              장비인경우 : 교환
+        //              같은 아이템타입, 같은 아이템인덱스 : 합치기
+        //              같은 아이템타입, 다른 아이템인덱스 : 교환
+        //              다른 아이템타입 : 교환
+        // 창고 -> 창고 (교환)
+        //      타겟있음 : 교환
+        //      빈 타겟 : 교체
+        // 단축키 -> 단축키
+        //      타겟있음 : 교환
+        //      빈 타겟 : 교체
+        if (uiSlotInfo.slotType == targetSlot.slotType)
         {
-            playerSlotData.SwapSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, targetSlot.slotIndex, uiSlotInfo.slotInfo.quantity, targetSlot.slotInfo.quantity, targetSlot.isItemExist);
-            uiSlotInfo.ReSetting();
-            targetSlot.ReSetting();
-        }
-        // 인벤토리 -> 창고 / 상점 (놓인곳이 같은게 있으면 있는곳 없고 빈곳이면 놓은곳에 빈곳이 아니면 순차대로 빈곳으로) 
-        //            단축키 (인벤은 그대로 단축키는 교체)
-        // 창고 -> 인벤토리 (놓았을때 인벤정보중 같은게 있으면 겹치고(소모품,재료 : 수량이 넘으면 빈곳으로) 같은게 없으면 놓인곳이 빈곳이면 빈곳에 아니면 순차대로 빈곳으로)
+            switch (uiSlotInfo.slotType)
+            {
+                case TypeData.SlotType.인벤토리:
+                    {
+                        if (!targetSlot.isItemExist) // 빈 타겟이면
+                        {
+                            playerSlotData.ChangSlotData(uiSlotInfo, targetSlot);
+                        }
+                        else
+                        {
+                            // 다른 아이템타입 : 교환
+                            if (!isItemType)
+                            {
+                                playerSlotData.SwapSlotData(uiSlotInfo, targetSlot);
+                            }
+                            // 같은 아이템타입이면서 같은 아이템인덱스 : 합치기
+                            else if (isItemIndex)
+                            {
+                                playerSlotData.CombineSlotData(uiSlotInfo, targetSlot);
+                            }
+                        }
+
+                    }
+                    break;
+
+                case TypeData.SlotType.단축키:
+                case TypeData.SlotType.창고:
+                    {
+
+                    }
+                    break;
+            } // end swicth
+        } // end if
+        // 인벤토리 -> 단축키 (인벤은 그대로 단축키에는 - 복사)
+        //            창고 (소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
+        //                 (                    같은 아이템타입, 다른 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
+        //                 (                    다른 아이템타입 - 분리 창 On - 분리 창에 적은 수량만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
+        //                 (장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
+        // 창고 -> 인벤토리 (소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
+        //                 (                    같은 아이템타입, 다른 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
+        //                 (                    다른 아이템타입 - 분리 창 On - 분리 창에 적은 수량만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
+        //                 (장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
         // 단축창 -> 제거
         else
         {
-
+            
         }
 
         uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
@@ -189,10 +247,5 @@ public class UIDragAndDrop : MonoBehaviour
             Debug.Log("mDraggedObject");
             NGUITools.Destroy(draggedObject);
         }
-    }
-
-    private void SwapSlotInfo()
-    {
-
     }
 }

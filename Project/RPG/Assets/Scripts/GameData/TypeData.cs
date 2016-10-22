@@ -62,7 +62,7 @@
         없음 = -1,
         장비 = 0,
         소모품,
-        재료
+        퀘스트템
     };
 
     // Weapon, armor, glove, shoes, ring, necklace
@@ -74,14 +74,6 @@
         신발,
         반지,
         목걸이
-    };
-
-    // QuestItem, UpgradeItem
-    public enum MaterialType
-    {
-        없음 = -1,
-        퀘스트템,
-        강화
     };
 
     // Inventory, ShortCut, Store, Storage, Skill

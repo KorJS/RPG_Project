@@ -31,37 +31,37 @@ public class ItemData
         public int SellGold;
     };
 
-    // 소모품 정보 - 우선 hp만.. 
+    // 소모품 정보
     public struct CusomableInfo
     {
         public string name;                             // 이름
+        public string instruction;                      // 설명
         public float increase;                          // 상승치
-        public int buyGold;
-        public int SellGold;
+        public int buyGold;                             // 구매가격
+        public int SellGold;                            // 판매가격
     };
 
-    // 재료 정보
-    public struct MaterialInfo
+    // 퀘스트템 정보
+    public struct QuestItemInfo
     {
         public string name;                             // 이름
-        public TypeData.MaterialType materialType;      // 재료 타입
-        public int buyGold;
-        public int SellGold;
+        public int buyGold;                             // 판매가격
+        public int SellGold;                            // 구매가격
     };
 
     public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 데이터를 로드해서 저장
     public Dictionary<int, CusomableInfo> cusomableInfos = null; // 소모품 데이터를 로드해서 저장
-    public Dictionary<int, MaterialInfo> materialInfos = null; // 재료 데이터를 로드해서 저장
+    public Dictionary<int, QuestItemInfo> questItemInfos = null; // 퀘스트템 데이터를 로드해서 저장
 
     public EquipmentInfo equipmentInfo;  // 장비 정보
     public CusomableInfo cusomableInfo;  // 소모품 정보
-    public MaterialInfo materialInfo;   // 재료 정보
+    public QuestItemInfo questItemInfo;   // 퀘스트템 정보
 
     public ItemData()
     {
         equipmentInfos = new Dictionary<int, EquipmentInfo>();
         cusomableInfos = new Dictionary<int, CusomableInfo>();
-        materialInfos = new Dictionary<int, MaterialInfo>();
+        questItemInfos = new Dictionary<int, QuestItemInfo>();
 
         cusomableInfo.name = "HPPotion";
         cusomableInfo.increase = 100;

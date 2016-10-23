@@ -9,13 +9,15 @@ public class UIDragAndDrop : MonoBehaviour
 
     private UIRoot root = null;
     private Transform parent = null;
-    private GameObject draggedObject = null;     // 드래그중인 icon
+    private GameObject draggedObject = null; // 드래그중인 icon
     private GameObject tempDraggingPanel = null; // 드래그중인 panel
 
-    private int dropSlotIndex = 0;               // 드롭하는 위치
+    private int dropSlotIndex = 0; // 드롭하는 위치
 
-    private bool isPressed = false;              // 마우스를 클릭해제했는지
-    private bool isDragging = false;             // 드래그중인지
+    private bool isPressed = false; // 마우스를 클릭해제했는지
+    private bool isDragging = false; // 드래그중인지
+
+    private int divQuantity = 0; // 분리한 수량
 
     void Awake()
     {
@@ -140,19 +142,19 @@ public class UIDragAndDrop : MonoBehaviour
                     {
                         if (!targetInfo.isItemExist) // 빈 타겟이면
                         {
-                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
+                            playerSlotData.ChangSlotData(ref uiSlotInfo, ref targetInfo);
                         }
                         else
                         {
                             // 장비이면 : 교환  - 다른 아이템타입 / 다른 인덱스(다른타입이면서) - 소모품,퀘스템
                             if (!isItemType || !isItemIndex || (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비))
                             {
-                                playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
+                                playerSlotData.SwapSlotData(ref uiSlotInfo, ref targetInfo);
                             }
                             // 같은 아이템타입이면서 같은 아이템인덱스 : 합치기 - 소모품, 퀘스트템
                             else if (isItemIndex)
                             {
-                                playerSlotData.CombineSlotData(uiSlotInfo, targetInfo, uiSlotInfo.QUANTITY_MAX);
+                                playerSlotData.CombineSlotData(ref uiSlotInfo, ref targetInfo, uiSlotInfo.QUANTITY_MAX);
                             }
                             else
                             {
@@ -168,12 +170,12 @@ public class UIDragAndDrop : MonoBehaviour
                         // 타겟이 없으면 교체
                         if (!targetInfo.isItemExist)
                         {
-                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
+                            playerSlotData.ChangSlotData(ref uiSlotInfo, ref targetInfo);
                         }
                         // 타겟이 있으면 교환
                         else
                         {
-                            playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
+                            playerSlotData.SwapSlotData(ref uiSlotInfo, ref targetInfo);
                         }
                     }
                     break;
@@ -193,7 +195,7 @@ public class UIDragAndDrop : MonoBehaviour
         {
             if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {
-                playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+                playerSlotData.CopySlotData(ref uiSlotInfo, ref targetInfo);
             }
             else
             {
@@ -203,6 +205,7 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.인벤토리:
                     case TypeData.SlotType.창고:
                         {
+                            uiManager.divisionPopup.SetActive(true);
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
                                 
@@ -214,7 +217,7 @@ public class UIDragAndDrop : MonoBehaviour
 
                     case TypeData.SlotType.단축키:
                         {
-                            playerSlotData.RemoveSlotData(uiSlotInfo);
+                            playerSlotData.RemoveSlotData(ref uiSlotInfo);
                         }
                         break;
                 }

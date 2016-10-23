@@ -80,6 +80,7 @@ public class PlayerSlotData
         // 해당 슬롯에 정보가 없으면 리턴
         if (!inventoryInfos.ContainsKey(slotIndex))
         {
+            slotInfoDatas = inventoryInfos;
             return false;
         }
 
@@ -94,6 +95,7 @@ public class PlayerSlotData
         // 해당 슬롯에 정보가 없으면 리턴
         if (!shortCutInfos.ContainsKey(slotIndex))
         {
+            slotInfoDatas = shortCutInfos;
             return false;
         }
 
@@ -107,6 +109,7 @@ public class PlayerSlotData
         // 해당 슬롯에 정보가 없으면 리턴
         if (!storageInfos.ContainsKey(slotIndex))
         {
+            slotInfoDatas = storageInfos;
             return false;
         }
 
@@ -257,7 +260,7 @@ public class PlayerSlotData
     }
 
     // 교환 (타겟이 있으면 교환 : 인벤>인벤 / 인벤>창고 / 창고>창고 / 창고>인벤 / 단축키>단축키)
-    public void SwapSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void SwapSlotData(ref UISlotInfo currentInfo, ref UISlotInfo targetInfo)
     {
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
         {
@@ -265,6 +268,7 @@ public class PlayerSlotData
             return;
         }
 
+        // 타겟슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas))
         {
             Debug.Log("타겟슬롯에 정보가 없음");
@@ -281,33 +285,32 @@ public class PlayerSlotData
     // 교체
     // 현재타입과 타겟타입이 같으면 타겟에 넘겨주고 현재는 제거 (인벤->인벤 / 단축->단축 / 창고->창고) - 이 경우는 현재와 타겟이 같고 타겟이 빈곳을 경우.
     // 현재타입과 타겟타입이 다르면 타겟 내용교체, 현재는 그대로 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 
-    public void ChangSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void ChangSlotData(ref UISlotInfo currentInfo, ref  UISlotInfo targetInfo)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
         {
             Debug.Log("현재슬롯에 정보가 없음");
-            return;
-        }
-        // 타겟슬롯에 정보가 존재하는가 / ref로 정보 가져옴
-        if (!CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas))
-        {
-            Debug.Log("타겟슬롯에 정보가 없음");
             return;
         }
 
         // 이 경우는 현재와 타겟이 같고 타겟이 빈 곳을 경우.
         if (currentInfo.slotType == targetInfo.slotType)
         {
-            tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
+            tempCurrentSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
             tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
+
+            return;
         }
 
-        
+        // 타겟슬롯의 정보 가져옴
+        CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas);
+
+
     }
 
     // 복사 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 빈곳
-    public void CopySlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void CopySlotData(ref UISlotInfo currentInfo, ref UISlotInfo targetInfo)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
@@ -315,15 +318,12 @@ public class PlayerSlotData
             Debug.Log("현재슬롯에 정보가 없음");
             return;
         }
-        // 타겟슬롯에 정보가 존재하는가 / ref로 정보 가져옴
-        if (!CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas))
-        {
-            Debug.Log("타겟슬롯에 정보가 없음");
-            return;
-        }
+
+        // 타겟슬롯의 정보 가져옴
+        CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas);
 
         // 현재를 타겟에 복사
-        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempTargetSlotInfoDatas[currentInfo.slotIndex];
+        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
     }
 
     // 추가 - 아이템 습득?
@@ -333,7 +333,7 @@ public class PlayerSlotData
     }
 
     // 합치기 - 같은 것이 있으면 결합(소모품, 퀘스트템)
-    public void CombineSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo, int quantityMAX)
+    public void CombineSlotData(ref UISlotInfo currentInfo, ref UISlotInfo targetInfo, int quantityMAX)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
@@ -341,6 +341,7 @@ public class PlayerSlotData
             Debug.Log("현재슬롯에 정보가 없음");
             return;
         }
+
         // 타겟슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas))
         {
@@ -366,13 +367,13 @@ public class PlayerSlotData
 
     // 나누다, 분리 - 아이템 분리(소모품, 퀘스트템)
     // 타겟이 같은 아이템타입이면 다시 합치고, 다르면 취소, 빈곳이면 그곳에 넣기
-    public void DivsionSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public void DivsionSlotData(ref UISlotInfo currentInfo, ref UISlotInfo targetInfo)
     {
 
     }
 
     // 제거
-    public void RemoveSlotData(UISlotInfo currentInfo)
+    public void RemoveSlotData(ref UISlotInfo currentInfo)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempSlotInfoDatas))

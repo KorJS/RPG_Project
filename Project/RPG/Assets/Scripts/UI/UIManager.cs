@@ -63,6 +63,9 @@ public class UIManager : MonoBehaviour
     public bool isStore = false;
     public bool isNPC = false;
 
+    public GameObject divisionPopup = null; // 분리창
+    public int divQuantity = 0; // 분리한 수량
+
     public GameObject tempDraggingPanel = null; // 드래그중인것 복사한거
     public UITexture tempIcon = null; // 드래그중인 Icon
 
@@ -71,6 +74,9 @@ public class UIManager : MonoBehaviour
         uiManager = this;
         
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
+
+        divisionPopup = GameObject.FindGameObjectWithTag("Quantity");
+        divisionPopup.SetActive(false);
 
         shortCuts = new Dictionary<int, GameObject>();
         
@@ -203,5 +209,10 @@ public class UIManager : MonoBehaviour
 
         tempIcon.alpha = 1f;
         Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
+    }
+
+    public void DivisionPopup()
+    {
+
     }
 }

@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     public InputSettings inputKey;
-    
+
     public Dictionary<int, GameObject> shortCuts = null; // 키보드 단축키를 눌렀을때를 위해서.
     public List<GameObject> windows = null;
 
@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         uiManager = this;
-        
+
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
         divisionPopup = GameObject.FindGameObjectWithTag("Quantity");
@@ -192,6 +192,7 @@ public class UIManager : MonoBehaviour
             Cursor.visible = false;
             isUIMode = false;
 
+            divisionPopup.SetActive(false);
             DisableDragIiem();
             AllCloseWindow();
             windowSettings.uiModeObj.SetActive(false);
@@ -200,7 +201,7 @@ public class UIManager : MonoBehaviour
     }
 
     // UI 해제되면 드래그중인 아이템 처리
-    private void DisableDragIiem()
+    public void DisableDragIiem()
     {
         if (tempDraggingPanel == null)
         {
@@ -209,10 +210,5 @@ public class UIManager : MonoBehaviour
 
         tempIcon.alpha = 1f;
         Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
-    }
-
-    public void DivisionPopup()
-    {
-
     }
 }

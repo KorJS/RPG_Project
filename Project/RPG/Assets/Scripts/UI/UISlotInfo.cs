@@ -32,7 +32,7 @@ public class UISlotInfo : MonoBehaviour
     [SerializeField]
     public SlotSettings slotSettings;
 
-    public readonly int QUANTITY_MAX = 99;
+    public readonly int QUANTITY_MAX = 99; // 인벤토리 슬롯당 최대 수량 - 소모품, 퀘스트템
 
     public int slotIndex = 0; // 슬롯 인덱스
     public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
@@ -55,6 +55,11 @@ public class UISlotInfo : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+
+    }
+
     // 슬롯 인덱스 설정
     private void SetSlotIndex()
     {
@@ -67,7 +72,18 @@ public class UISlotInfo : MonoBehaviour
     {
         // 슬롯 정보에 맞게 변환하여 받아옴
         isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
-        
+
+        // 수량 표시 2이상이면 표시
+        if (slotInfo.quantity > 1)
+        {
+            slotSettings.uiQuantity.gameObject.SetActive(true);
+            slotSettings.uiQuantity.text = slotInfo.quantity.ToString();
+        }
+        else
+        {
+            slotSettings.uiQuantity.gameObject.SetActive(false);
+        }
+
         // 현재 슬롯 아이템타입이 소모품, 퀘스템이면 합치고 분리 가능.
         switch (slotInfo.itemType)
         {

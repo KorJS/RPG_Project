@@ -29,13 +29,14 @@ public class UIDragAndDrop : MonoBehaviour
         root = NGUITools.FindInParents<UIRoot>(parent);
     }
 
-    void OnClick()
-    {
-        
-    }
-
     void OnDragStart()
     {
+        // 이미 드래그래서 분리중이면 새로운 드래그 못하게.
+        if (uiManager.divisionPopup.activeSelf)
+        {
+            return;
+        }
+
         // 눌린 곳에 아이템이 없으면 리턴
         if (uiSlotInfo.slotSettings.uiIcon.mainTexture == null)
         {
@@ -142,19 +143,19 @@ public class UIDragAndDrop : MonoBehaviour
                     {
                         if (!targetInfo.isItemExist) // 빈 타겟이면
                         {
-                            playerSlotData.ChangSlotData(ref uiSlotInfo, ref targetInfo);
+                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
                         else
                         {
                             // 장비이면 : 교환  - 다른 아이템타입 / 다른 인덱스(다른타입이면서) - 소모품,퀘스템
                             if (!isItemType || !isItemIndex || (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비))
                             {
-                                playerSlotData.SwapSlotData(ref uiSlotInfo, ref targetInfo);
+                                playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
                             }
                             // 같은 아이템타입이면서 같은 아이템인덱스 : 합치기 - 소모품, 퀘스트템
                             else if (isItemIndex)
                             {
-                                playerSlotData.CombineSlotData(ref uiSlotInfo, ref targetInfo, uiSlotInfo.QUANTITY_MAX);
+                                playerSlotData.CombineSlotData(uiSlotInfo, targetInfo, uiSlotInfo.QUANTITY_MAX);
                             }
                             else
                             {
@@ -170,12 +171,12 @@ public class UIDragAndDrop : MonoBehaviour
                         // 타겟이 없으면 교체
                         if (!targetInfo.isItemExist)
                         {
-                            playerSlotData.ChangSlotData(ref uiSlotInfo, ref targetInfo);
+                            playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
                         // 타겟이 있으면 교환
                         else
                         {
-                            playerSlotData.SwapSlotData(ref uiSlotInfo, ref targetInfo);
+                            playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
                         }
                     }
                     break;
@@ -195,7 +196,7 @@ public class UIDragAndDrop : MonoBehaviour
         {
             if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {
-                playerSlotData.CopySlotData(ref uiSlotInfo, ref targetInfo);
+                playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
             }
             else
             {
@@ -205,19 +206,22 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.인벤토리:
                     case TypeData.SlotType.창고:
                         {
-                            uiManager.divisionPopup.SetActive(true);
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
                                 
                             }
-
-                            // TODO : 분리창수량이 창고에 넣었을때 그 수량이 MAX 치 채우고 남으면 빈곳에 추가
+                            // 소모품, 퀘스트템일경우
+                            else
+                            {
+                                uiManager.divisionPopup.SetActive(true);
+                                uiManager.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo, isItemType, isItemIndex);
+                            }
                         }
                         break;
 
                     case TypeData.SlotType.단축키:
                         {
-                            playerSlotData.RemoveSlotData(ref uiSlotInfo);
+                            playerSlotData.RemoveSlotData(uiSlotInfo);
                         }
                         break;
                 }

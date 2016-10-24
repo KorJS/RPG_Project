@@ -65,8 +65,6 @@ public class ItemData
 
         cusomableInfo.name = "HPPotion";
         cusomableInfo.increase = 100;
-        cusomableInfo.buyGold = 1000;
-        cusomableInfo.SellGold = 500;
         cusomableInfos.Add(0, cusomableInfo);
 
         cusomableInfo.name = "MPPotion";

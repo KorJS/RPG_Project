@@ -36,20 +36,17 @@ public class PlayerSlotData
     public Dictionary<int, SlotInfoData> shortCutInfos = null;  // 단축슬롯 정보
     public Dictionary<int, SlotInfoData> storageInfos = null;   // 창고슬롯 정보
 
-    public Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas = null;
-    public Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas= null;
+    private Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas = null;
+    private Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas= null;
 
-    public Dictionary<int, UISlotInfo.SlotInfo> invenCusomableMark = null;
-    public Dictionary<int, UISlotInfo.SlotInfo> invenQuestItemMark = null;
-    public Dictionary<int, UISlotInfo.SlotInfo> storageCusomableMark = null;
-    public Dictionary<int, UISlotInfo.SlotInfo> storageQuestItemMark = null;
-    public Dictionary<int, UISlotInfo.SlotInfo> emptyInvenMark = null;
-    public Dictionary<int, UISlotInfo.SlotInfo> emptyStorageMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> invenCusomableMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> invenQuestItemMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> storageCusomableMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> storageQuestItemMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> emptyInvenMark = null;
+    private Dictionary<int, UISlotInfo.SlotInfo> emptyStorageMark = null;
 
-    // TODO : Mark 만들자 아니면 더 좋은방법이 있을까.
-
-    private UISlotInfo currentInfo = null;
-    private UISlotInfo targetInfo = null;
+    private SlotInfoData tempSlotInfoData;
 
     public PlayerSlotData()
     {
@@ -234,11 +231,14 @@ public class PlayerSlotData
         // 슬롯이 0보다 적으면 데이터 삭제
         if (slotInfo.slotInfo.quantity <= 0)
         {
-            RemoveSlotData(currentInfo);
+            RemoveSlotData(slotInfo);
             return true;
         }
 
-        slotInfo.slotInfo.quantity = tempCurrentSlotInfoDatas[slotIndex].quantity;
+        // 슬롯정보에 있는 수량을 주인공데이터의 수량에 등록
+        SlotInfoData tempSlotInfoData = tempCurrentSlotInfoDatas[slotIndex];
+        tempSlotInfoData.quantity = slotInfo.slotInfo.quantity;
+        tempCurrentSlotInfoDatas[slotIndex] = tempSlotInfoData;
 
         return true;
     }
@@ -382,15 +382,12 @@ public class PlayerSlotData
 
             return;
         }
-        else
-        {
-            Debug.Log("현재슬롯타입 : " + currentInfo.slotType + ", 타겟슬롯타입 : " + targetInfo.slotType);
-        }
-
+        
+        // 인벤 > 단축 / 스킬창 > 단축
         // 타겟슬롯의 정보 가져옴
         CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas);
 
-
+        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
     }
 
     // 복사 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 빈곳
@@ -445,98 +442,72 @@ public class PlayerSlotData
 
     // 나누다, 분리 - 아이템 분리(소모품, 퀘스트템)
     // 타겟이 같은 아이템타입이면 다시 합치고, 다르면 취소, 빈곳이면 그곳에 넣기
-    public void DivisionSlotData(UISlotInfo currentInfo, int divQuantity)
+    public void DivisionSlotData(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
     {
-        switch (currentInfo.slotInfo.itemType)
+        switch (currentItemType)
         {
             case TypeData.ItemType.소모품:
                 {
-                    CheckMark(currentInfo, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
+                    CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
                 }
                 break;
 
             case TypeData.ItemType.퀘스트템:
                 {
-                    CheckMark(currentInfo, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
+                    CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
+                }
+                break;
+        }
+    }
+
+    // 소모품, 퀘스트템 정보 생성 (인벤>창고 / 창고>인벤 에 추가할때 슬롯 정보가 있어야되므로 생성)
+    private void CreateSlotInfoData(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity, ref SlotInfoData tempSlotInfoData)
+    {
+        tempSlotInfoData.slotType = targetSlotType;
+        tempSlotInfoData.itemType = currentItemType;
+        tempSlotInfoData.skillIndex = -1;
+        tempSlotInfoData.equipmentIndex = -1;
+        tempSlotInfoData.quantity = divQuantity;
+        switch (currentItemType)
+        {
+            case TypeData.ItemType.소모품:
+                {
+                    tempSlotInfoData.cusomableIndex = currentItemIndex;
+                }
+                break;
+
+            case TypeData.ItemType.퀘스트템:
+                {
+                    tempSlotInfoData.qusetItemIndex = currentItemIndex;
                 }
                 break;
         }
     }
 
     // 소모품, 퀘스트템 검사
-    public void CheckMark(UISlotInfo currentInfo, int divQuantity, ref Dictionary<int, UISlotInfo.SlotInfo> invenMark, ref Dictionary<int, UISlotInfo.SlotInfo> storageMark)
+    public void CheckCAndQMark(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType, 
+        int currentItemIndex, int divQuantity, ref Dictionary<int, UISlotInfo.SlotInfo> invenMark, ref Dictionary<int, UISlotInfo.SlotInfo> storageMark)
     {
-        // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
-        if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
-        {
-            Debug.Log("현재슬롯에 정보가 없음");
-            return;
-        }
 
-        switch (currentInfo.slotType)
+        // 타겟
+        switch (targetSlotType)
         {
             case TypeData.SlotType.인벤토리:
                 {
-                    SlotInfoData tempStorageSlotInfoData;
-
-                    // 창고 - 수량 제한 없음 무족건 합침.
-                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> storageSlotInfo in storageMark)
-                    {
-                        if (storageSlotInfo.Value.itemIndex == currentInfo.slotInfo.itemIndex)
-                        {
-                            int tempStorageSlotIndex = storageSlotInfo.Key;
-                            tempStorageSlotInfoData = storageInfos[tempStorageSlotIndex];
-                            tempStorageSlotInfoData.quantity += divQuantity;
-
-                            storageInfos[tempStorageSlotIndex] = tempStorageSlotInfoData;
-
-                            divQuantity = 0; // 다 합치고 나면 0개
-                            GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
-                            break;
-                        }
-                    }
-
-                    // 위에서 다 합쳤으면 수량 0개이므로 리턴 
-                    if (divQuantity <= 0)
-                    {
-                        return;
-                    }
-
-                    // 수량이 남아있으면 (같은 아이템이 아니므로)
-                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyStorageMark)
-                    {
-                        int tempStorageSlotIndex = emptySlotInfo.Key;
-                        // 만약에 빈곳이 아닐경우
-                        if (!storageInfos.ContainsKey(emptySlotInfo.Key))
-                        {
-                            Debug.Log("에러 빈곳이 아님");
-                            return;
-                        }
-
-                        // 현재 슬롯 정보와 똑같으니 정보를 임시변수에 가져와 수량 변화를 주고 등록.
-                        tempStorageSlotInfoData = tempCurrentSlotInfoDatas[tempStorageSlotIndex];
-                        tempStorageSlotInfoData.quantity = divQuantity;
-                        storageInfos.Add(tempStorageSlotIndex, tempStorageSlotInfoData);
-                        GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
-                    }
-                }
-                break;
-
-            case TypeData.SlotType.창고:
-                {
-                    SlotInfoData tempInvenSlotInfoData;
                     // 인벤
                     // 창고 - 수량 제한 없음 무족건 합침. - 순서대로 등록되어있겟지?..
                     foreach (KeyValuePair<int, UISlotInfo.SlotInfo> invenSlotInfo in invenMark)
                     {
-                        if (invenSlotInfo.Value.itemIndex == currentInfo.slotInfo.itemIndex)
+                        if (invenSlotInfo.Value.itemIndex == currentItemIndex)
                         {
+                            SlotInfoData tempInvenSlotInfoData;
+
                             // 같은 곳에 수량이 99인지는 마크 등록할때 했음.
 
                             // 같은게 있으면 채우고 
                             // 남으면 다시 또 같은게 있으면 채우고.. 
                             int tempInvenSlotIndex = invenSlotInfo.Key;
-                            tempInvenSlotInfoData = storageInfos[tempInvenSlotIndex];
+                            tempInvenSlotInfoData = inventoryInfos[tempInvenSlotIndex];
 
                             int targetQuantity = tempInvenSlotInfoData.quantity;
 
@@ -544,7 +515,7 @@ public class PlayerSlotData
 
                             tempInvenSlotInfoData.quantity = targetQuantity;
 
-                            tempCurrentSlotInfoDatas[tempInvenSlotIndex] = tempInvenSlotInfoData;
+                            inventoryInfos[tempInvenSlotIndex] = tempInvenSlotInfoData;
                             GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
                         }
                     }
@@ -554,6 +525,10 @@ public class PlayerSlotData
                     {
                         return;
                     }
+
+                    // 옴겨질 아이템 정보 만듬
+                    CreateSlotInfoData(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref tempSlotInfoData);
+
                     // 위에서 같은 아이템인덱스에 합치고도 남거나. 아예 같은 타입이 없으면
                     // 수량은 남아있으니.
                     foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyInvenMark)
@@ -567,33 +542,138 @@ public class PlayerSlotData
                         int tempInvenSlotIndex = emptySlotInfo.Key;
 
                         // 만약에 빈곳이 아닐경우
-                        if (!storageInfos.ContainsKey(tempInvenSlotIndex))
+                        if (!inventoryInfos.ContainsKey(tempInvenSlotIndex))
                         {
                             Debug.Log("에러 빈곳이 아님");
                             return;
                         }
 
                         // (0이 될때까지) 추가하고도 수량이 남으면 또 다음 슬롯에 추가.
-                        tempInvenSlotInfoData = tempCurrentSlotInfoDatas[tempInvenSlotIndex];
-
-                        int targetQuantity = tempInvenSlotInfoData.quantity;
+                        int targetQuantity = inventoryInfos[tempInvenSlotIndex].quantity;
 
                         CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
 
-                        tempInvenSlotInfoData.quantity = targetQuantity;
+                        tempSlotInfoData.quantity = targetQuantity;
 
-                        storageInfos.Add(tempInvenSlotIndex, tempInvenSlotInfoData);
+                        inventoryInfos.Add(tempInvenSlotIndex, tempSlotInfoData);
                         GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+                    }
+                }
+                break;
+
+            case TypeData.SlotType.창고:
+                {
+
+                    // 창고 - 수량 제한 없음 무족건 합침.
+                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> storageSlotInfo in storageMark)
+                    {
+                        if (storageSlotInfo.Value.itemIndex == currentItemIndex)
+                        {
+                            SlotInfoData tempStorageSlotInfoData;
+
+                            int tempStorageSlotIndex = storageSlotInfo.Key;
+                            tempStorageSlotInfoData = storageInfos[tempStorageSlotIndex];
+                            tempStorageSlotInfoData.quantity += divQuantity;
+
+                            storageInfos[tempStorageSlotIndex] = tempStorageSlotInfoData;
+
+                            divQuantity = 0; // 다 합치고 나면 0개
+                            GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+
+                            break;
+                        }
+                    }
+
+                    // 위에서 다 합쳤으면 수량 0개이므로 리턴 
+                    if (divQuantity <= 0)
+                    {
+                        return;
+                    }
+
+                    // 옴길 아이템 정보
+                    CreateSlotInfoData(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref tempSlotInfoData);
+
+                    // 수량이 남아있으면 (같은 아이템이 아니므로)
+                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyStorageMark)
+                    {
+                        int tempStorageSlotIndex = emptySlotInfo.Key;
+                        // 만약에 빈곳이 아닐경우
+                        if (!storageInfos.ContainsKey(tempStorageSlotIndex))
+                        {
+                            Debug.Log("에러 빈곳이 아님");
+                            return;
+                        }
+
+                        // 수량 변화후 등록
+                        tempSlotInfoData.quantity = divQuantity;
+                        storageInfos.Add(tempStorageSlotIndex, tempSlotInfoData);
+                        GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+
+                        break;
                     }
                 }
                 break;
         }
     }
 
-    // 추가 - 아이템 습득?
-    public void AddSlotData()
+    public void CheckEquipmentMark(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType,
+        int currentItemIndex, int divQuantity)
     {
+        // 옴겨길 템 정보
+        CreateSlotInfoData(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref tempSlotInfoData);
 
+        switch (targetSlotType)
+        {
+            case TypeData.SlotType.인벤토리:
+                {
+                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyInvenMark)
+                    {
+                        // 빈곳이겟지?
+                        int tempSlotIndex = emptySlotInfo.Key;
+
+                        tempSlotInfoData.quantity = divQuantity;
+                        storageInfos.Add(tempSlotIndex, tempSlotInfoData);
+                        return;
+                    }
+                }
+                break;
+            case TypeData.SlotType.창고:
+                {
+                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyStorageMark)
+                    {
+                        // 빈곳이겟지?
+                        int tempSlotIndex = emptySlotInfo.Key;
+
+                        tempSlotInfoData.quantity = divQuantity;
+                        storageInfos.Add(tempSlotIndex, tempSlotInfoData);
+                        return;
+                    }
+                }
+                break;
+        }
+        
+    }
+
+    // 추가 - 아이템 습득(장비, 소모품, 퀘스트템) / 인벤>창고(장비) / 창고>인벤(장비)
+    public void AddSlotData(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
+    {
+        if (currentItemType == TypeData.ItemType.장비)
+        {
+            CheckEquipmentMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity);
+            return;
+        }
+
+        if (currentItemType == TypeData.ItemType.소모품)
+        {
+            CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
+            return;
+        }
+
+        if (currentItemType == TypeData.ItemType.퀘스트템)
+        {
+            CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
+            return;
+        }
     }
 
     // 제거

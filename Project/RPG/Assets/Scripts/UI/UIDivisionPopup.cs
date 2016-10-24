@@ -11,8 +11,6 @@ public class UIDivisionPopup : MonoBehaviour
 
     public UISlotInfo currentInfo = null;
     public UISlotInfo targetInfo = null;
-    public bool isItemType = false;
-    public bool isItemIndex = false;
 
     void Awake()
     {
@@ -26,16 +24,12 @@ public class UIDivisionPopup : MonoBehaviour
     {
         currentInfo = null;
         targetInfo = null;
-        isItemType = false;
-        isItemIndex = false;
     }
 
-    public void DragAndDropInfo(UISlotInfo _currentSlot, UISlotInfo _targetSlot, bool _isItemType, bool _isItemIndex)
+    public void DragAndDropInfo(UISlotInfo _currentSlot, UISlotInfo _targetSlot)
     {
         currentInfo = _currentSlot;
         targetInfo = _targetSlot;
-        isItemType = _isItemType;
-        isItemIndex = _isItemIndex;
 
         // 처음 표시 : 현재 옮길수 최대 수량
         divQuantityMAX = currentInfo.slotInfo.quantity;
@@ -101,8 +95,9 @@ public class UIDivisionPopup : MonoBehaviour
             currentInfo.slotInfo.quantity -= divQuantity;
         }
 
-        playerSlotData.DivisionSlotData(currentInfo, divQuantity);
-        // 대상만 바꾸고 현재꺼는 따로 수정
+        // 대상 바꿈
+        playerSlotData.DivisionSlotData(targetInfo.slotType, currentInfo.slotIndex, currentInfo.slotInfo.itemType, currentInfo.slotInfo.itemIndex, divQuantity);
+        // 현재꺼는 따로 수정
         playerSlotData.SetSlotData(currentInfo.slotType, currentInfo.slotIndex, ref currentInfo);
 
         currentInfo.ReSetting();

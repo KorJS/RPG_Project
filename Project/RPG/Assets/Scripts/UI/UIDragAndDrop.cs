@@ -122,6 +122,8 @@ public class UIDragAndDrop : MonoBehaviour
         bool isItemType = uiSlotInfo.slotInfo.itemType == targetInfo.slotInfo.itemType ? true : false;
         bool isItemIndex = isItemType & (uiSlotInfo.slotInfo.itemIndex == targetInfo.slotInfo.itemIndex ? true : false);
 
+        // 스킬 -> 스킬 X
+        // 상점 -> 상점 X
         // 인벤토리 -> 인벤토리 (교환) 
         //      빈 타겟 : 교체
         //      타겟있음
@@ -182,25 +184,36 @@ public class UIDragAndDrop : MonoBehaviour
                     break;
             } // end swicth
         } // end if
-        // 인벤토리 -> 단축키 (인벤은 그대로 단축키에는 - 복사)
-        //            창고 (소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
+        // 인벤토리 -> 단축창 (인벤은 그대로 단축키에는 - 복사)
+        //            창고 ( 소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
         //                 (                    같은 아이템타입, 다른 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
         //                 (                    다른 아이템타입 - 분리 창 On - 분리 창에 적은 수량만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
-        //                 (장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
-        // 창고 -> 인벤토리 (소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
+        //                 ( 장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
+        // 창고 -> 인벤토리 ( 소모품, 퀘템인경우 : 같은 아이템타입, 같은 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 수량검사후 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
         //                 (                    같은 아이템타입, 다른 아이템인덱스 - 분리 창 On - 분리창 수량 만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
         //                 (                    다른 아이템타입 - 분리 창 On - 분리 창에 적은 수량만큼 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
-        //                 (장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
+        //                 ( 장비 인경우 : 빈곳에 추가 - 현재 슬롯 제거)
         // 단축창 -> 제거
+        // 스킬 -> 단축창 ( 타겟이 존재하면 교체 / 타겟이 없으면 복사 )
+        // < 상점 내용은 상점스크립트로 연결 - 정산이 완료되면 주인공 데이터 변화된다 >
+        // 인벤 > 상점 ( 인벤은 그대로, 판매목록 : 분리창 On - 분리 수량 만큼 - 이미있으면 합치기 - 없으면 빈곳에 복사 )
+        // 상점 > 인벤 ( 판매목록 : 수량 2개 이상 - 분리창 On - 분리 수량 만큼 - 판매목록 수량에서 제거 )
+        //             (           1개이면 이면 슬롯에서 제거 )
         else
         {
-            if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
+            if (uiSlotInfo.slotType == TypeData.SlotType.인벤토리)
             {
-                playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+                if (targetInfo.slotType == TypeData.SlotType.단축키)
+                {
+                    playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+                }
+                else if (targetInfo.slotType == TypeData.SlotType.상점)
+                {
+                    // 상점스크립트로
+                }
             }
             else
             {
-                // TODO : 분리창 On
                 switch (uiSlotInfo.slotType)
                 {
                     case TypeData.SlotType.인벤토리:
@@ -208,13 +221,13 @@ public class UIDragAndDrop : MonoBehaviour
                         {
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
-                                
+                                playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotIndex, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                             }
                             // 소모품, 퀘스트템일경우
                             else
                             {
                                 uiManager.divisionPopup.SetActive(true);
-                                uiManager.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo, isItemType, isItemIndex);
+                                uiManager.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
                             }
                         }
                         break;
@@ -222,6 +235,33 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.단축키:
                         {
                             playerSlotData.RemoveSlotData(uiSlotInfo);
+                        }
+                        break;
+
+                    case TypeData.SlotType.상점:
+                        {
+                            if (uiSlotInfo.slotType == TypeData.SlotType.인벤토리)
+                            {
+                                // 상점스크립트로
+                            }
+                        }
+                        break;
+
+                    case TypeData.SlotType.스킬:
+                        {
+                            if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
+                            {
+                                // 타겟이 존재 하면 교체
+                                if (targetInfo.isItemExist)
+                                {
+                                    playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
+                                }
+                                // 타겟이 없으면 복사
+                                else
+                                {
+                                    playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+                                }
+                            }
                         }
                         break;
                 }

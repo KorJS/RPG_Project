@@ -156,6 +156,10 @@ public class PlayerInput : MonoBehaviour
     // Test 
     private void InputKey()
     {
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
+        {
+            Debug.Log("aaaaaaaaaaaaaa");
+        }
         if (Input.GetKeyDown(KeyCode.V))
         {
             playerState.nextMode = TypeData.MODE.평화;

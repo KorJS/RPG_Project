@@ -32,7 +32,7 @@ public class UIDragAndDrop : MonoBehaviour
     void OnDragStart()
     {
         // 이미 드래그래서 분리중이면 새로운 드래그 못하게.
-        if (uiManager.divisionPopup.activeSelf)
+        if (uiManager.popupSettings.divisionPopup.activeSelf)
         {
             return;
         }
@@ -109,6 +109,9 @@ public class UIDragAndDrop : MonoBehaviour
                 case TypeData.SlotType.인벤토리:
                     {
                         // 제거할지 안할지 팝업창.
+                        uiManager.popupSettings.InquirePopup.SetActive(true);
+                        UIInquirePopup inquireP = uiManager.popupSettings.InquirePopup.GetComponent<UIInquirePopup>();
+                        inquireP.SetMessage(uiSlotInfo, "아이템을 버리겠습니까?");
                     }
                     break;
 
@@ -254,8 +257,8 @@ public class UIDragAndDrop : MonoBehaviour
                             // 소모품, 퀘스트템일경우
                             else
                             {
-                                uiManager.divisionPopup.SetActive(true);
-                                uiManager.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                                uiManager.popupSettings.divisionPopup.SetActive(true);
+                                uiManager.popupSettings.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
                                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                                 return;
                             }

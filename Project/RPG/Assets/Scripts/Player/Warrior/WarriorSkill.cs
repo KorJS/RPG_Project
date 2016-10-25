@@ -43,7 +43,7 @@ public class WarriorSkill : MonoBehaviour
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
     private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
 
-    public float comboTimer = COMBOTIME;    // 연속공격 입력타이머
+    public float comboTimer = 0f;    // 연속공격 입력타이머
     public bool isComboTime = false;        // 콤보 타임이 지났는지
     public bool isCombo = false;            // 몇번 콤보 공격인지
 
@@ -215,7 +215,7 @@ public class WarriorSkill : MonoBehaviour
         }
 
         isComboTime = true;
-        comboTimer = COMBOTIME;
+        comboTimer = 0f;
     }
 
     // 연속공격 타임 체크
@@ -225,17 +225,17 @@ public class WarriorSkill : MonoBehaviour
         // 콤보타임중이 아닐때 / 스킬이 끝나고 idle(서브상태머신 안에있는) 상태일떄 / 스킬상태가 아닐때
         if (!isComboTime || playerState.currentState != TypeData.State.스킬)
         {
-            comboTimer = COMBOTIME; // 콤보타임 초기화
+            comboTimer = 0f; // 콤보타임 초기화
             return;
         }
 
-        comboTimer -= Time.deltaTime;
+        comboTimer += Time.deltaTime;
 
         // 3초 안에 클릭 못할시. 1콤에서 끝
-        if (comboTimer < 0f)
+        if (comboTimer > COMBOTIME)
         {
             playerMovement.animator.SetTrigger(warriorAniSettings.isEndComboTrigger);
-            comboTimer = COMBOTIME;
+            comboTimer = 0f;
             isComboTime = false;
             isCombo = false; // 1콤보에서 끊겨서 다음 모션초기화 1콤으로
             playerState.nextState = TypeData.State.대기;

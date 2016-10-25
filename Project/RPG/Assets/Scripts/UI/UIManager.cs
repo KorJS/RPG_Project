@@ -43,6 +43,16 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public WindowSettings windowSettings;
 
+    [System.Serializable]
+    public class PopupSettings
+    {
+        public GameObject divisionPopup; // 분리창
+        public GameObject InquirePopup; // 확인창 (ex: 아이템을 버릴때)
+    }
+
+    [SerializeField]
+    public PopupSettings popupSettings;
+
     // 키 입력 정보
     [System.Serializable]
     public class InputSettings
@@ -65,7 +75,6 @@ public class UIManager : MonoBehaviour
     public bool isStore = false;
     public bool isNPC = false;
 
-    public GameObject divisionPopup = null; // 분리창
     public int divQuantity = 0; // 분리한 수량
 
     public GameObject tempDraggingPanel = null; // 드래그중인것 복사한거
@@ -77,8 +86,11 @@ public class UIManager : MonoBehaviour
 
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
-        divisionPopup = GameObject.FindGameObjectWithTag("Quantity");
-        divisionPopup.SetActive(false);
+        popupSettings.divisionPopup = GameObject.FindGameObjectWithTag("DivisionPopup");
+        popupSettings.divisionPopup.SetActive(false);
+
+        popupSettings.InquirePopup = GameObject.FindGameObjectWithTag("InquirePopup");
+        popupSettings.InquirePopup.SetActive(false);
 
         shortCuts = new Dictionary<int, GameObject>();
         
@@ -206,7 +218,7 @@ public class UIManager : MonoBehaviour
             Cursor.visible = false;
             isUIMode = false;
 
-            divisionPopup.SetActive(false);
+            popupSettings.divisionPopup.SetActive(false);
             DisableDragIiem();
             AllCloseWindow();
             windowSettings.uiModeObj.SetActive(false);

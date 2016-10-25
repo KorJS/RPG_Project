@@ -28,7 +28,7 @@ public class StoreItemListData
         itemListInfos = new Dictionary<TypeData.StoreType, List<int>>();
     }
 
-    public void SetStoreItemListData()
+    public void SetStore()
     {
 
     }

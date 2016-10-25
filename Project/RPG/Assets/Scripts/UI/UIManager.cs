@@ -27,15 +27,17 @@ public class UIManager : MonoBehaviour
         // 특수키 에 따라 On/Off
         public GameObject characterObj;      // 케릭터창 : P
         public GameObject uiModeObj;         // UIMode : Alt/ESC
-        public GameObject inventoryObj ;      // 소지품 : I
+        public GameObject inventoryObj ;     // 소지품 : I
         public GameObject questObj;          // 퀘스트 : Q
         public GameObject storeObj;          // 상점 : NPC 근처에 있을때 F
+        public GameObject storageObj;        // 창고 : NPC 근처에 있을때 F
 
         public string character = "Character_Panel";
         public string uiMode    = "UI_Panel";
         public string inventory = "Inventory_Panel";
         public string quest     = "Quest_Panel";
         public string store     = "Store_Panel";
+        public string storage   = "Storage_Panel";
     }
 
     [SerializeField]
@@ -86,6 +88,7 @@ public class UIManager : MonoBehaviour
         FindWindow(ref windowSettings.inventoryObj, windowSettings.inventory);
         FindWindow(ref windowSettings.questObj, windowSettings.quest);
         FindWindow(ref windowSettings.storeObj, windowSettings.store);
+        FindWindow(ref windowSettings.storageObj, windowSettings.storage);
     }
 
     void Update()
@@ -173,6 +176,17 @@ public class UIManager : MonoBehaviour
 
     private void UIMode(GameObject obj)
     {
+        // UI오브젝트가 활성화 상태 일때 - 이건 UI모드상태인깐
+        if (windowSettings.uiModeObj.activeSelf)
+        {
+            // 오브젝트가 비활성화이면
+            if (!obj.activeSelf)
+            {
+                obj.SetActive(true); // 활성화
+                return;
+            }
+        }
+
         // UI 모드 아니면 UI모드로
         if (!isUIMode)
         {

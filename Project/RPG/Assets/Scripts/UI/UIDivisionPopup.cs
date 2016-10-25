@@ -19,6 +19,11 @@ public class UIDivisionPopup : MonoBehaviour
         divQuantity_Input = transform.FindChild("Input").GetComponent<UIInput>();
     }
 
+    void OnEnable()
+    {
+        divQuantity_Input.value = "0";
+    }
+
     // 비활성화 되면 내용 초기화
     void OnDisable()
     {
@@ -31,9 +36,10 @@ public class UIDivisionPopup : MonoBehaviour
         currentInfo = _currentSlot;
         targetInfo = _targetSlot;
 
+        Debug.Log(currentInfo.slotInfo.quantity);
         // 처음 표시 : 현재 옮길수 최대 수량
         divQuantityMAX = currentInfo.slotInfo.quantity;
-        divQuantity_Input.savedAs = divQuantityMAX.ToString();
+        //divQuantity_Input.label.text = divQuantityMAX.ToString();
     }
 
     // 분리할 수량 변화가 생기면 호출되는 함수
@@ -45,25 +51,29 @@ public class UIDivisionPopup : MonoBehaviour
     // 수량 증가버튼 눌렀을시 호출되는 함수
     public void Up_Button()
     {
-        int total = divQuantity + 1;
-        if (total >= divQuantityMAX)
+        divQuantity += 1;
+        if (divQuantity >= divQuantityMAX)
         {
-            divQuantity_Input.label.text = divQuantityMAX.ToString();
+            divQuantity_Input.value = divQuantityMAX.ToString();
+            divQuantity = divQuantityMAX;
+            return;
         }
 
-        divQuantity_Input.label.text = total.ToString();
+        divQuantity_Input.value = divQuantity.ToString();
     }
 
     // 수량 감소버튼 눌렀을시 호출되는 함수
     public void Down_Button()
     {
-        int total = divQuantity - 1;
-        if (total <= 0)
+        divQuantity -= 1;
+        if (divQuantity <= 0)
         {
-            divQuantity_Input.label.text = "0";
+            divQuantity_Input.value = "0";
+            divQuantity = 0;
+            return;
         }
 
-        divQuantity_Input.label.text = total.ToString();
+        divQuantity_Input.value = divQuantity.ToString();
     }
 
     // 인벤토리 -> 창고 (소모품, 퀘템인경우 : 분리 창 On - 분리창 수량 만큼 수량검사, 
@@ -101,7 +111,8 @@ public class UIDivisionPopup : MonoBehaviour
         playerSlotData.SetSlotData(currentInfo.slotType, currentInfo.slotIndex, ref currentInfo);
 
         currentInfo.ReSetting();
-        targetInfo.ReSetting();
+
+        gameObject.SetActive(false);
     }
 
     // 분리 취소버튼 눌렀을시 호출되는 함수

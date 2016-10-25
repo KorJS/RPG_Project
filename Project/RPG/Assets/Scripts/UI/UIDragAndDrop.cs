@@ -100,15 +100,37 @@ public class UIDragAndDrop : MonoBehaviour
         DestoryTemporary();
         
         // 빈 곳에 버릴겨우 targetObj는 UIRoot로 잡힘
-        // TODO : 타겟이 없으면 인벤토리인경우 경고메시지(파괴할지 말지)
+        // 타겟이 없으면 인벤토리인경우 경고메시지(파괴할지 말지)
+        // 단축키이면 제거
         if (string.Compare(targetObj.name, "UI Root") == 0)
+        {
+            switch (uiSlotInfo.slotType)
+            {
+                case TypeData.SlotType.인벤토리:
+                    {
+                        // 제거할지 안할지 팝업창.
+                    }
+                    break;
+
+                case TypeData.SlotType.단축키:
+                    {
+                        playerSlotData.RemoveSlotData(uiSlotInfo);
+                    }
+                    break;
+            }
+            uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+            return;
+        }
+
+        // 슬롯이 아닌경우 - BG인경우 Icon이 없으니깐.. - 이래 허접하게.. 음..
+        if (!targetObj.transform.FindChild("Icon"))
         {
             uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
             return;
         }
 
-        UITexture targetTexture = targetObj.transform.GetChild(0).GetComponent<UITexture>(); // 타겟 아이콘
         UISlotInfo targetInfo = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
+        UITexture targetTexture = targetObj.transform.FindChild("Icon").GetComponent<UITexture>(); // 타겟 아이콘
 
         CheckSlotInfo(targetInfo);
     }
@@ -139,6 +161,12 @@ public class UIDragAndDrop : MonoBehaviour
         //      빈 타겟 : 교체
         if (uiSlotInfo.slotType == targetInfo.slotType)
         {
+            // 현재 슬롯 인덱스랑 타겟 슬롯 인덱스가 같으면 
+            if (uiSlotInfo.slotIndex == targetInfo.slotIndex)
+            {
+                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                return;
+            }
             switch (uiSlotInfo.slotType)
             {
                 case TypeData.SlotType.인벤토리:
@@ -173,6 +201,7 @@ public class UIDragAndDrop : MonoBehaviour
                         // 타겟이 없으면 교체
                         if (!targetInfo.isItemExist)
                         {
+                            Debug.Log("?");
                             playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
                         // 타겟이 있으면 교환
@@ -201,16 +230,15 @@ public class UIDragAndDrop : MonoBehaviour
         //             (           1개이면 이면 슬롯에서 제거 )
         else
         {
-            if (uiSlotInfo.slotType == TypeData.SlotType.인벤토리)
+            if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {
-                if (targetInfo.slotType == TypeData.SlotType.단축키)
-                {
-                    playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
-                }
-                else if (targetInfo.slotType == TypeData.SlotType.상점)
-                {
-                    // 상점스크립트로
-                }
+                playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
+            }
+            else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.상점))
+            {
+                // 상점스크립트로
+                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                return;
             }
             else
             {
@@ -228,6 +256,8 @@ public class UIDragAndDrop : MonoBehaviour
                             {
                                 uiManager.divisionPopup.SetActive(true);
                                 uiManager.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                                return;
                             }
                         }
                         break;
@@ -243,6 +273,8 @@ public class UIDragAndDrop : MonoBehaviour
                             if (uiSlotInfo.slotType == TypeData.SlotType.인벤토리)
                             {
                                 // 상점스크립트로
+                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                                return;
                             }
                         }
                         break;

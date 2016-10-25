@@ -21,6 +21,14 @@
         보스
     };
 
+    public enum NPCType
+    {
+        무기점 = 0,
+        방어구점,
+        소모품점,
+        퀘스트
+    };
+
     // Peace, Combat
     public enum MODE
     {

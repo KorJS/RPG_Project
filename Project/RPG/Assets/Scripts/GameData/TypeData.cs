@@ -80,19 +80,20 @@
         갑옷,
         장갑,
         신발,
-        반지,
-        목걸이
     };
 
     // Inventory, ShortCut, Store, Storage, Skill
     public enum SlotType
     {
         없음 = -1,
-        인벤토리 = 0,
+        캐릭터 = 0,
+        인벤토리,
         단축키,
-        상점,
         창고,
-        스킬 
+        스킬리스트,
+        상점리스트,
+        구매,
+        판매,
     };
 
     // Skill, Item

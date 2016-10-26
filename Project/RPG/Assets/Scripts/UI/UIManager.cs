@@ -28,16 +28,18 @@ public class UIManager : MonoBehaviour
         public GameObject characterObj;      // 케릭터창 : P
         public GameObject uiModeObj;         // UIMode : Alt/ESC
         public GameObject inventoryObj ;     // 소지품 : I
+        public GameObject skillObj;          // 스킬 : K
         public GameObject questObj;          // 퀘스트 : Q
         public GameObject storeObj;          // 상점 : NPC 근처에 있을때 F
         public GameObject storageObj;        // 창고 : NPC 근처에 있을때 F
 
-        public string character = "Character_Panel";
-        public string uiMode    = "UI_Panel";
-        public string inventory = "Inventory_Panel";
-        public string quest     = "Quest_Panel";
-        public string store     = "Store_Panel";
-        public string storage   = "Storage_Panel";
+        public string characterW = "Character_Panel";
+        public string uiModeW    = "UI_Panel";
+        public string inventoryW = "Inventory_Panel";
+        public string skillW     = "SKill_Panel";
+        public string questW     = "Quest_Panel";
+        public string storeW     = "Store_Panel";
+        public string storageW   = "Storage_Panel";
     }
 
     [SerializeField]
@@ -57,10 +59,11 @@ public class UIManager : MonoBehaviour
     [System.Serializable]
     public class InputSettings
     {
-        public KeyCode character        = KeyCode.P;
-        public KeyCode inventory        = KeyCode.I;      // 인벤토리 I
-        public KeyCode questList        = KeyCode.L;      // 퀘스트일지 L
+        public KeyCode character        = KeyCode.P;        // 캐릭터 P
+        public KeyCode inventory        = KeyCode.I;        // 인벤토리 I
+        public KeyCode questList        = KeyCode.L;        // 퀘스트일지 L
         public KeyCode worldMap         = KeyCode.M;        // 월드맵 M
+        public KeyCode special          = KeyCode.F;        // 대화
         public KeyCode uiChangeLAlt     = KeyCode.LeftAlt;  // UI 전환 LeftAlt
         public KeyCode uiChangeESC      = KeyCode.Escape;   // UI 전환 ESC
     }
@@ -68,7 +71,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public InputSettings inputKey;
 
-    public Dictionary<int, GameObject> shortCuts = null; // 키보드 단축키를 눌렀을때를 위해서.
+    public Dictionary<int, GameObject> shortCuts = null;    // 키보드 단축키를 눌렀을때를 위해서.
+    public Dictionary<int, GameObject> buySlots = null;     // 상점 구매목록슬롯
+    public Dictionary<int, GameObject> sellSlots = null;    // 상점 판매목록슬롯
     public List<GameObject> windows = null;
 
     public bool isUIMode = false;
@@ -83,44 +88,34 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         uiManager = this;
+        DontDestroyOnLoad(this);
 
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
-        popupSettings.divisionPopup = GameObject.FindGameObjectWithTag("DivisionPopup");
-        popupSettings.divisionPopup.SetActive(false);
-
-        popupSettings.InquirePopup = GameObject.FindGameObjectWithTag("InquirePopup");
-        popupSettings.InquirePopup.SetActive(false);
+        windows.Add(popupSettings.divisionPopup);
+        //popupSettings.divisionPopup = GameObject.FindGameObjectWithTag("DivisionPopup");
+        //popupSettings.divisionPopup.SetActive(false);
+        windows.Add(popupSettings.InquirePopup);
+        //popupSettings.InquirePopup = GameObject.FindGameObjectWithTag("InquirePopup");
+        //popupSettings.InquirePopup.SetActive(false);
 
         shortCuts = new Dictionary<int, GameObject>();
         
         // window
-        FindWindow(ref windowSettings.characterObj, windowSettings.character);
-        FindWindow(ref windowSettings.uiModeObj, windowSettings.uiMode);
-        FindWindow(ref windowSettings.inventoryObj, windowSettings.inventory);
-        FindWindow(ref windowSettings.questObj, windowSettings.quest);
-        FindWindow(ref windowSettings.storeObj, windowSettings.store);
-        FindWindow(ref windowSettings.storageObj, windowSettings.storage);
+        FindWindow(ref windowSettings.characterObj, windowSettings.characterW);
+        FindWindow(ref windowSettings.uiModeObj, windowSettings.uiModeW);
+        FindWindow(ref windowSettings.inventoryObj, windowSettings.inventoryW);
+        FindWindow(ref windowSettings.skillObj, windowSettings.skillW);
+        FindWindow(ref windowSettings.questObj, windowSettings.questW);
+        FindWindow(ref windowSettings.storeObj, windowSettings.storeW);
+        FindWindow(ref windowSettings.storageObj, windowSettings.storageW);
     }
 
     void Update()
     {
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
-        InputSpecialkey();
+        InputUIkey();
     }
-
-    //private void FindShortCut()
-    //{
-    //    GameObject[] obj = GameObject.FindGameObjectsWithTag("ShortCut");
-
-    //    for (int i = 0; i < obj.Length; i++)
-    //    {
-    //        string[] strIndex = obj[i].name.Split(' ');
-    //        int index = int.Parse(strIndex[1]);
-
-    //        shortCuts.Add(index, obj[i]);
-    //    }
-    //}
 
     private void FindWindow(ref GameObject obj, string objName)
     {
@@ -140,32 +135,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // 특수키 입력
-    private void InputSpecialkey()
+    // UI 키 입력
+    // 상점, 창고 - 인벤창도 같이 On
+    private void InputUIkey()
     {
         // 케릭터창
-        if (Input.GetKeyDown(inputKey.character))
-        {
-
-        }
+        if (Input.GetKeyDown(inputKey.character)) { }
 
         // 소지품
-        if (Input.GetKeyDown(inputKey.inventory))
-        {
-            UIMode(windowSettings.inventoryObj);
-        }
+        if (Input.GetKeyDown(inputKey.inventory)) { ShowWindow(windowSettings.inventoryObj); }
 
-        // 소지품
-        if (Input.GetKeyDown(inputKey.questList))
-        {
-            UIMode(windowSettings.questObj);
-        }
+        // 퀘스트창
+        if (Input.GetKeyDown(inputKey.questList)) { ShowWindow(windowSettings.questObj); }
 
         // UI 모드
-        if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
-        {
-            UIMode(windowSettings.uiModeObj);
-        }
+        if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC)) { ShowWindow(windowSettings.uiModeObj); }
     }
 
     public void AllCloseWindow()
@@ -186,7 +170,7 @@ public class UIManager : MonoBehaviour
         windowSettings.storeObj.SetActive(true);
     }
 
-    private void UIMode(GameObject obj)
+    public void ShowWindow(GameObject obj)
     {
         // UI오브젝트가 활성화 상태 일때 - 이건 UI모드상태인깐
         if (windowSettings.uiModeObj.activeSelf)

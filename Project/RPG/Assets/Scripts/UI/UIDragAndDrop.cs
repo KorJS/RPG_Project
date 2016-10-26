@@ -253,16 +253,14 @@ public class UIDragAndDrop : MonoBehaviour
         // 단축창 -> 제거
         // 스킬 -> 단축창 ( 타겟이 존재하면 교체 / 타겟이 없으면 복사 )
         // < 상점 내용은 상점스크립트로 연결 - 정산이 완료되면 주인공 데이터 변화된다 >
-        // 인벤 > 상점 ( 인벤은 그대로, 판매목록 : 분리창 On - 분리 수량 만큼 - 이미있으면 합치기 - 없으면 빈곳에 복사 )
-        // 상점 > 인벤 ( 판매목록 : 수량 2개 이상 - 분리창 On - 분리 수량 만큼 - 판매목록 수량에서 제거 )
-        //             (           1개이면 이면 슬롯에서 제거 )
+        // 인벤 > 판매목록(상점) ( 인벤은 그대로, 판매목록 : 분리창 On - 분리 수량 만큼 - 이미있으면 합치기 - 없으면 빈곳에 복사 )
         else
         {
             if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {
                 playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
             }
-            else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.상점))
+            else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.판매))
             {
                 // 상점스크립트로
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
@@ -296,18 +294,7 @@ public class UIDragAndDrop : MonoBehaviour
                         }
                         break;
 
-                    case TypeData.SlotType.상점:
-                        {
-                            if (uiSlotInfo.slotType == TypeData.SlotType.인벤토리)
-                            {
-                                // 상점스크립트로
-                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
-                                return;
-                            }
-                        }
-                        break;
-
-                    case TypeData.SlotType.스킬:
+                    case TypeData.SlotType.스킬리스트:
                         {
                             if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
                             {

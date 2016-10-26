@@ -29,6 +29,30 @@ public class UIDragAndDrop : MonoBehaviour
         root = NGUITools.FindInParents<UIRoot>(parent);
     }
 
+    void OnClick()
+    {
+        // Test
+        if (UICamera.currentKey == KeyCode.Mouse1)
+        {
+            switch (uiSlotInfo.slotType)
+            {
+                case TypeData.SlotType.인벤토리:
+                case TypeData.SlotType.단축키:
+                    {
+                        if (uiSlotInfo.slotInfo.skillIndex != -1)
+                        {
+                            Debug.Log(uiSlotInfo.slotInfo.skillIndex);
+                            return;
+                        }
+                        uiSlotInfo.slotInfo.quantity -= 1;
+                        playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
+                        uiSlotInfo.ReSetting();
+                    }
+                    break;
+            }
+        }
+    }
+
     void OnDragStart()
     {
         // 이미 드래그래서 분리중이면 새로운 드래그 못하게.
@@ -122,6 +146,7 @@ public class UIDragAndDrop : MonoBehaviour
                     break;
             }
             uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+            uiSlotInfo.ReSetting();
             return;
         }
 
@@ -252,7 +277,7 @@ public class UIDragAndDrop : MonoBehaviour
                         {
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
-                                playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotIndex, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
+                                playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                             }
                             // 소모품, 퀘스트템일경우
                             else

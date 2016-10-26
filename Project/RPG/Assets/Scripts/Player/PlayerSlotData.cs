@@ -43,6 +43,7 @@ public class PlayerSlotData
     private SortedDictionary<int, UISlotInfo.SlotInfo> invenQuestItemMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> storageCusomableMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> storageQuestItemMark = null;
+    private SortedDictionary<int, UISlotInfo.SlotInfo> shortCutMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> emptyInvenMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> emptyStorageMark = null;
 
@@ -58,6 +59,7 @@ public class PlayerSlotData
         invenQuestItemMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         storageCusomableMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         storageQuestItemMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
+        shortCutMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
 
         emptyInvenMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
@@ -214,7 +216,7 @@ public class PlayerSlotData
 
     // 마크 지움
     private void RemoveMark(TypeData.SlotType slotType, int slotIndex, 
-        ref SortedDictionary<int, UISlotInfo.SlotInfo> invenMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> storageMark, string temp)
+        ref SortedDictionary<int, UISlotInfo.SlotInfo> invenMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> storageMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> shortCutMark, string temp)
     {
         switch (slotType)
         {
@@ -231,12 +233,19 @@ public class PlayerSlotData
                     storageMark.Remove(slotIndex);
                 }
                 break;
+
+            case TypeData.SlotType.단축키:
+                {
+                    Debug.Log(temp + " ShortCut Remove : " + slotType + " ok : " + slotIndex);
+                    shortCutMark.Remove(slotIndex);
+                }
+                break;
         }
     }
     
     // 마크 등록 : 인벤>창고, 창고>인벤 이동할때 쓰일 것
     private void SetMark(TypeData.SlotType slotType, int slotIndex, UISlotInfo.SlotInfo slotInfo, 
-        ref SortedDictionary<int, UISlotInfo.SlotInfo> invenMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> storageMark, string temp)
+        ref SortedDictionary<int, UISlotInfo.SlotInfo> invenMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> storageMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> shortCutMark, string temp)
     {
         switch (slotType)
         {
@@ -245,6 +254,7 @@ public class PlayerSlotData
                     if (invenMark.ContainsKey(slotIndex))
                     {
                         // TODO : 여기에 지우고 밑에 다시 추가하려고햇는데 빈번한 삭제 추가는 오류 발생함
+                        Debug.Log(temp + " Inven Exist : " + slotType + " ok : " + slotIndex);
                         return;
                     }
                     Debug.Log(temp + " Inven Add : " + slotType + " ok : " + slotIndex);
@@ -257,11 +267,23 @@ public class PlayerSlotData
                     // 이미 등록된게 있으면 리턴
                     if (storageMark.ContainsKey(slotIndex))
                     {
-                        Debug.Log(temp + " Storage Add : " + slotType + " ok : " + slotIndex);
+                        Debug.Log(temp + " Storage Exist : " + slotType + " ok : " + slotIndex);
                         return;
                     }
-                    //Debug.Log("Storage Add : " + slotType + " ok : " + slotIndex);
+                    Debug.Log(temp + " Storage Add : " + slotType + " ok : " + slotIndex);
                     storageMark.Add(slotIndex, slotInfo);
+                }
+                break;
+
+            case TypeData.SlotType.단축키:
+                {
+                    if (shortCutMark.ContainsKey(slotIndex))
+                    {
+                        Debug.Log(temp + " ShortCut Exist : " + slotType + " ok : " + slotIndex);
+                        return;
+                    }
+                    Debug.Log(temp + " ShortCut Add : " + slotType + " ok : " + slotIndex);
+                    shortCutMark.Add(slotIndex, slotInfo);
                 }
                 break;
         }
@@ -292,7 +314,7 @@ public class PlayerSlotData
     }
 
     // 소모품, 퀘스트템 검사
-    private void CheckCAndQMark(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType,
+    private void CheckCAndQMark(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType,
         int currentItemIndex, int divQuantity, ref SortedDictionary<int, UISlotInfo.SlotInfo> invenMark, ref SortedDictionary<int, UISlotInfo.SlotInfo> storageMark)
     {
         // 타겟
@@ -303,31 +325,36 @@ public class PlayerSlotData
                     // 인벤
                     foreach (KeyValuePair<int, UISlotInfo.SlotInfo> invenSlotInfo in invenMark)
                     {
-                        if (invenSlotInfo.Value.itemIndex == currentItemIndex)
+                        if (invenSlotInfo.Value.itemIndex != currentItemIndex)
                         {
-                            // 수량이 없으면 멈춤
-                            if (divQuantity <= 0)
-                            {
-                                break;
-                            }
-
-                            // 같은 곳에 수량이 99인지는 마크 등록할때 했음.
-                            // 같은게 있으면 채우고
-                            // 남으면 다시 또 같은게 있으면 채우고..
-                            int tempInvenSlotIndex = invenSlotInfo.Key;
-                            Debug.Log("tempInvenSlotIndex : " + tempInvenSlotIndex);
-
-                            tempSlotInfoData = inventoryInfos[tempInvenSlotIndex];
-
-                            int targetQuantity = tempSlotInfoData.quantity;
-
-                            CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
-                            Debug.Log("targetQuantity : " + targetQuantity);
-                            tempSlotInfoData.quantity = targetQuantity;
-
-                            inventoryInfos[tempInvenSlotIndex] = tempSlotInfoData;
-                            GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+                            continue;
                         }
+
+                        // 수량이 없으면 멈춤
+                        if (divQuantity <= 0)
+                        {
+                            break;
+                        }
+
+                        // 같은 곳에 수량이 99인지는 마크 등록할때 했음.
+                        // 같은게 있으면 채우고
+                        // 남으면 다시 또 같은게 있으면 채우고..
+                        int tempInvenSlotIndex = invenSlotInfo.Key;
+                        Debug.Log("tempInvenSlotIndex : " + tempInvenSlotIndex);
+
+                        tempSlotInfoData = inventoryInfos[tempInvenSlotIndex];
+
+                        // 수량이 99개 이면 다음꺼로.
+                        if (inventoryInfos[tempInvenSlotIndex].quantity >= 99) { continue; }
+
+                        int targetQuantity = tempSlotInfoData.quantity;
+
+                        CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
+                        Debug.Log("targetQuantity : " + targetQuantity);
+                        tempSlotInfoData.quantity = targetQuantity;
+
+                        inventoryInfos[tempInvenSlotIndex] = tempSlotInfoData;
+                        GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
                     }
 
                     // 수량이 없으면 리턴
@@ -375,18 +402,20 @@ public class PlayerSlotData
                     // 창고 - 수량 제한 없음 무족건 합침.
                     foreach (KeyValuePair<int, UISlotInfo.SlotInfo> storageSlotInfo in storageMark)
                     {
-                        if (storageSlotInfo.Value.itemIndex == currentItemIndex)
+                        if (storageSlotInfo.Value.itemIndex != currentItemIndex)
                         {
-                            int tempStorageSlotIndex = storageSlotInfo.Key;
-                            tempSlotInfoData = storageInfos[tempStorageSlotIndex];
-                            tempSlotInfoData.quantity += divQuantity;
-                            storageInfos[tempStorageSlotIndex] = tempSlotInfoData;
-
-                            divQuantity = 0; // 다 합치고 나면 0개
-                            GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
-
-                            break;
+                            continue;
                         }
+
+                        int tempStorageSlotIndex = storageSlotInfo.Key;
+                        tempSlotInfoData = storageInfos[tempStorageSlotIndex];
+                        tempSlotInfoData.quantity += divQuantity;
+                        storageInfos[tempStorageSlotIndex] = tempSlotInfoData;
+
+                        divQuantity = 0; // 다 합치고 나면 0개
+                        GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+
+                        break;
                     }
 
                     // 위에서 다 합쳤으면 수량 0개이므로 리턴 
@@ -421,7 +450,8 @@ public class PlayerSlotData
         }
     }
 
-    private void CheckEquipmentMark(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType,
+    // 장비 검사
+    private void CheckEquipmentMark(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType,
         int currentItemIndex, int divQuantity)
     {
         // 옴겨길 템 정보
@@ -438,7 +468,8 @@ public class PlayerSlotData
 
                         tempSlotInfoData.quantity = divQuantity;
                         emptyInvenMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
-                        storageInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
+                        inventoryInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
+                        GameObject.Find("I_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
                         return;
                     }
                 }
@@ -453,12 +484,186 @@ public class PlayerSlotData
                         tempSlotInfoData.quantity = divQuantity;
                         emptyStorageMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
                         storageInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
+                        GameObject.Find("W_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
                         return;
                     }
                 }
                 break;
         }
 
+    }
+    
+    // 단축창 수량 검사(소모품, 퀘스트템)
+    private void CheckShorCutMark(TypeData.SlotType slotType, UISlotInfo slotInfo)
+    {
+        // 만약에 장비인 경우
+        if (slotInfo.slotInfo.itemType == TypeData.ItemType.장비)
+        {
+            return;
+        }
+
+        // 단축창에서 수량 변화가 생기면 인벤에도 변화를 / 인벤에서 수량 변화가 생기면 단축창에도 변화를
+        int quantity = 0;
+
+        switch (slotType)
+        {
+            // 인벤에서 수량 변화가 생기면 단축창에도 변화를 > 아이템 습득, 소모
+            case TypeData.SlotType.인벤토리:
+                {
+                    foreach (KeyValuePair<int, UISlotInfo.SlotInfo> shorCutInfo in shortCutMark)
+                    {
+                        // 같은 타입이 아니면 
+                        if (slotInfo.slotInfo.itemType != shorCutInfo.Value.itemType)
+                        {
+                            continue;
+                        }
+
+                        // 같은 인덱스가 아니면
+                        if (slotInfo.slotInfo.itemIndex != shorCutInfo.Value.itemIndex)
+                        {
+                            continue;
+                        }
+
+                        // 같은 아이템타입에 같은 아이텝인덱스인경우 - 인벤에 아이템에 수량을 전부 알아옴
+                        if (slotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
+                        {
+                            quantity = CheckInvenQuantity(slotInfo.slotInfo.itemIndex, invenCusomableMark);
+                            Debug.Log("? " + quantity);
+
+                        }
+                        else if (slotInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
+                        {
+                            quantity = CheckInvenQuantity(slotInfo.slotInfo.itemIndex, invenQuestItemMark);
+                        }
+
+                        // 단축창에 수량 변화시켜준다.
+                        int tempShorCutIndex = shorCutInfo.Key;
+                        SlotInfoData tempSlotInfoData = shortCutInfos[tempShorCutIndex];
+                        tempSlotInfoData.quantity = quantity;
+                        shortCutInfos[tempShorCutIndex] = tempSlotInfoData;
+
+                        UISlotInfo uislotInfo = GameObject.Find("H_Slot " + tempShorCutIndex).GetComponent<UISlotInfo>();
+
+                        if (quantity == 0)
+                        {
+                            RemoveSlotData(uislotInfo);
+                            uislotInfo.ReSetting();
+                            return;
+                        }
+
+                        uislotInfo.ReSetting();
+                    }
+                }
+                break;
+
+            // 단축창에서 수량 변화가 생기면 인벤에도 변화를 > 아이템 소모
+            case TypeData.SlotType.단축키:
+                {
+                    List<int> invenIndex = new List<int>();
+
+                    if (slotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
+                    {
+                        foreach (KeyValuePair<int, UISlotInfo.SlotInfo> cusomableInfo in invenCusomableMark)
+                        {
+                            if (slotInfo.slotInfo.itemIndex != cusomableInfo.Value.itemIndex)
+                            {
+                                continue;
+                            }
+
+                            int index = cusomableInfo.Key;
+
+                            invenIndex.Add(index);
+
+                            quantity += inventoryInfos[index].quantity;
+                        }
+                    }
+                    else if (slotInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
+                    {
+                        foreach (KeyValuePair<int, UISlotInfo.SlotInfo> questItemInfo in invenQuestItemMark)
+                        {
+                            if (slotInfo.slotInfo.itemIndex != questItemInfo.Value.itemIndex)
+                            {
+                                continue;
+                            }
+
+                            int index = questItemInfo.Key;
+
+                            invenIndex.Add(index);
+
+                            quantity += inventoryInfos[index].quantity;
+                        }
+                    }
+
+                    // 같은 아이템이 하나도 없으면 리턴
+                    if (invenIndex.Count == 0)
+                    {
+                        return;
+                    }
+
+                    // 단축창의 수량하고 인벤에 수량합계랑 다르면
+                    if (slotInfo.slotInfo.quantity != quantity)
+                    {
+                        // 단축 수량이 변화가 생긴거니깐.
+                        // 인벤수량 - 단축수량
+                        int resultQuantity = quantity - slotInfo.slotInfo.quantity;
+
+                        // 수량이 적은 곳 부터 수량 감소
+                        for (int i = invenIndex.Count - 1; i >= 0; i--)
+                        {
+                            if (resultQuantity <= 0)
+                            {
+                                break;
+                            }
+
+                            int index = invenIndex[i];
+
+                            SlotInfoData tempSlotInfoData = inventoryInfos[index];
+                            Debug.Log(tempSlotInfoData.quantity);
+                            
+                            // 소모3 슬롯2 > if문으로 > 소모1 슬롯99 > else문으로 > 소모 0 끝. 
+                            // 소모된 수량보다 슬롯에 수량이 작거나 큰경우
+                            if (tempSlotInfoData.quantity <= resultQuantity)
+                            {
+                                // 소모된 수량 조정후
+                                resultQuantity -= tempSlotInfoData.quantity;
+
+                                // 슬롯 제거
+                                UISlotInfo uiSlotInfo = GameObject.Find("I_Slot " + index).GetComponent<UISlotInfo>();
+                                RemoveSlotData(uiSlotInfo);
+                                uiSlotInfo.ReSetting();
+                            }
+                            // 소모된 수량보다 슬롯에 수량이 큰 경우
+                            else
+                            {
+                                tempSlotInfoData.quantity -= resultQuantity;
+                                resultQuantity = 0;
+                                inventoryInfos[index] = tempSlotInfoData;
+                                GameObject.Find("I_Slot " + index).GetComponent<UISlotInfo>().ReSetting();
+                            }
+                        }
+                    }
+
+                    invenIndex.Clear();
+                }
+                break;
+        }
+    }
+
+    // 인벤>단축 소모품이나 퀘스트템 복사시 인벤에 똑같은 템이 다수 존재 하면 수량을 단축창에 모두 표시.
+    private int CheckInvenQuantity(int currentItemIndex, SortedDictionary<int, UISlotInfo.SlotInfo> invenMark)
+    {
+        int quantity = 0;
+
+        foreach (KeyValuePair<int, UISlotInfo.SlotInfo> invenInfo in invenMark)
+        {
+            if (currentItemIndex == invenInfo.Value.itemIndex)
+            {
+                int index = invenInfo.Key;
+                quantity += inventoryInfos[index].quantity;
+            }
+        }
+
+        return quantity;
     }
 
     // 슬롯에 변화가 생기면 슬롯의 정보로 재 설정 - 수량 변화
@@ -470,30 +675,25 @@ public class PlayerSlotData
             return false;
         }
 
-        // 슬롯이 0보다 적으면 데이터 삭제
-        if (slotInfo.slotInfo.quantity <= 0)
-        {
-            RemoveSlotData(slotInfo);
-            return true;
-        }
-
-        // 인벤토리이고 현재 슬롯 수량이 99 이상이면 마크 제거
-        if ((slotType == TypeData.SlotType.인벤토리) && (slotInfo.slotInfo.quantity >= 99))
-        {
-            if (slotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
-            {
-                invenCusomableMark.Remove(slotIndex);
-            }
-            else if (slotInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
-            {
-                invenQuestItemMark.Remove(slotIndex);
-            }
-        }
-
         // 슬롯정보에 있는 수량을 주인공데이터의 수량에 등록
         SlotInfoData tempSlotInfoData = tempCurrentSlotInfoDatas[slotIndex];
         tempSlotInfoData.quantity = slotInfo.slotInfo.quantity;
         tempCurrentSlotInfoDatas[slotIndex] = tempSlotInfoData;
+
+        // 슬롯이 0보다 적으면 데이터 삭제
+        if (slotInfo.slotInfo.quantity <= 0)
+        {
+            // 인벤, 단축창 수량 변화
+            CheckShorCutMark(slotType, slotInfo);
+
+            RemoveSlotData(slotInfo);
+
+            return true;
+        }
+
+
+        // 인벤, 단축창 수량 변화
+        CheckShorCutMark(slotType, slotInfo);
 
         return true;
     }
@@ -519,7 +719,7 @@ public class PlayerSlotData
             if ((slotType == TypeData.SlotType.인벤토리) || (slotType == TypeData.SlotType.창고))
             {
                 // 인벤, 창고 빈 곳 체크해두자
-                SetMark(slotType, slotIndex, slotInfo, ref emptyInvenMark, ref emptyStorageMark, "빈곳");
+                SetMark(slotType, slotIndex, slotInfo, ref emptyInvenMark, ref emptyStorageMark, ref shortCutMark, "빈곳");
             }
             return false;
         }
@@ -541,6 +741,7 @@ public class PlayerSlotData
                 return false;
             }
 
+            slotInfo.itemIndex = -1;
             slotInfo.iconName = SkillData.Instance.skillInfos[slotInfo.skillIndex].name; // 스킬 이름
             slotInfo.slotInfoType = TypeData.SlotInfoType.스킬;
             slotInfo.itemType = TypeData.ItemType.없음;
@@ -551,7 +752,7 @@ public class PlayerSlotData
             {
                 Debug.Log("Error : " + tempCurrentSlotInfoDatas[slotIndex].skillIndex + " 스킬임");
             }
-
+            slotInfo.skillIndex = -1;
             switch (tempCurrentSlotInfoDatas[slotIndex].itemType)
             {
                 case TypeData.ItemType.장비:
@@ -572,11 +773,7 @@ public class PlayerSlotData
                         slotInfo.itemType = TypeData.ItemType.소모품;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;
 
-                        // 인벤토리에 수량 99개 이면 마크에서 제외하고 나머지 마크등록 - 인벤 슬롯당 최대수량은 99
-                        if (!((slotType == TypeData.SlotType.인벤토리) && (slotInfo.quantity >= 99)))
-                        {
-                            SetMark(slotType, slotIndex, slotInfo, ref invenCusomableMark, ref storageCusomableMark, "소모품"); // 소모품 마크 등록
-                        }
+                        SetMark(slotType, slotIndex, slotInfo, ref invenCusomableMark, ref storageCusomableMark, ref shortCutMark, "소모품"); // 소모품 마크 등록
                     }
                     break;
 
@@ -588,11 +785,7 @@ public class PlayerSlotData
                         slotInfo.itemType = TypeData.ItemType.퀘스트템;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;
 
-                        // 인벤토리에 수량 99개 이면 마크에서 제외하고 나머지 마크등록 - 인벤 슬롯당 최대수량은 99
-                        if (!((slotType == TypeData.SlotType.인벤토리) && (slotInfo.quantity >= 99)))
-                        {
-                            SetMark(slotType, slotIndex, slotInfo, ref invenQuestItemMark, ref storageQuestItemMark, "퀘템"); // 퀘템 마크 등록
-                        }
+                        SetMark(slotType, slotIndex, slotInfo, ref invenQuestItemMark, ref storageQuestItemMark, ref shortCutMark, "퀘템"); // 퀘템 마크 등록
                     }
                     break;
             }
@@ -642,17 +835,21 @@ public class PlayerSlotData
             tempCurrentSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
             tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
 
+            if (currentInfo.slotType == TypeData.SlotType.단축키)
+            {
+                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, ref shortCutMark, "단축제거");
+                return;
+            }
 
             // 버그 - 갱신 전이라서 수량이 그대로..
             // 타겟으로 교체하면 현재는 빈곳이므로 inven, storage Mark에서 지우자
             if (currentInfo.slotInfo.itemType == TypeData.ItemType.소모품)
             {
-                Debug.Log("?");
-                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, "소모품제거");
+                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, ref shortCutMark, "소모품제거");
             }
             else if (currentInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
             {
-                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenQuestItemMark, ref storageQuestItemMark, "퀘템제거");
+                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenQuestItemMark, ref storageQuestItemMark, ref shortCutMark, "퀘템제거");
             }
             return;
         }
@@ -674,11 +871,30 @@ public class PlayerSlotData
             return;
         }
 
+        if (currentInfo.slotInfo.itemType == TypeData.ItemType.장비)
+        {
+            Debug.Log("장비 입니다. 단축 슬롯에 넣을 수 없습니다.");
+            return;
+        }
+
         // 타겟슬롯의 정보 가져옴
         CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas);
 
+        int quantity = 0;
+
+        if (currentInfo.slotInfo.itemType == TypeData.ItemType.소모품)
+        {
+            quantity = CheckInvenQuantity(currentInfo.slotInfo.itemIndex, invenCusomableMark);
+        }
+        else if (currentInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
+        {
+            quantity = CheckInvenQuantity(currentInfo.slotInfo.itemIndex, invenQuestItemMark);
+        }
+
+        SlotInfoData tempSlotInfoData = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
+        tempSlotInfoData.quantity = quantity;
         // 현재를 타겟에 복사
-        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
+        tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempSlotInfoData;
     }
 
     // 합치기 - 타겟이 있을때 같은 것이 있으면 결합(소모품, 퀘스트템) 인벤>인벤 / 창고>인벤
@@ -721,44 +937,50 @@ public class PlayerSlotData
     }
 
     // 나누다, 분리 - 아이템 분리(소모품, 퀘스트템)
-    // 타겟이 같은 아이템타입이면 다시 합치고, 다르면 취소, 빈곳이면 그곳에 넣기
-    public void DivisionSlotData(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
+    // 타겟이 같은 아이템타입이면 다시 합치고, 다르면 취소, 빈곳이면 순차대로 
+    public void DivisionSlotData(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
     {
         switch (currentItemType)
         {
             case TypeData.ItemType.소모품:
                 {
-                    CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
+                    CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
                 }
                 break;
 
             case TypeData.ItemType.퀘스트템:
                 {
-                    CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
+                    CheckCAndQMark(targetSlotType,  currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
                 }
                 break;
         }
     }
 
-    // 추가 - 아이템 습득(장비, 소모품, 퀘스트템) / 인벤>창고(장비) / 창고>인벤(장비)
-    public void AddSlotData(TypeData.SlotType targetSlotType, int currentIndex, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
+    // 추가 - 아이템 습득(장비, 소모품, 퀘스트템) / 인벤>창고(장비) / 창고>인벤(장비) . 안벤에 추가 되면 단축키에 복사된거면 같이 수량증가.(소모품, 퀘스트템)
+    public void AddSlotData(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
     {
         if (currentItemType == TypeData.ItemType.장비)
         {
-            CheckEquipmentMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity);
+            CheckEquipmentMark(targetSlotType, currentItemType, currentItemIndex, divQuantity);
             return;
         }
 
         if (currentItemType == TypeData.ItemType.소모품)
         {
-            CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
+            CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
             return;
         }
 
         if (currentItemType == TypeData.ItemType.퀘스트템)
         {
-            CheckCAndQMark(targetSlotType, currentIndex, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
+            CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
             return;
+        }
+
+        // 창고로 소모품, 퀘스트템이 이동했을때. 인벤에 수량 변화에따라 단축창에 수량변화.
+        if (targetSlotType == TypeData.SlotType.창고)
+        {
+
         }
     }
 
@@ -774,15 +996,24 @@ public class PlayerSlotData
 
         tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
 
+        if (currentInfo.slotType == TypeData.SlotType.단축키)
+        {
+            if (currentInfo.slotInfo.skillIndex == -1)
+            {
+                RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, ref shortCutMark, "단축제거");
+            }
+            return;
+        }
+
         // 타겟으로 교체하면 현재는 빈곳이므로 inven, storage Mark에서 지우자
         if (currentInfo.slotInfo.itemType == TypeData.ItemType.소모품)
         {
             // 여기는 제거이기때문에 인벤토리에 수량이 남아있을경우가 없음.
-            RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, "소모품제거");
+            RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenCusomableMark, ref storageCusomableMark, ref shortCutMark, "소모품제거");
         }
         else if (currentInfo.slotInfo.itemType == TypeData.ItemType.퀘스트템)
         {
-            RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenQuestItemMark, ref storageQuestItemMark, "퀘템제거");
+            RemoveMark(currentInfo.slotType, currentInfo.slotIndex, ref invenQuestItemMark, ref storageQuestItemMark, ref shortCutMark, "퀘템제거");
         }
     }
 }

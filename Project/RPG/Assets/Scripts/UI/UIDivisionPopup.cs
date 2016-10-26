@@ -113,7 +113,7 @@ public class UIDivisionPopup : MonoBehaviour
         }
 
         // 대상 바꿈
-        playerSlotData.DivisionSlotData(targetInfo.slotType, currentInfo.slotIndex, currentInfo.slotInfo.itemType, currentInfo.slotInfo.itemIndex, divQuantity);
+        playerSlotData.DivisionSlotData(targetInfo.slotType, currentInfo.slotInfo.itemType, currentInfo.slotInfo.itemIndex, divQuantity);
         // 현재꺼는 따로 수정
         playerSlotData.SetSlotData(currentInfo.slotType, currentInfo.slotIndex, ref currentInfo);
 

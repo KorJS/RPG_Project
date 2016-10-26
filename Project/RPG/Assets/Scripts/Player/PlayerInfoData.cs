@@ -18,6 +18,7 @@ public class PlayerInfoData
         }
     }
 
+    // TODO :  리스폰 위치
     public struct InfoData
     {
         public string name;

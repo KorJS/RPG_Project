@@ -27,8 +27,8 @@ public class ItemData
         public int attack;                              // 공격력
         public int defence;                             // 방어력
         public int hp;                                  // 체력
-        public int buyGold;
-        public int SellGold;
+        public int buyGold;                             // 구매가격
+        public int sellGold;                            // 판매가격
     };
 
     // 소모품 정보
@@ -37,8 +37,9 @@ public class ItemData
         public string name;                             // 이름
         public string instruction;                      // 설명
         public float increase;                          // 상승치
+        public float coolTime;                          // 쿨타임
         public int buyGold;                             // 구매가격
-        public int SellGold;                            // 판매가격
+        public int sellGold;                            // 판매가격
     };
 
     // 퀘스트템 정보
@@ -46,7 +47,7 @@ public class ItemData
     {
         public string name;                             // 이름
         public int buyGold;                             // 판매가격
-        public int SellGold;                            // 구매가격
+        public int sellGold;                            // 구매가격
     };
 
     public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 데이터를 로드해서 저장
@@ -65,16 +66,23 @@ public class ItemData
 
         cusomableInfo.name = "HPPotion";
         cusomableInfo.increase = 100;
+        cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 1000;
-        cusomableInfo.SellGold = 500;
+        cusomableInfo.sellGold = 500;
         cusomableInfos.Add(0, cusomableInfo);
 
         cusomableInfo.name = "MPPotion";
         cusomableInfo.increase = 100;
+        cusomableInfo.coolTime = 10f;
+        cusomableInfo.buyGold = 500;
+        cusomableInfo.sellGold = 250;
         cusomableInfos.Add(1, cusomableInfo);
 
         cusomableInfo.name = "HMPPotion";
         cusomableInfo.increase = 100;
+        cusomableInfo.coolTime = 10f;
+        cusomableInfo.buyGold = 2000;
+        cusomableInfo.sellGold = 1000;
         cusomableInfos.Add(2, cusomableInfo);
     }
 }

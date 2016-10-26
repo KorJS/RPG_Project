@@ -19,6 +19,7 @@ public class SkillData
     }
 
     // TODO : 데이터를 받아올때 각 스킬별로 스킬렙업시 상승 효과도 같이 받아와서 PlayerSkillData에서 처리
+    // 케릭 직업에 맞게 데이터를 받아온다
     public struct Skillinfo
     {
         public int index;       // 인덱스
@@ -44,8 +45,31 @@ public class SkillData
         skillinfo.level = 1;
         skillinfo.coolTime = 1f;
         skillinfo.attack = 100f;
+        skillinfo.mp = 5f;
         skillinfo.angle = 60f;
         skillinfo.distance = 3f;
+
+        skillInfos.Add(skillinfo.index, skillinfo);
+
+        skillinfo.index = 1;
+        skillinfo.name = "Overpower";
+        skillinfo.level = 5;
+        skillinfo.coolTime = 8f;
+        skillinfo.attack = 500f;
+        skillinfo.mp = -100f;
+        skillinfo.angle = 60f;
+        skillinfo.distance = 5f;
+
+        skillInfos.Add(skillinfo.index, skillinfo);
+
+        skillinfo.index = 2;
+        skillinfo.name = "Rush";
+        skillinfo.level = 8;
+        skillinfo.coolTime = 10f;
+        skillinfo.attack = 0f;
+        skillinfo.mp = -50f;
+        skillinfo.angle = 90f;
+        skillinfo.distance = 2f;
 
         skillInfos.Add(skillinfo.index, skillinfo);
     }

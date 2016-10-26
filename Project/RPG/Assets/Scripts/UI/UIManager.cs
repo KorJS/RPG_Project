@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
         public GameObject inventoryObj ;     // 소지품 : I
         public GameObject skillObj;          // 스킬 : K
         public GameObject questObj;          // 퀘스트 : Q
-        public GameObject storeObj;          // 상점 : NPC 근처에 있을때 F
+        
         public GameObject storageObj;        // 창고 : NPC 근처에 있을때 F
 
         public string characterW = "Character_Panel";
@@ -38,7 +38,6 @@ public class UIManager : MonoBehaviour
         public string inventoryW = "Inventory_Panel";
         public string skillW     = "SKill_Panel";
         public string questW     = "Quest_Panel";
-        public string storeW     = "Store_Panel";
         public string storageW   = "Storage_Panel";
     }
 
@@ -71,9 +70,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public InputSettings inputKey;
 
-    public Dictionary<int, GameObject> shortCuts = null;    // 키보드 단축키를 눌렀을때를 위해서.
-    public Dictionary<int, GameObject> buySlots = null;     // 상점 구매목록슬롯
-    public Dictionary<int, GameObject> sellSlots = null;    // 상점 판매목록슬롯
+    public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
+    public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
+    public Dictionary<int, UISlotInfo> buySlots = null;         // 상점 구매목록슬롯
+    public Dictionary<int, UISlotInfo> sellSlots = null;        // 상점 판매목록슬롯
     public List<GameObject> windows = null;
 
     public bool isUIMode = false;
@@ -93,21 +93,19 @@ public class UIManager : MonoBehaviour
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
         windows.Add(popupSettings.divisionPopup);
-        //popupSettings.divisionPopup = GameObject.FindGameObjectWithTag("DivisionPopup");
-        //popupSettings.divisionPopup.SetActive(false);
         windows.Add(popupSettings.InquirePopup);
-        //popupSettings.InquirePopup = GameObject.FindGameObjectWithTag("InquirePopup");
-        //popupSettings.InquirePopup.SetActive(false);
 
-        shortCuts = new Dictionary<int, GameObject>();
-        
+        shortCuts = new Dictionary<int, UISlotInfo>();
+        storeListSlots = new Dictionary<int, UISlotInfo>();
+        buySlots = new Dictionary<int, UISlotInfo>();
+        sellSlots = new Dictionary<int, UISlotInfo>();
+
         // window
         FindWindow(ref windowSettings.characterObj, windowSettings.characterW);
         FindWindow(ref windowSettings.uiModeObj, windowSettings.uiModeW);
         FindWindow(ref windowSettings.inventoryObj, windowSettings.inventoryW);
         FindWindow(ref windowSettings.skillObj, windowSettings.skillW);
         FindWindow(ref windowSettings.questObj, windowSettings.questW);
-        FindWindow(ref windowSettings.storeObj, windowSettings.storeW);
         FindWindow(ref windowSettings.storageObj, windowSettings.storageW);
     }
 
@@ -145,7 +143,7 @@ public class UIManager : MonoBehaviour
         // 소지품
         if (Input.GetKeyDown(inputKey.inventory)) { ShowWindow(windowSettings.inventoryObj); }
 
-        // 퀘스트창
+        // 퀘스트일지창
         if (Input.GetKeyDown(inputKey.questList)) { ShowWindow(windowSettings.questObj); }
 
         // UI 모드
@@ -158,16 +156,6 @@ public class UIManager : MonoBehaviour
         {
             windows[i].SetActive(false);
         }
-    }
-
-    private void Store()
-    {
-        if (!isStore)
-        {
-            return;
-        }
-
-        windowSettings.storeObj.SetActive(true);
     }
 
     public void ShowWindow(GameObject obj)

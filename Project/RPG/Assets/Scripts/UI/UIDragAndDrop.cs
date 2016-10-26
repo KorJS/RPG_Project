@@ -44,7 +44,7 @@ public class UIDragAndDrop : MonoBehaviour
         }
 
         isDragging = true; // 드래그 시작
-
+        Debug.Log(uiSlotInfo.name + " : " + uiSlotInfo.slotIndex);
         uiSlotInfo.slotSettings.uiIcon.alpha = 0.5f; // 드래그시작하면 원래있던건 반투명하게
         uiManager.tempIcon = uiSlotInfo.slotSettings.uiIcon;
 

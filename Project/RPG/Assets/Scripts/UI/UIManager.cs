@@ -51,9 +51,11 @@ public class UIManager : MonoBehaviour
     {
         public GameObject divisionPopup; // 분리창
         public GameObject inquirePopup; // 확인창 (ex: 아이템을 버릴때)
+        public GameObject copyPopup; // 상점에 구매목록 판매목록
 
         public string divW = "DivisionPopup";
         public string inquireW = "InquirePopup";
+        public string copyW = "CopyPopup";
     }
 
     [SerializeField]
@@ -78,8 +80,8 @@ public class UIManager : MonoBehaviour
 
     public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
     public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
-    public Dictionary<int, UISlotInfo> buySlots = null;         // 상점 구매목록슬롯
-    public Dictionary<int, UISlotInfo> sellSlots = null;        // 상점 판매목록슬롯
+    public SortedDictionary<int, UISlotInfo> buySlots = null;         // 상점 구매목록슬롯
+    public SortedDictionary<int, UISlotInfo> sellSlots = null;        // 상점 판매목록슬롯
     public List<GameObject> windows = null;
     public List<GameObject> showWindowList = null;
 
@@ -102,8 +104,8 @@ public class UIManager : MonoBehaviour
 
         shortCuts = new Dictionary<int, UISlotInfo>();
         storeListSlots = new Dictionary<int, UISlotInfo>();
-        buySlots = new Dictionary<int, UISlotInfo>();
-        sellSlots = new Dictionary<int, UISlotInfo>();
+        buySlots = new SortedDictionary<int, UISlotInfo>();
+        sellSlots = new SortedDictionary<int, UISlotInfo>();
     }
 
     void Start()
@@ -120,6 +122,7 @@ public class UIManager : MonoBehaviour
 
         FindWindow(ref popupSettings.divisionPopup, popupSettings.divW);
         FindWindow(ref popupSettings.inquirePopup, popupSettings.inquireW);
+        FindWindow(ref popupSettings.copyPopup, popupSettings.copyW);
     }
 
     void Update()

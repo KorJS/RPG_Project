@@ -312,10 +312,10 @@ public class PlayerSlotData
                     if (invenMark.ContainsKey(slotIndex))
                     {
                         // TODO : 여기에 지우고 밑에 다시 추가하려고햇는데 빈번한 삭제 추가는 오류 발생함
-                        Debug.Log(temp + " Inven Exist : " + slotType + " ok : " + slotIndex);
+                        //Debug.Log(temp + " Inven Exist : " + slotType + " ok : " + slotIndex);
                         return;
                     }
-                    Debug.Log(temp + " Inven Add : " + slotType + " ok : " + slotIndex);
+                    //Debug.Log(temp + " Inven Add : " + slotType + " ok : " + slotIndex);
                     invenMark.Add(slotIndex, slotInfo);
                 }
                 break;
@@ -325,10 +325,10 @@ public class PlayerSlotData
                     // 이미 등록된게 있으면 리턴
                     if (storageMark.ContainsKey(slotIndex))
                     {
-                        Debug.Log(temp + " Storage Exist : " + slotType + " ok : " + slotIndex);
+                        //Debug.Log(temp + " Storage Exist : " + slotType + " ok : " + slotIndex);
                         return;
                     }
-                    Debug.Log(temp + " Storage Add : " + slotType + " ok : " + slotIndex);
+                    //Debug.Log(temp + " Storage Add : " + slotType + " ok : " + slotIndex);
                     storageMark.Add(slotIndex, slotInfo);
                 }
                 break;

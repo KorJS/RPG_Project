@@ -5,7 +5,9 @@ public class UIDivisionPopup : MonoBehaviour
 {
     private UIManager uiManager = null;
     private PlayerSlotData playerSlotData = null;
+
     private UIInput divQuantity_Input = null; // 입력 수량
+
     private int divQuantityMAX = 0; // 옮길수 있는 최대 수량(현재슬롯 수량)
     private int divQuantity = 0; // 분리 창에 적은 분리할 수량
 
@@ -36,10 +38,8 @@ public class UIDivisionPopup : MonoBehaviour
         currentInfo = _currentSlot;
         targetInfo = _targetSlot;
 
-        Debug.Log(currentInfo.slotInfo.quantity);
         // 처음 표시 : 현재 옮길수 최대 수량
         divQuantityMAX = currentInfo.slotInfo.quantity;
-        //divQuantity_Input.label.text = divQuantityMAX.ToString();
     }
 
     // 분리할 수량 변화가 생기면 호출되는 함수

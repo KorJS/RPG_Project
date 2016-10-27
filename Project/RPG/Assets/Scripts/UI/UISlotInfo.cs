@@ -102,6 +102,20 @@ public class UISlotInfo : MonoBehaviour
         slotSettings.uiName.text = slotInfo.name;
     }
 
+    private void SetQuantity()
+    {
+        // 수량 표시 2이상이면 표시
+        if (slotInfo.quantity > 1)
+        {
+            slotSettings.uiQuantity.gameObject.SetActive(true);
+            slotSettings.uiQuantity.text = slotInfo.quantity.ToString();
+        }
+        else
+        {
+            slotSettings.uiQuantity.gameObject.SetActive(false);
+        }
+    }
+
     // 단축키, 상점리스트, 판매목록, 구매목록 슬롯
     private void  SetSlotMark()
     {
@@ -115,20 +129,19 @@ public class UISlotInfo : MonoBehaviour
 
             case TypeData.SlotType.상점리스트:
                 {
-                    Debug.Log("?");
                     uiManager.storeListSlots.Add(slotIndex, this);
                 }
                 break;
 
             case TypeData.SlotType.구매:
                 {
-                    uiManager.sellSlots.Add(slotIndex, this);
+                    uiManager.buySlots.Add(slotIndex, this);
                 }
                 break;
 
             case TypeData.SlotType.판매:
                 {
-                    uiManager.buySlots.Add(slotIndex, this);
+                    uiManager.sellSlots.Add(slotIndex, this);
                 }
                 break;
         }
@@ -166,16 +179,7 @@ public class UISlotInfo : MonoBehaviour
         // 슬롯 정보에 맞게 변환하여 받아옴
         isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
 
-        // 수량 표시 2이상이면 표시
-        if (slotInfo.quantity > 1)
-        {
-            slotSettings.uiQuantity.gameObject.SetActive(true);
-            slotSettings.uiQuantity.text = slotInfo.quantity.ToString();
-        }
-        else
-        {
-            slotSettings.uiQuantity.gameObject.SetActive(false);
-        }
+        SetQuantity();
 
         // 현재 슬롯 아이템타입이 소모품, 퀘스템이면 합치고 분리 가능.
         switch (slotInfo.itemType)
@@ -198,5 +202,11 @@ public class UISlotInfo : MonoBehaviour
     {
         CheckType();
         SetSlotIcon();
+    }
+
+    public void StoreReSetting()
+    {
+        SetSlotIcon();
+        SetQuantity();
     }
 }

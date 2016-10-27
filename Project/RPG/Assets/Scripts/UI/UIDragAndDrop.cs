@@ -261,9 +261,12 @@ public class UIDragAndDrop : MonoBehaviour
             }
             else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.판매))
             {
+                Debug.Log("판매");
                 // 상점스크립트로
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
-                uiManager.windowSettings.storeObj.GetComponent<UIStore>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                // 팝업창 On
+                uiManager.popupSettings.copyPopup.SetActive(true);
+                uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
                 return;
             }
             else
@@ -298,7 +301,12 @@ public class UIDragAndDrop : MonoBehaviour
                         {
                             if (targetInfo.slotType == TypeData.SlotType.구매)
                             {
+                                Debug.Log("구매");
+                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                                 // 팝업창 On
+                                uiManager.popupSettings.copyPopup.SetActive(true);
+                                uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                                return;
                             }
                         }
                         break;

@@ -133,8 +133,8 @@ public class UIDragAndDrop : MonoBehaviour
                 case TypeData.SlotType.인벤토리:
                     {
                         // 제거할지 안할지 팝업창.
-                        uiManager.popupSettings.InquirePopup.SetActive(true);
-                        UIInquirePopup inquireP = uiManager.popupSettings.InquirePopup.GetComponent<UIInquirePopup>();
+                        uiManager.popupSettings.inquirePopup.SetActive(true);
+                        UIInquirePopup inquireP = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
                         inquireP.SetMessage(uiSlotInfo, "아이템을 버리겠습니까?");
                     }
                     break;
@@ -229,7 +229,6 @@ public class UIDragAndDrop : MonoBehaviour
                         // 타겟이 없으면 교체
                         if (!targetInfo.isItemExist)
                         {
-                            Debug.Log("?");
                             playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
                         // 타겟이 있으면 교환
@@ -264,6 +263,7 @@ public class UIDragAndDrop : MonoBehaviour
             {
                 // 상점스크립트로
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                uiManager.windowSettings.storeObj.GetComponent<UIStore>().DragAndDropInfo(uiSlotInfo, targetInfo);
                 return;
             }
             else
@@ -294,9 +294,18 @@ public class UIDragAndDrop : MonoBehaviour
                         }
                         break;
 
+                    case TypeData.SlotType.상점리스트:
+                        {
+                            if (targetInfo.slotType == TypeData.SlotType.구매)
+                            {
+                                // 팝업창 On
+                            }
+                        }
+                        break;
+
                     case TypeData.SlotType.스킬리스트:
                         {
-                            if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
+                            if (targetInfo.slotType == TypeData.SlotType.단축키)
                             {
                                 // 타겟이 존재 하면 교체
                                 if (targetInfo.isItemExist)

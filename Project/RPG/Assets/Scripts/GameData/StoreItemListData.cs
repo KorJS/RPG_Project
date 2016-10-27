@@ -27,6 +27,10 @@ public class StoreItemListData
     {
         itemIndexs = new List<int>();
         itemListInfos = new Dictionary<TypeData.StoreType, List<int>>();
+
+        itemIndexs.Add(0);
+        itemIndexs.Add(1);
+        itemListInfos.Add(TypeData.StoreType.소모품점, itemIndexs);
     }
 
     public void SetStore()

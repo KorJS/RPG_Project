@@ -8,7 +8,7 @@ public class NPCMovement : MonoBehaviour
     [System.Serializable]
     public class AnimationSettings
     {
-        public string stateInt = "State";
+        public string isTalkTrigger = "isTalk";
     }
 
     [SerializeField]
@@ -17,18 +17,18 @@ public class NPCMovement : MonoBehaviour
     public CharacterController charCtrl = null;
     public Animator animator = null;
 
-    public bool isPlayer = false;
-
     void Awake()
     {
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+
+        SetAnimator();
     }
 
-    // 상태
-    public void SetAniState(TypeData.NPCState state)
+    // 대화
+    public void SetAniState()
     {
-        animator.SetInteger(animationSettings.stateInt, (int)state);
+        animator.SetTrigger(animationSettings.isTalkTrigger);
     }
 
     // 자식에 아바타를 받아옴

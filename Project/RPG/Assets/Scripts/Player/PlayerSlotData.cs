@@ -44,6 +44,7 @@ public class PlayerSlotData
     private SortedDictionary<int, UISlotInfo.SlotInfo> invenQuestItemMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> storageCusomableMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> storageQuestItemMark = null;
+
     private SortedDictionary<int, UISlotInfo.SlotInfo> shortCutMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> emptyInvenMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> emptyStorageMark = null;
@@ -504,6 +505,12 @@ public class PlayerSlotData
                     }
                 }
                 break;
+
+            case TypeData.SlotType.판매:
+                {
+
+                }
+                break;
         }
     }
 
@@ -762,10 +769,6 @@ public class PlayerSlotData
 
         isExist = CheckSlotType(slotType, slotIndex, ref tempCurrentSlotInfoDatas);
 
-        if (slotType == TypeData.SlotType.창고)
-        {
-            Debug.Log(isExist);
-        }
         // 정보가 없으면
         if (!isExist)
         {

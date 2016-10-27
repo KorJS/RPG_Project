@@ -55,6 +55,8 @@ public class WarriorSkill : MonoBehaviour
     public float skillAngle = 0f;
     public float skillDistance = 0f;
 
+    private KeyCode blockKeyCode = KeyCode.Mouse1;
+
     void Awake()
     {
         playerSkillData = PlayerSkillData.Instance; // 스킬 정보
@@ -97,8 +99,9 @@ public class WarriorSkill : MonoBehaviour
 
         if (isBlock)
         {
-            if (Input.GetMouseButtonUp(1))
+            if (Input.GetKeyUp(blockKeyCode))
             {
+                Debug.Log("?");
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
                 isBlock = false;
             }
@@ -160,7 +163,7 @@ public class WarriorSkill : MonoBehaviour
 
         // 어떤 스킬인지 알아옴
         int index = playerInput.index;
-        Debug.Log(index);
+
         skillInfo = SkillData.Instance.skillInfos[index]; // 스킬 정보를 받아옴
 
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
@@ -245,6 +248,8 @@ public class WarriorSkill : MonoBehaviour
     // 방패 막기
     private void ShieldBlock()
     {
+        blockKeyCode = playerInput.tempKeyCode;
+
         // TODO : 나중에 변경
         skillAngle = 90f;
         skillDistance = 2f;

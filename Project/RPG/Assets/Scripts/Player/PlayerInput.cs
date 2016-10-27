@@ -17,15 +17,21 @@ public class PlayerInput : MonoBehaviour
         public string horizontal    = "Horizontal";     // 좌우
 
         public KeyCode jump         = KeyCode.Space;           // 점프
-        public KeyCode special      = KeyCode.F;        // 특수동작 F ( 대화, 줍기, 채집 )
         public KeyCode mouse0       = KeyCode.Mouse0;
         public KeyCode mouse1       = KeyCode.Mouse1;
+        public KeyCode c            = KeyCode.C;
         public KeyCode alpha1       = KeyCode.Alpha1;
         public KeyCode alpha2       = KeyCode.Alpha2;
+        public KeyCode alpha3       = KeyCode.Alpha3;
+        public KeyCode alpha4       = KeyCode.Alpha4;
+        public KeyCode alpha5       = KeyCode.Alpha5;
+        public KeyCode alpha6       = KeyCode.Alpha6;
     }
 
     [SerializeField]
     public InputSettings inputKey;
+
+    public KeyCode tempKeyCode = KeyCode.Mouse1;
 
     // Test용
     public GameObject weapon = null;
@@ -41,28 +47,6 @@ public class PlayerInput : MonoBehaviour
     public string swordName = "Sword_01";
     public string shieldName = "Shield_01";
 
-    // 슬롯 타입
-    public enum SlotType
-    {
-        없음 = -1,
-        스킬 = 0,
-        아이템
-    };
-
-    public SlotType slotType = SlotType.없음;
-
-    // 나중에 
-    // 슬롯 정보
-    public struct SlotInfo
-    {
-        public SlotType slotType;
-        public int index;
-    };
-
-    public SlotInfo slotInfo;
-
-    public Dictionary<KeyCode, SlotInfo> slotInfos = null; // 모든 슬롯 정보
-
     public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
 
     void Awake()
@@ -71,24 +55,6 @@ public class PlayerInput : MonoBehaviour
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-
-        slotInfos = new Dictionary<KeyCode, SlotInfo>();
-
-        slotInfo.slotType = SlotType.스킬;
-        slotInfo.index = 0;
-        slotInfos.Add(KeyCode.Mouse0, slotInfo);
-
-        slotInfo.slotType = SlotType.스킬;
-        slotInfo.index = 1;
-        slotInfos.Add(KeyCode.Mouse1, slotInfo);
-
-        slotInfo.slotType = SlotType.스킬;
-        slotInfo.index = 2;
-        slotInfos.Add(KeyCode.Alpha1, slotInfo);
-
-        slotInfo.slotType = SlotType.스킬;
-        slotInfo.index = 3;
-        slotInfos.Add(KeyCode.Alpha2, slotInfo);
     }
 
     void Update()
@@ -126,31 +92,29 @@ public class PlayerInput : MonoBehaviour
     private void InputShortCutkey()
     {
         // 각 슬롯이 Swap 될수 있음(스킬,아이템, 없음) => 타입 체크.
-        if (Input.GetKeyDown(inputKey.alpha1))
-        {
-            index = CheckSlotType(1);
-        }
+        if (Input.GetKeyDown(inputKey.alpha1)) { index = CheckSlotType(1, inputKey.alpha1); }
 
-        if (Input.GetKeyDown(inputKey.alpha2))
-        {
-            index = CheckSlotType(2);
-        }
+        if (Input.GetKeyDown(inputKey.alpha2)) { index = CheckSlotType(2, inputKey.alpha2); }
+
+        if (Input.GetKeyDown(inputKey.alpha3)) { index = CheckSlotType(3, inputKey.alpha3); }
+
+        if (Input.GetKeyDown(inputKey.alpha4)) { index = CheckSlotType(4, inputKey.alpha4); }
+
+        if (Input.GetKeyDown(inputKey.alpha5)) { index = CheckSlotType(5, inputKey.alpha5); }
+
+        if (Input.GetKeyDown(inputKey.alpha6)) { index = CheckSlotType(6, inputKey.alpha6); }
+
+        if (Input.GetKeyDown(inputKey.c)) { index = CheckSlotType(9, inputKey.c); }
 
         // 해결 : UI On모드에서의 마우스 클릭처리랑. Off모드 에서 마우스 클릭처리 따로..
         if (UICamera.Raycast(Input.mousePosition))
         {
             return;
         }
-        if (Input.GetKeyDown(inputKey.mouse0))
-        {
-            // 타입 체크후 타입에 인덱스 값을 가져옴.( 어떤 스킬이고, 어떤 아이템인지.) = 스킬 정보자체를 넘겨서. 워리어가 알아서 할까.. 
-            index = CheckSlotType(7);
-        }
 
-        if (Input.GetKeyDown(inputKey.mouse1))
-        {
-            index = CheckSlotType(8);
-        }
+        if (Input.GetKeyDown(inputKey.mouse0)) { index = CheckSlotType(7, inputKey.mouse0); }
+
+        if (Input.GetKeyDown(inputKey.mouse1)) { index = CheckSlotType(8, inputKey.mouse1); }
     }
 
     // Test 
@@ -222,7 +186,7 @@ public class PlayerInput : MonoBehaviour
     // public SlotInfo slotinfo(string inputKey)
     // TODO : 마우스 클릭으로 하는건 UIManager에서 타입 확인
     // 단축키를 눌렀을때 타입 확인
-    public int CheckSlotType(int slotIndex)
+    public int CheckSlotType(int slotIndex, KeyCode keyCode)
     {
         int index = -1;
 
@@ -239,6 +203,7 @@ public class PlayerInput : MonoBehaviour
             case TypeData.SlotInfoType.스킬:
                 {
                     index = uiSlotInfo.slotInfo.skillIndex;
+                    tempKeyCode = keyCode;
                     playerState.nextState = TypeData.State.스킬;
                     playerState.nextMode = TypeData.MODE.전투;
                 }

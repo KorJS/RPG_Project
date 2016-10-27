@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NPCState : MonoBehaviour
 {
+    private NPCInfoData npcInfoData = null;
     private NPCMovement npcMovement = null;
 
     public TypeData.NPCState currentState = TypeData.NPCState.없음;
@@ -10,6 +11,7 @@ public class NPCState : MonoBehaviour
 
     void Awake()
     {
+        npcInfoData = GetComponent<NPCInfoData>();
         npcMovement = GetComponent<NPCMovement>();
 
         currentState = TypeData.NPCState.없음;
@@ -31,7 +33,7 @@ public class NPCState : MonoBehaviour
         currentState = nextState;
         nextState = TypeData.NPCState.없음;
 
-        npcMovement.SetAniState(currentState);
+        //npcMovement.SetAniState(currentState);
     }
 
 }

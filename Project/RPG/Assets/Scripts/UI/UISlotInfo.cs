@@ -60,6 +60,12 @@ public class UISlotInfo : MonoBehaviour
         SetSlotMark();
     }
 
+    void OnEnable()
+    {
+        SetSlotIcon(); // 슬롯 아이콘 설정
+        SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
+    }
+
     // 슬롯 인덱스 설정
     private void SetSlotIndex()
     {
@@ -109,6 +115,7 @@ public class UISlotInfo : MonoBehaviour
 
             case TypeData.SlotType.상점리스트:
                 {
+                    Debug.Log("?");
                     uiManager.storeListSlots.Add(slotIndex, this);
                 }
                 break;

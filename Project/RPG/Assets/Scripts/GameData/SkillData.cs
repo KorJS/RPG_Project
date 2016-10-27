@@ -54,8 +54,8 @@ public class SkillData
         skillInfos.Add(skillinfo.index, skillinfo);
 
         skillinfo.index = 1;
-        skillinfo.name = "압도";
-        skillinfo.iconName = "Overpower";
+        skillinfo.name = "방패막기";
+        skillinfo.iconName = "Block";
         skillinfo.level = 5;
         skillinfo.coolTime = 8f;
         skillinfo.attack = 500f;
@@ -66,8 +66,8 @@ public class SkillData
         skillInfos.Add(skillinfo.index, skillinfo);
 
         skillinfo.index = 2;
-        skillinfo.name = "난폭한 돌진";
-        skillinfo.iconName = "Rush";
+        skillinfo.name = "압도";
+        skillinfo.iconName = "Overpower";
         skillinfo.level = 8;
         skillinfo.coolTime = 10f;
         skillinfo.attack = 0f;

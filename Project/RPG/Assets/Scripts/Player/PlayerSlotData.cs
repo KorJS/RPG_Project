@@ -35,6 +35,7 @@ public class PlayerSlotData
     public Dictionary<int, SlotInfoData> inventoryInfos = null; // 인벤토리슬롯 정보
     public Dictionary<int, SlotInfoData> shortCutInfos = null;  // 단축슬롯 정보
     public Dictionary<int, SlotInfoData> storageInfos = null;   // 창고슬롯 정보
+    public Dictionary<int, SlotInfoData> skillListInfos = null; // 스킬창 리스트 정보
 
     private Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas = null;
     private Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas= null;
@@ -54,6 +55,7 @@ public class PlayerSlotData
         inventoryInfos = new Dictionary<int, SlotInfoData>();
         shortCutInfos = new Dictionary<int, SlotInfoData>();
         storageInfos = new Dictionary<int, SlotInfoData>();
+        skillListInfos = new Dictionary<int, SlotInfoData>();
 
         invenCusomableMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         invenQuestItemMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
@@ -118,6 +120,41 @@ public class PlayerSlotData
         slotInfoData.qusetItemIndex = -1;
         slotInfoData.quantity = 20;
         storageInfos.Add(2, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.없음;
+        slotInfoData.skillIndex = 0;
+        slotInfoData.equipmentIndex = -1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        skillListInfos.Add(0, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.없음;
+        slotInfoData.skillIndex = 1;
+        slotInfoData.equipmentIndex = -1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        skillListInfos.Add(1, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.없음;
+        slotInfoData.skillIndex = 2;
+        slotInfoData.equipmentIndex = -1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        skillListInfos.Add(2, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.없음;
+        slotInfoData.skillIndex = 3;
+        slotInfoData.equipmentIndex = -1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        skillListInfos.Add(3, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.없음;
+        slotInfoData.skillIndex = 4;
+        slotInfoData.equipmentIndex = -1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        skillListInfos.Add(4, slotInfoData);
     }
 
     // 인벤토리 정보 가져오기
@@ -163,6 +200,20 @@ public class PlayerSlotData
         return true;
     }
 
+    // 스킬리스트 정보 가져오기
+    private bool CheckSkillListData(int slotIndex, ref Dictionary<int, SlotInfoData> slotInfoDatas)
+    {
+        // 해당 슬롯에 정보가 없으면 리턴
+        if (!skillListInfos.ContainsKey(slotIndex))
+        {
+            slotInfoDatas = skillListInfos;
+            return false;
+        }
+
+        slotInfoDatas = skillListInfos;
+        return true;
+    }
+
     // 타입을 비교하여 정보를 가져옴
     private bool CheckSlotType(TypeData.SlotType slotType, int slotIndex, ref Dictionary<int, SlotInfoData> slotInfoDatas)
     {
@@ -185,6 +236,12 @@ public class PlayerSlotData
             case TypeData.SlotType.창고:
                 {
                     isExist = CheckStorageData(slotIndex, ref slotInfoDatas);
+                }
+                break;
+
+            case TypeData.SlotType.스킬리스트:
+                {
+                    isExist = CheckSkillListData(slotIndex, ref slotInfoDatas);
                 }
                 break;
         }
@@ -733,16 +790,10 @@ public class PlayerSlotData
             }
 
             slotInfo.skillIndex = tempCurrentSlotInfoDatas[slotIndex].skillIndex; // 스킬 인덱스
-            // 예외처리 - 혹시나 배운 스킬이 아닐경우
-            if (!PlayerSkillData.Instance.GetSkillData(slotInfo.skillIndex))
-            {
-                Debug.Log("배우지 않은 스킬이 슬롯에 있음");
-
-                return false;
-            }
-
             slotInfo.itemIndex = -1;
-            slotInfo.iconName = SkillData.Instance.skillInfos[slotInfo.skillIndex].name; // 스킬 이름
+            slotInfo.name = SkillData.Instance.skillInfos[slotInfo.skillIndex].name; // 스킬 이름
+            slotInfo.iconName = SkillData.Instance.skillInfos[slotInfo.skillIndex].iconName; // 스킬 아이콘 이름
+            slotInfo.coolTime = SkillData.Instance.skillInfos[slotInfo.skillIndex].coolTime;
             slotInfo.slotInfoType = TypeData.SlotInfoType.스킬;
             slotInfo.itemType = TypeData.ItemType.없음;
         }
@@ -758,7 +809,8 @@ public class PlayerSlotData
                 case TypeData.ItemType.장비:
                     {
                         slotInfo.itemIndex = tempCurrentSlotInfoDatas[slotIndex].equipmentIndex;
-                        slotInfo.iconName = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].name;
+                        slotInfo.name = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].name;
+                        slotInfo.iconName = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].iconName;
                         slotInfo.quantity = tempCurrentSlotInfoDatas[slotIndex].quantity;
                         slotInfo.itemType = TypeData.ItemType.장비;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;
@@ -768,7 +820,8 @@ public class PlayerSlotData
                 case TypeData.ItemType.소모품:
                     {
                         slotInfo.itemIndex = tempCurrentSlotInfoDatas[slotIndex].cusomableIndex;
-                        slotInfo.iconName = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].name;
+                        slotInfo.name = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].name;
+                        slotInfo.iconName = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].iconName;
                         slotInfo.quantity = tempCurrentSlotInfoDatas[slotIndex].quantity;
                         slotInfo.itemType = TypeData.ItemType.소모품;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;
@@ -780,7 +833,8 @@ public class PlayerSlotData
                 case TypeData.ItemType.퀘스트템:
                     {
                         slotInfo.itemIndex = tempCurrentSlotInfoDatas[slotIndex].qusetItemIndex;
-                        slotInfo.iconName = ItemData.Instance.questItemInfos[slotInfo.itemIndex].name;
+                        slotInfo.name = ItemData.Instance.questItemInfos[slotInfo.itemIndex].name;
+                        slotInfo.iconName = ItemData.Instance.questItemInfos[slotInfo.itemIndex].iconName;
                         slotInfo.quantity = tempCurrentSlotInfoDatas[slotIndex].quantity;
                         slotInfo.itemType = TypeData.ItemType.퀘스트템;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;

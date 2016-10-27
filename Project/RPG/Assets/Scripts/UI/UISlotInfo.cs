@@ -16,6 +16,7 @@ public class UISlotInfo : MonoBehaviour
         public int itemIndex;
         public float coolTime;
         public int quantity;
+        public string name;
         public string iconName;
         public TypeData.ItemType itemType;
         public TypeData.SlotInfoType slotInfoType;
@@ -27,6 +28,7 @@ public class UISlotInfo : MonoBehaviour
     public class SlotSettings
     {
         public UITexture uiIcon;
+        public UILabel uiName;
         public UISprite uiCoolTime;
         public UILabel uiQuantity;
         public UILabel uiSellGold;
@@ -53,6 +55,7 @@ public class UISlotInfo : MonoBehaviour
         SetSlotIndex(); // 슬롯 인덱스 설정
         CheckType(); // 슬롯 정보 설정
         SetSlotIcon(); // 슬롯 아이콘 설정
+        SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
 
         SetSlotMark();
     }
@@ -75,6 +78,22 @@ public class UISlotInfo : MonoBehaviour
         }
 
         slotSettings.uiIcon.mainTexture = Resources.Load("Icon/" + slotInfo.iconName) as Texture2D;
+    }
+
+    private void SetSlotName()
+    {
+        if (!(slotType == TypeData.SlotType.상점리스트 || slotType == TypeData.SlotType.스킬리스트))
+        {
+            return;
+        }
+
+        if (!isItemExist)
+        {
+            slotSettings.uiName.text = null;
+            return;
+        }
+
+        slotSettings.uiName.text = slotInfo.name;
     }
 
     // 단축키, 상점리스트, 판매목록, 구매목록 슬롯
@@ -128,7 +147,7 @@ public class UISlotInfo : MonoBehaviour
 
             case TypeData.SlotType.스킬리스트:
                 {
-                    SetSkillListSlotInfo();
+                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                 }
                 break;
         }
@@ -166,14 +185,6 @@ public class UISlotInfo : MonoBehaviour
                 }
                 break;
         }
-    }
-
-    // 스킬리스트 정보 설정
-    private void SetSkillListSlotInfo()
-    {
-        SkillData.Skillinfo tempSkillInfo = skillData.skillInfos[slotIndex];
-        slotInfo.iconName = tempSkillInfo.name;
-        slotInfo.skillIndex = tempSkillInfo.index;
     }
 
     public void ReSetting()

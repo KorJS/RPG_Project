@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(NPCMovement))]
 public class NPCInfoData : MonoBehaviour
 {
     private UIManager uiManager = null;
     private ItemData itemData = null;
     private StoreItemListData storeItemListData = null;
+    private NPCMovement npcMovement = null;
+
     // NPC - 위치는 정해져 있음
     // 어느 지역인지
     // 어느 상점인지
@@ -24,15 +27,19 @@ public class NPCInfoData : MonoBehaviour
     public NPCInfo npcInfo;
 
     // 상점창 UI
+    [SerializeField]
     public GameObject storeObj = null;
+
     private UISlotInfo tempSlotInfo = null;
-    public bool isPlayer = false;
 
     void Awake()
     {
         uiManager = UIManager.Instance;
         itemData = ItemData.Instance;
         storeItemListData = StoreItemListData.Instance;
+
+        npcMovement = GetComponent<NPCMovement>();
+
         SetNPCInfo();
     }
 
@@ -97,7 +104,12 @@ public class NPCInfoData : MonoBehaviour
     }
 
     // 주인공이 근처에 왔는지
-    private void CheckPlayer()
+    void OnTriggerEnter(Collider col)
+    {
+
+    }
+
+    void OnTriggerExit(Collider col)
     {
 
     }

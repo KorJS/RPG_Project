@@ -8,6 +8,7 @@ public class PlayerEffect : MonoBehaviour
     public class EffectSettings
     {
         public string aggro = "Aggro";
+        public string levelup = "LevelUp";
     }
 
     [SerializeField]

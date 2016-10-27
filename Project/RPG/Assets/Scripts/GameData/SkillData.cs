@@ -24,6 +24,7 @@ public class SkillData
     {
         public int index;       // 인덱스
         public string name;     // 이름
+        public string iconName; // 아이콘 이름
         public int level;       // 습득 필요레벨
         public float coolTime;  // 쿨타임
         public float attack;    // 공격력
@@ -41,7 +42,8 @@ public class SkillData
         skillInfos = new Dictionary<int, Skillinfo>();
 
         skillinfo.index = 0;
-        skillinfo.name = "Combo";
+        skillinfo.name = "연속 공격";
+        skillinfo.iconName = "Combo";
         skillinfo.level = 1;
         skillinfo.coolTime = 1f;
         skillinfo.attack = 100f;
@@ -52,7 +54,8 @@ public class SkillData
         skillInfos.Add(skillinfo.index, skillinfo);
 
         skillinfo.index = 1;
-        skillinfo.name = "Overpower";
+        skillinfo.name = "압도";
+        skillinfo.iconName = "Overpower";
         skillinfo.level = 5;
         skillinfo.coolTime = 8f;
         skillinfo.attack = 500f;
@@ -63,7 +66,32 @@ public class SkillData
         skillInfos.Add(skillinfo.index, skillinfo);
 
         skillinfo.index = 2;
-        skillinfo.name = "Rush";
+        skillinfo.name = "난폭한 돌진";
+        skillinfo.iconName = "Rush";
+        skillinfo.level = 8;
+        skillinfo.coolTime = 10f;
+        skillinfo.attack = 0f;
+        skillinfo.mp = -50f;
+        skillinfo.angle = 90f;
+        skillinfo.distance = 2f;
+
+        skillInfos.Add(skillinfo.index, skillinfo);
+
+        skillinfo.index = 3;
+        skillinfo.name = "난폭한 돌진";
+        skillinfo.iconName = "Rush";
+        skillinfo.level = 8;
+        skillinfo.coolTime = 10f;
+        skillinfo.attack = 0f;
+        skillinfo.mp = -50f;
+        skillinfo.angle = 90f;
+        skillinfo.distance = 2f;
+
+        skillInfos.Add(skillinfo.index, skillinfo);
+
+        skillinfo.index = 4;
+        skillinfo.name = "난폭한 돌진";
+        skillinfo.iconName = "Rush";
         skillinfo.level = 8;
         skillinfo.coolTime = 10f;
         skillinfo.attack = 0f;

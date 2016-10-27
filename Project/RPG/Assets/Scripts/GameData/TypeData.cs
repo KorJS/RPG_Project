@@ -48,6 +48,14 @@
         죽음
     };
 
+    // idle, talk
+    public enum NPCState
+    {
+        없음 = -1,
+        대기 = 0,
+        대화,
+    };
+
     // idle, move, rotate, skill, damage, stun, down, death
     public enum MonsterState
     {

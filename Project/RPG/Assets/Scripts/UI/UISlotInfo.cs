@@ -23,6 +23,7 @@ public class UISlotInfo : MonoBehaviour
     }
 
     public SlotInfo slotInfo;
+    private SlotInfo emptySlotInfo;
 
     [System.Serializable]
     public class SlotSettings
@@ -66,6 +67,18 @@ public class UISlotInfo : MonoBehaviour
         SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
     }
 
+    void OnDisable()
+    {
+        if (slotType == TypeData.SlotType.구매 || slotType == TypeData.SlotType.판매)
+        {
+            isItemExist = false;
+            SetQuantity();
+            slotInfo.itemType = TypeData.ItemType.없음;
+            slotInfo.itemIndex = -1;
+            slotInfo.quantity = 0;
+        }
+    }
+
     // 슬롯 인덱스 설정
     private void SetSlotIndex()
     {
@@ -74,15 +87,16 @@ public class UISlotInfo : MonoBehaviour
     }
 
     // 슬롯에 아이콘 설정
-    private void SetSlotIcon()
+    public void SetSlotIcon()
     {
         // 슬롯에 아이템이 없으면 리턴
         if (!isItemExist)
         {
-            slotSettings.uiIcon.mainTexture = null;
+            slotSettings.uiIcon.gameObject.SetActive(false);
             return;
         }
 
+        slotSettings.uiIcon.gameObject.SetActive(true);
         slotSettings.uiIcon.mainTexture = Resources.Load("Icon/" + slotInfo.iconName) as Texture2D;
     }
 
@@ -102,8 +116,15 @@ public class UISlotInfo : MonoBehaviour
         slotSettings.uiName.text = slotInfo.name;
     }
 
-    private void SetQuantity()
+    public void SetQuantity()
     {
+        // 슬롯에 아이템이 없으면 리턴
+        if (!isItemExist)
+        {
+            slotSettings.uiQuantity.gameObject.SetActive(false);
+            return;
+        }
+
         // 수량 표시 2이상이면 표시
         if (slotInfo.quantity > 1)
         {
@@ -121,6 +142,12 @@ public class UISlotInfo : MonoBehaviour
     {
         switch (slotType)
         {
+            case TypeData.SlotType.인벤토리:
+                {
+                    uiManager.invenSlots.Add(slotIndex, this);
+                }
+                break;
+
             case TypeData.SlotType.단축키:
                 {
                     uiManager.shortCuts.Add(slotIndex, this);

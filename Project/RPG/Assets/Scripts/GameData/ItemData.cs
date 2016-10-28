@@ -24,8 +24,8 @@ public class ItemData
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
         public TypeData.EquipmentType equipmentType;    // 장비타입
-        public int level;                               // 착용레벨
         public TypeData.PlayerType playerType;          // 착용직업
+        public int level;                               // 착용레벨
         public int attack;                              // 공격력
         public int defence;                             // 방어력
         public int hp;                                  // 체력
@@ -91,5 +91,13 @@ public class ItemData
         cusomableInfo.buyGold = 2000;
         cusomableInfo.sellGold = 1000;
         cusomableInfos.Add(2, cusomableInfo);
+
+        equipmentInfo.name = "고룡갑옷";
+        equipmentInfo.iconName = "DragonArmor";
+        equipmentInfo.equipmentType = TypeData.EquipmentType.갑옷;
+        equipmentInfo.defence = 100;
+        equipmentInfo.buyGold = 2000;
+        equipmentInfo.sellGold = 1000;
+        equipmentInfos.Add(0, equipmentInfo);
     }
 }

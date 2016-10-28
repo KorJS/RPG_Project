@@ -99,6 +99,22 @@ public class PlayerSlotData
         slotInfoData.quantity = 10;
         inventoryInfos.Add(5, slotInfoData);
 
+        slotInfoData.itemType = TypeData.ItemType.장비;
+        slotInfoData.skillIndex = -1;
+        slotInfoData.equipmentIndex = 0;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        slotInfoData.quantity = 1;
+        inventoryInfos.Add(6, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.장비;
+        slotInfoData.skillIndex = -1;
+        slotInfoData.equipmentIndex = 0;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        slotInfoData.quantity = 1;
+        inventoryInfos.Add(7, slotInfoData);
+
         slotInfoData.itemType = TypeData.ItemType.없음;
         slotInfoData.skillIndex = 0;
         slotInfoData.equipmentIndex = -1;

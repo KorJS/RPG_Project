@@ -40,6 +40,11 @@ public class UICopyPopup : MonoBehaviour
         currentInfo = _currentInfo;
         targetInfo = _targetInfo;
 
+        if (_currentInfo.slotType == TypeData.SlotType.상점리스트)
+        {
+            copyQuantityMAX = 999;
+            return;
+        }
         // 처음 표시 : 현재 옮길수 최대 수량
         copyQuantityMAX = currentInfo.slotInfo.quantity;
     }
@@ -103,15 +108,27 @@ public class UICopyPopup : MonoBehaviour
         {
             case TypeData.SlotType.인벤토리:
                 {
-                    // 판매목록 수량만큼 복사
-                    AddItem(ref uiManager.sellSlots);
+                    // 판매목록 수량만큼 보냄
+                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(currentInfo, targetInfo, copyQuantity);
+
+                    currentInfo.slotInfo.quantity -= copyQuantity;
+
+                    if (currentInfo.slotInfo.quantity == 0)
+                    {
+                        currentInfo.isItemExist = false;
+                        currentInfo.StoreReSetting();
+                        CopyCancel();
+                        return;
+                    }
+                    currentInfo.SetQuantity();
                 }
                 break;
 
             case TypeData.SlotType.상점리스트:
                 {
-                    // 구매목록 수량만큼 복사
-                    AddItem(ref uiManager.buySlots);
+                    Debug.Log("?");
+                    // 구매목록 수량만큼 보냄
+                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(currentInfo, targetInfo, copyQuantity);
                 }
                 break;
 
@@ -119,74 +136,11 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.판매:
                 {
                     // 수량 만큼 제거
-                    currentInfo.slotInfo.quantity -= copyQuantity;
+                    //currentInfo.slotInfo.quantity -= copyQuantity;
                 }
                 break;
         }
-    }
 
-    // 판매목록 수량 추가
-    private void AddItem(ref SortedDictionary<int, UISlotInfo> slots)
-    {
-        Debug.Log(slots.Count);
-        bool isExist = false;
-
-        if (currentInfo.slotInfo.itemType == TypeData.ItemType.장비)
-        {
-            CheckEmptySlot(ref slots);
-            return;
-        }
-
-        foreach (KeyValuePair<int, UISlotInfo> slotInfo in slots)
-        {
-            // 목록에 같은 타입이 없으면
-            if (currentInfo.slotInfo.itemType != slotInfo.Value.slotInfo.itemType)
-            {
-                continue;
-            }
-
-            // 같은 인덱스가 없으면
-            if (currentInfo.slotInfo.itemIndex != slotInfo.Value.slotInfo.itemIndex)
-            {
-                continue;
-            }
-
-            // 존재하면 그 슬롯에 추가
-            isExist = true;
-
-            int index = slotInfo.Key;
-
-            // 수량 추가
-            slots[index].slotInfo.quantity += copyQuantity;
-            slots[index].StoreReSetting();
-            CopyCancel();
-            return;
-        }
-
-        // 판매 목록에 아무것도 존재 안하면 빈곳에 추가
-        if (!isExist)
-        {
-            CheckEmptySlot(ref slots);
-        }
         CopyCancel();
-    }
-
-    private void CheckEmptySlot(ref SortedDictionary<int, UISlotInfo> slots)
-    {
-        foreach (KeyValuePair<int, UISlotInfo> slotInfo in slots)
-        {
-            // 타입이 없으면 빈곳.
-            if (slotInfo.Value.slotInfo.itemType == TypeData.ItemType.없음)
-            {
-                int index = slotInfo.Key;
-
-                // 수량 추가
-                slots[index].isItemExist = currentInfo.isItemExist;
-                slots[index].slotInfo = currentInfo.slotInfo;
-                slots[index].slotInfo.quantity = copyQuantity;
-                slots[index].StoreReSetting();
-                break;
-            }
-        }
     }
 }

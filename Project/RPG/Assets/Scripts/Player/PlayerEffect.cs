@@ -19,7 +19,7 @@ public class PlayerEffect : MonoBehaviour
     public Transform effectHolder = null;
 
     public string effectPath = "Effect/Player/";
-    public GameObject oo = null;
+
     void Awake()
     {
         effects = new Dictionary<string, GameObject>();
@@ -45,7 +45,7 @@ public class PlayerEffect : MonoBehaviour
         obj.transform.SetParent(effectHolder);
         obj.transform.localPosition = Vector3.zero;
         obj.SetActive(false);
-        oo = obj;
+        
         return obj;
     }
 

@@ -75,7 +75,7 @@ public class PlayerInput : MonoBehaviour
     public void InputMove(float inputV, float inputH)
     {
         // UI 모드에서 움직이면 UI모드 해제
-        if (inputH != 0 || inputV != 0)
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
         {
             if (uiManager.isUIMode)
             {

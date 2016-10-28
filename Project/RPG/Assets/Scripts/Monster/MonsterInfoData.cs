@@ -18,11 +18,6 @@ public class MonsterInfoData : MonoBehaviour
         monsterT = transform;
     }
 
-    void Update()
-    {
-
-    }
-
     void OnEnable()
     {
         currentHP = monsterInfo.hp;

@@ -421,11 +421,11 @@ public class PlayerSlotData
                         // 수량이 99개 이면 다음꺼로.
                         if (inventoryInfos[tempInvenSlotIndex].quantity >= 99) { continue; }
 
-                        int targetQuantity = tempSlotInfoData.quantity;
-
-                        CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
-                        Debug.Log("targetQuantity : " + targetQuantity);
-                        tempSlotInfoData.quantity = targetQuantity;
+                        //int targetQuantity = tempSlotInfoData.quantity;
+                        Debug.Log("전 tempSlotInfoData.quantity : " + tempSlotInfoData.quantity);
+                        CheckInvenQuantity(ref divQuantity, ref tempSlotInfoData.quantity, 99);
+                        Debug.Log("후 tempSlotInfoData.quantity : " + tempSlotInfoData.quantity);
+                        //tempSlotInfoData.quantity = targetQuantity;
 
                         inventoryInfos[tempInvenSlotIndex] = tempSlotInfoData;
                         GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
@@ -986,6 +986,7 @@ public class PlayerSlotData
             Debug.Log("타겟슬롯에 정보가 없음");
             return;
         }
+
 
         int currentQuantity = currentInfo.slotInfo.quantity;
         int targetQuantity = targetInfo.slotInfo.quantity;

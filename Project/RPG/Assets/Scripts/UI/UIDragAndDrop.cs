@@ -5,6 +5,10 @@ public class UIDragAndDrop : MonoBehaviour
 {
     private UIManager uiManager = null;
     private PlayerSlotData playerSlotData = null;
+    private UIStore uistore = null;
+    private UIInquirePopup uiInquirePopup = null;
+    private UICopyPopup uiCopyPopup = null;
+    private UIDivisionPopup uidivPopup = null;
     public UISlotInfo uiSlotInfo = null;
 
     private UIRoot root = null;
@@ -24,9 +28,18 @@ public class UIDragAndDrop : MonoBehaviour
         uiManager = UIManager.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
+        
         uiSlotInfo = this.GetComponent<UISlotInfo>();
         parent = this.transform.parent;
         root = NGUITools.FindInParents<UIRoot>(parent);
+    }
+
+    void Start()
+    {
+        uiInquirePopup = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
+        uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+        uidivPopup = uiManager.popupSettings.divisionPopup.GetComponent<UIDivisionPopup>();
+        uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
     }
 
     void OnClick()
@@ -134,8 +147,7 @@ public class UIDragAndDrop : MonoBehaviour
                     {
                         // 제거할지 안할지 팝업창.
                         uiManager.popupSettings.inquirePopup.SetActive(true);
-                        UIInquirePopup inquireP = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
-                        inquireP.SetMessage(uiSlotInfo, "아이템을 버리겠습니까?");
+                        uiInquirePopup.SetMessage(uiSlotInfo, "아이템을 버리겠습니까?");
                     }
                     break;
 
@@ -161,11 +173,14 @@ public class UIDragAndDrop : MonoBehaviour
         UITexture targetTexture = targetObj.transform.FindChild("Icon").GetComponent<UITexture>(); // 타겟 아이콘
 
         CheckSlotInfo(targetInfo);
+
+        uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
     }
 
     // (인벤,창고)인경우 놓았을떄 분리 창은 같은 슬롯타입에는 안뜸 
     private void CheckSlotInfo(UISlotInfo targetInfo)
     {
+        Debug.Log(uiSlotInfo.slotType);
         // 같은 아이템타입이면서 같은 아이템인덱스 : isItemIndex = true;
         // 같은 아이템타입이면서 다른 아이템인덱스 : isItemType = true, isItemIndex = false;
         // 다른 아이템타입이면                    : isItemType = false;
@@ -190,11 +205,8 @@ public class UIDragAndDrop : MonoBehaviour
         if (uiSlotInfo.slotType == targetInfo.slotType)
         {
             // 현재 슬롯 인덱스랑 타겟 슬롯 인덱스가 같으면 
-            if (uiSlotInfo.slotIndex == targetInfo.slotIndex)
-            {
-                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
-                return;
-            }
+            if (uiSlotInfo.slotIndex == targetInfo.slotIndex) { return; }
+            
             switch (uiSlotInfo.slotType)
             {
                 case TypeData.SlotType.인벤토리:
@@ -261,17 +273,16 @@ public class UIDragAndDrop : MonoBehaviour
             }
             else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.판매))
             {
-                Debug.Log("판매");
                 // 상점스크립트로
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                 {
-                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, null, 1);
+                    uistore.CopySlotInfo(uiSlotInfo, null, 1);
                     return;
                 }
                 // 팝업창 On
                 uiManager.popupSettings.copyPopup.SetActive(true);
-                uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                uiCopyPopup.DragAndDropInfo(uiSlotInfo, targetInfo);
                 return;
             }
             else
@@ -281,6 +292,8 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.인벤토리:
                     case TypeData.SlotType.창고:
                         {
+                            if (targetInfo.slotType == TypeData.SlotType.구매) { return; }
+
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
@@ -289,8 +302,8 @@ public class UIDragAndDrop : MonoBehaviour
                             else
                             {
                                 uiManager.popupSettings.divisionPopup.SetActive(true);
-                                uiManager.popupSettings.divisionPopup.GetComponent<UIDivisionPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
-                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+                                uidivPopup.DragAndDropInfo(uiSlotInfo, targetInfo);
+
                                 return;
                             }
                         }
@@ -306,15 +319,14 @@ public class UIDragAndDrop : MonoBehaviour
                         {
                             if (targetInfo.slotType == TypeData.SlotType.구매)
                             {
-                                uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                                 {
-                                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, null, 1);
+                                    uistore.CopySlotInfo(uiSlotInfo, null, 1);
                                     return;
                                 }
                                 // 팝업창 On
                                 uiManager.popupSettings.copyPopup.SetActive(true);
-                                uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>().DragAndDropInfo(uiSlotInfo, targetInfo);
+                                uiCopyPopup.DragAndDropInfo(uiSlotInfo, targetInfo);
                                 return;
                             }
                         }
@@ -341,23 +353,20 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.구매:
                     case TypeData.SlotType.판매:
                         {
-                            uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
-                                uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, null, 1);
+                                uistore.CopySlotInfo(uiSlotInfo, null, 1);
                                 return;
                             }
                             // 팝업창 On
                             uiManager.popupSettings.copyPopup.SetActive(true);
-                            uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>().DragAndDropInfo(uiSlotInfo, null);
+                            uiCopyPopup.DragAndDropInfo(uiSlotInfo, null);
                             return;
                         }
                         break;
                 }
             }
         }
-
-        uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
 
         // 슬롯 재설정
         uiSlotInfo.ReSetting();

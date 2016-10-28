@@ -30,5 +30,9 @@ public class PlayerInfoData
 
     public InfoData infoData;
 
+    public PlayerInfoData()
+    {
+        infoData.glod = 10000;
+    }
     // TODO : 공격력 / 방어력 / HP / MP 계산
 }

@@ -109,7 +109,7 @@ public class NPCInfoData : MonoBehaviour
                 tempSlotInfo.slotInfo.itemIndex = itemIndex;
                 tempSlotInfo.slotInfo.itemType = TypeData.ItemType.장비;
                 tempSlotInfo.slotInfo.quantity = 1;
-                tempSlotInfo.slotSettings.uiSellGold.text = itemData.equipmentInfos[itemIndex].sellGold.ToString();
+                tempSlotInfo.slotSettings.uiBuyGold.text = itemData.equipmentInfos[itemIndex].buyGold.ToString();
             }
             else if (npcInfo.storeType == TypeData.StoreType.소모품점)
             {
@@ -134,7 +134,7 @@ public class NPCInfoData : MonoBehaviour
                 tempSlotInfo.slotInfo.itemIndex = itemIndex;
                 tempSlotInfo.slotInfo.itemType = TypeData.ItemType.소모품;
                 tempSlotInfo.slotInfo.quantity = 1;
-                tempSlotInfo.slotSettings.uiSellGold.text = itemData.cusomableInfos[itemIndex].sellGold.ToString();
+                tempSlotInfo.slotSettings.uiBuyGold.text = itemData.cusomableInfos[itemIndex].buyGold.ToString();
             }
         }
 

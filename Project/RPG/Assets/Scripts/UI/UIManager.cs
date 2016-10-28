@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     }
 
     private PlayerInput playerInput = null;
+    private PlayerInfoData playerInfoData = null;
 
     // 윈도우 정보
     [System.Serializable]
@@ -49,13 +50,15 @@ public class UIManager : MonoBehaviour
     [System.Serializable]
     public class PopupSettings
     {
-        public GameObject divisionPopup; // 분리창
-        public GameObject inquirePopup; // 확인창 (ex: 아이템을 버릴때)
-        public GameObject copyPopup; // 상점에 구매목록 판매목록
+        public GameObject divisionPopup;    // 분리창
+        public GameObject inquirePopup;     // 확인창 (ex: 아이템을 버릴때)
+        public GameObject copyPopup;        // 상점에 구매목록 판매목록
+        public GameObject warningPopup;     // 경고창
 
         public string divW = "DivisionPopup";
         public string inquireW = "InquirePopup";
         public string copyW = "CopyPopup";
+        public string warningW = "WarningPopup";
     }
 
     [SerializeField]
@@ -80,11 +83,13 @@ public class UIManager : MonoBehaviour
 
     public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
     public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
-    public Dictionary<int, UISlotInfo> invenSlots = null;       // 인벤토리
+    public SortedDictionary<int, UISlotInfo> invenSlots = null;       // 인벤토리
     public SortedDictionary<int, UISlotInfo> buySlots = null;   // 상점 구매목록슬롯
     public SortedDictionary<int, UISlotInfo> sellSlots = null;  // 상점 판매목록슬롯
     public List<GameObject> windows = null;
     public List<GameObject> showWindowList = null;
+
+    public UILabel playerGold = null;
 
     public bool isUIMode = false;
     public bool isStorage = false;
@@ -107,11 +112,12 @@ public class UIManager : MonoBehaviour
         storeListSlots = new Dictionary<int, UISlotInfo>();
         buySlots = new SortedDictionary<int, UISlotInfo>();
         sellSlots = new SortedDictionary<int, UISlotInfo>();
-        invenSlots = new Dictionary<int, UISlotInfo>();
+        invenSlots = new SortedDictionary<int, UISlotInfo>();
     }
 
     void Start()
     {
+        playerInfoData = PlayerInfoData.Instance;
         //// window
         FindWindow(ref windowSettings.characterObj, windowSettings.characterW);
         FindWindow(ref windowSettings.uiModeObj, windowSettings.uiModeW);
@@ -125,6 +131,10 @@ public class UIManager : MonoBehaviour
         FindWindow(ref popupSettings.divisionPopup, popupSettings.divW);
         FindWindow(ref popupSettings.inquirePopup, popupSettings.inquireW);
         FindWindow(ref popupSettings.copyPopup, popupSettings.copyW);
+        FindWindow(ref popupSettings.warningPopup, popupSettings.warningW);
+
+        playerGold = windowSettings.inventoryObj.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+        SetHoldingGold();
     }
 
     void Update()
@@ -285,11 +295,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void SetUIMode()
-    {
-
-    }
-
     // UI 해제되면 드래그중인 아이템 처리
     public void DisableDragIiem()
     {
@@ -300,5 +305,10 @@ public class UIManager : MonoBehaviour
 
         tempIcon.alpha = 1f;
         Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
+    }
+
+    public void SetHoldingGold()
+    {
+        playerGold.text = playerInfoData.infoData.glod.ToString();
     }
 }

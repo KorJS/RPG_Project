@@ -51,7 +51,6 @@ public class ItemData
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
         public int buyGold;                             // 판매가격
-        public int sellGold;                            // 구매가격
     };
 
     public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 데이터를 로드해서 저장
@@ -73,15 +72,15 @@ public class ItemData
         cusomableInfo.increase = 100;
         cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 1000;
-        cusomableInfo.sellGold = 500;
+        cusomableInfo.sellGold = 100;
         cusomableInfos.Add(0, cusomableInfo);
 
         cusomableInfo.name = "MP 포션";
         cusomableInfo.iconName = "MPPotion";
         cusomableInfo.increase = 100;
         cusomableInfo.coolTime = 10f;
-        cusomableInfo.buyGold = 500;
-        cusomableInfo.sellGold = 250;
+        cusomableInfo.buyGold = 1000;
+        cusomableInfo.sellGold = 100;
         cusomableInfos.Add(1, cusomableInfo);
 
         cusomableInfo.name = "HMP 포션";
@@ -89,7 +88,7 @@ public class ItemData
         cusomableInfo.increase = 100;
         cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 2000;
-        cusomableInfo.sellGold = 1000;
+        cusomableInfo.sellGold = 500;
         cusomableInfos.Add(2, cusomableInfo);
 
         equipmentInfo.name = "고룡갑옷";

@@ -43,6 +43,12 @@ public class UIManager : MonoBehaviour
         public string questW     = "QuestW";
         public string storeW     = "StoreW";
         public string storageW   = "StorageW";
+
+        public bool isCharacterW = false;
+        public bool isInventoryW = false;
+        public bool isSkillW = false;
+        public bool isQuestListW = false;
+        public bool isOptionW = false;
     }
 
     public WindowSettings windowSettings;
@@ -166,38 +172,50 @@ public class UIManager : MonoBehaviour
     private void InputUIkey()
     {
         // 소지품
-        if (Input.GetKeyDown(inputKey.inventory))
+        if (windowSettings.isInventoryW || Input.GetKeyDown(inputKey.inventory))
         {
+            windowSettings.isInventoryW = false;
             showWindowList.Add(windowSettings.inventoryObj);
             ShowWindow(showWindowList);
         }
 
         // 퀘스트일지창
-        if (Input.GetKeyDown(inputKey.questList))
+        if (windowSettings.isQuestListW || Input.GetKeyDown(inputKey.questList))
         {
+            windowSettings.isQuestListW = false;
             showWindowList.Add(windowSettings.questListObj);
             ShowWindow(showWindowList);
         }
 
         // 스킬창
-        if (Input.GetKeyDown(inputKey.skillList))
+        if (windowSettings.isSkillW || Input.GetKeyDown(inputKey.skillList))
         {
+            windowSettings.isSkillW = false;
             showWindowList.Add(windowSettings.skillObj);
             ShowWindow(showWindowList);
+        }
+
+        // 케릭터창
+        if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
+        {
+            windowSettings.isCharacterW = false;
+            showWindowList.Add(windowSettings.characterObj);
+            showWindowList.Add(windowSettings.inventoryObj);
+            ShowWindow(showWindowList);
+        }
+
+        //  옵션
+        if (windowSettings.isOptionW) //|| Input.GetKeyDown(inputKey.option))
+        {
+            windowSettings.isOptionW = false;
+            //showWindowList.Add(windowSettings.optionObj);
+            //ShowWindow(showWindowList);
         }
 
         // UI 모드
         if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
             showWindowList.Add(windowSettings.uiModeObj);
-            ShowWindow(showWindowList);
-        }
-
-        // 케릭터창
-        if (Input.GetKeyDown(inputKey.character))
-        {
-            showWindowList.Add(windowSettings.characterObj);
-            showWindowList.Add(windowSettings.inventoryObj);
             ShowWindow(showWindowList);
         }
 
@@ -310,5 +328,30 @@ public class UIManager : MonoBehaviour
     public void SetHoldingGold()
     {
         playerGold.text = playerInfoData.infoData.glod.ToString();
+    }
+
+    public void ShowCharacterBtn()
+    {
+        windowSettings.isCharacterW = true;
+    }
+
+    public void ShowInventoryBtn()
+    {
+        windowSettings.isInventoryW = true;
+    }
+
+    public void ShowSkillBtn()
+    {
+        windowSettings.isSkillW = true;
+    }
+
+    public void ShowQuestListBtn()
+    {
+        windowSettings.isQuestListW = true;
+    }
+
+    public void ShowOptionBtn()
+    {
+        windowSettings.isOptionW = true;
     }
 }

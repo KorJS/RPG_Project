@@ -96,7 +96,7 @@ public class UIDivisionPopup : MonoBehaviour
     public void DivisionOK()
     {
         // 분리수량 0인데 확인 누른경우 걍 종료
-        if (divQuantity == 0)
+        if (divQuantity <= 0)
         {
             DivisionCancel();
             return;

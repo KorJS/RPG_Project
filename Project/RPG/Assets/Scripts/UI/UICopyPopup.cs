@@ -94,6 +94,13 @@ public class UICopyPopup : MonoBehaviour
 
     public void CopyOk()
     {
+        // 분리수량 0인데 확인 누른경우 걍 종료
+        if (copyQuantity <= 0)
+        {
+            CopyCancel();
+            return;
+        }
+
         CheckCopyItem();
     }
 
@@ -103,7 +110,6 @@ public class UICopyPopup : MonoBehaviour
         gameObject.SetActive(false);
     }
     
-    // 정산하면 데이터 처리.
     private void CheckCopyItem()
     {
         switch (currentInfo.slotType)

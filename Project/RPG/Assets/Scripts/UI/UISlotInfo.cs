@@ -23,7 +23,6 @@ public class UISlotInfo : MonoBehaviour
     }
 
     public SlotInfo slotInfo;
-    private SlotInfo emptySlotInfo;
 
     [System.Serializable]
     public class SlotSettings
@@ -34,6 +33,7 @@ public class UISlotInfo : MonoBehaviour
         public UILabel uiQuantity;
         public UILabel uiSellGold;
         public UILabel uiBuyGold;
+        public GameObject overlapObj;
     }
 
     [SerializeField]
@@ -44,6 +44,7 @@ public class UISlotInfo : MonoBehaviour
     public int slotIndex = 0; // 슬롯 인덱스
     public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
     public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
+    public bool isSkillLearn = false; // 스킬리스트, 배운 스킬인지 아닌지.
 
     void Awake()
     {
@@ -194,7 +195,9 @@ public class UISlotInfo : MonoBehaviour
 
             case TypeData.SlotType.스킬리스트:
                 {
-                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+                    isItemExist = true;
+                    isSkillLearn = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+                    slotSettings.overlapObj.SetActive(!isSkillLearn);
                 }
                 break;
         }

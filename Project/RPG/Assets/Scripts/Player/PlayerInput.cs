@@ -120,18 +120,31 @@ public class PlayerInput : MonoBehaviour
     // Test 
     private void InputKey()
     {
+        // 보유금액 추가
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            PlayerInfoData.Instance.infoData.glod += 2000;
+            uiManager.SetHoldingGold();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            PlayerInfoData.Instance.infoData.glod -= 2000;
+            if (PlayerInfoData.Instance.infoData.glod <= 0)
+            {
+                PlayerInfoData.Instance.infoData.glod = 0;
+            }
+            uiManager.SetHoldingGold();
+        }
+
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
         {
             Debug.Log("aaaaaaaaaaaaaa");
         }
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             playerState.nextMode = TypeData.MODE.평화;
-        }
-        else if (Input.GetKeyDown(KeyCode.B))
-        {
-            playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.Damage();
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -155,16 +168,6 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             swordName = Equipment.Spear_01.ToString();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            swordName = Equipment.Hammer_01.ToString();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            swordName = Equipment.Axe_01.ToString();
         }
 
         if (Input.GetKeyDown(KeyCode.H))

@@ -58,7 +58,9 @@ public class UIStore : MonoBehaviour
             }
             else
             {
-                originalInfos.Add(_currentInfo.slotIndex, _currentInfo.slotInfo.quantity);
+                int tempQuantity = _currentInfo.slotInfo.quantity;
+                if (_currentInfo.slotInfo.itemType == TypeData.ItemType.장비) { tempQuantity = 1; }
+                originalInfos.Add(_currentInfo.slotIndex, quantity);
             }
         }
        
@@ -318,7 +320,8 @@ public class UIStore : MonoBehaviour
             return;
         }
 
-        playerInfoData.infoData.glod = changG;
+        playerInfoData.infoData.glod = changG; // 주인공 보유골드 갱신
+        uiManager.SetHoldingGold(); // 인벤 소지금 갱신
 
         for (int i = 0; i < changInvenIndexs.Count; i++)
         {
@@ -339,22 +342,39 @@ public class UIStore : MonoBehaviour
             int itemQuantity = buyInfo.Value.slotInfo.quantity;
 
             playerSlotDate.AddSlotData(TypeData.SlotType.인벤토리, itemType, itemIndex, itemQuantity);
+            
+            buyInfo.Value.StoreReSetting();
         }
+
+        ReSetSlot(uiManager.buySlots);
+        ReSetSlot(uiManager.sellSlots);
+
+        storeSettings.buyAmount.text = "0";
+        storeSettings.sellAmount.text = "0";
+
+        originalInfos.Clear();
+        changInvenIndexs.Clear();
     }
 
     public void CalculateCancel()
     {
-        // 취소한 경우 원본 정보 복구
-        foreach (KeyValuePair<int, int> originalInfo in originalInfos)
+        if (originalInfos.Count > 0)
         {
-            int index = originalInfo.Key;
+            // 취소한 경우 원본 정보 복구
+            foreach (KeyValuePair<int, int> originalInfo in originalInfos)
+            {
+                int index = originalInfo.Key;
 
-            uiManager.invenSlots[index].slotInfo.quantity = originalInfo.Value;
+                uiManager.invenSlots[index].isItemExist = true;
+                uiManager.invenSlots[index].slotInfo.quantity = originalInfo.Value;
 
-            currentInfo.StoreReSetting();
+                currentInfo.StoreReSetting();
+            }
+
+            originalInfos.Clear();
         }
 
-        originalInfos.Clear();
+        changInvenIndexs.Clear();
 
         storeSettings.buyAmount.text = "0";
         storeSettings.sellAmount.text = "0";
@@ -363,6 +383,19 @@ public class UIStore : MonoBehaviour
         if (gameObject.activeSelf)
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    public void ReSetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
+    {
+        foreach (KeyValuePair<int, UISlotInfo> slotInfo in slotInfos)
+        {
+            slotInfo.Value.isItemExist = false;
+            slotInfo.Value.slotInfo.itemIndex = -1;
+            slotInfo.Value.slotInfo.itemType = TypeData.ItemType.없음;
+            slotInfo.Value.slotInfo.quantity = 0;
+
+            slotInfo.Value.StoreReSetting();
         }
     }
 }

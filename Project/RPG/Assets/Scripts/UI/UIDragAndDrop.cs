@@ -277,7 +277,16 @@ public class UIDragAndDrop : MonoBehaviour
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                 {
-                    uistore.CopySlotInfo(uiSlotInfo, null, 1);
+                    uistore.CopySlotInfo(uiSlotInfo, targetInfo, 1);
+                    if (!uistore.changInvenIndexs.Contains(uiSlotInfo.slotIndex))
+                    {
+                        uistore.changInvenIndexs.Add(uiSlotInfo.slotIndex);
+                    }
+
+                    uiSlotInfo.slotInfo.quantity = 0;
+                    uiSlotInfo.isItemExist = false;
+                    uiSlotInfo.StoreReSetting();
+
                     return;
                 }
                 // 팝업창 On
@@ -321,7 +330,7 @@ public class UIDragAndDrop : MonoBehaviour
                             {
                                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                                 {
-                                    uistore.CopySlotInfo(uiSlotInfo, null, 1);
+                                    uistore.CopySlotInfo(uiSlotInfo, targetInfo, 1);
                                     return;
                                 }
                                 // 팝업창 On

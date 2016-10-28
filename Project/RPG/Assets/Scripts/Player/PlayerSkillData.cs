@@ -20,13 +20,14 @@ public class PlayerSkillData
     }
 
     // 주인공이 배운 스킬
-    public Dictionary<int, int> skillInfos;
+    public List<int> skillInfos;
 
     public PlayerSkillData()
     {
-        skillInfos = new Dictionary<int, int>();
+        skillInfos = new List<int>();
 
-        skillInfos.Add(0, 0);
+        skillInfos.Add(0);
+        skillInfos.Add(1);
     }
 
     public void SetSkillData()
@@ -37,7 +38,7 @@ public class PlayerSkillData
     public bool GetSkillData(int skillIndex)
     {
         // 스킬 정보가 없으면 리턴
-        if (!skillInfos.ContainsKey(skillIndex))
+        if (!skillInfos.Contains(skillIndex))
         {
             return false;
         }

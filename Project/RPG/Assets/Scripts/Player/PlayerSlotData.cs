@@ -807,7 +807,7 @@ public class PlayerSlotData
             {
                 Debug.Log("Error : " + tempCurrentSlotInfoDatas[slotIndex].skillIndex + " 아이템임");
             }
-
+            Debug.Log("?");
             slotInfo.skillIndex = tempCurrentSlotInfoDatas[slotIndex].skillIndex; // 스킬 인덱스
             slotInfo.itemIndex = -1;
             slotInfo.name = SkillData.Instance.skillInfos[slotInfo.skillIndex].name; // 스킬 이름
@@ -815,6 +815,11 @@ public class PlayerSlotData
             slotInfo.coolTime = SkillData.Instance.skillInfos[slotInfo.skillIndex].coolTime;
             slotInfo.slotInfoType = TypeData.SlotInfoType.스킬;
             slotInfo.itemType = TypeData.ItemType.없음;
+
+            if (slotType == TypeData.SlotType.스킬리스트)
+            {
+                return PlayerSkillData.Instance.GetSkillData(slotIndex);
+            }
         }
         else
         {

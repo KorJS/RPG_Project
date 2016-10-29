@@ -181,7 +181,7 @@ public class UISlotInfo : MonoBehaviour
         {
             case TypeData.SlotType.캐릭터:
                 {
-
+                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                 }
                 break;
 
@@ -189,7 +189,8 @@ public class UISlotInfo : MonoBehaviour
             case TypeData.SlotType.단축키:
             case TypeData.SlotType.창고:
                 {
-                    SetInvenShortStorageSlotInfo();
+                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+                    SetQuantity();
                 }
                 break;
 
@@ -198,31 +199,6 @@ public class UISlotInfo : MonoBehaviour
                     isItemExist = true;
                     isSkillLearn = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                     slotSettings.overlapObj.SetActive(!isSkillLearn);
-                }
-                break;
-        }
-    }
-
-    // 인벤, 단축, 창고 정보 설정
-    private void SetInvenShortStorageSlotInfo()
-    {
-        // 슬롯 정보에 맞게 변환하여 받아옴
-        isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
-
-        SetQuantity();
-
-        // 현재 슬롯 아이템타입이 소모품, 퀘스템이면 합치고 분리 가능.
-        switch (slotInfo.itemType)
-        {
-            case TypeData.ItemType.소모품:
-            case TypeData.ItemType.퀘스트템:
-                {
-                    isAddDiv = true;
-                }
-                break;
-            default:
-                {
-                    isAddDiv = false;
                 }
                 break;
         }

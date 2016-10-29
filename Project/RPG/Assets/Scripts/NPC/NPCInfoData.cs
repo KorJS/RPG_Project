@@ -68,6 +68,12 @@ public class NPCInfoData : MonoBehaviour
                 }
                 break;
 
+            case TypeData.NPCType.창고:
+                {
+                    // TODO : 퀘스트 정보
+                }
+                break;
+
             case TypeData.NPCType.퀘스트:
                 {
                     // TODO : 퀘스트 정보

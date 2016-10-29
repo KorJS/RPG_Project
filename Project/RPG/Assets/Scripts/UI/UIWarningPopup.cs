@@ -9,8 +9,12 @@ public class UIWarningPopup : MonoBehaviour
 
     void Awake()
     {
-        uiManager = UIManager.Instance;
         messageT = transform.FindChild("Message").GetComponent<UILabel>();
+    }
+
+    void Start()
+    {
+        uiManager = UIManager.Instance;
     }
 
     public void SetMessage(string _message)

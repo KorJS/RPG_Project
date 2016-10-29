@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UISkill : MonoBehaviour {
+public class UIStorage : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

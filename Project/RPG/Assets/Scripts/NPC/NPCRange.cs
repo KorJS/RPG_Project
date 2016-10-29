@@ -9,7 +9,7 @@ public class NPCRange : MonoBehaviour
     public GameObject inquireTextObj = null; // "대화를 하려면 F키를 누르시오"
 
     private Transform targetT = null;
-    public Collider[] targets;
+    private Collider[] targets;
     private float distance = 0f;
     public bool isPlayer = false;
 

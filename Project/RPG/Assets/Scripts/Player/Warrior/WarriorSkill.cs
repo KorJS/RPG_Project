@@ -27,7 +27,7 @@ public class WarriorSkill : MonoBehaviour
     [SerializeField]
     public WarriorAniSettings warriorAniSettings;
 
-    private SkillData.Skillinfo skillInfo; // 스킬 정보
+    private SkillData.SkillInfo skillInfo; // 스킬 정보
 
     public enum SkillType
     {

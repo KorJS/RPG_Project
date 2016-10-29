@@ -24,6 +24,7 @@
     public enum NPCType
     {
         상인 = 0,
+        창고,
         퀘스트
     };
 
@@ -102,7 +103,7 @@
         판매,
     };
 
-    // Skill, Item
+    // Skill, Item, Character
     public enum SlotInfoType
     {
         없음 = -1,

@@ -264,7 +264,11 @@ public class UIDragAndDrop : MonoBehaviour
         // 단축창 -> 제거
         // 스킬 -> 단축창 ( 타겟이 존재하면 교체 / 타겟이 없으면 복사 )
         // < 상점 내용은 상점스크립트로 연결 - 정산이 완료되면 주인공 데이터 변화된다 >
-        // 인벤 > 판매목록(상점) ( 인벤은 그대로, 판매목록 : 분리창 On - 분리 수량 만큼 - 이미있으면 합치기 - 없으면 빈곳에 복사 )
+        // 인벤 > 판매목록(상점) ( 인벤은 수량 변화, 판매목록 : 분리창 On - 분리 수량 만큼 - 이미있으면 합치기 - 없으면 빈곳에 ) - 상점 정산클릭시 데이터 처리
+        // 상점리스트 > 구매 ( 분리창On - 수량만큼 추가 / 똑같은게 있으면 합치고 다르면 빈곳에 )
+        // 구매 (분리창On - 수량 감소 / 0개면 제거 )
+        // 판매 (분리창On - 수량 감소,0개- 인벤에 복구 )
+        // 인벤 > 케릭 / 케릭 > 인벤
         else
         {
             if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
@@ -362,6 +366,8 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.구매:
                     case TypeData.SlotType.판매:
                         {
+                            if (targetInfo.slotType == TypeData.SlotType.단축키) { return; }
+
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
                                 uistore.CopySlotInfo(uiSlotInfo, null, 1);

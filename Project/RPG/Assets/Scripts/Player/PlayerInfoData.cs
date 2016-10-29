@@ -26,13 +26,25 @@ public class PlayerInfoData
         public string nick;
         public float exp;
         public int glod;
+        public int att;
+        public int def;
+        public int hp;
+        public int mp;
     }
 
     public InfoData infoData;
 
     public PlayerInfoData()
     {
+        infoData.name = "테라";
+        infoData.level = 1;
+        infoData.exp = 0;
         infoData.glod = 10000;
+        infoData.att = 100;
+        infoData.def = 100;
+        infoData.hp = 1000;
+        infoData.mp = 1000;
     }
+
     // TODO : 공격력 / 방어력 / HP / MP 계산
 }

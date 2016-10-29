@@ -32,6 +32,7 @@ public class PlayerSlotData
 
     public SlotInfoData slotInfoData;
 
+    public Dictionary<int, SlotInfoData> characterInfos = null; // 케릭터슬롯 정보
     public Dictionary<int, SlotInfoData> inventoryInfos = null; // 인벤토리슬롯 정보
     public Dictionary<int, SlotInfoData> shortCutInfos = null;  // 단축슬롯 정보
     public Dictionary<int, SlotInfoData> storageInfos = null;   // 창고슬롯 정보
@@ -53,6 +54,7 @@ public class PlayerSlotData
 
     public PlayerSlotData()
     {
+        characterInfos = new Dictionary<int, SlotInfoData>();
         inventoryInfos = new Dictionary<int, SlotInfoData>();
         shortCutInfos = new Dictionary<int, SlotInfoData>();
         storageInfos = new Dictionary<int, SlotInfoData>();
@@ -66,6 +68,14 @@ public class PlayerSlotData
 
         emptyInvenMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
+
+        slotInfoData.itemType = TypeData.ItemType.장비;
+        slotInfoData.skillIndex = -1;
+        slotInfoData.equipmentIndex = 0;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        slotInfoData.quantity = 1;
+        characterInfos.Add(2, slotInfoData);
 
         slotInfoData.itemType = TypeData.ItemType.소모품;
         slotInfoData.skillIndex = -1;
@@ -231,6 +241,20 @@ public class PlayerSlotData
         return true;
     }
 
+    // 스킬리스트 정보 가져오기
+    private bool CheckCharacterData(int slotIndex, ref Dictionary<int, SlotInfoData> slotInfoDatas)
+    {
+        // 해당 슬롯에 정보가 없으면 리턴
+        if (!characterInfos.ContainsKey(slotIndex))
+        {
+            slotInfoDatas = characterInfos;
+            return false;
+        }
+
+        slotInfoDatas = characterInfos;
+        return true;
+    }
+
     // 타입을 비교하여 정보를 가져옴
     private bool CheckSlotType(TypeData.SlotType slotType, int slotIndex, ref Dictionary<int, SlotInfoData> slotInfoDatas)
     {
@@ -259,6 +283,12 @@ public class PlayerSlotData
             case TypeData.SlotType.스킬리스트:
                 {
                     isExist = CheckSkillListData(slotIndex, ref slotInfoDatas);
+                }
+                break;
+
+            case TypeData.SlotType.캐릭터:
+                {
+                    isExist = CheckCharacterData(slotIndex, ref slotInfoDatas);
                 }
                 break;
         }
@@ -519,12 +549,6 @@ public class PlayerSlotData
 
                         break;
                     }
-                }
-                break;
-
-            case TypeData.SlotType.판매:
-                {
-
                 }
                 break;
         }
@@ -800,6 +824,12 @@ public class PlayerSlotData
             return false;
         }
 
+        if (slotType == TypeData.SlotType.캐릭터)
+        {
+            // slotIndex : 1 - 무기 / 2 - 갑옷 / 3 - 장갑 / 4 - 신발
+            return true;
+        }
+
         // 아이템 타입이 없으면 스킬이므로
         if (tempCurrentSlotInfoDatas[slotIndex].itemType == TypeData.ItemType.없음)
         {
@@ -807,7 +837,7 @@ public class PlayerSlotData
             {
                 Debug.Log("Error : " + tempCurrentSlotInfoDatas[slotIndex].skillIndex + " 아이템임");
             }
-            Debug.Log("?");
+
             slotInfo.skillIndex = tempCurrentSlotInfoDatas[slotIndex].skillIndex; // 스킬 인덱스
             slotInfo.itemIndex = -1;
             slotInfo.name = SkillData.Instance.skillInfos[slotInfo.skillIndex].name; // 스킬 이름
@@ -896,8 +926,9 @@ public class PlayerSlotData
     }
 
     // 교체
-    // 현재타입과 타겟타입이 같으면 타겟에 넘겨주고 현재는 제거 (인벤->인벤 / 단축->단축 / 창고->창고) - 이 경우는 현재와 타겟이 같고 타겟이 빈곳을 경우.
-    // 현재타입과 타겟타입이 다르면 타겟 내용교체, 현재는 그대로 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 
+    // 타겟슬롯타입이 케릭이면 케릭창에 넣고 현재는 제거
+    // 현재슬롯타입과 타겟슬롯타입이 같으면 타겟에 넘겨주고 현재는 제거 (인벤->인벤 / 단축->단축 / 창고->창고) - 이 경우는 현재와 타겟이 같고 타겟이 빈곳을 경우.
+    // 현재슬롯타입과 타겟슬롯타입이 다르면 타겟 내용교체, 현재는 그대로 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 
     public void ChangSlotData(UISlotInfo currentInfo,  UISlotInfo targetInfo)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
@@ -908,7 +939,7 @@ public class PlayerSlotData
         }
 
         // 이 경우는 현재와 타겟이 같고 타겟이 빈 곳을 경우.
-        if (currentInfo.slotType == targetInfo.slotType)
+        if (currentInfo.slotType == targetInfo.slotType || targetInfo.slotType == TypeData.SlotType.캐릭터)
         {
             tempCurrentSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
             tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
@@ -939,7 +970,7 @@ public class PlayerSlotData
         tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
     }
 
-    // 복사 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 빈곳
+    // 복사 ( 인벤 > 단축 / 스킬창 > 단축) 빈곳
     public void CopySlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
     {
         // 현재슬롯에 정보가 존재하는가 / ref로 정보 가져옴
@@ -1035,7 +1066,7 @@ public class PlayerSlotData
         }
     }
 
-    // 추가 - 아이템 습득(장비, 소모품, 퀘스트템) / 인벤>창고(장비) / 창고>인벤(장비) . 안벤에 추가 되면 단축키에 복사된거면 같이 수량증가.(소모품, 퀘스트템)
+    // 추가 - 아이템 습득(장비, 소모품, 퀘스트템) / 인벤>창고(장비) / 창고>인벤(장비) / 케릭>인벤. 안벤에 추가 되면 단축키에 복사된거면 같이 수량증가.(소모품, 퀘스트템)
     public void AddSlotData(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity)
     {
         if (currentItemType == TypeData.ItemType.장비)
@@ -1054,12 +1085,6 @@ public class PlayerSlotData
         {
             CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
             return;
-        }
-
-        // 창고로 소모품, 퀘스트템이 이동했을때. 인벤에 수량 변화에따라 단축창에 수량변화.
-        if (targetSlotType == TypeData.SlotType.창고)
-        {
-
         }
     }
 

@@ -53,6 +53,7 @@ public class MonsterRange : MonoBehaviour
         monster.monsterT = transform;
         monster.originPos = transform.position;
         monster.originRot = transform.rotation;
+        skillPoint = transform.FindChild("SkillPoint");
 
         monster.monsterLayer = LayerMask.NameToLayer("Monster");
         monster.targetLayer = LayerMask.NameToLayer("Player");
@@ -226,6 +227,18 @@ public class MonsterRange : MonoBehaviour
         }
     }
 
+    private Transform skillPoint = null;
+    private float skilldis = 0f;
+    void OnDrawGizmos()
+    {
+        if (skillPoint == null)
+        {
+            return;
+        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(skillPoint.position, skilldis);
+    }
+
     // 공격범위 - 각 스킬별로 위치, 거리, 각도로 타겟 hit판정.
     public void HitRange(Vector3 skillPos, float skillDistance, float skillAngle)
     {
@@ -238,6 +251,10 @@ public class MonsterRange : MonoBehaviour
 
         Vector3 monsterPos = monster.monsterT.position;
         Vector3 targetPos2 = monster.targetT.position;
+
+        skillPoint.localPosition = new Vector3(skillPos.x, skillPos.y, skillPos.z);
+        skilldis = skillDistance;
+        Debug.Log(skillPoint.position + " " + skillPoint.localPosition);
 
         Collider[] targets = Physics.OverlapSphere(skillPos, skillDistance);
 

@@ -161,6 +161,7 @@ public class BloodGolemSkill : MonoBehaviour
             case SkillType.일반공격:
                 {
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isNormalTrigger);
+                    monsterRange.HitRange(skillSettings.normalPos, skillSettings.normalDistace, skillSettings.normalAngle);
                     patternCount++;
                 }
                 break;
@@ -168,6 +169,7 @@ public class BloodGolemSkill : MonoBehaviour
             case SkillType.내려찍기스턴:
                 {
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isStunTrigger);
+                    monsterRange.HitRange(skillSettings.stunPos, skillSettings.stunDistace, skillSettings.stunAngle);
                 }
                 break;
 

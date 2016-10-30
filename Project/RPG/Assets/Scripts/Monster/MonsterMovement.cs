@@ -2,7 +2,6 @@
 using System.Collections;
 
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(CharacterController))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterRange monsterRange = null;
@@ -23,7 +22,7 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    public CharacterController charCtrl = null;
+    //public CharacterController charCtrl = null;
     public Animator animator = null;
 
     public GameObject skillHolderObj = null;
@@ -39,7 +38,7 @@ public class MonsterMovement : MonoBehaviour
     void Awake()
     {
         monsterRange = GetComponent<MonsterRange>();
-        charCtrl = GetComponent<CharacterController>();
+        //charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;

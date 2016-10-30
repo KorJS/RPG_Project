@@ -112,10 +112,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(inputKey.c)) { index = CheckSlotType(9, inputKey.c); }
 
         // 해결 : UI On모드에서의 마우스 클릭처리랑. Off모드 에서 마우스 클릭처리 따로..
-        if (UICamera.Raycast(Input.mousePosition))
-        {
-            return;
-        }
+        if (UICamera.Raycast(Input.mousePosition)) { return; }
 
         if (Input.GetKeyDown(inputKey.mouse0)) { index = CheckSlotType(7, inputKey.mouse0); }
 

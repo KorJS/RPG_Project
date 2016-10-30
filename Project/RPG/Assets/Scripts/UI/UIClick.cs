@@ -134,7 +134,7 @@ public class UIClick : MonoBehaviour
 
             UISlotInfo targetInfo = uiManager.characterSlots[targetIndex];
 
-            uiManager.windowSettings.characterObj.GetComponent<UICharater>().CheckSlotInfo(uiSlotInfo, targetInfo);
+            uiManager.windowSettings.characterObj.GetComponent<UICharater>().SetSlotInfo(uiSlotInfo, targetInfo);
         }
     }
 

@@ -117,7 +117,7 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.인벤토리:
                 {
                     // 판매목록 수량만큼 추가
-                    uistore.CopySlotInfo(currentInfo, targetInfo, copyQuantity);
+                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
 
                     // 인벤 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;
@@ -141,7 +141,7 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.상점리스트:
                 {
                     // 구매목록 수량만큼 추가
-                    uistore.CopySlotInfo(currentInfo, targetInfo, copyQuantity);
+                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
                 }
                 break;
 
@@ -149,7 +149,7 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.판매:
                 {
                     // 수량 만큼 제거
-                    uistore.CopySlotInfo(currentInfo, targetInfo, copyQuantity);
+                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
 
                     // 구매, 판매목록 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;

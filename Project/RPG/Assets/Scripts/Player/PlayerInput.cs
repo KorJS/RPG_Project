@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerState playerState = null;
     private EquipmentHandler equipHandler = null;
     private UIManager uiManager = null;
+    private UIInventory uiInventory = null;
 
     // 키 입력 정보
     [System.Serializable]
@@ -54,7 +55,11 @@ public class PlayerInput : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
-        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+    }
+
+    void Start()
+    {
+        uiManager = UIManager.Instance;
     }
 
     void Update()

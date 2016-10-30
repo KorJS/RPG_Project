@@ -101,13 +101,13 @@ public class PlayerSlotData
         slotInfoData.quantity = 10;
         inventoryInfos.Add(4, slotInfoData);
 
-        slotInfoData.itemType = TypeData.ItemType.소모품;
-        slotInfoData.skillIndex = -1;
-        slotInfoData.equipmentIndex = -1;
-        slotInfoData.cusomableIndex = 2;
-        slotInfoData.qusetItemIndex = -1;
-        slotInfoData.quantity = 10;
-        inventoryInfos.Add(5, slotInfoData);
+        //slotInfoData.itemType = TypeData.ItemType.소모품;
+        //slotInfoData.skillIndex = -1;
+        //slotInfoData.equipmentIndex = -1;
+        //slotInfoData.cusomableIndex = 2;
+        //slotInfoData.qusetItemIndex = -1;
+        //slotInfoData.quantity = 10;
+        //inventoryInfos.Add(5, slotInfoData);
 
         slotInfoData.itemType = TypeData.ItemType.장비;
         slotInfoData.skillIndex = -1;
@@ -125,6 +125,14 @@ public class PlayerSlotData
         slotInfoData.quantity = 1;
         inventoryInfos.Add(7, slotInfoData);
 
+        slotInfoData.itemType = TypeData.ItemType.장비;
+        slotInfoData.skillIndex = -1;
+        slotInfoData.equipmentIndex = 1;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        slotInfoData.quantity = 1;
+        inventoryInfos.Add(10, slotInfoData);
+
         slotInfoData.itemType = TypeData.ItemType.없음;
         slotInfoData.skillIndex = 0;
         slotInfoData.equipmentIndex = -1;
@@ -132,21 +140,29 @@ public class PlayerSlotData
         slotInfoData.qusetItemIndex = -1;
         shortCutInfos.Add(7, slotInfoData);
 
-        slotInfoData.itemType = TypeData.ItemType.소모품;
-        slotInfoData.skillIndex = -1;
-        slotInfoData.equipmentIndex = -1;
-        slotInfoData.cusomableIndex = 0;
-        slotInfoData.qusetItemIndex = -1;
-        slotInfoData.quantity = 10;
-        storageInfos.Add(1, slotInfoData);
+        //slotInfoData.itemType = TypeData.ItemType.소모품;
+        //slotInfoData.skillIndex = -1;
+        //slotInfoData.equipmentIndex = -1;
+        //slotInfoData.cusomableIndex = 0;
+        //slotInfoData.qusetItemIndex = -1;
+        //slotInfoData.quantity = 10;
+        //storageInfos.Add(1, slotInfoData);
 
         slotInfoData.itemType = TypeData.ItemType.소모품;
         slotInfoData.skillIndex = -1;
         slotInfoData.equipmentIndex = -1;
-        slotInfoData.cusomableIndex = 0;
+        slotInfoData.cusomableIndex = 2;
         slotInfoData.qusetItemIndex = -1;
-        slotInfoData.quantity = 20;
+        slotInfoData.quantity = 10;
         storageInfos.Add(2, slotInfoData);
+
+        slotInfoData.itemType = TypeData.ItemType.장비;
+        slotInfoData.skillIndex = -1;
+        slotInfoData.equipmentIndex = 0;
+        slotInfoData.cusomableIndex = -1;
+        slotInfoData.qusetItemIndex = -1;
+        slotInfoData.quantity = 1;
+        storageInfos.Add(1, slotInfoData);
 
         slotInfoData.itemType = TypeData.ItemType.없음;
         slotInfoData.skillIndex = 0;
@@ -393,16 +409,21 @@ public class PlayerSlotData
         }
     }
 
-    // 소모품, 퀘스트템 정보 생성 (인벤>창고 / 창고>인벤 에 추가할때 슬롯 정보가 있어야되므로 생성)
+    // 장비, 소모품, 퀘스트템 정보 생성 (인벤>창고 / 창고>인벤 에 추가할때 슬롯 정보가 있어야되므로 생성)
     private void CreateSlotInfoData(TypeData.SlotType targetSlotType, TypeData.ItemType currentItemType, int currentItemIndex, int divQuantity, ref SlotInfoData tempSlotInfoData)
     {
         tempSlotInfoData.slotType = targetSlotType;
         tempSlotInfoData.itemType = currentItemType;
         tempSlotInfoData.skillIndex = -1;
-        tempSlotInfoData.equipmentIndex = -1;
         tempSlotInfoData.quantity = divQuantity;
         switch (currentItemType)
         {
+            case TypeData.ItemType.장비:
+                {
+                    tempSlotInfoData.equipmentIndex = currentItemIndex;
+                }
+                break;
+
             case TypeData.ItemType.소모품:
                 {
                     tempSlotInfoData.cusomableIndex = currentItemIndex;
@@ -493,7 +514,7 @@ public class PlayerSlotData
                         int targetQuantity = 0;
 
                         CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
-
+                        
                         tempSlotInfoData.quantity = targetQuantity;
                         inventoryInfos.Add(tempInvenSlotIndex, tempSlotInfoData); // 추가
                         GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
@@ -544,11 +565,18 @@ public class PlayerSlotData
 
                         // 수량 변화후 등록
                         tempSlotInfoData.quantity = divQuantity;
+                        
                         storageInfos.Add(tempStorageSlotIndex, tempSlotInfoData); // 추가
                         GameObject.Find("W_Slot " + tempStorageSlotIndex).GetComponent<UISlotInfo>().ReSetting();
 
                         break;
                     }
+                }
+                break;
+
+            case TypeData.SlotType.판매:
+                {
+
                 }
                 break;
         }
@@ -574,7 +602,7 @@ public class PlayerSlotData
                         emptyInvenMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
                         inventoryInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
                         GameObject.Find("I_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
-                        return;
+                        break;
                     }
                 }
                 break;
@@ -589,7 +617,7 @@ public class PlayerSlotData
                         emptyStorageMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
                         storageInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
                         GameObject.Find("W_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
-                        return;
+                        break;
                     }
                 }
                 break;
@@ -827,6 +855,12 @@ public class PlayerSlotData
         if (slotType == TypeData.SlotType.캐릭터)
         {
             // slotIndex : 1 - 무기 / 2 - 갑옷 / 3 - 장갑 / 4 - 신발
+            slotInfo.itemIndex = tempCurrentSlotInfoDatas[slotIndex].equipmentIndex;
+            slotInfo.itemType = TypeData.ItemType.장비;
+            slotInfo.iconName = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].iconName;
+            slotInfo.name = ItemData.Instance.equipmentInfos[slotInfo.itemIndex].name;
+            slotInfo.quantity = 1;
+
             return true;
         }
 
@@ -902,7 +936,7 @@ public class PlayerSlotData
         return true;
     }
 
-    // 교환 (타겟이 있으면 교환 : 인벤>인벤 / 인벤>창고 / 창고>창고 / 창고>인벤 / 단축키>단축키)
+    // 교환 (타겟이 있으면 교환 : 인벤>인벤 / 인벤>창고 / 인벤>케릭 / 창고>창고 / 창고>인벤 / 단축키>단축키)
     public void SwapSlotData(UISlotInfo currentInfo, UISlotInfo targetInfo)
     {
         if (!CheckSlotType(currentInfo.slotType, currentInfo.slotIndex, ref tempCurrentSlotInfoDatas))
@@ -926,7 +960,7 @@ public class PlayerSlotData
     }
 
     // 교체
-    // 타겟슬롯타입이 케릭이면 케릭창에 넣고 현재는 제거
+    // 인벤>케릭 - 타겟슬롯타입이 케릭이면 케릭창에 넣고 현재는 제거
     // 현재슬롯타입과 타겟슬롯타입이 같으면 타겟에 넘겨주고 현재는 제거 (인벤->인벤 / 단축->단축 / 창고->창고) - 이 경우는 현재와 타겟이 같고 타겟이 빈곳을 경우.
     // 현재슬롯타입과 타겟슬롯타입이 다르면 타겟 내용교체, 현재는 그대로 ( 인벤 -> 단축 / 스킬창 -> 단축 ) 
     public void ChangSlotData(UISlotInfo currentInfo,  UISlotInfo targetInfo)
@@ -939,7 +973,7 @@ public class PlayerSlotData
         }
 
         // 이 경우는 현재와 타겟이 같고 타겟이 빈 곳을 경우.
-        if (currentInfo.slotType == targetInfo.slotType || targetInfo.slotType == TypeData.SlotType.캐릭터)
+        if (currentInfo.slotType == targetInfo.slotType)
         {
             tempCurrentSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
             tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
@@ -963,11 +997,16 @@ public class PlayerSlotData
             return;
         }
         
-        // 인벤 > 단축 / 스킬창 > 단축
+        // 인벤 > 단축 / 스킬창 > 단축 / 인벤 > 케릭
         // 타겟슬롯의 정보 가져옴
         CheckSlotType(targetInfo.slotType, targetInfo.slotIndex, ref tempTargetSlotInfoDatas);
 
         tempTargetSlotInfoDatas[targetInfo.slotIndex] = tempCurrentSlotInfoDatas[currentInfo.slotIndex];
+
+        if (currentInfo.slotType == TypeData.SlotType.인벤토리 && targetInfo.slotType == TypeData.SlotType.캐릭터)
+        {
+            tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
+        }
     }
 
     // 복사 ( 인벤 > 단축 / 스킬창 > 단축) 빈곳
@@ -1071,6 +1110,7 @@ public class PlayerSlotData
     {
         if (currentItemType == TypeData.ItemType.장비)
         {
+            Debug.Log("playerSlotData Add");
             CheckEquipmentMark(targetSlotType, currentItemType, currentItemIndex, divQuantity);
             return;
         }

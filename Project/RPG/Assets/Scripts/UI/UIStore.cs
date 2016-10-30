@@ -21,8 +21,9 @@ public class UIStore : MonoBehaviour
 
     public List<int> changInvenIndexs = null;
     private Dictionary<int, int> originalInfos = null;
+
     private UISlotInfo currentInfo = null;
-    private UISlotInfo targetInfo = null;
+    private TypeData.SlotType targetType = TypeData.SlotType.없음;
 
     private int playerGold = 0;
     private int quantity = 0;
@@ -41,11 +42,11 @@ public class UIStore : MonoBehaviour
 
     void OnDisable()
     {
-        CalculateCancel();
+        CloseWindows();
     }
 
     // 정보 받아옴
-    public void CopySlotInfo(UISlotInfo _currentInfo, UISlotInfo _targetInfo, int copyQuantity)
+    public void CopySlotInfo(UISlotInfo _currentInfo, TypeData.SlotType _targetType, int copyQuantity)
     {
         playerGold = playerInfoData.infoData.glod;
 
@@ -65,7 +66,7 @@ public class UIStore : MonoBehaviour
         }
        
         currentInfo = _currentInfo;
-        targetInfo = _targetInfo;
+        targetType = _targetType;
         quantity = copyQuantity;
         CheckCopyItem();
 
@@ -75,7 +76,7 @@ public class UIStore : MonoBehaviour
     // 슬롯 분기
     private void CheckCopyItem()
     {
-        if (targetInfo == null)
+        if (targetType == TypeData.SlotType.없음)
         {
             if (currentInfo.slotType == TypeData.SlotType.구매)
             {
@@ -89,7 +90,7 @@ public class UIStore : MonoBehaviour
         }
         else
         {
-            switch (targetInfo.slotType)
+            switch (targetType)
             {
                 case TypeData.SlotType.구매:
                     {
@@ -343,7 +344,8 @@ public class UIStore : MonoBehaviour
 
             playerSlotDate.AddSlotData(TypeData.SlotType.인벤토리, itemType, itemIndex, itemQuantity);
             
-            buyInfo.Value.StoreReSetting();
+            buyInfo.Value.ReSetting();
+            buyInfo.Value.SetQuantity();
         }
 
         ReSetSlot(uiManager.buySlots);
@@ -356,7 +358,20 @@ public class UIStore : MonoBehaviour
         changInvenIndexs.Clear();
     }
 
-    public void CalculateCancel()
+    public void ReSetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
+    {
+        foreach (KeyValuePair<int, UISlotInfo> slotInfo in slotInfos)
+        {
+            slotInfo.Value.isItemExist = false;
+            slotInfo.Value.slotInfo.itemIndex = -1;
+            slotInfo.Value.slotInfo.itemType = TypeData.ItemType.없음;
+            slotInfo.Value.slotInfo.quantity = 0;
+
+            slotInfo.Value.StoreReSetting();
+        }
+    }
+
+    public void CloseWindows()
     {
         if (originalInfos.Count > 0)
         {
@@ -383,19 +398,6 @@ public class UIStore : MonoBehaviour
         if (gameObject.activeSelf)
         {
             gameObject.SetActive(false);
-        }
-    }
-
-    public void ReSetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
-    {
-        foreach (KeyValuePair<int, UISlotInfo> slotInfo in slotInfos)
-        {
-            slotInfo.Value.isItemExist = false;
-            slotInfo.Value.slotInfo.itemIndex = -1;
-            slotInfo.Value.slotInfo.itemType = TypeData.ItemType.없음;
-            slotInfo.Value.slotInfo.quantity = 0;
-
-            slotInfo.Value.StoreReSetting();
         }
     }
 }

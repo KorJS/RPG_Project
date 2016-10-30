@@ -21,9 +21,8 @@ public class PlayerInfoData
     // TODO :  리스폰 위치
     public struct InfoData
     {
-        public string name;
-        public int level;
         public string nick;
+        public int level;
         public float exp;
         public int glod;
         public int att;
@@ -36,8 +35,8 @@ public class PlayerInfoData
 
     public PlayerInfoData()
     {
-        infoData.name = "테라";
-        infoData.level = 1;
+        infoData.nick = "테라";
+        infoData.level = 10;
         infoData.exp = 0;
         infoData.glod = 10000;
         infoData.att = 100;

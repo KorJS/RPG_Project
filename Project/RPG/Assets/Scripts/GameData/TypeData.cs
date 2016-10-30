@@ -83,7 +83,7 @@
     // Weapon, armor, glove, shoes, ring, necklace
     public enum EquipmentType
     {
-        무기 = 0,
+        무기 = 1,
         갑옷,
         장갑,
         신발,

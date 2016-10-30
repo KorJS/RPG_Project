@@ -30,4 +30,9 @@ public class UISkillList : MonoBehaviour
         skillListSettings.skillName.text = skillName;
         skillListSettings.skillDescription.text = description;
     }
+
+    public void CloseWindows()
+    {
+        gameObject.SetActive(false);
+    }
 }

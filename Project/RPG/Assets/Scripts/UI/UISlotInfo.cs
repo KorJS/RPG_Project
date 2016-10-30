@@ -143,6 +143,12 @@ public class UISlotInfo : MonoBehaviour
     {
         switch (slotType)
         {
+            case TypeData.SlotType.캐릭터:
+                {
+                    uiManager.characterSlots.Add(slotIndex, this);
+                }
+                break;
+
             case TypeData.SlotType.인벤토리:
                 {
                     uiManager.invenSlots.Add(slotIndex, this);

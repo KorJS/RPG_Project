@@ -98,5 +98,13 @@ public class ItemData
         equipmentInfo.buyGold = 2000;
         equipmentInfo.sellGold = 1000;
         equipmentInfos.Add(0, equipmentInfo);
+
+        equipmentInfo.name = "발로나갑옷";
+        equipmentInfo.iconName = "ValonaArmor";
+        equipmentInfo.equipmentType = TypeData.EquipmentType.갑옷;
+        equipmentInfo.defence = 150;
+        equipmentInfo.buyGold = 1000;
+        equipmentInfo.sellGold = 500;
+        equipmentInfos.Add(1, equipmentInfo);
     }
 }

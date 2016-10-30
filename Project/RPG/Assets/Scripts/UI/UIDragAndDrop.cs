@@ -6,6 +6,7 @@ public class UIDragAndDrop : MonoBehaviour
     private UIManager uiManager = null;
     private PlayerSlotData playerSlotData = null;
     private UIStore uistore = null;
+    private UICharater uiCharacter = null;
     private UIInquirePopup uiInquirePopup = null;
     private UICopyPopup uiCopyPopup = null;
     private UIDivisionPopup uidivPopup = null;
@@ -20,8 +21,6 @@ public class UIDragAndDrop : MonoBehaviour
 
     private bool isPressed = false; // 마우스를 클릭해제했는지
     private bool isDragging = false; // 드래그중인지
-
-    private int divQuantity = 0; // 분리한 수량
 
     void Awake()
     {
@@ -38,32 +37,9 @@ public class UIDragAndDrop : MonoBehaviour
     {
         uiInquirePopup = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
         uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+        uiCharacter = uiManager.windowSettings.characterObj.GetComponent<UICharater>();
         uidivPopup = uiManager.popupSettings.divisionPopup.GetComponent<UIDivisionPopup>();
         uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
-    }
-
-    void OnClick()
-    {
-        // Test
-        if (UICamera.currentKey == KeyCode.Mouse1)
-        {
-            switch (uiSlotInfo.slotType)
-            {
-                case TypeData.SlotType.인벤토리:
-                case TypeData.SlotType.단축키:
-                    {
-                        if (uiSlotInfo.slotInfo.skillIndex != -1)
-                        {
-                            Debug.Log(uiSlotInfo.slotInfo.skillIndex);
-                            return;
-                        }
-                        uiSlotInfo.slotInfo.quantity -= 1;
-                        playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
-                        uiSlotInfo.ReSetting();
-                    }
-                    break;
-            }
-        }
     }
 
     void OnDragStart()
@@ -271,7 +247,17 @@ public class UIDragAndDrop : MonoBehaviour
         // 인벤 > 케릭 / 케릭 > 인벤
         else
         {
-            if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
+            // 케릭슬롯에 아이템 존재하면 교환 / 없으면 교체
+            if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.캐릭터))
+            {
+                if (uiSlotInfo.slotInfo.itemType != TypeData.ItemType.장비)
+                {
+                    return;
+                }
+
+                uiCharacter.CheckSlotInfo(uiSlotInfo, targetInfo);
+            }
+            else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {
                 playerSlotData.CopySlotData(uiSlotInfo, targetInfo);
             }
@@ -281,7 +267,7 @@ public class UIDragAndDrop : MonoBehaviour
                 uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                 {
-                    uistore.CopySlotInfo(uiSlotInfo, targetInfo, 1);
+                    uistore.CopySlotInfo(uiSlotInfo, targetInfo.slotType, 1);
                     if (!uistore.changInvenIndexs.Contains(uiSlotInfo.slotIndex))
                     {
                         uistore.changInvenIndexs.Add(uiSlotInfo.slotIndex);
@@ -302,6 +288,19 @@ public class UIDragAndDrop : MonoBehaviour
             {
                 switch (uiSlotInfo.slotType)
                 {
+                    // 케릭>인벤 빈 곳에 추가
+                    case TypeData.SlotType.캐릭터:
+                        {
+                            if (targetInfo.slotType == TypeData.SlotType.인벤토리)
+                            {
+                                Debug.Log("케릭>인벤");
+                                // 장비 수량 1
+                                playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
+                                playerSlotData.RemoveSlotData(uiSlotInfo);
+                            }
+                        }
+                        break;
+
                     case TypeData.SlotType.인벤토리:
                     case TypeData.SlotType.창고:
                         {
@@ -310,6 +309,7 @@ public class UIDragAndDrop : MonoBehaviour
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
+                                playerSlotData.RemoveSlotData(uiSlotInfo);
                             }
                             // 소모품, 퀘스트템일경우
                             else
@@ -334,7 +334,7 @@ public class UIDragAndDrop : MonoBehaviour
                             {
                                 if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                                 {
-                                    uistore.CopySlotInfo(uiSlotInfo, targetInfo, 1);
+                                    uistore.CopySlotInfo(uiSlotInfo, targetInfo.slotType, 1);
                                     return;
                                 }
                                 // 팝업창 On
@@ -370,7 +370,7 @@ public class UIDragAndDrop : MonoBehaviour
 
                             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
                             {
-                                uistore.CopySlotInfo(uiSlotInfo, null, 1);
+                                uistore.CopySlotInfo(uiSlotInfo, TypeData.SlotType.없음, 1);
                                 return;
                             }
                             // 팝업창 On

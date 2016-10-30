@@ -89,9 +89,11 @@ public class UIManager : MonoBehaviour
 
     public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
     public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
+    public Dictionary<int, UISlotInfo> characterSlots = null;   // 케릭터 슬롯
     public SortedDictionary<int, UISlotInfo> invenSlots = null; // 인벤토리
     public SortedDictionary<int, UISlotInfo> buySlots = null;   // 상점 구매목록슬롯
     public SortedDictionary<int, UISlotInfo> sellSlots = null;  // 상점 판매목록슬롯
+
     public List<GameObject> windows = null;
     public List<GameObject> showWindowList = null;
 
@@ -116,6 +118,7 @@ public class UIManager : MonoBehaviour
 
         shortCuts = new Dictionary<int, UISlotInfo>();
         storeListSlots = new Dictionary<int, UISlotInfo>();
+        characterSlots = new Dictionary<int, UISlotInfo>();
         buySlots = new SortedDictionary<int, UISlotInfo>();
         sellSlots = new SortedDictionary<int, UISlotInfo>();
         invenSlots = new SortedDictionary<int, UISlotInfo>();

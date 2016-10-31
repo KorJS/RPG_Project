@@ -38,7 +38,6 @@ public class UIClick : MonoBehaviour
         {
             CheckSlotType();
         }
-        uiSlotInfo.ReSetting();
     }
 
     private void CheckSlotType()
@@ -49,6 +48,8 @@ public class UIClick : MonoBehaviour
                 {
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
+                    uiManager.windowSettings.characterObj.GetComponent<UICharater>().ChangPlayerStat();
+                    uiSlotInfo.ReSetting();
                 }
                 break;
 
@@ -79,7 +80,7 @@ public class UIClick : MonoBehaviour
             case TypeData.SlotType.구매:
             case TypeData.SlotType.판매:
                 {
-                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.없음, 1);
+                    BuyAndSellSlot();
                 }
                 break;
         }
@@ -110,7 +111,25 @@ public class UIClick : MonoBehaviour
     {
         if (uiManager.windowSettings.storeObj.activeSelf)
         {
-            uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.판매, uiSlotInfo.slotInfo.quantity);
+            // 클릭한 슬롯에 아이템이 없으면 리턴
+            if (!uiSlotInfo.isItemExist)
+            {
+                return;
+            }
+
+            UIStore uiStore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+
+            uiStore.CopySlotInfo(uiSlotInfo, TypeData.SlotType.판매, uiSlotInfo.slotInfo.quantity);
+
+            uiSlotInfo.slotInfo.quantity = 0;
+
+            if (!uiStore.changInvenIndexs.Contains(uiSlotInfo.slotIndex))
+            {
+                uiStore.changInvenIndexs.Add(uiSlotInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
+            }
+            Debug.Log(uiSlotInfo.slotIndex);
+            uiSlotInfo.isItemExist = false;
+            uiSlotInfo.StoreReSetting();
         }
         else if (uiManager.windowSettings.storageObj.activeSelf) // 인벤 > 창고 수량 전부 넣음
         {
@@ -124,6 +143,7 @@ public class UIClick : MonoBehaviour
 
             playerSlotData.AddSlotData(TypeData.SlotType.창고, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.slotInfo.quantity);
             playerSlotData.RemoveSlotData(uiSlotInfo);
+            uiSlotInfo.ReSetting();
         }
         else if (uiManager.windowSettings.characterObj.activeSelf)
         {
@@ -135,6 +155,7 @@ public class UIClick : MonoBehaviour
             UISlotInfo targetInfo = uiManager.characterSlots[targetIndex];
 
             uiManager.windowSettings.characterObj.GetComponent<UICharater>().SetSlotInfo(uiSlotInfo, targetInfo);
+            uiSlotInfo.ReSetting();
         }
     }
 
@@ -160,5 +181,23 @@ public class UIClick : MonoBehaviour
 
         playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.slotInfo.quantity);
         playerSlotData.RemoveSlotData(uiSlotInfo);
+        uiSlotInfo.ReSetting();
+    }
+
+    private void BuyAndSellSlot()
+    {
+        UIStore uiStore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+        uiStore.CopySlotInfo(uiSlotInfo, TypeData.SlotType.없음, uiSlotInfo.slotInfo.quantity);
+
+        if (!uiStore.changInvenIndexs.Contains(uiSlotInfo.slotIndex))
+        {
+            uiStore.changInvenIndexs.Add(uiSlotInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
+        }
+
+        uiSlotInfo.isItemExist = false;
+        uiSlotInfo.slotInfo.itemIndex = -1;
+        uiSlotInfo.slotInfo.itemType = TypeData.ItemType.없음;
+        uiSlotInfo.slotInfo.quantity = 0;
+        uiSlotInfo.StoreReSetting();
     }
 }

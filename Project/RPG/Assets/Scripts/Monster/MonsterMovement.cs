@@ -72,7 +72,7 @@ public class MonsterMovement : MonoBehaviour
     }
 
     // 죽음
-    IEnumerator Death(float destroyTime)
+    public IEnumerator Death(float destroyTime)
     {
         yield return new WaitForSeconds(destroyTime);
     }

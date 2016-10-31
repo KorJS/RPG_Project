@@ -1,5 +1,11 @@
 ﻿public class TypeData
 {
+    public enum GameDataState
+    {
+        불러오기 = 0,
+        저장
+    }
+
     // Warrior, Magician, Priest
     public enum PlayerType
     {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UICharater : MonoBehaviour
 {
@@ -22,6 +23,18 @@ public class UICharater : MonoBehaviour
     [SerializeField]
     public CharacterSettings characterSettings;
 
+    [System.Serializable]
+    public struct EquipmentStat
+    {
+        public int att;
+        public int def;
+        public int hp;
+        public int mp;
+    }
+
+    [SerializeField]
+    public EquipmentStat equipmentStat;
+
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
@@ -33,16 +46,17 @@ public class UICharater : MonoBehaviour
     void Start()
     {
         uiManager = UIManager.Instance;
+        ChangPlayerStat();
     }
 
     void OnEnable()
     {
         string levelNick = "레벨 " + playerInfoData.infoData.level + " " + playerInfoData.infoData.nick;
         characterSettings.levelNick.text = levelNick;
-        characterSettings.str.text = playerInfoData.att.ToString();
-        characterSettings.def.text = playerInfoData.def.ToString();
-        characterSettings.hp.text = playerInfoData.hp.ToString();
-        characterSettings.mp.text = playerInfoData.mp.ToString();
+        characterSettings.str.text = playerInfoData.infoData.att.ToString() + "  + [00FF00FF]" + equipmentStat.att;
+        characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def;
+        characterSettings.hp.text = playerInfoData.infoData.hp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
+        characterSettings.mp.text = playerInfoData.infoData.mp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
     }
     
     // 슬롯에 아이템 셋팅. - 이 함수가 호출될때 label에 스텟 +
@@ -52,7 +66,7 @@ public class UICharater : MonoBehaviour
         {
             return;
         }
-
+        Debug.Log("?");
         int index = currentInfo.slotInfo.itemIndex;
         ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
 
@@ -67,9 +81,42 @@ public class UICharater : MonoBehaviour
                 playerSlotData.ChangSlotData(currentInfo, targetInfo);
             }
         }
+        // 스텟 변경
+        ChangPlayerStat();
 
         currentInfo.ReSetting();
         targetInfo.ReSetting();
+    }
+
+    public void ChangPlayerStat()
+    {
+        equipmentStat.att = 0;
+        equipmentStat.def = 0;
+        equipmentStat.hp = 0;
+        equipmentStat.mp = 0;
+
+        foreach (KeyValuePair<int, PlayerSlotData.SlotInfoData> charSlotInfo in playerSlotData.characterInfos)
+        {
+            if (charSlotInfo.Value.itemIndex == -1)
+            {
+                return;
+            }
+
+            ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[charSlotInfo.Value.itemIndex];
+            equipmentStat.att += tempEquipmentInfo.attack;
+            equipmentStat.def += tempEquipmentInfo.defence;
+            equipmentStat.hp += tempEquipmentInfo.hp;
+            equipmentStat.mp += tempEquipmentInfo.mp;
+            Debug.Log(tempEquipmentInfo.hp);
+        }
+
+        // 기본스텟 + 장비스텟
+        playerInfoData.SetStat(equipmentStat.att, equipmentStat.def, equipmentStat.hp, equipmentStat.mp);
+
+        characterSettings.str.text = playerInfoData.infoData.att.ToString() + "  + [00FF00FF]" + equipmentStat.att;
+        characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def;
+        characterSettings.hp.text = playerInfoData.infoData.hp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
+        characterSettings.mp.text = playerInfoData.infoData.mp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
     }
 
     public void CloseWindows()

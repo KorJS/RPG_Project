@@ -21,6 +21,7 @@ public class PlayerInfoData
     // TODO :  리스폰 위치
     public struct InfoData
     {
+        public int index;
         public string nick;
         public int level;
         public float exp;
@@ -33,29 +34,30 @@ public class PlayerInfoData
 
     public InfoData infoData;
 
-    public int att = 0;
-    public int def = 0;
-    public int hp = 0;
-    public int mp = 0;
+    public int totalAtt = 0;
+    public int totalDef = 0;
+    public int totalHp = 0;
+    public int totalMp = 0;
 
     public PlayerInfoData()
     {
+        infoData.index = 1;
         infoData.nick = "테라";
         infoData.level = 10;
         infoData.exp = 0;
         infoData.glod = 10000;
-        att = infoData.att = 100;
-        def = infoData.def = 100;
-        hp = infoData.hp = 1000;
-        mp = infoData.mp = 1000;
+        infoData.att = 100;
+        infoData.def = 100;
+        infoData.hp = 1000;
+        infoData.mp = 1000;
     }
 
     // TODO : 공격력 / 방어력 / HP / MP 계산
     public void SetStat(int _att, int _def, int _hp, int _mp)
     {
-        att = infoData.att + _att;
-        def = infoData.def + _def;
-        hp = infoData.hp + _hp;
-        mp = infoData.mp + _mp;
+        totalAtt = infoData.att + _att;
+        totalDef = infoData.def + _def;
+        totalHp = infoData.hp + _hp;
+        totalMp = infoData.mp + _mp;
     }
 }

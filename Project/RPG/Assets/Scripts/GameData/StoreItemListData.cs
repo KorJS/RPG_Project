@@ -21,16 +21,16 @@ public class StoreItemListData
     // TODO : 지역으로 검색 후 타입별로 (나중에. 지역이 여러개라면)
     public List<int> itemIndexs;
 
-    public Dictionary<TypeData.StoreType, List<int>> itemListInfos = null;
+    public Dictionary<int, List<int>> itemListInfos = null;
 
     public StoreItemListData()
     {
         itemIndexs = new List<int>();
-        itemListInfos = new Dictionary<TypeData.StoreType, List<int>>();
+        itemListInfos = new Dictionary<int, List<int>>();
 
         itemIndexs.Add(0);
         itemIndexs.Add(1);
-        itemListInfos.Add(TypeData.StoreType.소모품점, itemIndexs);
+        itemListInfos.Add((int)TypeData.StoreType.소모품점, itemIndexs);
     }
 
     public void SetStore()

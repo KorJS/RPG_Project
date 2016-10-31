@@ -3,15 +3,10 @@ using System; // DateTime
 using System.Collections.Generic; // Dictionary
 using JsonFx.Json; // JsonReader
 
-public class LoginManager : MonoBehaviour
+public class Network_Login : MonoBehaviour
 {
-    [SerializeField]
     public UIInput id;
-
-    [SerializeField]
     public UIInput pw;
-
-    [SerializeField]
     public UILabel message;
 
     private class RecvLoginData
@@ -28,11 +23,11 @@ public class LoginManager : MonoBehaviour
         //{
 
         //}
-
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", "login");
         sendData.Add("id", id.value);
         sendData.Add("pw", pw.value);
+        sendData.Add("inven", PlayerSlotData.Instance.inventoryInfos);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyLogin));
     }
@@ -47,5 +42,4 @@ public class LoginManager : MonoBehaviour
 
         Debug.Log((origin.ToLocalTime()).ToString("yyyy년 MM월 dd일의 tt HH시 mm분 s초에 로그인 했습니다."));
     }
-
 }

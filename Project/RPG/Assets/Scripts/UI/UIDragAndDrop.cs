@@ -56,6 +56,12 @@ public class UIDragAndDrop : MonoBehaviour
             return;
         }
 
+        // 드래그 하려는 슬롯에 아이템이 없으면 리턴
+        if (!uiSlotInfo.isItemExist)
+        {
+            return;
+        }
+
         isDragging = true; // 드래그 시작
         Debug.Log(uiSlotInfo.name + " : " + uiSlotInfo.slotIndex);
         uiSlotInfo.slotSettings.uiIcon.alpha = 0.5f; // 드래그시작하면 원래있던건 반투명하게
@@ -292,6 +298,7 @@ public class UIDragAndDrop : MonoBehaviour
                                 // 장비 수량 1
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                                 playerSlotData.RemoveSlotData(uiSlotInfo);
+                                uiCharacter.GetComponent<UICharater>().ChangPlayerStat();
                             }
                         }
                         break;

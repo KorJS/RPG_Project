@@ -61,7 +61,7 @@ public class UIStore : MonoBehaviour
             {
                 int tempQuantity = _currentInfo.slotInfo.quantity;
                 if (_currentInfo.slotInfo.itemType == TypeData.ItemType.장비) { tempQuantity = 1; }
-                originalInfos.Add(_currentInfo.slotIndex, quantity);
+                originalInfos.Add(_currentInfo.slotIndex, tempQuantity);
             }
         }
        
@@ -152,12 +152,16 @@ public class UIStore : MonoBehaviour
         // 판매 목록에 아무것도 존재 안하면 빈곳에 추가
         if (!isExist)
         {
-            CheckEmptySlot(ref slots);
+            // 빈 곳이 없으면 경고창 - 빈곳이 있으면 넣고. if문 빠져나옴
+            if (!CheckEmptySlot(ref slots))
+            {
+                // 빈 곳도 없으면 경고창On - 슬롯부족
+            }
         }
     }
 
     // 빈 곳에 추가
-    private void CheckEmptySlot(ref SortedDictionary<int, UISlotInfo> slots)
+    private bool CheckEmptySlot(ref SortedDictionary<int, UISlotInfo> slots)
     {
         foreach (KeyValuePair<int, UISlotInfo> slotInfo in slots)
         {
@@ -171,38 +175,80 @@ public class UIStore : MonoBehaviour
                 slots[index].slotInfo = currentInfo.slotInfo;
                 slots[index].slotInfo.quantity = quantity;
                 slots[index].StoreReSetting();
-                break;
+
+                return true;
             }
         }
+
+        return false;
     }
 
     // 판매목록>인벤 복구
     private void InvenRecoverItem()
     {
-        foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
+        if (currentInfo.slotInfo.itemType == TypeData.ItemType.장비)
         {
-            if (quantity <= 0)
+            foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
             {
-                return;
+                if (invenSlot.Value.isItemExist)
+                {
+                    Debug.Log("true : " + invenSlot.Key);
+                    continue;
+                }
+
+                Debug.Log("false : " + invenSlot.Key);
+
+                if (invenSlot.Value.slotInfo.itemType != TypeData.ItemType.장비)
+                {
+                    Debug.Log("장비x : " + invenSlot.Key);
+                    continue;
+                }
+
+                Debug.Log("장비o : " + invenSlot.Key);
+
+                if (invenSlot.Value.slotInfo.itemIndex != currentInfo.slotInfo.itemIndex)
+                {
+                    Debug.Log("장비index x : " + invenSlot.Key);
+                    continue;
+                }
+                Debug.Log("장비index o : " + invenSlot.Key);
+                int index = invenSlot.Key;
+
+                invenSlot.Value.isItemExist = true;
+                invenSlot.Value.slotInfo.quantity = 1;
+
+                invenSlot.Value.StoreReSetting();
+                break;
             }
-            // 같은 타입이 없으면
-            if (currentInfo.slotInfo.itemType != invenSlot.Value.slotInfo.itemType)
+        }
+        else
+        {
+            foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
             {
-                continue;
+                if (quantity <= 0)
+                {
+                    return;
+                }
+
+                // 같은 타입이 없으면
+                if (currentInfo.slotInfo.itemType != invenSlot.Value.slotInfo.itemType)
+                {
+                    continue;
+                }
+
+                // 같은 인덱스가 없으면
+                if (currentInfo.slotInfo.itemIndex != invenSlot.Value.slotInfo.itemIndex)
+                {
+                    continue;
+                }
+
+                // 같은 타입에 같은 인덱스가 있으면
+                int index = invenSlot.Key;
+                Debug.Log(invenSlot.Value.slotInfo.quantity);
+                CheckInvenQuantity(ref invenSlot.Value.slotInfo.quantity);
+
+                invenSlot.Value.StoreReSetting();
             }
-
-            // 같은 인덱스가 없으면
-            if (currentInfo.slotInfo.itemIndex != invenSlot.Value.slotInfo.itemIndex)
-            {
-                continue;
-            }
-
-            // 같은 타입에 같은 인덱스가 있으면
-            int index = invenSlot.Key;
-
-            CheckInvenQuantity(ref invenSlot.Value.slotInfo.quantity);
-
-            invenSlot.Value.StoreReSetting();
         }
     }
 
@@ -379,10 +425,10 @@ public class UIStore : MonoBehaviour
             foreach (KeyValuePair<int, int> originalInfo in originalInfos)
             {
                 int index = originalInfo.Key;
-
+                Debug.Log("originalInfo.Key : " + originalInfo.Key + ", originalInfo.Value : " + originalInfo.Value);
                 uiManager.invenSlots[index].isItemExist = true;
                 uiManager.invenSlots[index].slotInfo.quantity = originalInfo.Value;
-
+                uiManager.invenSlots[index].StoreReSetting();
                 currentInfo.StoreReSetting();
             }
 

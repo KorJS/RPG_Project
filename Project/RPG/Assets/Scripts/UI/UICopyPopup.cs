@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class UICopyPopup : MonoBehaviour
 {
     private UIManager uiManager = null;
-    private UIStore uistore = null;
+    private UIStore uiStore = null;
     private UIInput copyQuantity_Input = null; // 입력 수량
 
     private int copyQuantityMAX = 0; // 옮길수 있는 최대 수량(현재슬롯 수량)
@@ -22,7 +22,7 @@ public class UICopyPopup : MonoBehaviour
 
     void Start()
     {
-        uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+        uiStore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
     }
 
     void OnEnable()
@@ -54,7 +54,6 @@ public class UICopyPopup : MonoBehaviour
     // 분리할 수량 변화가 생기면 호출되는 함수
     public void ChangCopyPopupText()
     {
-        Debug.Log("copyQuantityMAX : " + copyQuantityMAX + " copyQuantity : " + copyQuantity);
         copyQuantity = int.Parse(copyQuantity_Input.label.text);
 
         if (copyQuantity > copyQuantityMAX)
@@ -62,6 +61,8 @@ public class UICopyPopup : MonoBehaviour
             copyQuantity_Input.value = copyQuantityMAX.ToString();
             copyQuantity = copyQuantityMAX;
         }
+
+        Debug.Log("copyQuantityMAX : " + copyQuantityMAX + " copyQuantity : " + copyQuantity);
     }
 
     // 수량 증가버튼 눌렀을시 호출되는 함수
@@ -117,14 +118,14 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.인벤토리:
                 {
                     // 판매목록 수량만큼 추가
-                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
+                    uiStore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
 
                     // 인벤 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;
 
-                    if (!uistore.changInvenIndexs.Contains(currentInfo.slotIndex))
+                    if (!uiStore.changInvenIndexs.Contains(currentInfo.slotIndex))
                     {
-                        uistore.changInvenIndexs.Add(currentInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
+                        uiStore.changInvenIndexs.Add(currentInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
                     }
 
                     if (currentInfo.slotInfo.quantity == 0)
@@ -141,7 +142,7 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.상점리스트:
                 {
                     // 구매목록 수량만큼 추가
-                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
+                    uiStore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
                 }
                 break;
 
@@ -149,7 +150,7 @@ public class UICopyPopup : MonoBehaviour
             case TypeData.SlotType.판매:
                 {
                     // 수량 만큼 제거
-                    uistore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
+                    uiStore.CopySlotInfo(currentInfo, TypeData.SlotType.없음, copyQuantity);
 
                     // 구매, 판매목록 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;

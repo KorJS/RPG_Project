@@ -41,7 +41,7 @@ public class NetworkManager : MonoBehaviour {
     {
         // 2. JSON 형식으로 변환
         string json = JsonWriter.Serialize(sendData);
-
+        Debug.Log(json);
         // 3. POST 방식의 데이타로 만든다.
         WWWForm form = new WWWForm();
         form.AddField("json", json);
@@ -74,7 +74,7 @@ public class NetworkManager : MonoBehaviour {
             {
                 index = 1;
             }
-
+            Debug.Log(www.text);
             if (www.text[index] == '{') // JSON 데이타 인가? 
             {
                 // JSON 데이타를 Dictionary로 변환

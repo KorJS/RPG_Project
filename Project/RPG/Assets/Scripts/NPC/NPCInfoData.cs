@@ -64,7 +64,7 @@ public class NPCInfoData : MonoBehaviour
         {
             case TypeData.NPCType.상인:
                 {
-                    npcInfo.itemIndexs = storeItemListData.itemListInfos[npcInfo.storeType];
+                    npcInfo.itemIndexs = storeItemListData.itemListInfos[(int)npcInfo.storeType];
                 }
                 break;
 

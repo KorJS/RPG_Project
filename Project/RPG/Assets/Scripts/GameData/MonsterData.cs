@@ -24,7 +24,7 @@ public class MonsterData
     public struct MonsterInfo
     {
         public string name;
-        public TypeData.MonsterType monsterType;
+        public int monsterType;
         public int skillIndex;
         public int defence;
         public float hp;
@@ -44,7 +44,7 @@ public class MonsterData
         monsterInfos = new Dictionary<string, MonsterInfo>();
 
         monsterInfo.name = "BloodGolem";
-        monsterInfo.monsterType = TypeData.MonsterType.보스;
+        monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
         monsterInfo.hp = 1000;
         monsterInfos.Add(monsterInfo.name + "_Spawns", monsterInfo);
     }

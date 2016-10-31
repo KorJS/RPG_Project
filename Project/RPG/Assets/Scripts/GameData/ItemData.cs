@@ -23,8 +23,8 @@ public class ItemData
     {
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
-        public int equipmentType;    // 장비타입
-        public int playerType;          // 착용직업
+        public int equipmentType;                       // 장비타입
+        public int playerType;                          // 착용직업
         public int level;                               // 착용레벨
         public int attack;                              // 공격력
         public int defence;                             // 방어력
@@ -92,21 +92,81 @@ public class ItemData
         cusomableInfo.sellGold = 500;
         cusomableInfos.Add(2, cusomableInfo);
 
-        equipmentInfo.name = "고룡갑옷";
-        equipmentInfo.iconName = "DragonArmor";
+        equipmentInfo.name = "베르고스 검";
+        equipmentInfo.iconName = "Vergos_Lance";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
+        equipmentInfo.attack = 10000;
+        equipmentInfo.hp = 10000;
+        equipmentInfo.buyGold = 10000;
+        equipmentInfo.sellGold = 5000;
+        equipmentInfos.Add(0, equipmentInfo);
+
+        equipmentInfo.name = "빛나는 검";
+        equipmentInfo.iconName = "Lance01";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
+        equipmentInfo.attack = 5000;
+        equipmentInfo.hp = 1000;
+        equipmentInfo.mp = 500;
+        equipmentInfo.buyGold = 4000;
+        equipmentInfo.sellGold = 2000;
+        equipmentInfos.Add(1, equipmentInfo);
+
+        equipmentInfo.name = "베르고스 갑옷";
+        equipmentInfo.iconName = "Vergos_Body";
         equipmentInfo.equipmentType = (int)TypeData.EquipmentType.갑옷;
         equipmentInfo.defence = 10000;
         equipmentInfo.hp = 10000;
         equipmentInfo.buyGold = 2000;
         equipmentInfo.sellGold = 1000;
-        equipmentInfos.Add(0, equipmentInfo);
+        equipmentInfos.Add(2, equipmentInfo);
 
         equipmentInfo.name = "발로나갑옷";
-        equipmentInfo.iconName = "ValonaArmor";
+        equipmentInfo.iconName = "Val_Body";
         equipmentInfo.equipmentType = (int)TypeData.EquipmentType.갑옷;
-        equipmentInfo.defence = 150;
+        equipmentInfo.defence = 1500;
+        equipmentInfo.hp = 500;
         equipmentInfo.buyGold = 1000;
         equipmentInfo.sellGold = 500;
-        equipmentInfos.Add(1, equipmentInfo);
+        equipmentInfos.Add(3, equipmentInfo);
+
+        equipmentInfo.name = "베르고스 장갑";
+        equipmentInfo.iconName = "Vergos_Hand";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.장갑;
+        equipmentInfo.defence = 2000;
+        equipmentInfo.hp = 200;
+        equipmentInfo.mp = 200;
+        equipmentInfo.buyGold = 2000;
+        equipmentInfo.sellGold = 1000;
+        equipmentInfos.Add(4, equipmentInfo);
+
+        equipmentInfo.name = "발로나 장갑";
+        equipmentInfo.iconName = "Val_Hand";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.장갑;
+        equipmentInfo.defence = 2000;
+        equipmentInfo.hp = 150;
+        equipmentInfo.mp = 150;
+        equipmentInfo.buyGold = 1000;
+        equipmentInfo.sellGold = 500;
+        equipmentInfos.Add(5, equipmentInfo);
+
+        equipmentInfo.name = "베르고스 신발";
+        equipmentInfo.iconName = "Vergos_Leg";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.신발;
+        equipmentInfo.defence = 1000;
+        equipmentInfo.hp = 200;
+        equipmentInfo.mp = 200;
+        equipmentInfo.buyGold = 2000;
+        equipmentInfo.sellGold = 1000;
+        equipmentInfos.Add(6, equipmentInfo);
+
+        equipmentInfo.name = "발로나 신발";
+        equipmentInfo.iconName = "Val_Leg";
+        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.신발;
+        equipmentInfo.defence = 1000;
+        equipmentInfo.hp = 150;
+        equipmentInfo.mp = 150;
+        equipmentInfo.buyGold = 1000;
+        equipmentInfo.sellGold = 500;
+        equipmentInfos.Add(7, equipmentInfo);
     }
 }

@@ -152,14 +152,14 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             equipHandler.SetWeapon(null, false);
-            equipHandler.SetShield(null, false);
+            equipHandler.SetSubWeapon(null, false);
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            weapon = Instantiate(Resources.Load("Equipment/" + swordName)) as GameObject;
-            shield = Instantiate(Resources.Load("Equipment/" + shieldName)) as GameObject;
+            weapon = Instantiate(Resources.Load("Equipment/Vergos_Lance_Weapon")) as GameObject;
+            shield = Instantiate(Resources.Load("Equipment/Vergos_Lance_Subweapon")) as GameObject;
             equipHandler.SetWeapon(weapon, true);
-            equipHandler.SetShield(shield, true);
+            equipHandler.SetSubWeapon(shield, true);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha6))

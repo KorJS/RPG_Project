@@ -9,20 +9,20 @@ public class EquipmentHandler : MonoBehaviour
     {
         public Transform weaponEquipSpot;
         public Transform weaponUnequipSpot;
-        public Transform shieldEquipSpot;
-        public Transform shieldUnequipSpot;
+        public Transform subWeaponEquipSpot;
+        public Transform subWeaponUnequipSpot;
     }
 
     [SerializeField]
     public UserSettings userSettings;
 
-    public GameObject   weaponObj   = null;
-    public Equipment    weapon      = null;
+    public GameObject   weaponObj       = null;
+    public Equipment    weapon          = null;
 
-    public GameObject   shieldObj   = null;
-    public Equipment    shield      = null;
+    public GameObject   subWeaponObj    = null;
+    public Equipment    subWeapon       = null;
 
-    private PlayerState playerState = null;
+    private PlayerState playerState     = null;
 
     void Awake()
     {
@@ -39,9 +39,9 @@ public class EquipmentHandler : MonoBehaviour
                 weapon.SetLocation();
             }
 
-            if (shield != null)
+            if (subWeapon != null)
             {
-                shield.SetLocation();
+                subWeapon.SetLocation();
             }
         }
     }
@@ -82,32 +82,32 @@ public class EquipmentHandler : MonoBehaviour
         }
     }
 
-    public void SetShield(GameObject _shieldObj, bool _isShield)
+    public void SetSubWeapon(GameObject _subWeaponObj, bool _isSubWeapon)
     {
         // 기존 착용장비가 존재하고 
         // 착용할 장비가 기존 장비와 다르면
         // 제거
-        if (shieldObj && (shieldObj != _shieldObj))
+        if (subWeaponObj && (subWeaponObj != _subWeaponObj))
         {
-            shield.RemoveEquipment();
-            shieldObj = null;
-            shield = null;
+            subWeapon.RemoveEquipment();
+            subWeaponObj = null;
+            subWeapon = null;
         }
 
         // 제거후 착용한 장비가 있다면
-        if (_shieldObj != null)
+        if (_subWeaponObj != null)
         {
-            shieldObj = _shieldObj;
-            shield = shieldObj.GetComponent<Equipment>();
+            subWeaponObj = _subWeaponObj;
+            subWeapon = subWeaponObj.GetComponent<Equipment>();
 
             // 장비 부모 설정
-            shield.locationSettings.equipT = userSettings.shieldEquipSpot;
-            shield.locationSettings.unequipT = userSettings.shieldUnequipSpot;
+            subWeapon.locationSettings.equipT = userSettings.subWeaponEquipSpot;
+            subWeapon.locationSettings.unequipT = userSettings.subWeaponUnequipSpot;
 
-            shield.SetEquipeed(_isShield);
-            shield.SetEquipHandler(this);
-            shield.CheckActive(playerState.currentMode); // 장비에 모드 설정
-            shield.SetLocation(); // 장비 위치 설정
+            subWeapon.SetEquipeed(_isSubWeapon);
+            subWeapon.SetEquipHandler(this);
+            subWeapon.CheckActive(playerState.currentMode); // 장비에 모드 설정
+            subWeapon.SetLocation(); // 장비 위치 설정
         }
     }
 
@@ -119,9 +119,9 @@ public class EquipmentHandler : MonoBehaviour
             weapon.CheckActive(mode);
         }
 
-        if (shield)
+        if (subWeapon)
         {
-            shield.CheckActive(mode);
+            subWeapon.CheckActive(mode);
         }
     }
 }

@@ -9,7 +9,7 @@ public class Equipment : MonoBehaviour
         검 = 0,
         마법책,
         지팡이,
-        방패
+        보조무기
     };
 
     public EquipmentType eqType = EquipmentType.없음;

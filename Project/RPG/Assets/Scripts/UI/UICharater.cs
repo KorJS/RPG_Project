@@ -8,7 +8,11 @@ public class UICharater : MonoBehaviour
     private PlayerInfoData playerInfoData = null;
     private PlayerSlotData playerSlotData = null;
 
+    private EquipmentHandler equipHandler = null;
     private Transform slotHolder = null;
+
+    private GameObject weaponObj = null;
+    private GameObject subWeaponObj = null;
 
     [System.Serializable]
     public class CharacterSettings
@@ -40,6 +44,7 @@ public class UICharater : MonoBehaviour
         playerInfoData = PlayerInfoData.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
+        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
         slotHolder = transform.FindChild("E_Slots");
     }
 
@@ -66,10 +71,27 @@ public class UICharater : MonoBehaviour
         {
             return;
         }
-        Debug.Log("?");
+        
         int index = currentInfo.slotInfo.itemIndex;
-        ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
+        ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index]; // 장착하려는 장비
 
+        // 무기
+        if (targetInfo.slotIndex == 1)
+        {
+            if (weaponObj != null || subWeaponObj != null)
+            {
+                equipHandler.SetWeapon(null, false);
+                equipHandler.SetSubWeapon(null, false);
+            }
+            Debug.Log("Equipment/" + tempEquipmentInfo.name + "_Weapon");
+            weaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Weapon")) as GameObject;
+            subWeaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon")) as GameObject;
+
+            // 무기 장착
+            equipHandler.SetWeapon(weaponObj, true);
+            equipHandler.SetSubWeapon(subWeaponObj, true);
+        }
+        
         if ((int)tempEquipmentInfo.equipmentType == targetInfo.slotIndex)
         {
             if (targetInfo.isItemExist)
@@ -81,6 +103,7 @@ public class UICharater : MonoBehaviour
                 playerSlotData.ChangSlotData(currentInfo, targetInfo);
             }
         }
+
         // 스텟 변경
         ChangPlayerStat();
 

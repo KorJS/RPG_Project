@@ -45,7 +45,8 @@ public class MonsterData
 
         monsterInfo.name = "BloodGolem";
         monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
-        monsterInfo.hp = 1000;
+        monsterInfo.defence = 30;
+        monsterInfo.hp = 10000;
         monsterInfos.Add(monsterInfo.name + "_Spawns", monsterInfo);
     }
 

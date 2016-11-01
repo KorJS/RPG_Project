@@ -67,12 +67,6 @@ public class PlayerSlotData
         emptyInvenMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
 
-        slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        slotInfoData.skillIndex = -1;
-        slotInfoData.itemIndex = 2;
-        slotInfoData.quantity = 1;
-        characterInfos.Add(2, slotInfoData);
-
         slotInfoData.itemType = (int)TypeData.ItemType.소모품;
         slotInfoData.skillIndex = -1;
         slotInfoData.itemIndex = 0;

@@ -48,7 +48,7 @@ public class SkillData
         skillinfo.description = "근접한 대상에게 타격을 입히고 일정량의 MP를 회복합니다. 스킬 버튼을 연속적으로 누르면 공격이 이어지면서 더 강한 타격을 입힐 수 있습니다."; // 형식 포맷 사용하자
         skillinfo.level = 1;
         skillinfo.coolTime = 1f;
-        skillinfo.attack = 100f;
+        skillinfo.attack = 1f;
         skillinfo.mp = 5f;
         skillinfo.angle = 60f;
         skillinfo.distance = 3f;
@@ -87,7 +87,7 @@ public class SkillData
         skillinfo.description = "전방으로 빠르게 돌진하여 부딪히는 적들을 밀고 나갑니다.";
         skillinfo.level = 8;
         skillinfo.coolTime = 10f;
-        skillinfo.attack = 0f;
+        skillinfo.attack = 0.3f;
         skillinfo.mp = -50f;
         skillinfo.angle = 90f;
         skillinfo.distance = 2f;
@@ -100,7 +100,7 @@ public class SkillData
         skillinfo.description = "전방을 향해 점프하여 방패를 땅으로 내려찍어 공격을 가하고 다운 시킵니다.";
         skillinfo.level = 8;
         skillinfo.coolTime = 10f;
-        skillinfo.attack = 0f;
+        skillinfo.attack = 5f;
         skillinfo.mp = -50f;
         skillinfo.angle = 90f;
         skillinfo.distance = 2f;

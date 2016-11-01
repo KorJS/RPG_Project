@@ -5,11 +5,13 @@ using System.Collections.Generic;
 public class WarriorSkill : MonoBehaviour
 {
     private SkillData skillData = null;
+    private PlayerInfoData playerInfoData = null;
     private PlayerSkillData playerSkillData = null; // 스킬 정보 받아옴
     private PlayerMovement playerMovement = null;
     private PlayerInput playerInput = null;
     private PlayerState playerState = null;
     private WarriorEffect warriorEffect = null;
+    private UIManager uiManager = null;
 
     // 워리어 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -59,14 +61,19 @@ public class WarriorSkill : MonoBehaviour
 
     void Awake()
     {
+        playerInfoData = PlayerInfoData.Instance;
         playerSkillData = PlayerSkillData.Instance; // 스킬 정보
-
         playerMovement = GetComponent<PlayerMovement>();
         playerInput = GetComponent<PlayerInput>();
         playerState = GetComponent<PlayerState>();
         warriorEffect = GetComponent<WarriorEffect>();
 
         currentSkillTpye = SkillType.없음;
+    }
+
+    void Start()
+    {
+        uiManager = UIManager.Instance;
     }
 
     void Update()
@@ -101,7 +108,6 @@ public class WarriorSkill : MonoBehaviour
         {
             if (Input.GetKeyUp(blockKeyCode))
             {
-                Debug.Log("?");
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
                 isBlock = false;
             }
@@ -129,8 +135,7 @@ public class WarriorSkill : MonoBehaviour
                 if (angle <= skillAngle)
                 {
                     // 범위 안에 있으면 Hit
-                    //Debug.Log(angle);
-                    Debug.Log(target.name);
+                    //Debug.Log(target.name);
                     Damage(target.gameObject);
                 }
             }
@@ -139,9 +144,11 @@ public class WarriorSkill : MonoBehaviour
 
     private void Damage(GameObject enemyObj)
     {
+        float attack = playerInfoData.totalAtt * skillInfo.attack;
+        Debug.Log("attack : " + attack);
         // TODO : SKillInfo의 데미지를 적용
-        enemyObj.GetComponent<MonsterInfoData>().SetCurrentHP(-100f);
-        Debug.Log((int)currentSkillTpye);
+        enemyObj.GetComponent<MonsterMovement>().SetDamage(-attack);
+        uiManager.SetHpBar(enemyObj.transform);
     }
 
     // TODO : 다음에는 Queue와 입력시간 Timer를 사용해서 지정한 Time 안에 입력이 없을시 연속으로 안나가게 막하볼까..
@@ -155,8 +162,8 @@ public class WarriorSkill : MonoBehaviour
             return;
         }
 
-        // 클릭한 곳에 스킬이 없거나 / 스킬 상태가 아닐때
-        if (playerInput.index < 0)// || playerState.currentState != TypeData.State.스킬)
+        // 클릭한 곳에 스킬이 없거나
+        if (playerInput.index < 0)
         {
             return;
         }

@@ -40,13 +40,13 @@ public class SpawnControl : MonoBehaviour
     {
         switch (spawnTag)
         {
-            case "Normal":
+            case "NormalSpawn":
                 { respawnTime = NORMAL_TIME; }
                 break;
-            case "Elite":
+            case "EliteSpawn":
                 { respawnTime = ELITE_TIME; }
                 break;
-            case "Boss":
+            case "BossSpawn":
                 { respawnTime = BOSS_TIME; }
                 break;
         }
@@ -54,7 +54,7 @@ public class SpawnControl : MonoBehaviour
 
     private void Respawn()
     {
-        if (!isRespawn)
+        if (monsterObj.activeSelf)
         {
             return;
         }

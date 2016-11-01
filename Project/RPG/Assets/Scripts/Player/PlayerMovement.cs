@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
         isHit = isDamage = isEndSkillPoint = false;
         isIdle = true; // 대기상태
 
-        SetAnimator();
+        //SetAnimator();
     }
 
     void Update()
@@ -151,24 +151,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // 자식에 아바타를 받아옴
-    private void SetAnimator()
-    {
-        Animator[] animators = GetComponentsInChildren<Animator>();
+    //// 자식에 아바타를 받아옴
+    //private void SetAnimator()
+    //{
+    //    Animator[] animators = GetComponentsInChildren<Animator>();
 
-        if (animators.Length > 0)
-        {
-            for (int i = 0; i < animators.Length; i++)
-            {
-                Animator anim = animators[i];
-                Avatar av = anim.avatar;
+    //    if (animators.Length > 0)
+    //    {
+    //        for (int i = 0; i < animators.Length; i++)
+    //        {
+    //            Animator anim = animators[i];
+    //            Avatar av = anim.avatar;
 
-                if (anim != animator)
-                {
-                    animator.avatar = av;
-                    Destroy(anim);
-                }
-            }
-        }
-    }
+    //            if (anim != animator)
+    //            {
+    //                animator.avatar = av;
+    //                Destroy(anim);
+    //            }
+    //        }
+    //    }
+    //}
 }

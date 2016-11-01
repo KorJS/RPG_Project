@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(Animator))]
 public class MonsterMovement : MonoBehaviour
 {
+    private MonsterInfoData monsterInfoData = null;
     private MonsterRange monsterRange = null;
 
     [System.Serializable]
@@ -22,7 +23,6 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    //public CharacterController charCtrl = null;
     public Animator animator = null;
 
     public GameObject skillHolderObj = null;
@@ -33,12 +33,12 @@ public class MonsterMovement : MonoBehaviour
     public bool isIdle = false;
     public bool isMove = false;
     public bool isRot = false;
-    public bool isPeace = false;
+    public bool isHit = false;
 
     void Awake()
     {
         monsterRange = GetComponent<MonsterRange>();
-        //charCtrl = GetComponent<CharacterController>();
+        monsterInfoData = GetComponent<MonsterInfoData>();
         animator = GetComponent<Animator>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
@@ -60,9 +60,10 @@ public class MonsterMovement : MonoBehaviour
     }
 
     // 데미지
-    public void SetAniDamage()
+    public void SetDamage(float damage)
     {
-
+        monsterInfoData.SetCurrentHP(damage);
+        isHit = true;
     }
 
     // 다운
@@ -107,6 +108,11 @@ public class MonsterMovement : MonoBehaviour
         else
         {
             isMove = false;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("death"))
+        {
+            //animator.ResetTrigger(animationSettings.isDeathTrigger);
         }
 
         // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지

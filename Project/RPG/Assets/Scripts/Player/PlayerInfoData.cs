@@ -28,16 +28,18 @@ public class PlayerInfoData
         public int glod;
         public int att;
         public int def;
-        public int hp;
-        public int mp;
+        public float currentHp;
+        public float currentMp;
+        public int maxHp;
+        public int maxMp;
     }
 
     public InfoData infoData;
 
     public int totalAtt = 0;
     public int totalDef = 0;
-    public int totalHp = 0;
-    public int totalMp = 0;
+    public int totalMaxHp = 0;
+    public int totalMaxMp = 0;
 
     public PlayerInfoData()
     {
@@ -48,8 +50,10 @@ public class PlayerInfoData
         infoData.glod = 10000;
         infoData.att = 100;
         infoData.def = 100;
-        infoData.hp = 1000;
-        infoData.mp = 1000;
+        infoData.currentHp = 1000;
+        infoData.currentMp = 1000;
+        totalMaxHp = infoData.maxHp = 1000;
+        totalMaxMp = infoData.maxMp = 1000;
     }
 
     // TODO : 공격력 / 방어력 / HP / MP 계산
@@ -57,7 +61,7 @@ public class PlayerInfoData
     {
         totalAtt = infoData.att + _att;
         totalDef = infoData.def + _def;
-        totalHp = infoData.hp + _hp;
-        totalMp = infoData.mp + _mp;
+        totalMaxHp = infoData.maxHp + _hp;
+        totalMaxMp = infoData.maxMp + _mp;
     }
 }

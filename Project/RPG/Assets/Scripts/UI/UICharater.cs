@@ -60,8 +60,8 @@ public class UICharater : MonoBehaviour
         characterSettings.levelNick.text = levelNick;
         characterSettings.str.text = playerInfoData.infoData.att.ToString() + "  + [00FF00FF]" + equipmentStat.att;
         characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def;
-        characterSettings.hp.text = playerInfoData.infoData.hp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
-        characterSettings.mp.text = playerInfoData.infoData.mp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
+        characterSettings.hp.text = playerInfoData.infoData.maxHp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
+        characterSettings.mp.text = playerInfoData.infoData.maxMp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
     }
     
     // 슬롯에 아이템 셋팅. - 이 함수가 호출될때 label에 스텟 +
@@ -83,7 +83,7 @@ public class UICharater : MonoBehaviour
                 equipHandler.SetWeapon(null, false);
                 equipHandler.SetSubWeapon(null, false);
             }
-            Debug.Log("Equipment/" + tempEquipmentInfo.name + "_Weapon");
+            Debug.Log("Equipment/" + tempEquipmentInfo.iconName + "_Weapon");
             weaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Weapon")) as GameObject;
             subWeaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon")) as GameObject;
 
@@ -138,8 +138,8 @@ public class UICharater : MonoBehaviour
 
         characterSettings.str.text = playerInfoData.infoData.att.ToString() + "  + [00FF00FF]" + equipmentStat.att;
         characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def;
-        characterSettings.hp.text = playerInfoData.infoData.hp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
-        characterSettings.mp.text = playerInfoData.infoData.mp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
+        characterSettings.hp.text = playerInfoData.infoData.maxHp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
+        characterSettings.mp.text = playerInfoData.infoData.maxMp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
     }
 
     public void CloseWindows()

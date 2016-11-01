@@ -37,6 +37,9 @@ public class MonsterRange : MonoBehaviour
     [SerializeField]
     public MonsterSettings monster;
 
+    private Transform skillPoint = null;
+    private float skilldis = 0f;
+
     public Vector3 mobPos = Vector3.zero;
     public Vector3 tPos = Vector3.zero;
 
@@ -66,6 +69,16 @@ public class MonsterRange : MonoBehaviour
         CheckAggro();
         CheckOriginDistance();
         CheckForward();
+    }
+
+    void OnDrawGizmos()
+    {
+        if (skillPoint == null)
+        {
+            return;
+        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(skillPoint.position, skilldis);
     }
 
     // 스폰위치로부터 거리를 체크 - 지정된 거리가 되면 원위치로 돌아감 / 어글 풀림
@@ -156,7 +169,7 @@ public class MonsterRange : MonoBehaviour
         aggroTimer += Time.deltaTime;
 
         // 타겟에 어글이 표시 되는 타임. ()
-        if (aggroTimer >= monster.aggroTime)
+        if (monsterMovement.isHit || aggroTimer >= monster.aggroTime)
         {
             if (!playerEffect)
             {
@@ -168,6 +181,7 @@ public class MonsterRange : MonoBehaviour
             aggroTimer = 0f;
             monsterState.nextMode = TypeData.MODE.전투;
             monsterState.nextState = TypeData.State.이동;
+            monsterMovement.isHit = false;
 
             return;
         }
@@ -225,18 +239,6 @@ public class MonsterRange : MonoBehaviour
             mobPos = monster.monsterT.position;
             tPos = monster.targetT.position;
         }
-    }
-
-    private Transform skillPoint = null;
-    private float skilldis = 0f;
-    void OnDrawGizmos()
-    {
-        if (skillPoint == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(skillPoint.position, skilldis);
     }
 
     // 공격범위 - 각 스킬별로 위치, 거리, 각도로 타겟 hit판정.

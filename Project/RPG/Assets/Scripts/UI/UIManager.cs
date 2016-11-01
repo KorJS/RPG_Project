@@ -97,6 +97,9 @@ public class UIManager : MonoBehaviour
     public List<GameObject> windows = null;
     public List<GameObject> showWindowList = null;
 
+    public GameObject bossHpBarObj = null;
+    public GameObject mobHpBarObj = null;
+
     public UILabel playerGold = null;
 
     public bool isUIMode = false;
@@ -122,6 +125,11 @@ public class UIManager : MonoBehaviour
         buySlots = new SortedDictionary<int, UISlotInfo>();
         sellSlots = new SortedDictionary<int, UISlotInfo>();
         invenSlots = new SortedDictionary<int, UISlotInfo>();
+
+        bossHpBarObj = GameObject.Find("BossPanel");
+        mobHpBarObj = GameObject.Find("MonsterPanel");
+        bossHpBarObj.SetActive(false);
+        mobHpBarObj.SetActive(false);
     }
 
     void Start()
@@ -326,6 +334,28 @@ public class UIManager : MonoBehaviour
 
         tempIcon.alpha = 1f;
         Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
+    }
+
+    public void SetHpBar(Transform targetT)
+    {
+        GameObject tempHpBarObj = null;
+
+        if (string.Compare(targetT.tag, "Boss") == 0)
+        {
+            tempHpBarObj = bossHpBarObj;
+        }
+        else
+        {
+            tempHpBarObj = mobHpBarObj;
+        }
+
+        if (tempHpBarObj.activeSelf)
+        {
+            return;
+        }
+
+        tempHpBarObj.SetActive(true);
+        tempHpBarObj.GetComponent<UIMonsterHpBar>().SetTarget(targetT);
     }
 
     public void SetHoldingGold()

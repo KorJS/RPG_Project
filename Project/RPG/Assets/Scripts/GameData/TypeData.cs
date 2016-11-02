@@ -9,6 +9,7 @@
     // Warrior, Magician, Priest
     public enum PlayerType
     {
+        없음 = -1,
         기사 = 0,
         마법사,
         사제

@@ -5,6 +5,7 @@ public class UIDragAndDrop : MonoBehaviour
 {
     private UIManager uiManager = null;
     private PlayerSlotData playerSlotData = null;
+    private EquipmentHandler equipHandler = null;
     private UIStore uistore = null;
     private UICharater uiCharacter = null;
     private UIInquirePopup uiInquirePopup = null;
@@ -27,7 +28,7 @@ public class UIDragAndDrop : MonoBehaviour
         uiManager = UIManager.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
-        
+        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
         uiSlotInfo = this.GetComponent<UISlotInfo>();
         parent = this.transform.parent;
         root = NGUITools.FindInParents<UIRoot>(parent);
@@ -294,7 +295,12 @@ public class UIDragAndDrop : MonoBehaviour
                         {
                             if (targetInfo.slotType == TypeData.SlotType.인벤토리)
                             {
-                                Debug.Log("케릭>인벤");
+                                if (uiSlotInfo.slotIndex == 1)
+                                {
+                                    equipHandler.SetWeapon(null, false);
+                                    equipHandler.SetSubWeapon(null, false);
+                                }
+
                                 // 장비 수량 1
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                                 playerSlotData.RemoveSlotData(uiSlotInfo);

@@ -99,6 +99,11 @@ public class UISlotInfo : MonoBehaviour
 
         slotSettings.uiIcon.gameObject.SetActive(true);
         slotSettings.uiIcon.mainTexture = Resources.Load("Icon/" + slotInfo.iconName) as Texture2D;
+
+        if (slotSettings.uiIcon.mainTexture == null)
+        {
+            Debug.Log("아이콘명에 맞는 아이템이 존재하지 않습니다.");
+        }
     }
 
     private void SetSlotName()

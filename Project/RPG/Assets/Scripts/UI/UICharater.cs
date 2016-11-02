@@ -11,7 +11,7 @@ public class UICharater : MonoBehaviour
     private EquipmentHandler equipHandler = null;
     private Transform slotHolder = null;
 
-    private GameObject weaponObj = null;
+    public GameObject weaponObj = null;
     private GameObject subWeaponObj = null;
 
     [System.Serializable]
@@ -78,6 +78,7 @@ public class UICharater : MonoBehaviour
         // 무기
         if (targetInfo.slotIndex == 1)
         {
+            Debug.Log(targetInfo.slotIndex);
             if (weaponObj != null || subWeaponObj != null)
             {
                 equipHandler.SetWeapon(null, false);

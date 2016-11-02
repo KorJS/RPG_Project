@@ -24,15 +24,14 @@ public class MonsterData
     public struct MonsterInfo
     {
         public string name;
+        public string fileName;
         public int monsterType;
-        public int skillIndex;
         public int defence;
         public float hp;
         public float exp;
         public int glod;
-        public int equipmentIndex;
-        public int consumableIndex;
-        public int materialIndex;
+        public int itemType;
+        public int itemIndex;
     }
 
     public MonsterInfo monsterInfo;
@@ -43,11 +42,12 @@ public class MonsterData
     {
         monsterInfos = new Dictionary<string, MonsterInfo>();
 
-        monsterInfo.name = "BloodGolem";
+        monsterInfo.name = "블러드 골렘";
+        monsterInfo.fileName = "BloodGolem";
         monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
         monsterInfo.defence = 30;
         monsterInfo.hp = 10000;
-        monsterInfos.Add(monsterInfo.name + "_Spawns", monsterInfo);
+        monsterInfos.Add(monsterInfo.fileName + "_Spawns", monsterInfo);
     }
 
     // 지역으로 검색해서 받아온 몬스터 정보

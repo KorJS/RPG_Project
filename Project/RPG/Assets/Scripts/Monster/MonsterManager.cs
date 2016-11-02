@@ -53,10 +53,10 @@ public class MonsterManager : MonoBehaviour
 
         FindSpawn(tempSpawn, monsterSpawns);
 
-        Debug.Log(tempMonsterInfo.name + " 몬스터 스폰지역 수 : " + monsterSpawns.Count);
+        Debug.Log(tempMonsterInfo.fileName + " 몬스터 스폰지역 수 : " + monsterSpawns.Count);
 
         // 몬스터 리소스 생성
-        var resource = Resources.Load("Monster/" + tempMonsterInfo.name);
+        var resource = Resources.Load("Monster/" + tempMonsterInfo.fileName);
         var hpbar = Resources.Load("UI/Mob Hp Bar");
 
         for (int i = 0; i < monsterSpawns.Count; i++)
@@ -68,7 +68,7 @@ public class MonsterManager : MonoBehaviour
 
             monsterObj.layer = LayerMask.NameToLayer("Monster");
             monsterObj.transform.localPosition = Vector3.zero;
-            monsterObj.name = tempMonsterInfo.name; // 이름 (Clone) 제거
+            monsterObj.name = tempMonsterInfo.fileName; // 이름 (Clone) 제거
 
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();
             infoData.monsterInfo = tempMonsterInfo; // 몬스터 정보

@@ -7,6 +7,7 @@ public class UIClick : MonoBehaviour
     private SkillData skillData = null;
     private PlayerInput playerInupt = null;
     private PlayerSlotData playerSlotData = null;
+    private EquipmentHandler equipHandler = null;
 
     public UISlotInfo uiSlotInfo = null;
     private UISkillList uiSkillList = null;
@@ -22,6 +23,7 @@ public class UIClick : MonoBehaviour
         skillData = SkillData.Instance;
         playerSlotData = PlayerSlotData.Instance;
         playerInupt = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
+        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
         uiSlotInfo = GetComponent<UISlotInfo>();
     }
 
@@ -46,6 +48,11 @@ public class UIClick : MonoBehaviour
         {
             case TypeData.SlotType.캐릭터:
                 {
+                    if (uiSlotInfo.slotIndex == 1)
+                    {
+                        equipHandler.SetWeapon(null, false);
+                        equipHandler.SetSubWeapon(null, false);
+                    }
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
                     uiManager.windowSettings.characterObj.GetComponent<UICharater>().ChangPlayerStat();

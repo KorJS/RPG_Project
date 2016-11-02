@@ -43,28 +43,30 @@ public class MonsterInfoData : MonoBehaviour
     {
         if (hp < 0)
         {
-            Debug.Log("monsterInfo.defence : " + monsterInfo.defence + " hp : " + hp);
             hp /= monsterInfo.defence;
         }
-        Debug.Log(currentHP + " : " + hp);
+
         currentHP += hp;
-        Debug.Log(currentHP + " : " + hp);
+
         if (currentHP <= 0)
         {
             isDeath = true;
             gameObject.layer = LayerMask.NameToLayer("Default");
         }
-
-        Debug.Log("현재 HP : " + currentHP);
-    }
-
-    private void CreateHUD()
-    {
-
     }
 
     public void Reset()
     {
+        if (UIManager.Instance.bossHpBarObj.activeSelf)
+        {
+            UIManager.Instance.bossHpBarObj.SetActive(false);
+        }
+
+        if (UIManager.Instance.mobHpBarObj.activeSelf)
+        {
+            UIManager.Instance.mobHpBarObj.SetActive(false);
+        }
+
         monsterT.localPosition = Vector3.zero;
         currentHP = monsterInfo.hp;
     }

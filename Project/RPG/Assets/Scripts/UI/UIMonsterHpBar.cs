@@ -8,6 +8,7 @@ public class UIMonsterHpBar : MonoBehaviour
     {
         public MonsterInfoData targetMonsterInfoData;
         public Transform targetT; // 몬스터
+        public UILabel targetName;
         public UIProgressBar targetHpBar;
         public UILabel typeLabel;
     }
@@ -17,6 +18,7 @@ public class UIMonsterHpBar : MonoBehaviour
 
     void Awake()
     {
+        hpBarSettings.targetName = transform.FindChild("Name").GetComponent<UILabel>();
         hpBarSettings.targetHpBar = transform.FindChild("Hp Bar").GetComponent<UIProgressBar>();
 
         if (transform.FindChild("Type") != null)
@@ -45,6 +47,7 @@ public class UIMonsterHpBar : MonoBehaviour
     {
         hpBarSettings.targetT = targetT;
         hpBarSettings.targetMonsterInfoData = targetT.GetComponent<MonsterInfoData>();
+        hpBarSettings.targetName.text = hpBarSettings.targetMonsterInfoData.monsterInfo.name;
 
         switch ((TypeData.MonsterType)hpBarSettings.targetMonsterInfoData.monsterInfo.monsterType)
         {

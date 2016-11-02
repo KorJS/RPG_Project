@@ -2,16 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ItemData
+public sealed class ItemData
 {
-    private static ItemData itemData = null;
+    // volatile 동시에 실행되는 여러 스레드에 의해 필드가 수정될 수 있음을 나타낸다.
+    private static volatile ItemData itemData = null;
+    private static object _lock = new System.Object();
+
     public static ItemData Instance
     {
         get
         {
             if (itemData == null)
             {
-                itemData = new ItemData();
+                // lock으로 지정된 블록안의 코드르 하나의 스레드만 접근
+                lock (_lock)
+                {
+                    if (itemData == null)
+                    {
+                        itemData = new ItemData();
+                    }
+                }
             }
 
             return itemData;
@@ -23,6 +33,7 @@ public class ItemData
     {
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
+        public string description;                      // 설명
         public int equipmentType;                       // 장비타입
         public int playerType;                          // 착용직업
         public int level;                               // 착용레벨
@@ -39,8 +50,8 @@ public class ItemData
     {
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
-        public string instruction;                      // 설명
-        public float increase;                          // 상승치
+        public string description;                      // 설명
+        public float regeneration;                      // 상승치
         public float coolTime;                          // 쿨타임
         public int buyGold;                             // 구매가격
         public int sellGold;                            // 판매가격
@@ -51,6 +62,7 @@ public class ItemData
     {
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
+        public string description;                      // 설명
         public int buyGold;                             // 판매가격
     };
 
@@ -68,9 +80,9 @@ public class ItemData
         cusomableInfos = new Dictionary<int, CusomableInfo>();
         questItemInfos = new Dictionary<int, QuestItemInfo>();
 
-        cusomableInfo.name = "H 포션";
+        cusomableInfo.name = "HP 포션";
         cusomableInfo.iconName = "HPPotion";
-        cusomableInfo.increase = 100;
+        cusomableInfo.regeneration = 100;
         cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 1000;
         cusomableInfo.sellGold = 100;
@@ -78,7 +90,7 @@ public class ItemData
 
         cusomableInfo.name = "MP 포션";
         cusomableInfo.iconName = "MPPotion";
-        cusomableInfo.increase = 100;
+        cusomableInfo.regeneration = 100;
         cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 1000;
         cusomableInfo.sellGold = 100;
@@ -86,7 +98,7 @@ public class ItemData
 
         cusomableInfo.name = "HMP 포션";
         cusomableInfo.iconName = "HMPPotion";
-        cusomableInfo.increase = 100;
+        cusomableInfo.regeneration = 100;
         cusomableInfo.coolTime = 10f;
         cusomableInfo.buyGold = 2000;
         cusomableInfo.sellGold = 500;
@@ -101,8 +113,8 @@ public class ItemData
         equipmentInfo.sellGold = 5000;
         equipmentInfos.Add(0, equipmentInfo);
 
-        equipmentInfo.name = "빛나는 검";
-        equipmentInfo.iconName = "Lance01";
+        equipmentInfo.name = "발로나 검";
+        equipmentInfo.iconName = "Val_Lance";
         equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
         equipmentInfo.attack = 5000;
         equipmentInfo.hp = 1000;

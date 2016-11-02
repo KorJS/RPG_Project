@@ -45,7 +45,7 @@ public class Network_Slot : MonoBehaviour
         Dictionary<string, object> sendData = new Dictionary<string, object>();
 
         sendData.Add("contents", contents);
-        sendData.Add("char_index", PlayerInfoData.Instance.infoData.index);
+        sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyLoadSlot));
     }
@@ -67,7 +67,7 @@ public class Network_Slot : MonoBehaviour
         Dictionary<string, object> sendData = new Dictionary<string, object>();
 
         sendData.Add("contents", contents);
-        sendData.Add("char_index", PlayerInfoData.Instance.infoData.index);
+        sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
         sendData.Add("slotInfoDatas", slotInfoDatas);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, null));

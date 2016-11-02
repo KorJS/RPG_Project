@@ -39,10 +39,20 @@ public class Network_Char : MonoBehaviour
 
     public void RequestInGame()
     {
-
+        // Login에 acc_index, char_index 로 정보 가져옴
     }
 
     public void ReplyInGame()
+    {
+
+    }
+
+    public void RequestCreate()
+    {
+
+    }
+
+    public void ReplyCreate()
     {
 
     }

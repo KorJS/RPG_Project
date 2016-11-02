@@ -11,6 +11,10 @@ public class Network_Login : MonoBehaviour
 
     private string char_title = null;
 
+    public GameObject idObj = null;
+    public GameObject pwObj = null;
+    public GameObject slotsObj = null;
+
     public UIInput id = null;
     public UIInput pw = null;
     public UILabel title = null;
@@ -23,7 +27,6 @@ public class Network_Login : MonoBehaviour
     public UILabel join_message = null;
     private string join_contents = null;
     private string join_title = null;
-
 
     private class RecvLoginData
     {
@@ -66,7 +69,7 @@ public class Network_Login : MonoBehaviour
     {
         if (id.value.Length <= 0 || pw.value.Length <= 0)
         {
-            login_message.text = "  ";
+            login_message.text = "아이디 / 비밀번호를 입력해주세요.";
             return;
         }
 
@@ -85,8 +88,11 @@ public class Network_Login : MonoBehaviour
         if (data.isLogin)
         {
             // 케릭선택창
+            idObj.SetActive(false);
+            pwObj.SetActive(false);
             loginObj.SetActive(false);
             charObj.SetActive(true);
+            slotsObj.SetActive(true);
             title.text = char_title;
             Debug.Log(data.characterInfo.Count);
         }

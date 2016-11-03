@@ -66,15 +66,15 @@ public sealed class ItemData
         public int buyGold;                             // 판매가격
     };
 
-    public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 데이터를 로드해서 저장
-    public Dictionary<int, CusomableInfo> cusomableInfos = null; // 소모품 데이터를 로드해서 저장
-    public Dictionary<int, QuestItemInfo> questItemInfos = null; // 퀘스트템 데이터를 로드해서 저장
+    public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 
+    public Dictionary<int, CusomableInfo> cusomableInfos = null; // 소모품 
+    public Dictionary<int, QuestItemInfo> questItemInfos = null; // 퀘스트템 
 
     public EquipmentInfo equipmentInfo;  // 장비 정보
     public CusomableInfo cusomableInfo;  // 소모품 정보
     public QuestItemInfo questItemInfo;   // 퀘스트템 정보
 
-    public ItemData()
+    private ItemData()
     {
         equipmentInfos = new Dictionary<int, EquipmentInfo>();
         cusomableInfos = new Dictionary<int, CusomableInfo>();
@@ -181,4 +181,6 @@ public sealed class ItemData
         equipmentInfo.sellGold = 500;
         equipmentInfos.Add(7, equipmentInfo);
     }
+
+
 }

@@ -19,6 +19,7 @@ public class NPCInfoData : MonoBehaviour
     [System.Serializable]
     public class NPCInfo
     {
+        public GameObject windowObj = null;
         public TypeData.NPCType npcType;
         public TypeData.StoreType storeType;
         public int questIndex;
@@ -54,11 +55,37 @@ public class NPCInfoData : MonoBehaviour
         {
             npcMovement.SetAniState();
             SetStoreSlotInfo();
+            CheckNPCType();
             uiManager.isStore = true;
         }
     }
 
     private void SetNPCInfo()
+    {
+        switch (npcInfo.npcType)
+        {
+            case TypeData.NPCType.상인:
+                {
+                    npcInfo.windowObj = uiManager.windowSettings.storeObj;
+                    npcInfo.itemIndexs = storeItemListData.itemListInfos[(int)npcInfo.storeType];
+                }
+                break;
+
+            case TypeData.NPCType.창고:
+                {
+                    // TODO : 퀘스트 정보
+                }
+                break;
+
+            case TypeData.NPCType.퀘스트:
+                {
+                    // TODO : 퀘스트 정보
+                }
+                break;
+        }
+    }
+
+    private void CheckNPCType()
     {
         switch (npcInfo.npcType)
         {
@@ -70,7 +97,7 @@ public class NPCInfoData : MonoBehaviour
 
             case TypeData.NPCType.창고:
                 {
-                    // TODO : 퀘스트 정보
+                    // TODO : 이건 정보 딱히 
                 }
                 break;
 

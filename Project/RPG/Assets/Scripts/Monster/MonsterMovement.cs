@@ -76,6 +76,9 @@ public class MonsterMovement : MonoBehaviour
     public IEnumerator Death(float destroyTime)
     {
         yield return new WaitForSeconds(destroyTime);
+
+        monsterInfoData.Reset();
+        gameObject.SetActive(false);
     }
 
     // 모드

@@ -5,9 +5,12 @@ using JsonFx.Json; // JsonReader
 
 public class Network_Login : MonoBehaviour
 {
+    private Network_Char networkChar = null;
+
     public GameObject loginObj = null;
     public GameObject joinObj = null;
     public GameObject charObj = null;
+    public GameObject createObj = null;
 
     private string char_title = null;
 
@@ -20,40 +23,35 @@ public class Network_Login : MonoBehaviour
     public UILabel title = null;
 
     public UILabel login_message = null;
-    private string login_contents = null;
+    public string login_contents = null;
     private string login_title = null;
 
     public UIInput join_repw = null;
     public UILabel join_message = null;
-    private string join_contents = null;
+    public string join_contents = null;
     private string join_title = null;
 
     private class RecvLoginData
     {
+        public int acc_index;
         public string message;
         public bool isLogin;
         public int timestamp;
-        public Dictionary<int, CharacterInfo> characterInfo = new Dictionary<int, CharacterInfo>();
+        public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();
     }
 
     private class RecvJoinData
     {
+        public int acc_index;
         public string acc_id;
         public int timestamp;
         public string message;
         public bool isJoin;
     }
 
-    public class CharacterInfo
-    {
-        public int acc_index;
-        public int char_index;
-        public string nickname;
-        public int player_type;
-    }
-
     void Awake()
     {
+        networkChar = GameObject.Find("CharManager").GetComponent<Network_Char>();
         login_contents = "login";
         login_title = "로그인";
 
@@ -63,6 +61,12 @@ public class Network_Login : MonoBehaviour
         char_title = "캐릭터 선택";
 
         title.text = login_title;
+
+        joinObj.SetActive(false);
+        charObj.SetActive(false);
+        createObj.SetActive(false);
+
+        ItemManager.Instance.LoadTalbe();
     }
 
     public void RequestLogin()
@@ -75,8 +79,8 @@ public class Network_Login : MonoBehaviour
 
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", login_contents);
-        sendData.Add("id", id.value);
-        sendData.Add("pw", pw.value);
+        sendData.Add("acc_id", id.value);
+        sendData.Add("acc_pw", pw.value);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyLogin));
     }
@@ -85,22 +89,23 @@ public class Network_Login : MonoBehaviour
     {
         RecvLoginData data = JsonReader.Deserialize<RecvLoginData>(json);
 
-        if (data.isLogin)
-        {
-            // 케릭선택창
-            idObj.SetActive(false);
-            pwObj.SetActive(false);
-            loginObj.SetActive(false);
-            charObj.SetActive(true);
-            slotsObj.SetActive(true);
-            title.text = char_title;
-            Debug.Log(data.characterInfo.Count);
-        }
-        else
+        if (!data.isLogin)
         {
             login_message.text = data.message;
             pw.value = null;
+            return;
         }
+
+        // 케릭선택창
+        idObj.SetActive(false);
+        pwObj.SetActive(false);
+        loginObj.SetActive(false);
+        charObj.SetActive(true);
+        slotsObj.SetActive(true);
+        title.text = char_title;
+        Debug.Log("data : " + data.characterInfos.Count);
+        networkChar.CheckSlotinfo(data.characterInfos);
+        networkChar.acc_index = data.acc_index;
 
         DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(data.timestamp);
 
@@ -123,9 +128,9 @@ public class Network_Login : MonoBehaviour
 
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", join_contents);
-        sendData.Add("id", id.value);
-        sendData.Add("pw", pw.value);
-        sendData.Add("repw", join_repw.value);
+        sendData.Add("acc_id", id.value);
+        sendData.Add("acc_pw", pw.value);
+        sendData.Add("acc_repw", join_repw.value);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyJoin));
     }
@@ -134,20 +139,18 @@ public class Network_Login : MonoBehaviour
     {
         RecvJoinData data = JsonReader.Deserialize<RecvJoinData>(json);
 
-        if (data.isJoin)
-        {
-            joinObj.SetActive(false);
-            loginObj.SetActive(true);
-            id.value = data.acc_id;
-            pw.value = null;
-            title.text = login_title;
-        }
-        else
+        if (!data.isJoin)
         {
             join_message.text = data.message;
+            return;
         }
-    }
 
+        joinObj.SetActive(false);
+        loginObj.SetActive(true);
+        id.value = data.acc_id;
+        pw.value = null;
+        title.text = login_title;
+    }
     public void JoinBtn()
     {
         loginObj.SetActive(false);

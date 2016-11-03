@@ -35,6 +35,7 @@ public class PlayerInfoData
         public float currentMp;
         public int maxHp;
         public int maxMp;
+        public string spawnPos;
     }
 
     public InfoData infoData;

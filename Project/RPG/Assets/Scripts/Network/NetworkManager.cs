@@ -87,11 +87,15 @@ public class NetworkManager : MonoBehaviour {
                     int errorcode = (int)receivePacket["result"];
                     switch (errorcode)
                     {
-                        case 1000: Debug.Log("패스워드가 올바르지 않습니다."); break;
-                        case 1001: Debug.Log("이미 존재하는 닉네임 입니다."); break;
-                        case 1002: Debug.Log("이미 등록된 ID로 계정 생성에 실패 했습니다."); break;
-                        case 1003: Debug.Log("게임 정보를 저장할 수 없습니다. \n확인하고 다시 시도하시기 바랍니다."); break;
-                        case 1004: Debug.Log("등록된 계정이 아닙니다. \n확인하고 다시 시도하시기 바랍니다."); break;
+                        case 1000: Debug.Log("이미 존재하는 아이디"); break;
+                        case 1001: Debug.Log("가입 실패"); break;
+                        case 1002: Debug.Log("존재 하지 않은 아이디"); break;
+                        case 1003: Debug.Log("패스워드가 올바르지 않습니다"); break;
+                        case 1004: Debug.Log("이미 존재하는 닉네임"); break;
+                        case 1005: Debug.Log("캐릭터 슬롯 초과"); break;
+                        case 1006: Debug.Log("캐릭터 만들기 실패"); break;
+                        case 1007: Debug.Log("캐릭터 삭제 실패"); break;
+                        //case 1006: Debug.Log("게임 정보 저장 실패"); break;
                     }
                 }
                 // 실제 처리 결과물

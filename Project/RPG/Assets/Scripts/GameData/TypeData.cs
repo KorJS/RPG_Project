@@ -87,7 +87,7 @@
         퀘스트템
     };
 
-    // Weapon, armor, glove, shoes, ring, necklace
+    // Weapon, Body(armor), Hand(glove), Leg(shoes), ring, necklace
     public enum EquipmentType
     {
         무기 = 1,

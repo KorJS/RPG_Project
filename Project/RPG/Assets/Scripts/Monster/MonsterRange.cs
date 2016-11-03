@@ -6,7 +6,7 @@ public class MonsterRange : MonoBehaviour
     private MonsterInfoData monsterInfoData = null;
     private MonsterMovement monsterMovement = null;
     private MonsterState monsterState = null;
-    private PlayerEffect playerEffect = null;
+    public PlayerEffect playerEffect = null;
 
     [System.Serializable]
     public class MonsterSettings

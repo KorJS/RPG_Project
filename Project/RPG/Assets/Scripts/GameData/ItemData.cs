@@ -107,7 +107,7 @@ public sealed class ItemData
         equipmentInfo.name = "베르고스 검";
         equipmentInfo.iconName = "Vergos_Lance";
         equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
-        equipmentInfo.attack = 10000;
+        equipmentInfo.attack = 100000;
         equipmentInfo.hp = 10000;
         equipmentInfo.buyGold = 10000;
         equipmentInfo.sellGold = 5000;

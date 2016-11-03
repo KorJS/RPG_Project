@@ -34,7 +34,7 @@ public class MonsterInfoData : MonoBehaviour
         {
             monsterState.nextState = TypeData.State.죽음;
             monsterMovemnet.animator.SetTrigger(monsterMovemnet.animationSettings.isDeathTrigger);
-            StartCoroutine(monsterMovemnet.Death(1f));
+            StartCoroutine(monsterMovemnet.Death(5f));
             isDeath = false;
         }
     }

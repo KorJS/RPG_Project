@@ -116,6 +116,7 @@ public class UIClick : MonoBehaviour
 
     private void InventorySlot()
     {
+        // 상점창이 열여있는 경우
         if (uiManager.windowSettings.storeObj.activeSelf)
         {
             // 클릭한 슬롯에 아이템이 없으면 리턴
@@ -138,6 +139,7 @@ public class UIClick : MonoBehaviour
             uiSlotInfo.isItemExist = false;
             uiSlotInfo.StoreReSetting();
         }
+        // 창고창이 열여있는 경우
         else if (uiManager.windowSettings.storageObj.activeSelf) // 인벤 > 창고 수량 전부 넣음
         {
             int quantity = 0;
@@ -152,6 +154,7 @@ public class UIClick : MonoBehaviour
             playerSlotData.RemoveSlotData(uiSlotInfo);
             uiSlotInfo.ReSetting();
         }
+        // 케릭창이 열여있는 경우
         else if (uiManager.windowSettings.characterObj.activeSelf)
         {
             int index = uiSlotInfo.slotInfo.itemIndex;
@@ -164,6 +167,11 @@ public class UIClick : MonoBehaviour
             uiManager.windowSettings.characterObj.GetComponent<UICharater>().SetSlotInfo(uiSlotInfo, targetInfo);
             uiSlotInfo.ReSetting();
         }
+        // 그냥 인벤만.
+        else
+        {
+            // 소모품인 경우 아이템 사용
+        }
     }
 
     private void ShortCutSlot()
@@ -172,7 +180,7 @@ public class UIClick : MonoBehaviour
         {
             case TypeData.SlotInfoType.아이템:
                 {
-
+                    // 아이템 사용.
                 }
                 break;
         }

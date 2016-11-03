@@ -62,8 +62,8 @@ public class SkillData
         skillinfo.level = 1;
         skillinfo.coolTime = 8f;
         skillinfo.attack = 0f;
-        skillinfo.mp = -10f;
-        skillinfo.angle = 60f;
+        skillinfo.mp = -6f;
+        skillinfo.angle = 90f;
         skillinfo.distance = 5f;
 
         skillInfos.Add(skillinfo.index, skillinfo);
@@ -85,7 +85,7 @@ public class SkillData
         skillinfo.name = "난폭한 돌진";
         skillinfo.iconName = "Rush";
         skillinfo.description = "전방으로 빠르게 돌진하여 부딪히는 적들을 밀고 나갑니다.";
-        skillinfo.level = 8;
+        skillinfo.level = 20;
         skillinfo.coolTime = 10f;
         skillinfo.attack = 0.3f;
         skillinfo.mp = -50f;
@@ -97,13 +97,13 @@ public class SkillData
         skillinfo.index = 4;
         skillinfo.name = "압도";
         skillinfo.iconName = "Overpower";
-        skillinfo.description = "전방을 향해 점프하여 방패를 땅으로 내려찍어 공격을 가하고 다운 시킵니다.";
-        skillinfo.level = 8;
+        skillinfo.description = "전방을 향해 점프하여 검를 땅으로 내려찍어 공격을 가하고 다운 시킵니다.";
+        skillinfo.level = 30;
         skillinfo.coolTime = 10f;
         skillinfo.attack = 5f;
         skillinfo.mp = -50f;
         skillinfo.angle = 90f;
-        skillinfo.distance = 2f;
+        skillinfo.distance = 5f;
 
         skillInfos.Add(skillinfo.index, skillinfo);
     }

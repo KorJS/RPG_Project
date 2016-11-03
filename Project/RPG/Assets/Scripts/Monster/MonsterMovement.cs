@@ -6,6 +6,8 @@ public class MonsterMovement : MonoBehaviour
 {
     private MonsterInfoData monsterInfoData = null;
     private MonsterRange monsterRange = null;
+    private MonsterState monsterState = null;
+    private PlayerEffect playerEffect = null;
 
     [System.Serializable]
     public class AnimationSettings
@@ -39,6 +41,7 @@ public class MonsterMovement : MonoBehaviour
     {
         monsterRange = GetComponent<MonsterRange>();
         monsterInfoData = GetComponent<MonsterInfoData>();
+        monsterState = GetComponent<MonsterState>();
         animator = GetComponent<Animator>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
@@ -50,6 +53,7 @@ public class MonsterMovement : MonoBehaviour
     void OnEnable()
     {
         isIdle = true;
+        isHit = false;
     }
 
     void Update()
@@ -77,7 +81,12 @@ public class MonsterMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(destroyTime);
 
+        monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+        monsterRange.monster.targetT = null;
+        monsterRange.isTargetAggro = false;
         monsterInfoData.Reset();
+        monsterState.nextState = TypeData.State.대기;
+        monsterState.nextMode = TypeData.MODE.평화;
         gameObject.SetActive(false);
     }
 

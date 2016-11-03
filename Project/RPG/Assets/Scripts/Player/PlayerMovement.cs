@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isDamage = false;           // 공격에 맞았으면 true - 몬스터로부터 맞았으면.
     public bool isIdle = false;             // 스킬 끝나고 idle 상태
     public bool isEndSkillPoint = false;    // 스킬 서브상태머신 빠져왔는지.
+    public bool isBlock = false;            // 방패막기 중에는 공격 안받음
 
     void Awake()
     {

@@ -57,7 +57,7 @@ public class WarriorSkill : MonoBehaviour
     public float skillAngle = 0f;
     public float skillDistance = 0f;
 
-    private KeyCode blockKeyCode = KeyCode.Mouse1;
+    private KeyCode blockKeyCode = KeyCode.None;
 
     void Awake()
     {
@@ -106,10 +106,12 @@ public class WarriorSkill : MonoBehaviour
 
         if (isBlock)
         {
-            if (Input.GetKeyUp(blockKeyCode))
+            if (Input.GetKeyUp(blockKeyCode) || playerInput.isClick)
             {
+                blockKeyCode = KeyCode.None;
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
                 isBlock = false;
+                playerMovement.isBlock = isBlock;
             }
         }
     }
@@ -265,6 +267,7 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
         isBlock = true;
+        playerMovement.isBlock = isBlock;
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
     }

@@ -49,6 +49,7 @@ public class PlayerInput : MonoBehaviour
     public string shieldName = "Shield_01";
 
     public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
+    public bool isClick = false;
 
     void Awake()
     {
@@ -66,12 +67,8 @@ public class PlayerInput : MonoBehaviour
     {
         InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
 
-        // UI 모드가 아닐때
-        if (!uiManager.isUIMode)
-        {
-            InputShortCutkey();
-        }
-
+        InputShortCutkey();
+        
         // Test
         InputKey();
     }
@@ -96,6 +93,12 @@ public class PlayerInput : MonoBehaviour
     // 단축키 입력
     private void InputShortCutkey()
     {
+        // UI 모드 이면 리턴
+        if (uiManager.isUIMode)
+        {
+            return;
+        }
+
         // 각 슬롯이 Swap 될수 있음(스킬,아이템, 없음) => 타입 체크.
         if (Input.GetKeyDown(inputKey.alpha1)) { index = CheckSlotType(1, inputKey.alpha1); }
 
@@ -193,6 +196,13 @@ public class PlayerInput : MonoBehaviour
     // 단축키를 눌렀을때 타입 확인
     public int CheckSlotType(int slotIndex, KeyCode keyCode)
     {
+        // 무기를 장착하지 않았으면 리턴
+        if (!uiManager.characterSlots[1].isItemExist)
+        {
+            uiManager.SetMessage("무기를 장착하세요.");
+            return -1;
+        }
+
         int index = -1;
 
         // 대상이 단축 슬롯에 없으면

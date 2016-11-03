@@ -34,6 +34,7 @@ public class UISlotInfo : MonoBehaviour
         public UILabel uiSellGold;
         public UILabel uiBuyGold;
         public GameObject overlapObj;
+        public KeyCode slotKeyCode;
     }
 
     [SerializeField]

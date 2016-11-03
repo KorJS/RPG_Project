@@ -6,11 +6,14 @@ public class UIClick : MonoBehaviour
     private UIManager uiManager = null;
     private SkillData skillData = null;
     private PlayerInput playerInupt = null;
+    private PlayerState playerState = null;
     private PlayerSlotData playerSlotData = null;
     private EquipmentHandler equipHandler = null;
 
     public UISlotInfo uiSlotInfo = null;
     private UISkillList uiSkillList = null;
+
+    public bool isClick = false;
 
     void Awake()
     {
@@ -22,9 +25,13 @@ public class UIClick : MonoBehaviour
         uiManager = UIManager.Instance;
         skillData = SkillData.Instance;
         playerSlotData = PlayerSlotData.Instance;
-        playerInupt = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
-        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
+
         uiSlotInfo = GetComponent<UISlotInfo>();
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        playerInupt = playerObj.GetComponent<PlayerInput>();
+        playerState = playerObj.GetComponent<PlayerState>();
+        equipHandler = playerObj.GetComponent<EquipmentHandler>();
     }
 
     void OnClick()
@@ -39,6 +46,14 @@ public class UIClick : MonoBehaviour
         if (UICamera.currentKey == KeyCode.Mouse1)
         {
             CheckSlotType();
+        }
+    }
+
+    void OnPress(bool isPress)
+    {
+        if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
+        {
+            isClick = isPress;
         }
     }
 
@@ -178,6 +193,24 @@ public class UIClick : MonoBehaviour
     {
         switch (uiSlotInfo.slotInfo.slotInfoType)
         {
+            case TypeData.SlotInfoType.스킬:
+                {
+                    // 무기를 장착하지 않았으면 리턴
+                    if (!uiManager.characterSlots[1].isItemExist)
+                    {
+                        uiManager.SetMessage("무기를 장착하세요.");
+                        return;
+                    }
+
+                    playerInupt.index = uiSlotInfo.slotInfo.skillIndex;
+                    playerInupt.tempKeyCode = uiSlotInfo.slotSettings.slotKeyCode;
+                    playerInupt.isClick = isClick;
+
+                    playerState.nextState = TypeData.State.스킬;
+                    playerState.nextMode = TypeData.MODE.전투;
+                }
+                break;
+
             case TypeData.SlotInfoType.아이템:
                 {
                     // 아이템 사용.

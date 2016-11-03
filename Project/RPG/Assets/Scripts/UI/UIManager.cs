@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
     [System.Serializable]
     public class PopupSettings
     {
+        public UILabel    message;          // 공지, 기본 메시지
         public GameObject divisionPopup;    // 분리창
         public GameObject inquirePopup;     // 확인창 (ex: 아이템을 버릴때)
         public GameObject copyPopup;        // 상점에 구매목록 판매목록
@@ -106,6 +107,10 @@ public class UIManager : MonoBehaviour
     public bool isStorage = false;
     public bool isStore = false;
     public bool isQuest = false;
+
+    private const float MESSAGETIME = 2f;
+    private float messageTimer = 0f;
+    private bool isMessage = false;
 
     public int divQuantity = 0; // 분리한 수량
 
@@ -158,6 +163,8 @@ public class UIManager : MonoBehaviour
     {
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
+
+        MessageTime(); // 메시지 표시 시간
     }
 
     private void FindWindow(ref GameObject obj, string objName)
@@ -321,6 +328,32 @@ public class UIManager : MonoBehaviour
                 winList[i].SetActive(false);
             }
             winList.Clear();
+        }
+    }
+
+    public void SetMessage(string _message)
+    {
+        popupSettings.message.alpha = 1f;
+        popupSettings.message.text = _message;
+        isMessage = true;
+        messageTimer = 0f;
+    }
+
+    private void MessageTime()
+    {
+        if (!isMessage)
+        {
+            return;
+        }
+
+        messageTimer += Time.deltaTime;
+
+        if (messageTimer >= MESSAGETIME)
+        {
+            popupSettings.message.alpha = 0f;
+            popupSettings.message.text = null;
+            messageTimer = 0f;
+            isMessage = false;
         }
     }
 

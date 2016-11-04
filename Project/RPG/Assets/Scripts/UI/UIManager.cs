@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
         public GameObject questObj;          // 퀘스트 : NPC 근처에 있을때 F
         public GameObject storeObj;          // 상점 : NPC 근처에 있을때 F
         public GameObject storageObj;        // 창고 : NPC 근처에 있을때 F
+        public GameObject shortCutObj;       // 단축슬롯
 
         public string characterW = "CharacterW";
         public string uiModeW    = "UIModeW";
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
         public string questW     = "QuestW";
         public string storeW     = "StoreW";
         public string storageW   = "StorageW";
+        public string shortCutW  = "ShortCutW";
 
         public bool isCharacterW = false;
         public bool isInventoryW = false;
@@ -149,6 +151,7 @@ public class UIManager : MonoBehaviour
         FindWindow(ref windowSettings.questObj, windowSettings.questW);
         FindWindow(ref windowSettings.storeObj, windowSettings.storeW);
         FindWindow(ref windowSettings.storageObj, windowSettings.storageW);
+        FindWindow(ref windowSettings.shortCutObj, windowSettings.shortCutW);
 
         FindWindow(ref popupSettings.divisionPopup, popupSettings.divW);
         FindWindow(ref popupSettings.inquirePopup, popupSettings.inquireW);
@@ -161,10 +164,20 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (!windowSettings.shortCutObj.activeSelf)
+        {
+            windowSettings.shortCutObj.SetActive(true);
+        }
+
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
 
         MessageTime(); // 메시지 표시 시간
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
+        }
     }
 
     private void FindWindow(ref GameObject obj, string objName)
@@ -192,6 +205,11 @@ public class UIManager : MonoBehaviour
         // 소지품
         if (windowSettings.isInventoryW || Input.GetKeyDown(inputKey.inventory))
         {
+            if (windowSettings.inventoryObj.activeSelf)
+            {
+                Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.인벤토리);
+            }
+
             windowSettings.isInventoryW = false;
             showWindowList.Add(windowSettings.inventoryObj);
             ShowWindow(showWindowList);
@@ -216,6 +234,11 @@ public class UIManager : MonoBehaviour
         // 케릭터창
         if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
         {
+            if (windowSettings.inventoryObj.activeSelf)
+            {
+                Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
+            }
+
             windowSettings.isCharacterW = false;
             showWindowList.Add(windowSettings.characterObj);
             showWindowList.Add(windowSettings.inventoryObj);

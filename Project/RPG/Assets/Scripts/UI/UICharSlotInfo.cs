@@ -34,7 +34,7 @@ public class UICharSlotInfo : MonoBehaviour
             networkChar.message.text = "빈 슬롯 선택 하셨습니다.";
             return;
         }
-        networkChar.message.text = (slotInfo.slotIndex + 1) + " 번째 슬롯 선택 하셨습니다.";
+        networkChar.message.text = slotInfo.nickName.text + " 슬롯 선택 하셨습니다.";
     }
 
     // 슬롯 인덱스 설정

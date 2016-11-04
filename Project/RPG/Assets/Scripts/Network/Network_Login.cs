@@ -35,7 +35,7 @@ public class Network_Login : MonoBehaviour
     {
         public int acc_index;
         public string message;
-        public bool isLogin;
+        public bool isSuccess;
         public int timestamp;
         public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();
     }
@@ -46,7 +46,7 @@ public class Network_Login : MonoBehaviour
         public string acc_id;
         public int timestamp;
         public string message;
-        public bool isJoin;
+        public bool isSuccess;
     }
 
     void Awake()
@@ -65,8 +65,6 @@ public class Network_Login : MonoBehaviour
         joinObj.SetActive(false);
         charObj.SetActive(false);
         createObj.SetActive(false);
-
-        ItemManager.Instance.LoadTalbe();
     }
 
     public void RequestLogin()
@@ -89,7 +87,7 @@ public class Network_Login : MonoBehaviour
     {
         RecvLoginData data = JsonReader.Deserialize<RecvLoginData>(json);
 
-        if (!data.isLogin)
+        if (!data.isSuccess)
         {
             login_message.text = data.message;
             pw.value = null;
@@ -139,7 +137,7 @@ public class Network_Login : MonoBehaviour
     {
         RecvJoinData data = JsonReader.Deserialize<RecvJoinData>(json);
 
-        if (!data.isJoin)
+        if (!data.isSuccess)
         {
             join_message.text = data.message;
             return;

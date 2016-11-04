@@ -1,0 +1,2 @@
+monster_index,monster_type,defence,hp,exp,gold,item_type,item_index,name,file_name
+0,2,30,10000,500,10000,0,0,블러드 골렘,BloodGolem

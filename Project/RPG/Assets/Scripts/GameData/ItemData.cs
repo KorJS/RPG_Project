@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.IO;
 
 public sealed class ItemData
 {
@@ -31,39 +33,39 @@ public sealed class ItemData
     // 장비 정보 - 장비타입 상관없이 통으로 받아옴.
     public struct EquipmentInfo
     {
-        public string name;                             // 이름
-        public string iconName;                         // 아이콘 이름
-        public string description;                      // 설명
         public int equipmentType;                       // 장비타입
+        public int buyGold;                             // 구매가격
+        public int sellGold;                            // 판매가격
         public int playerType;                          // 착용직업
         public int level;                               // 착용레벨
         public int attack;                              // 공격력
         public int defence;                             // 방어력
         public int hp;                                  // 체력
         public int mp;                                  // 마력
-        public int buyGold;                             // 구매가격
-        public int sellGold;                            // 판매가격
+        public string name;                             // 이름
+        public string iconName;                         // 아이콘 이름
+        public string description;                      // 설명
     };
 
     // 소모품 정보
     public struct CusomableInfo
     {
+        public int buyGold;                             // 구매가격
+        public int sellGold;                            // 판매가격
+        public float coolTime;                          // 쿨타임
+        public float regeneration;                      // 상승치
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
         public string description;                      // 설명
-        public float regeneration;                      // 상승치
-        public float coolTime;                          // 쿨타임
-        public int buyGold;                             // 구매가격
-        public int sellGold;                            // 판매가격
     };
 
     // 퀘스트템 정보
     public struct QuestItemInfo
     {
+        public int sellGold;                            // 판매가격
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
         public string description;                      // 설명
-        public int buyGold;                             // 판매가격
     };
 
     public Dictionary<int, EquipmentInfo> equipmentInfos = null; // 장비 
@@ -79,108 +81,144 @@ public sealed class ItemData
         equipmentInfos = new Dictionary<int, EquipmentInfo>();
         cusomableInfos = new Dictionary<int, CusomableInfo>();
         questItemInfos = new Dictionary<int, QuestItemInfo>();
-
-        cusomableInfo.name = "HP 포션";
-        cusomableInfo.iconName = "HPPotion";
-        cusomableInfo.regeneration = 100;
-        cusomableInfo.coolTime = 10f;
-        cusomableInfo.buyGold = 1000;
-        cusomableInfo.sellGold = 100;
-        cusomableInfos.Add(0, cusomableInfo);
-
-        cusomableInfo.name = "MP 포션";
-        cusomableInfo.iconName = "MPPotion";
-        cusomableInfo.regeneration = 100;
-        cusomableInfo.coolTime = 10f;
-        cusomableInfo.buyGold = 1000;
-        cusomableInfo.sellGold = 100;
-        cusomableInfos.Add(1, cusomableInfo);
-
-        cusomableInfo.name = "HMP 포션";
-        cusomableInfo.iconName = "HMPPotion";
-        cusomableInfo.regeneration = 100;
-        cusomableInfo.coolTime = 10f;
-        cusomableInfo.buyGold = 2000;
-        cusomableInfo.sellGold = 500;
-        cusomableInfos.Add(2, cusomableInfo);
-
-        equipmentInfo.name = "베르고스 검";
-        equipmentInfo.iconName = "Vergos_Lance";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
-        equipmentInfo.attack = 100000;
-        equipmentInfo.hp = 10000;
-        equipmentInfo.buyGold = 10000;
-        equipmentInfo.sellGold = 5000;
-        equipmentInfos.Add(0, equipmentInfo);
-
-        equipmentInfo.name = "발로나 검";
-        equipmentInfo.iconName = "Val_Lance";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.무기;
-        equipmentInfo.attack = 5000;
-        equipmentInfo.hp = 1000;
-        equipmentInfo.mp = 500;
-        equipmentInfo.buyGold = 4000;
-        equipmentInfo.sellGold = 2000;
-        equipmentInfos.Add(1, equipmentInfo);
-
-        equipmentInfo.name = "베르고스 갑옷";
-        equipmentInfo.iconName = "Vergos_Body";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.갑옷;
-        equipmentInfo.defence = 10000;
-        equipmentInfo.hp = 10000;
-        equipmentInfo.buyGold = 2000;
-        equipmentInfo.sellGold = 1000;
-        equipmentInfos.Add(2, equipmentInfo);
-
-        equipmentInfo.name = "발로나갑옷";
-        equipmentInfo.iconName = "Val_Body";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.갑옷;
-        equipmentInfo.defence = 1500;
-        equipmentInfo.hp = 500;
-        equipmentInfo.buyGold = 1000;
-        equipmentInfo.sellGold = 500;
-        equipmentInfos.Add(3, equipmentInfo);
-
-        equipmentInfo.name = "베르고스 장갑";
-        equipmentInfo.iconName = "Vergos_Hand";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.장갑;
-        equipmentInfo.defence = 2000;
-        equipmentInfo.hp = 200;
-        equipmentInfo.mp = 200;
-        equipmentInfo.buyGold = 2000;
-        equipmentInfo.sellGold = 1000;
-        equipmentInfos.Add(4, equipmentInfo);
-
-        equipmentInfo.name = "발로나 장갑";
-        equipmentInfo.iconName = "Val_Hand";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.장갑;
-        equipmentInfo.defence = 2000;
-        equipmentInfo.hp = 150;
-        equipmentInfo.mp = 150;
-        equipmentInfo.buyGold = 1000;
-        equipmentInfo.sellGold = 500;
-        equipmentInfos.Add(5, equipmentInfo);
-
-        equipmentInfo.name = "베르고스 신발";
-        equipmentInfo.iconName = "Vergos_Leg";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.신발;
-        equipmentInfo.defence = 1000;
-        equipmentInfo.hp = 200;
-        equipmentInfo.mp = 200;
-        equipmentInfo.buyGold = 2000;
-        equipmentInfo.sellGold = 1000;
-        equipmentInfos.Add(6, equipmentInfo);
-
-        equipmentInfo.name = "발로나 신발";
-        equipmentInfo.iconName = "Val_Leg";
-        equipmentInfo.equipmentType = (int)TypeData.EquipmentType.신발;
-        equipmentInfo.defence = 1000;
-        equipmentInfo.hp = 150;
-        equipmentInfo.mp = 150;
-        equipmentInfo.buyGold = 1000;
-        equipmentInfo.sellGold = 500;
-        equipmentInfos.Add(7, equipmentInfo);
     }
 
+    public string pathForDocumentsFile(string fileName)
+    {
+        // Application.dataPath : 실행 파일이 실행되는 위치의 경로를 얻어온다(=> GetProject Root Path)
+        if (Application.platform == RuntimePlatform.IPhonePlayer) // IOS 경로
+        {
+            string path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
+            path = path.Substring(0, path.LastIndexOf("/"));
+            return Path.Combine(Path.Combine(path, "Documents"), fileName);
+        }
+        else if (Application.platform == RuntimePlatform.Android) // 안드로이드 경로
+        {
+            string path = Application.persistentDataPath;
+            path = path.Substring(0, path.LastIndexOf("/"));
+            return Path.Combine(path, fileName);
+        }
+        else // PC 또는 Web 경로
+        {
+            string path = Application.dataPath; // /Assets 경로
+            path = path.Substring(0, path.LastIndexOf("/"));
+            return Path.Combine(path, fileName);
+        }
+    }
 
+    public void LoadTalbe()
+    {
+        string path = pathForDocumentsFile("Tables/item_table.csv");
+
+        if (File.Exists(path) == false)
+        {
+            Debug.Log("파일이 존재하지 않습니다!!" + path);
+            return;
+        }
+
+        string str = null;
+        equipmentInfos.Clear();
+        cusomableInfos.Clear();
+        questItemInfos.Clear();
+
+        FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read); // 읽기 전용으로 불러옴
+        StreamReader sr = new StreamReader(file);
+
+        while ((str = sr.ReadLine()) != null)
+        {
+            string[] datas = Regex.Split(str, "\r\n");
+
+            foreach (string data in datas)
+            {
+                // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
+                if ((data == "") || (data.Length == 0))
+                {
+                    break;
+                }
+
+                // # 문자로 시자갛느 데이타는 무시한다.
+                if (data[0] == '#')
+                {
+                    continue;
+                }
+
+                string[] temp = data.Split(',');
+                int index = int.Parse(temp[0]);
+
+                TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+
+                switch (itemType)
+                {
+                    case TypeData.ItemType.장비:
+                        {
+                            SetEquipmentDate(index, ref temp);
+                        }
+                        break;
+
+                    case TypeData.ItemType.소모품:
+                        {
+                            SetCusomableData(index, ref temp);
+                        }
+                        break;
+
+                    case TypeData.ItemType.퀘스트템:
+                        {
+                            SetQuestItemData(index, ref temp);
+                        }
+                        break;
+                }
+
+                Debug.Log("table에 데이타 등록 : " + temp[0]);
+            } // end foreach
+        } // end while
+
+        sr.Close();
+        file.Close();
+
+        Debug.Log("파일 읽기 완료 : " + path);
+    }
+
+    private void SetEquipmentDate(int index, ref string[] temp)
+    {
+        equipmentInfos.Add(index, new EquipmentInfo
+        {
+            equipmentType   = int.Parse(temp[2]),   // 장비타입
+            buyGold         = int.Parse(temp[3]),   // 구매가격
+            sellGold        = int.Parse(temp[4]),   // 판매가격
+            playerType      = int.Parse(temp[5]),   // 착용직업
+            level           = int.Parse(temp[6]),   // 착용레벨
+            attack          = int.Parse(temp[7]),   // 공격력
+            defence         = int.Parse(temp[8]),   // 방어력
+            hp              = int.Parse(temp[9]),   // 체력
+            mp              = int.Parse(temp[10]),  // 마력
+            name            = temp[13],             // 이름
+            iconName        = temp[14],             // 아이콘 이름
+            description     = temp[15]              // 설명
+        });
+    }
+
+    private void SetCusomableData(int index, ref string[] temp)
+    {
+        cusomableInfos.Add(index, new CusomableInfo
+        {
+            buyGold         = int.Parse(temp[3]),   // 구매가격
+            sellGold        = int.Parse(temp[4]),   // 판매가격
+            coolTime        = float.Parse(temp[11]),// 쿨타임
+            regeneration    = float.Parse(temp[12]),// 상승치
+            name            = temp[13],             // 이름
+            iconName        = temp[14],             // 아이콘 이름
+            description     = temp[15]              // 설명
+        });
+    }
+
+    private void SetQuestItemData(int index, ref string[] temp)
+    {
+        questItemInfos.Add(index, new QuestItemInfo
+        {
+            sellGold        = int.Parse(temp[4]),   // 판매가격
+            name            = temp[13],             // 이름
+            iconName        = temp[14],             // 아이콘 이름
+            description     = temp[15]              // 설명
+        });
+    }
 }

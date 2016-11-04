@@ -19,10 +19,10 @@ public class PlayerInfoData
     }
 
     // TODO :  리스폰 위치
-    public struct InfoData
+    public class InfoData
     {
-        public int charIndex;
         public int accIndex;
+        public int charIndex;
         public string nick;
         public int clas;
         public int level;
@@ -47,18 +47,21 @@ public class PlayerInfoData
 
     public PlayerInfoData()
     {
-        infoData.charIndex = 1;
-        infoData.nick = "테라";
-        infoData.clas = (int)TypeData.PlayerType.기사;
-        infoData.level = 10;
-        infoData.exp = 0;
-        infoData.glod = 10000;
-        infoData.att = 100;
-        infoData.def = 100;
-        infoData.currentHp = 1000;
-        infoData.currentMp = 1000;
-        totalMaxHp = infoData.maxHp = 1000;
-        totalMaxMp = infoData.maxMp = 1000;
+        //infoData.accIndex = 1;
+        //infoData.charIndex = 1;
+        //infoData.nick = "테라";
+        //infoData.clas = (int)TypeData.PlayerType.기사;
+        //infoData.level = 10;
+        //infoData.exp = 0;
+        //infoData.glod = 10000;
+        //infoData.att = 100;
+        //infoData.def = 100;
+        //infoData.currentHp = 1000;
+        //infoData.currentMp = 1000;
+        //totalMaxHp = infoData.maxHp = 1000;
+        //totalMaxMp = infoData.maxMp = 1000;
+
+        ItemData.Instance.LoadTalbe();
     }
 
     // TODO : 공격력 / 방어력 / HP / MP 계산

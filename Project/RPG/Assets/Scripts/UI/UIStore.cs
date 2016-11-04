@@ -345,7 +345,7 @@ public class UIStore : MonoBehaviour
 
             case TypeData.ItemType.퀘스트템:
                 {
-                    buyGold = ItemData.Instance.questItemInfos[index].buyGold;
+                    sellGold = ItemData.Instance.questItemInfos[index].sellGold;
                 }
                 break;
         }

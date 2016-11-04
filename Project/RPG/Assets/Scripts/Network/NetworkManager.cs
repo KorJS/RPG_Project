@@ -24,6 +24,7 @@ public class NetworkManager : MonoBehaviour {
             return _instance;
         }
     }
+
     // Awake에서 자신을 인스턴스로 등록 한다.
     void Awake()
     {
@@ -41,7 +42,7 @@ public class NetworkManager : MonoBehaviour {
     {
         // 2. JSON 형식으로 변환
         string json = JsonWriter.Serialize(sendData);
-        Debug.Log(json);
+
         // 3. POST 방식의 데이타로 만든다.
         WWWForm form = new WWWForm();
         form.AddField("json", json);
@@ -74,7 +75,7 @@ public class NetworkManager : MonoBehaviour {
             {
                 index = 1;
             }
-            Debug.Log(www.text);
+           
             if (www.text[index] == '{') // JSON 데이타 인가? 
             {
                 // JSON 데이타를 Dictionary로 변환
@@ -95,7 +96,12 @@ public class NetworkManager : MonoBehaviour {
                         case 1005: Debug.Log("캐릭터 슬롯 초과"); break;
                         case 1006: Debug.Log("캐릭터 만들기 실패"); break;
                         case 1007: Debug.Log("캐릭터 삭제 실패"); break;
-                        //case 1006: Debug.Log("게임 정보 저장 실패"); break;
+                        case 1008: Debug.Log("케릭 정보 불러오기 실패"); break;
+                        case 1009: Debug.Log("케릭 정보 저장 실패"); break;
+                        case 1010: Debug.Log("슬롯 정보 삭제 실패"); break;
+                        case 1011: Debug.Log("존재하지 않는 슬롯 정보"); break;
+                        case 1012: Debug.Log("슬롯 정보 불러오기 실패"); break;
+                        case 1013: Debug.Log("슬롯 정보 저장 실패"); break;
                     }
                 }
                 // 실제 처리 결과물
@@ -105,6 +111,7 @@ public class NetworkManager : MonoBehaviour {
                     _reply(JsonWriter.Serialize(receivePacket["data"]));
                 }
                 Debug.Log("Receive JSON : " + www.text);
+
             }// end if()
             else
             {

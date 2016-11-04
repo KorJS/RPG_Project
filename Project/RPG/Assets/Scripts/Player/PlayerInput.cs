@@ -196,12 +196,12 @@ public class PlayerInput : MonoBehaviour
     // 단축키를 눌렀을때 타입 확인
     public int CheckSlotType(int slotIndex, KeyCode keyCode)
     {
-        // 무기를 장착하지 않았으면 리턴
-        if (!uiManager.characterSlots[1].isItemExist)
-        {
-            uiManager.SetMessage("무기를 장착하세요.");
-            return -1;
-        }
+        //// 무기를 장착하지 않았으면 리턴
+        //if (!uiManager.characterSlots[1].isItemExist)
+        //{
+        //    uiManager.SetMessage("무기를 장착하세요.");
+        //    return -1;
+        //}
 
         int index = -1;
 

@@ -56,6 +56,10 @@ public class UISlotInfo : MonoBehaviour
         isItemExist = false;
 
         SetSlotIndex(); // 슬롯 인덱스 설정
+    }
+
+    void Start()
+    {
         CheckType(); // 슬롯 정보 설정
         SetSlotIcon(); // 슬롯 아이콘 설정
         SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
@@ -65,6 +69,7 @@ public class UISlotInfo : MonoBehaviour
 
     void OnEnable()
     {
+        CheckType(); // 슬롯 정보 설정
         SetSlotIcon(); // 슬롯 아이콘 설정
         SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
     }

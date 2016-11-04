@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic; // Dictionary
 using JsonFx.Json; // JsonReader
@@ -21,6 +22,7 @@ public class Network_Char : MonoBehaviour
 
     public string create_contents = null;
     public string delete_contents = null;
+    public string charInfo_contents = null;
     public int acc_index = 0;
     public int selectSlot = 0;
     public int selectPlayerType = 0;
@@ -44,6 +46,14 @@ public class Network_Char : MonoBehaviour
         public List<CharacterInfoData> characterInfos = new List<CharacterInfoData>();
     }
 
+    private class RecvInGameData
+    {
+        public string message;
+        public bool isSuccess;
+        public int timestamp;
+        public PlayerInfoData.InfoData playerInfoData;
+    }
+
     void Awake()
     {
         charSlotInfos = new Dictionary<int, UICharSlotInfo>();
@@ -51,9 +61,9 @@ public class Network_Char : MonoBehaviour
 
         selectSlot = -1;
         selectPlayerType = (int)TypeData.PlayerType.기사;
-        create_contents = "create_character";
-        delete_contents = "delete_character";
-        Debug.Log("network");
+        create_contents = "character_create";
+        delete_contents = "character_delete";
+        charInfo_contents = "characterInfo_load";
     }
 
     void Update()
@@ -61,6 +71,8 @@ public class Network_Char : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             Debug.Log("selectSlot : " + selectSlot);
+            SceneManager.LoadScene("PlayerTest");
+
         }
     }
 
@@ -147,13 +159,54 @@ public class Network_Char : MonoBehaviour
 
     public void RequestInGame()
     {
+        if (selectSlot < 0)
+        {
+            message.text = "선택한 슬롯이 없습니다.";
+            return;
+        }
+
+        if (mark.Contains(selectSlot))
+        {
+            message.text = "캐릭터를 선택 하세요.";
+            return;
+        }
         // Login에 acc_index, char_index 로 정보 가져옴
         // 케릭정보, 케릭창 슬롯, 단축슬롯, 인벤토리 슬롯, 창고슬롯
+        int char_index = slotInfos[selectSlot].char_index;
+
+        Dictionary<string, object> sendData = new Dictionary<string, object>();
+        sendData.Add("contents", charInfo_contents);
+        sendData.Add("acc_index", acc_index);
+        sendData.Add("char_index", char_index);
+
+        StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyInGame));
     }
 
-    public void ReplyInGame()
+    public void ReplyInGame(string json)
     {
+        RecvInGameData data = JsonReader.Deserialize<RecvInGameData>(json);
 
+        if (!data.isSuccess)
+        {
+            message.text = data.message;
+            return;
+        }
+
+        PlayerInfoData.Instance.infoData = data.playerInfoData;
+
+        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.단축키);
+        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.인벤토리);
+        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.창고);
+        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.캐릭터);
+
+        StartCoroutine(SceneLoad());
+    }
+
+    IEnumerator SceneLoad()
+    {
+        yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene("PlayerTest");
     }
 
     public void RequestCreate()
@@ -173,22 +226,6 @@ public class Network_Char : MonoBehaviour
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyCreate));
     }
 
-    public void RequestDelete()
-    {
-        if (selectSlot == -1)
-        {
-            message.text = "삭제할 캐릭을 선택 해주세요.";
-            return;
-        }
-
-        Dictionary<string, object> sendData = new Dictionary<string, object>();
-        sendData.Add("contents", delete_contents);
-        sendData.Add("acc_index", acc_index);
-        sendData.Add("char_index", slotInfos[selectSlot].char_index);
-
-        StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyCreate));
-    }
-
     public void ReplyCreate(string json)
     {
         RecvCreateData data = JsonReader.Deserialize<RecvCreateData>(json);
@@ -204,6 +241,22 @@ public class Network_Char : MonoBehaviour
         WarriorBtn();
         createObj.SetActive(false);
         CheckSlotinfo(data.characterInfos);
+    }
+
+    public void RequestDelete()
+    {
+        if (selectSlot == -1)
+        {
+            message.text = "삭제할 캐릭을 선택 해주세요.";
+            return;
+        }
+
+        Dictionary<string, object> sendData = new Dictionary<string, object>();
+        sendData.Add("contents", delete_contents);
+        sendData.Add("acc_index", acc_index);
+        sendData.Add("char_index", slotInfos[selectSlot].char_index);
+
+        StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyCreate));
     }
 
     public void CharCancelBtn()

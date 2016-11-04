@@ -70,6 +70,7 @@ public class UIClick : MonoBehaviour
                     }
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
+                    Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
                     uiManager.windowSettings.characterObj.GetComponent<UICharater>().ChangPlayerStat();
                     uiSlotInfo.ReSetting();
                 }
@@ -167,6 +168,7 @@ public class UIClick : MonoBehaviour
 
             playerSlotData.AddSlotData(TypeData.SlotType.창고, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.slotInfo.quantity);
             playerSlotData.RemoveSlotData(uiSlotInfo);
+            Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
             uiSlotInfo.ReSetting();
         }
         // 케릭창이 열여있는 경우
@@ -185,7 +187,10 @@ public class UIClick : MonoBehaviour
         // 그냥 인벤만.
         else
         {
-            // 소모품인 경우 아이템 사용
+            if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
+            {
+                // 소모품 사용
+            }
         }
     }
 
@@ -229,6 +234,7 @@ public class UIClick : MonoBehaviour
 
         playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.slotInfo.quantity);
         playerSlotData.RemoveSlotData(uiSlotInfo);
+        Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
         uiSlotInfo.ReSetting();
     }
 

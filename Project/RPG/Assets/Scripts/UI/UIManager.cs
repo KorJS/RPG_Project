@@ -205,11 +205,6 @@ public class UIManager : MonoBehaviour
         // 소지품
         if (windowSettings.isInventoryW || Input.GetKeyDown(inputKey.inventory))
         {
-            if (windowSettings.inventoryObj.activeSelf)
-            {
-                Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.인벤토리);
-            }
-
             windowSettings.isInventoryW = false;
             showWindowList.Add(windowSettings.inventoryObj);
             ShowWindow(showWindowList);
@@ -234,11 +229,6 @@ public class UIManager : MonoBehaviour
         // 케릭터창
         if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
         {
-            if (windowSettings.inventoryObj.activeSelf)
-            {
-                Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
-            }
-
             windowSettings.isCharacterW = false;
             showWindowList.Add(windowSettings.characterObj);
             showWindowList.Add(windowSettings.inventoryObj);
@@ -298,6 +288,11 @@ public class UIManager : MonoBehaviour
 
             windows[i].SetActive(false);
         }
+
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.인벤토리);
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.창고);
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
     public void ShowWindow(List<GameObject> winList)

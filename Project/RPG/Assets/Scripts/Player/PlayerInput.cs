@@ -37,16 +37,6 @@ public class PlayerInput : MonoBehaviour
     // Test용
     public GameObject weapon = null;
     public GameObject shield = null;
-    public enum Equipment
-    {
-        Sword_01 = 1,
-        Axe_01,
-        Spear_01,
-        Hammer_01
-    }
-
-    public string swordName = "Sword_01";
-    public string shieldName = "Shield_01";
 
     public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
     public bool isClick = false;
@@ -163,16 +153,6 @@ public class PlayerInput : MonoBehaviour
             shield = Instantiate(Resources.Load("Equipment/Vergos_Lance_Subweapon")) as GameObject;
             equipHandler.SetWeapon(weapon, true);
             equipHandler.SetSubWeapon(shield, true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            swordName = Equipment.Sword_01.ToString();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            swordName = Equipment.Spear_01.ToString();
         }
 
         if (Input.GetKeyDown(KeyCode.H))

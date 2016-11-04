@@ -24,7 +24,6 @@ public class UIInquirePopup : MonoBehaviour
     public void InquireOK()
     {
         playerSlotData.RemoveSlotData(currentInfo);
-        Network_Slot.Instance.RequestDeleteSlot(currentInfo.slotType, currentInfo.slotIndex);
         currentInfo.ReSetting();
         gameObject.SetActive(false);
     }

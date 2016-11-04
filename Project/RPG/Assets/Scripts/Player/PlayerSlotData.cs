@@ -377,10 +377,10 @@ public class PlayerSlotData
                 {
                     if (shortCutMark.ContainsKey(slotIndex))
                     {
-                        Debug.Log(temp + " ShortCut Exist : " + slotType + " ok : " + slotIndex);
+                        //Debug.Log(temp + " ShortCut Exist : " + slotType + " ok : " + slotIndex);
                         return;
                     }
-                    Debug.Log(temp + " ShortCut Add : " + slotType + " ok : " + slotIndex);
+                    //Debug.Log(temp + " ShortCut Add : " + slotType + " ok : " + slotIndex);
                     shortCutMark.Add(slotIndex, slotInfo);
                 }
                 break;
@@ -641,7 +641,6 @@ public class PlayerSlotData
                         if (quantity == 0)
                         {
                             RemoveSlotData(uislotInfo);
-                            Network_Slot.Instance.RequestDeleteSlot(uislotInfo.slotType, uislotInfo.slotIndex);
                             uislotInfo.ReSetting();
                             return;
                         }
@@ -725,7 +724,6 @@ public class PlayerSlotData
                                 // 슬롯 제거
                                 UISlotInfo uiSlotInfo = GameObject.Find("I_Slot " + index).GetComponent<UISlotInfo>();
                                 RemoveSlotData(uiSlotInfo);
-                                Network_Slot.Instance.RequestDeleteSlot(slotType, index);
                                 uiSlotInfo.ReSetting();
                             }
                             // 소모된 수량보다 슬롯에 수량이 큰 경우
@@ -783,7 +781,6 @@ public class PlayerSlotData
             CheckShorCutMark(slotType, slotInfo);
 
             RemoveSlotData(slotInfo);
-            Network_Slot.Instance.RequestDeleteSlot(slotInfo.slotType, slotInfo.slotIndex);
 
             return true;
         }
@@ -801,7 +798,7 @@ public class PlayerSlotData
         bool isExist = false;
 
         isExist = CheckSlotType(slotType, slotIndex, ref tempCurrentSlotInfoDatas);
-        Debug.Log(tempCurrentSlotInfoDatas.Count);
+
         // 정보가 없으면
         if (!isExist)
         {
@@ -1047,7 +1044,6 @@ public class PlayerSlotData
         if (currentQuantity <= 0)
         {
             RemoveSlotData(currentInfo);
-            Network_Slot.Instance.RequestDeleteSlot(currentInfo.slotType, currentInfo.slotIndex);
         }
     }
 
@@ -1105,6 +1101,8 @@ public class PlayerSlotData
         }
 
         tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
+        Debug.Log("slotType : " + currentInfo.slotType + " slotIndex : " + currentInfo.slotIndex);
+        Network_Slot.Instance.RequestDeleteSlot(currentInfo.slotType, currentInfo.slotIndex); // 슬롯 제거되면 DB에서도 정리 - 나중에 백업 이런거 하게된다면 이렇게 말고.. 백업테이블을 따로 두자
 
         if (currentInfo.slotType == TypeData.SlotType.단축키)
         {

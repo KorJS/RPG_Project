@@ -105,7 +105,6 @@ public class Network_Slot : MonoBehaviour
 
     public void RequestSaveSlot(TypeData.SlotType slotType)
     {
-
         Dictionary<int, PlayerSlotData.SlotInfoData> slotInfoDatas = null;
         string table_name = null;
 
@@ -148,6 +147,7 @@ public class Network_Slot : MonoBehaviour
         sendData.Add("acc_index", PlayerInfoData.Instance.infoData.accIndex);
         sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
         sendData.Add("slot_index", slotIndex);
+        sendData.Add("table_name", table_name);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyDeleteSlot));
     }

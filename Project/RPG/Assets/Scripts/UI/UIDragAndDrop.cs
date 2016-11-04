@@ -137,7 +137,6 @@ public class UIDragAndDrop : MonoBehaviour
                 case TypeData.SlotType.단축키:
                     {
                         playerSlotData.RemoveSlotData(uiSlotInfo);
-                        Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
                     }
                     break;
             }
@@ -305,7 +304,6 @@ public class UIDragAndDrop : MonoBehaviour
                                 // 장비 수량 1
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                                 playerSlotData.RemoveSlotData(uiSlotInfo);
-                                Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
                                 uiCharacter.GetComponent<UICharater>().ChangPlayerStat();
                             }
                         }
@@ -320,7 +318,6 @@ public class UIDragAndDrop : MonoBehaviour
                             {
                                 playerSlotData.AddSlotData(targetInfo.slotType, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                                 playerSlotData.RemoveSlotData(uiSlotInfo);
-                                Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
                             }
                             // 소모품, 퀘스트템일경우
                             else
@@ -336,7 +333,6 @@ public class UIDragAndDrop : MonoBehaviour
                     case TypeData.SlotType.단축키:
                         {
                             playerSlotData.RemoveSlotData(uiSlotInfo);
-                            Network_Slot.Instance.RequestDeleteSlot(uiSlotInfo.slotType, uiSlotInfo.slotIndex);
                         }
                         break;
 

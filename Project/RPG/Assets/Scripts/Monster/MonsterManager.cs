@@ -57,7 +57,6 @@ public class MonsterManager : MonoBehaviour
 
         // 몬스터 리소스 생성
         var resource = Resources.Load("Monster/" + tempMonsterInfo.fileName);
-        var hpbar = Resources.Load("UI/Mob Hp Bar");
 
         for (int i = 0; i < monsterSpawns.Count; i++)
         {
@@ -78,6 +77,5 @@ public class MonsterManager : MonoBehaviour
         }
 
         resource = null;
-        hpbar = null;
     }
 }

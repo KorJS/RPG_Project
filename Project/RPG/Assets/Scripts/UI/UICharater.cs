@@ -4,12 +4,10 @@ using System.Collections.Generic;
 
 public class UICharater : MonoBehaviour
 {
-    private UIManager uiManager = null;
     private PlayerInfoData playerInfoData = null;
     private PlayerSlotData playerSlotData = null;
 
     private EquipmentHandler equipHandler = null;
-    private Transform slotHolder = null;
 
     public GameObject weaponObj = null;
     private GameObject subWeaponObj = null;
@@ -45,12 +43,10 @@ public class UICharater : MonoBehaviour
         playerSlotData = PlayerSlotData.Instance;
 
         equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
-        slotHolder = transform.FindChild("E_Slots");
     }
 
     void Start()
     {
-        uiManager = UIManager.Instance;
         ChangPlayerStat();
     }
 

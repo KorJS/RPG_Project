@@ -95,7 +95,10 @@ public class UIClick : MonoBehaviour
 
             case TypeData.SlotType.상점리스트:
                 {
-                    uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.구매, 1);
+                    if (uiSlotInfo.isItemExist)
+                    {
+                        uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.구매, 1);
+                    }
                 }
                 break;
 

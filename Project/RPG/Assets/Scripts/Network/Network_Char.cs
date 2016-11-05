@@ -194,10 +194,11 @@ public class Network_Char : MonoBehaviour
 
         PlayerInfoData.Instance.infoData = data.playerInfoData;
 
-        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.단축키);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.인벤토리);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.창고);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.캐릭터);
+        Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.단축키);
+        ItemData.Instance.LoadTalbe();
 
         StartCoroutine(SceneLoad());
     }

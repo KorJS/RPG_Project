@@ -24,13 +24,26 @@ public class EquipmentHandler : MonoBehaviour
 
     private PlayerState playerState     = null;
 
+    private bool isStart = false;
     void Awake()
     {
         playerState = GetComponent<PlayerState>();
+        isStart = true;
     }
 
     void Update()
     {
+        if (isStart && PlayerSlotData.Instance.characterInfos.ContainsKey(1))
+        {
+            isStart = false;
+            int index = PlayerSlotData.Instance.characterInfos[1].itemIndex;
+            ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
+            GameObject weaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Weapon")) as GameObject;
+            GameObject subWeaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon")) as GameObject;
+            SetWeapon(weaponObj, true);
+            SetSubWeapon(subWeaponObj, true);
+        }
+        
         // 스킬을 사용할때 장비 전투모드 위치로.
         if (playerState.currentState == TypeData.State.스킬)
         {

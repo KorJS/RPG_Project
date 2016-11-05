@@ -31,13 +31,19 @@ public class UIStore : MonoBehaviour
     void Awake()
     {
         originalInfos = new Dictionary<int, int>();
+        playerInfoData = PlayerInfoData.Instance;
+        playerSlotDate = PlayerSlotData.Instance;
     }
 
     void Start()
     {
         uiManager = UIManager.Instance;
-        playerInfoData = PlayerInfoData.Instance;
-        playerSlotDate = PlayerSlotData.Instance;
+    }
+
+    void OnEnable()
+    {
+        playerGold = playerInfoData.infoData.glod;
+        storeSettings.changeG.text = playerGold.ToString();
     }
 
     void OnDisable()
@@ -243,8 +249,6 @@ public class UIStore : MonoBehaviour
                 }
 
                 // 같은 타입에 같은 인덱스가 있으면
-                int index = invenSlot.Key;
-                Debug.Log(invenSlot.Value.slotInfo.quantity);
                 CheckInvenQuantity(ref invenSlot.Value.slotInfo.quantity);
 
                 invenSlot.Value.StoreReSetting();
@@ -370,6 +374,7 @@ public class UIStore : MonoBehaviour
         playerInfoData.infoData.glod = changG; // 주인공 보유골드 갱신
         uiManager.SetHoldingGold(); // 인벤 소지금 갱신
 
+        // 수량 변화가 있던 슬롯 갱신
         for (int i = 0; i < changInvenIndexs.Count; i++)
         {
             int index = changInvenIndexs[i];
@@ -377,6 +382,7 @@ public class UIStore : MonoBehaviour
             playerSlotDate.SetSlotData(tempUISlotInfo.slotType, tempUISlotInfo.slotIndex, ref tempUISlotInfo);
         }
 
+        // 구매한 아이템 인벤에 추가
         foreach (KeyValuePair<int, UISlotInfo> buyInfo in uiManager.buySlots)
         {
             // 아이템 인덱스가 없으면 리턴 - 인덱스가 있으면 아이템이 있다는 뜻.

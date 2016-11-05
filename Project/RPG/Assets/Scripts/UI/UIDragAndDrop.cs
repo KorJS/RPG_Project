@@ -18,9 +18,6 @@ public class UIDragAndDrop : MonoBehaviour
     private GameObject draggedObject = null; // 드래그중인 icon
     private GameObject tempDraggingPanel = null; // 드래그중인 panel
 
-    private int dropSlotIndex = 0; // 드롭하는 위치
-
-    private bool isPressed = false; // 마우스를 클릭해제했는지
     private bool isDragging = false; // 드래그중인지
 
     void Awake()
@@ -153,7 +150,6 @@ public class UIDragAndDrop : MonoBehaviour
         }
 
         UISlotInfo targetInfo = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
-        UITexture targetTexture = targetObj.transform.FindChild("Icon").GetComponent<UITexture>(); // 타겟 아이콘
 
         CheckSlotInfo(targetInfo);
 

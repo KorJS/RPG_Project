@@ -967,7 +967,8 @@ public class PlayerSlotData
 
         if (currentInfo.slotType == TypeData.SlotType.인벤토리 && targetInfo.slotType == TypeData.SlotType.캐릭터)
         {
-            tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
+            RemoveSlotData(currentInfo);
+            //tempCurrentSlotInfoDatas.Remove(currentInfo.slotIndex);
         }
     }
 

@@ -60,8 +60,6 @@ public class PlayerInfoData
         //infoData.currentMp = 1000;
         //totalMaxHp = infoData.maxHp = 1000;
         //totalMaxMp = infoData.maxMp = 1000;
-
-        ItemData.Instance.LoadTalbe();
     }
 
     // TODO : 공격력 / 방어력 / HP / MP 계산

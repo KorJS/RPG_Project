@@ -54,9 +54,9 @@ public class NPCInfoData : MonoBehaviour
         if (npcRange.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
             npcMovement.SetAniState();
-            SetStoreSlotInfo();
-            CheckNPCType();
+            //CheckNPCType();
             uiManager.isStore = true;
+            SetStoreSlotInfo();
         }
     }
 
@@ -172,5 +172,6 @@ public class NPCInfoData : MonoBehaviour
         }
 
         uiManager.storeListSlots[slotIndex] = tempSlotInfo;
+        uiManager.storeListSlots[slotIndex].ReSetting();
     }
 }

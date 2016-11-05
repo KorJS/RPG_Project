@@ -3,8 +3,6 @@ using System.Collections;
 
 public class SpawnControl : MonoBehaviour
 {
-    private MonsterInfoData monsterInfoData = null;
-
     // TODO : 자식으로 있는 몬스터 리스폰 시간 체크
     private GameObject monsterObj = null;
 
@@ -33,7 +31,6 @@ public class SpawnControl : MonoBehaviour
     {
         child.transform.SetParent(transform);
         monsterObj = child;
-        monsterInfoData = monsterObj.GetComponent<MonsterInfoData>();
     }
 
     private void SetRespawnTime()

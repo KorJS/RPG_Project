@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Collections.Generic; // Dictionary
-using JsonFx.Json; // JsonReader
+using System.Collections.Generic;
+using JsonFx.Json; 
 
 public class Network_Char : MonoBehaviour
 {
@@ -20,9 +20,9 @@ public class Network_Char : MonoBehaviour
     public List<int> mark = null;
     public List<CharacterInfoData> slotInfos;
 
-    public string create_contents = null;
-    public string delete_contents = null;
-    public string charInfo_contents = null;
+    private string create_contents = null;
+    private string delete_contents = null;
+    private string charInfo_contents = null;
     public int acc_index = 0;
     public int selectSlot = 0;
     public int selectPlayerType = 0;
@@ -198,6 +198,8 @@ public class Network_Char : MonoBehaviour
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.창고);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.캐릭터);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.단축키);
+        Network_Store.Instance.RequestLoadStore(TypeData.AreaType.여명의정원);
+
         ItemData.Instance.LoadTalbe();
 
         StartCoroutine(SceneLoad());
@@ -205,7 +207,7 @@ public class Network_Char : MonoBehaviour
 
     IEnumerator SceneLoad()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
 
         SceneManager.LoadScene("PlayerTest");
     }

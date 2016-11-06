@@ -23,15 +23,16 @@ public class MonsterData
     [System.Serializable]
     public struct MonsterInfo
     {
-        public string name;
-        public string fileName;
         public int monsterType;
+        public int areaTpye;
         public int defence;
         public float hp;
         public float exp;
         public int glod;
         public int itemType;
         public int itemIndex;
+        public string name;
+        public string fileName;
     }
 
     public MonsterInfo monsterInfo;
@@ -45,6 +46,7 @@ public class MonsterData
         monsterInfo.name = "블러드 골렘";
         monsterInfo.fileName = "BloodGolem";
         monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
+        monsterInfo.areaTpye = (int)TypeData.AreaType.여명의정원;
         monsterInfo.defence = 30;
         monsterInfo.hp = 10000;
         monsterInfos.Add(monsterInfo.fileName + "_Spawns", monsterInfo);

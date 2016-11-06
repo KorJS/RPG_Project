@@ -46,9 +46,9 @@ public class Network_Slot : MonoBehaviour
         public int quantity;
     }
 
-    private string load_contents = null;
-    private string save_contents = null;
-    private string delete_contents = null;
+    private string load_slot_contents = null;
+    private string save_slot_contents = null;
+    private string delete_slot_contents = null;
 
     // Awake에서 자신을 인스턴스로 등록 한다.
     void Awake()
@@ -57,9 +57,9 @@ public class Network_Slot : MonoBehaviour
         // 다른 씬으로 넘어가더라도 메모리에서 삭제하지 않는다.
         DontDestroyOnLoad(this);
 
-        load_contents = "slot_load";
-        save_contents = "slot_save";
-        delete_contents = "slot_delete";
+        load_slot_contents = "slot_load";
+        save_slot_contents = "slot_save";
+        delete_slot_contents = "slot_delete";
     }
 
     public void Ok()
@@ -75,7 +75,7 @@ public class Network_Slot : MonoBehaviour
 
         Dictionary<string, object> sendData = new Dictionary<string, object>();
 
-        sendData.Add("contents", load_contents);
+        sendData.Add("contents", load_slot_contents);
         sendData.Add("acc_index", PlayerInfoData.Instance.infoData.accIndex);
         sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
         sendData.Add("table_name", table_name);
@@ -89,7 +89,7 @@ public class Network_Slot : MonoBehaviour
 
         if (!data.isSuccess)
         {
-            UIManager.Instance.popupSettings.message.text = data.table_name + " 의 " + data.message;
+            Debug.Log(data.table_name + " 의 " + data.message);
             return;
         }
 
@@ -113,7 +113,7 @@ public class Network_Slot : MonoBehaviour
 
         Dictionary<string, object> sendData = new Dictionary<string, object>();
 
-        sendData.Add("contents", save_contents);
+        sendData.Add("contents", save_slot_contents);
         sendData.Add("acc_index", PlayerInfoData.Instance.infoData.accIndex);
         sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
         sendData.Add("slotInfoDatas", slotInfoDatas);
@@ -129,7 +129,7 @@ public class Network_Slot : MonoBehaviour
 
         if (!data.isSuccess)
         {
-            UIManager.Instance.popupSettings.message.text = data.table_name + " 의 " + data.message;
+            Debug.Log(data.table_name + " 의 " + data.message);
             return;
         }
         Debug.Log(data.table_name + " 의 " + data.message);
@@ -143,7 +143,7 @@ public class Network_Slot : MonoBehaviour
 
         CheckTable(slotType, ref table_name);
 
-        sendData.Add("contents", delete_contents);
+        sendData.Add("contents", delete_slot_contents);
         sendData.Add("acc_index", PlayerInfoData.Instance.infoData.accIndex);
         sendData.Add("char_index", PlayerInfoData.Instance.infoData.charIndex);
         sendData.Add("slot_index", slotIndex);
@@ -158,7 +158,7 @@ public class Network_Slot : MonoBehaviour
 
         if (!data.isSuccess)
         {
-            UIManager.Instance.popupSettings.message.text = data.table_name + " 의 " + data.message;
+            Debug.Log(data.table_name + " 의 " + data.message);
             return;
         }
 

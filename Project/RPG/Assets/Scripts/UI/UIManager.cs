@@ -164,10 +164,10 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        //if (!windowSettings.shortCutObj.activeSelf)
-        //{
-        //    windowSettings.shortCutObj.SetActive(true);
-        //}
+        if (!windowSettings.shortCutObj.activeSelf)
+        {
+            windowSettings.shortCutObj.SetActive(true);
+        }
 
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
@@ -176,7 +176,7 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            windowSettings.shortCutObj.SetActive(true);
+            Network_PlayerInfo.Instance.RequestSavePlayerInfo();
         }
     }
 
@@ -411,7 +411,7 @@ public class UIManager : MonoBehaviour
 
     public void SetHoldingGold()
     {
-        playerGold.text = playerInfoData.infoData.glod.ToString();
+        playerGold.text = playerInfoData.infoData.gold.ToString();
     }
 
     public void ShowCharacterBtn()

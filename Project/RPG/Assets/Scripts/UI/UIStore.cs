@@ -42,7 +42,7 @@ public class UIStore : MonoBehaviour
 
     void OnEnable()
     {
-        playerGold = playerInfoData.infoData.glod;
+        playerGold = playerInfoData.infoData.gold;
         storeSettings.changeG.text = playerGold.ToString();
     }
 
@@ -54,7 +54,7 @@ public class UIStore : MonoBehaviour
     // 정보 받아옴
     public void CopySlotInfo(UISlotInfo _currentInfo, TypeData.SlotType _targetType, int copyQuantity)
     {
-        playerGold = playerInfoData.infoData.glod;
+        playerGold = playerInfoData.infoData.gold;
 
         if (_currentInfo.slotType == TypeData.SlotType.인벤토리)
         {
@@ -358,8 +358,7 @@ public class UIStore : MonoBehaviour
         else { itemGold = sellGold; }
     }
 
-    // 정산
-    public void CalculateOK()
+    public void Calculate()
     {
         int changG = int.Parse(storeSettings.changeG.text);
 
@@ -371,8 +370,10 @@ public class UIStore : MonoBehaviour
             return;
         }
 
-        playerInfoData.infoData.glod = changG; // 주인공 보유골드 갱신
+        playerInfoData.infoData.gold = changG; // 주인공 보유골드 갱신
         uiManager.SetHoldingGold(); // 인벤 소지금 갱신
+
+        Network_PlayerInfo.Instance.RequestSavePlayerInfo();
 
         // 수량 변화가 있던 슬롯 갱신
         for (int i = 0; i < changInvenIndexs.Count; i++)
@@ -395,7 +396,7 @@ public class UIStore : MonoBehaviour
             int itemQuantity = buyInfo.Value.slotInfo.quantity;
 
             playerSlotDate.AddSlotData(TypeData.SlotType.인벤토리, itemType, itemIndex, itemQuantity);
-            
+
             buyInfo.Value.ReSetting();
             buyInfo.Value.SetQuantity();
         }
@@ -408,6 +409,16 @@ public class UIStore : MonoBehaviour
 
         originalInfos.Clear();
         changInvenIndexs.Clear();
+    }
+
+    // 정산
+    public void CalculateOK()
+    {
+        int buyAmount = int.Parse(storeSettings.buyAmount.text);
+        int sellAmount = int.Parse(storeSettings.sellAmount.text);
+        int changeG = int.Parse(storeSettings.changeG.text);
+        Debug.Log("buyAmount : " + buyAmount + " sellAmount : " + sellAmount + " changeG : " + changeG);
+        Network_Store.Instance.RequestCalculate(buyAmount, sellAmount, changeG);
     }
 
     public void ReSetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
@@ -445,7 +456,7 @@ public class UIStore : MonoBehaviour
 
         storeSettings.buyAmount.text = "0";
         storeSettings.sellAmount.text = "0";
-        storeSettings.changeG.text = playerInfoData.infoData.glod.ToString();
+        storeSettings.changeG.text = playerInfoData.infoData.gold.ToString();
 
         if (gameObject.activeSelf)
         {

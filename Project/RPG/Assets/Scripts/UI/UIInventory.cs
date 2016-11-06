@@ -19,7 +19,7 @@ public class UIInventory : MonoBehaviour
 
     public void SetHoldingGold()
     {
-        inventoryGold.text = playerInfoData.infoData.glod.ToString();
+        inventoryGold.text = playerInfoData.infoData.gold.ToString();
     }
 
     public void CloseWindows()

@@ -23,12 +23,12 @@ public class Network_Login : MonoBehaviour
     public UILabel title = null;
 
     public UILabel login_message = null;
-    public string login_contents = null;
+    private string login_contents = null;
     private string login_title = null;
 
     public UIInput join_repw = null;
     public UILabel join_message = null;
-    public string join_contents = null;
+    private string join_contents = null;
     private string join_title = null;
 
     private class RecvLoginData

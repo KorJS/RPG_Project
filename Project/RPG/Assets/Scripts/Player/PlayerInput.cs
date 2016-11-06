@@ -118,16 +118,16 @@ public class PlayerInput : MonoBehaviour
         // 보유금액 추가
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            PlayerInfoData.Instance.infoData.glod += 2000;
+            PlayerInfoData.Instance.infoData.gold += 2000;
             uiManager.SetHoldingGold();
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            PlayerInfoData.Instance.infoData.glod -= 2000;
-            if (PlayerInfoData.Instance.infoData.glod <= 0)
+            PlayerInfoData.Instance.infoData.gold -= 2000;
+            if (PlayerInfoData.Instance.infoData.gold <= 0)
             {
-                PlayerInfoData.Instance.infoData.glod = 0;
+                PlayerInfoData.Instance.infoData.gold = 0;
             }
             uiManager.SetHoldingGold();
         }

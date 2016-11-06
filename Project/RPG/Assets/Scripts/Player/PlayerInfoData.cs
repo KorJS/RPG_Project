@@ -24,10 +24,10 @@ public class PlayerInfoData
         public int accIndex;
         public int charIndex;
         public string nick;
-        public int clas;
+        public int playerType;
         public int level;
         public float exp;
-        public int glod;
+        public int gold;
         public int storageGold;
         public int att;
         public int def;

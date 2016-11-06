@@ -51,10 +51,23 @@ public class PlayerMovement : MonoBehaviour
         isIdle = true; // 대기상태
 
         //SetAnimator();
+
+        // 마지막에 저장된 위치에 스폰.
+        string[] strPos = PlayerInfoData.Instance.infoData.spawnPos.Split(',');
+
+        float x = float.Parse(strPos[0]);
+        float y = float.Parse(strPos[1]);
+        float z = float.Parse(strPos[2]);
+        
+        transform.position = new Vector3(x, y, z);
     }
 
     void Update()
     {
+        Vector3 playerPos = transform.position;
+
+        PlayerInfoData.Instance.infoData.spawnPos = playerPos.x + "," + playerPos.y + "," + playerPos.z;
+
         // 공격해 맞혔으면 true
         animator.SetBool(animationSettings.hitBool, isHit);
 

@@ -58,7 +58,8 @@ public class UIManager : MonoBehaviour
     [System.Serializable]
     public class PopupSettings
     {
-        public UILabel    message;          // 공지, 기본 메시지
+        public UILabel    notice_message;   // 공지, 기본 메시지
+        public UILabel    inquire_message;  // NPC와 대화를 하려면 'F'키를 누르시오.
         public GameObject divisionPopup;    // 분리창
         public GameObject inquirePopup;     // 확인창 (ex: 아이템을 버릴때)
         public GameObject copyPopup;        // 상점에 구매목록 판매목록
@@ -351,8 +352,8 @@ public class UIManager : MonoBehaviour
 
     public void SetMessage(string _message)
     {
-        popupSettings.message.alpha = 1f;
-        popupSettings.message.text = _message;
+        popupSettings.notice_message.alpha = 1f;
+        popupSettings.notice_message.text = _message;
         isMessage = true;
         messageTimer = 0f;
     }
@@ -368,8 +369,8 @@ public class UIManager : MonoBehaviour
 
         if (messageTimer >= MESSAGETIME)
         {
-            popupSettings.message.alpha = 0f;
-            popupSettings.message.text = null;
+            popupSettings.notice_message.alpha = 0f;
+            popupSettings.notice_message.text = null;
             messageTimer = 0f;
             isMessage = false;
         }

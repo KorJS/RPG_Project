@@ -54,9 +54,16 @@ public class NPCInfoData : MonoBehaviour
         if (npcRange.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
             npcMovement.SetAniState();
-            //CheckNPCType();
-            uiManager.isStore = true;
-            SetStoreSlotInfo();
+
+            if (npcInfo.npcType == TypeData.NPCType.상인)
+            {
+                uiManager.isStore = true;
+                SetStoreSlotInfo();
+            }
+            else if (npcInfo.npcType == TypeData.NPCType.창고)
+            {
+                uiManager.isStorage = true;
+            }
         }
     }
 
@@ -68,36 +75,6 @@ public class NPCInfoData : MonoBehaviour
                 {
                     npcInfo.windowObj = uiManager.windowSettings.storeObj;
                     npcInfo.itemIndexs = storeItemListData.itemListInfos[(int)npcInfo.storeType];
-                }
-                break;
-
-            case TypeData.NPCType.창고:
-                {
-                    // TODO : 퀘스트 정보
-                }
-                break;
-
-            case TypeData.NPCType.퀘스트:
-                {
-                    // TODO : 퀘스트 정보
-                }
-                break;
-        }
-    }
-
-    private void CheckNPCType()
-    {
-        switch (npcInfo.npcType)
-        {
-            case TypeData.NPCType.상인:
-                {
-                    npcInfo.itemIndexs = storeItemListData.itemListInfos[(int)npcInfo.storeType];
-                }
-                break;
-
-            case TypeData.NPCType.창고:
-                {
-                    // TODO : 이건 정보 딱히 
                 }
                 break;
 
@@ -115,18 +92,19 @@ public class NPCInfoData : MonoBehaviour
 
         foreach (KeyValuePair<int, UISlotInfo> uiSlotInfo in uiManager.storeListSlots)
         {
-            slotIndex = uiSlotInfo.Key - 1;
+            slotIndex = uiSlotInfo.Key;
             tempSlotInfo = uiSlotInfo.Value;
-            Debug.Log(uiSlotInfo.Value);
+            Debug.Log("slotIndex : " + slotIndex + " : " + uiSlotInfo.Value);
 
             if (npcInfo.storeType == TypeData.StoreType.장비점)
             {
-                if (!npcInfo.itemIndexs.Contains(slotIndex))
+                if (slotIndex >= npcInfo.itemIndexs.Count)
                 {
+                    tempSlotInfo.isItemExist = false;
                     Debug.Log(slotIndex + " : 슬롯에 들어갈 아이템이 없습니다.");
                     continue;
                 }
-
+                Debug.Log("slotIndex : " + slotIndex + " count : " + npcInfo.itemIndexs.Count);
                 int itemIndex = npcInfo.itemIndexs[slotIndex];
 
                 if (!itemData.equipmentInfos.ContainsKey(itemIndex))
@@ -146,12 +124,13 @@ public class NPCInfoData : MonoBehaviour
             }
             else if (npcInfo.storeType == TypeData.StoreType.소모품점)
             {
-                if (!npcInfo.itemIndexs.Contains(slotIndex))
+                if (slotIndex >= npcInfo.itemIndexs.Count)
                 {
+                    tempSlotInfo.isItemExist = false;
                     Debug.Log(slotIndex + " : 슬롯에 들어갈 아이템이 없습니다.");
                     continue;
                 }
-                Debug.Log("slotIndex : " + slotIndex);
+                Debug.Log("slotIndex : " + slotIndex + " count : " + npcInfo.itemIndexs.Count);
                 int itemIndex = npcInfo.itemIndexs[slotIndex];
 
                 if (!itemData.cusomableInfos.ContainsKey(itemIndex))

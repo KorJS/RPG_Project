@@ -67,7 +67,6 @@ public class Network_Store : MonoBehaviour
 
     public void RequestLoadStore(TypeData.AreaType area_type)
     {
-        Debug.Log("성공?");
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", store_load_contents);
         sendData.Add("area_type", (int)area_type);

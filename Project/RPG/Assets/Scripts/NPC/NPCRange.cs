@@ -3,10 +3,12 @@ using System.Collections;
 
 public class NPCRange : MonoBehaviour
 {
+    private UIManager uiManager = null;
+
     private Transform npcT = null;
     private GameObject effectObj = null; // NPC 발밑 활성화
     [SerializeField]
-    public GameObject inquireTextObj = null; // "대화를 하려면 F키를 누르시오"
+    public GameObject inquireObj = null; // "대화를 하려면 F키를 누르시오"
 
     private Transform targetT = null;
     private Collider[] targets;
@@ -21,6 +23,12 @@ public class NPCRange : MonoBehaviour
         isPlayer = false;
     }
 
+    void Start()
+    {
+        uiManager = UIManager.Instance;
+        CreateMessage();
+    }
+
     void Update()
     {
         isPlayer = CheckPlayer();
@@ -29,7 +37,7 @@ public class NPCRange : MonoBehaviour
         {
             targetT = null;
             effectObj.SetActive(false);
-            inquireTextObj.SetActive(false);
+            inquireObj.SetActive(false);
         }
     }
 
@@ -45,12 +53,24 @@ public class NPCRange : MonoBehaviour
                 // 타겟 지정
                 targetT = target.transform;
                 effectObj.SetActive(true);
-                inquireTextObj.SetActive(true);
+                inquireObj.SetActive(true);
 
                 return true;
             }
         }
 
         return false;
+    }
+
+    private void CreateMessage()
+    {
+        inquireObj = Instantiate(Resources.Load("UI/Inquire_msg")) as GameObject;
+        inquireObj.layer = UICamera.mainCamera.gameObject.layer;
+        inquireObj.transform.SetParent(GameObject.FindGameObjectWithTag("InquireHolder").transform);
+        inquireObj.transform.localScale = Vector3.one;
+        inquireObj.transform.localRotation = Quaternion.identity;
+        inquireObj.transform.localPosition = Vector3.one;
+        
+        inquireObj.SetActive(false);
     }
 }

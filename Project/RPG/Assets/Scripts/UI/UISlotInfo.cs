@@ -124,6 +124,11 @@ public class UISlotInfo : MonoBehaviour
 
     public void SetQuantity()
     {
+        if (slotType == TypeData.SlotType.상점리스트 || slotType == TypeData.SlotType.스킬리스트)
+        {
+            return;
+        }
+
         // 슬롯에 아이템이 없으면 리턴
         if (!isItemExist)
         {

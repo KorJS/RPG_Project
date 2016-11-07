@@ -48,6 +48,7 @@ public class UIStore : MonoBehaviour
 
     void OnDisable()
     {
+        ResetListSlot();
         CloseWindows();
     }
 
@@ -401,8 +402,8 @@ public class UIStore : MonoBehaviour
             buyInfo.Value.SetQuantity();
         }
 
-        ReSetSlot(uiManager.buySlots);
-        ReSetSlot(uiManager.sellSlots);
+        ResetSlot(uiManager.buySlots);
+        ResetSlot(uiManager.sellSlots);
 
         storeSettings.buyAmount.text = "0";
         storeSettings.sellAmount.text = "0";
@@ -421,7 +422,7 @@ public class UIStore : MonoBehaviour
         Network_Store.Instance.RequestCalculate(buyAmount, sellAmount, changeG);
     }
 
-    public void ReSetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
+    public void ResetSlot(SortedDictionary<int, UISlotInfo> slotInfos)
     {
         foreach (KeyValuePair<int, UISlotInfo> slotInfo in slotInfos)
         {
@@ -431,6 +432,20 @@ public class UIStore : MonoBehaviour
             slotInfo.Value.slotInfo.quantity = 0;
 
             slotInfo.Value.StoreReSetting();
+        }
+    }
+
+    public void ResetListSlot()
+    {
+        foreach (KeyValuePair<int, UISlotInfo> slotList in uiManager.storeListSlots)
+        {
+            Debug.Log(slotList.Key);
+            slotList.Value.isItemExist = false;
+            slotList.Value.slotInfo.itemIndex = -1;
+            slotList.Value.slotInfo.itemType = TypeData.ItemType.없음;
+            slotList.Value.slotInfo.quantity = 0;
+
+            slotList.Value.StoreReSetting();
         }
     }
 

@@ -127,7 +127,7 @@ public class UICharater : MonoBehaviour
             equipmentStat.def += tempEquipmentInfo.defence;
             equipmentStat.hp += tempEquipmentInfo.hp;
             equipmentStat.mp += tempEquipmentInfo.mp;
-            Debug.Log(tempEquipmentInfo.hp);
+    
         }
 
         // 기본스텟 + 장비스텟

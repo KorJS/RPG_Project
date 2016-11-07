@@ -6,27 +6,6 @@ using JsonFx.Json;
 
 public class Network_Char : MonoBehaviour
 {
-    public GameObject loginObj = null;
-    public GameObject charObj = null;
-    public GameObject createObj = null;
-    public GameObject idObj = null;
-    public GameObject pwObj = null;
-    public GameObject slotsObj = null;
-
-    public UIInput nickname = null;
-    public UILabel message = null;
-    
-    public Dictionary<int, UICharSlotInfo> charSlotInfos = null;
-    public List<int> mark = null;
-    public List<CharacterInfoData> slotInfos;
-
-    private string create_contents = null;
-    private string delete_contents = null;
-    private string charInfo_contents = null;
-    public int acc_index = 0;
-    public int selectSlot = 0;
-    public int selectPlayerType = 0;
-
     // 슬롯 정보 클래스
     public class CharacterInfoData
     {
@@ -52,7 +31,29 @@ public class Network_Char : MonoBehaviour
         public bool isSuccess;
         public int timestamp;
         public PlayerInfoData.InfoData playerInfoData;
+        public List<int> playerSkillInfos;
     }
+
+    public GameObject loginObj = null;
+    public GameObject charObj = null;
+    public GameObject createObj = null;
+    public GameObject idObj = null;
+    public GameObject pwObj = null;
+    public GameObject slotsObj = null;
+
+    public UIInput nickname = null;
+    public UILabel message = null;
+    
+    public Dictionary<int, UICharSlotInfo> charSlotInfos = null;
+    public List<int> mark = null;
+    public List<CharacterInfoData> slotInfos;
+
+    private string create_contents = null;
+    private string delete_contents = null;
+    private string charInfo_contents = null;
+    public int acc_index = 0;
+    public int selectSlot = 0;
+    public int selectPlayerType = 0;
 
     void Awake()
     {
@@ -193,12 +194,15 @@ public class Network_Char : MonoBehaviour
         }
 
         PlayerInfoData.Instance.infoData = data.playerInfoData;
+        PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
 
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.인벤토리);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.창고);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.캐릭터);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.단축키);
+        // 플레이어 마지막으로 종료한 지역으로 로드
         Network_Store.Instance.RequestLoadStore(TypeData.AreaType.여명의정원);
+        Network_MonsterInfo.Instance.RequestLoadMonster(TypeData.AreaType.여명의정원);
 
         ItemData.Instance.LoadTalbe();
 

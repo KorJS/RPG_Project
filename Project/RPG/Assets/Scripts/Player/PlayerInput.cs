@@ -132,6 +132,11 @@ public class PlayerInput : MonoBehaviour
             uiManager.SetHoldingGold();
         }
 
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            PlayerInfoData.Instance.totalAtt += 99999;
+        }
+
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
         {
             Debug.Log("aaaaaaaaaaaaaa");

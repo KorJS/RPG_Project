@@ -63,6 +63,7 @@ public class SpawnControl : MonoBehaviour
         {
             // 자식으로 있는 몬스터 활성화
             monsterObj.SetActive(true);
+            monsterObj.layer = LayerMask.NameToLayer("Monster");
             respawnTimer = 0f;
             isRespawn = false;
         }

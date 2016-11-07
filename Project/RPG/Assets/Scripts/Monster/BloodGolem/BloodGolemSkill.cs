@@ -30,26 +30,31 @@ public class BloodGolemSkill : MonoBehaviour
         public Vector3 normalPos;
         public float normalDistace;
         public float normalAngle;
+        public int normalAttack;
 
         [Header("- Stun -")]
         public Vector3 stunPos;
         public float stunDistace;
         public float stunAngle;
+        public int stunAttack;
 
         [Header("- Heavy01 -")]
         public Vector3 heavyPos;
         public float heavy01Distace;
         public float heavy01Angle;
+        public int heavy01Attack;
 
         [Header("- Round -")]
         public Vector3 roundPos;
         public float roundDistace;
         public float roundAngle;
+        public int roundAttack;
 
         [Header("- Ultra -")]
         public Vector3 ultraPos;
         public float ultraDistace;
         public float ultraAngle;
+        public int ultraAttack;
     }
 
     [SerializeField]
@@ -153,7 +158,7 @@ public class BloodGolemSkill : MonoBehaviour
             case SkillType.일반공격:
                 {
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isNormalTrigger);
-                    monsterRange.HitRange(skillSettings.normalPos, skillSettings.normalDistace, skillSettings.normalAngle);
+                    monsterRange.HitRange(skillSettings.normalPos, skillSettings.normalDistace, skillSettings.normalAngle, skillSettings.normalAttack);
                     patternCount++;
                 }
                 break;
@@ -161,7 +166,7 @@ public class BloodGolemSkill : MonoBehaviour
             case SkillType.내려찍기스턴:
                 {
                     ActiveSkill(currentSkillType, bloodGolemAniSettings.isStunTrigger);
-                    monsterRange.HitRange(skillSettings.stunPos, skillSettings.stunDistace, skillSettings.stunAngle);
+                    monsterRange.HitRange(skillSettings.stunPos, skillSettings.stunDistace, skillSettings.stunAngle, skillSettings.stunAttack);
                 }
                 break;
 

@@ -43,6 +43,8 @@ public class MonsterRange : MonoBehaviour
     public Vector3 mobPos = Vector3.zero;
     public Vector3 tPos = Vector3.zero;
 
+    public Collider[] targets;
+
     // 어글 잡히는 시간을 체크하는 동안 범위안에 존재하면 범위를 벗어나도 타겟(어글)상태임
     public float aggroTimer = 0f; // 어글 타이머
     public bool isTargetAggro = false; // 어글이펙트가 활성화 되어있는지
@@ -242,7 +244,7 @@ public class MonsterRange : MonoBehaviour
     }
 
     // 공격범위 - 각 스킬별로 위치, 거리, 각도로 타겟 hit판정.
-    public void HitRange(Vector3 skillPos, float skillDistance, float skillAngle)
+    public void HitRange(Vector3 skillPos, float skillDistance, float skillAngle, float skillAtt)
     {
         // 어글자랑 타겟은 무족건 1명은 있으므로.
         // 어글타겟이 없거나 / 타겟지정이 없으면
@@ -254,24 +256,24 @@ public class MonsterRange : MonoBehaviour
         Vector3 monsterPos = monster.monsterT.position;
         Vector3 targetPos2 = monster.targetT.position;
 
-        skillPoint.localPosition = new Vector3(skillPos.x, skillPos.y, skillPos.z);
+        skillPoint.localPosition = new Vector3(skillPos.x, skillPos.y + 0.5f, skillPos.z);
         skilldis = skillDistance;
-        Debug.Log(skillPoint.position + " " + skillPoint.localPosition);
+        Debug.Log(skillPoint.position + " " + skillDistance);
 
-        Collider[] targets = Physics.OverlapSphere(skillPos, skillDistance);
+        targets = Physics.OverlapSphere(skillPoint.position, skillDistance);
 
-        foreach (var target in targets)
+        foreach (Collider target in targets)
         {
             // 주인공이 아닌경우
             if (target.gameObject.layer != monster.targetLayer)
             {
-                return;
+                continue;
             }
 
             Vector3 targetPos = target.transform.position;
 
-            float distance = Vector3.Distance(targetPos, skillPos); // 타겟과 스킬 거리
-
+            float distance = Vector3.Distance(targetPos, skillPoint.position); // 타겟과 스킬 거리
+            Debug.Log("distance : " + distance);
             // 스킬 거리(범위)에서 벗어나면 hit대상 제외
             if (distance > skillDistance)
             {
@@ -284,18 +286,15 @@ public class MonsterRange : MonoBehaviour
             Vector3 forward = monster.monsterT.forward; // 몬스터의 전방 forward
 
             float angle = Vector3.Angle(forward, disPos); // 각도
-
+            Debug.Log("angle : " + angle);
             // skill범위 각도에 들어오는 경우.
             if (angle <= skillAngle)
             {
+                Debug.Log("targetName : " + target.name + " Attack : " + skillAtt);
+                PlayerInfoData.Instance.SetCurrentHp(-skillAtt);
                 // 주인공 Hit
                 target.GetComponent<PlayerMovement>().isHit = true;
             }
         }
-    }
-
-    public void Damage()
-    {
-
     }
 }

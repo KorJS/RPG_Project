@@ -26,13 +26,8 @@ public class PlayerSkillData
     {
         skillInfos = new List<int>();
 
-        skillInfos.Add(0);
-        skillInfos.Add(1);
-    }
-
-    public void SetSkillData()
-    {
-        
+        //skillInfos.Add(0);
+        //skillInfos.Add(1);
     }
 
     public bool GetSkillData(int skillIndex)
@@ -42,7 +37,6 @@ public class PlayerSkillData
         {
             return false;
         }
-
 
         return true;
     }

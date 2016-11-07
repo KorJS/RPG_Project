@@ -149,30 +149,37 @@ public class PlayerSlotData
         //slotInfoData.quantity = 1;
         //storageInfos.Add(1, slotInfoData);
 
-        slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        slotInfoData.skillIndex = 0;
-        slotInfoData.itemIndex = -1;
-        skillListInfos.Add(0, slotInfoData);
+        foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in SkillData.Instance.skillInfos)
+        {
+            slotInfoData.itemType = (int)TypeData.ItemType.없음;
+            slotInfoData.skillIndex = skillInfo.Key;
+            slotInfoData.itemIndex = -1;
+            skillListInfos.Add(skillInfo.Key, slotInfoData);
+        }
+        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
+        //slotInfoData.skillIndex = 0;
+        //slotInfoData.itemIndex = -1;
+        //skillListInfos.Add(0, slotInfoData);
 
-        slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        slotInfoData.skillIndex = 1;
-        slotInfoData.itemIndex = -1;
-        skillListInfos.Add(1, slotInfoData);
+        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
+        //slotInfoData.skillIndex = 1;
+        //slotInfoData.itemIndex = -1;
+        //skillListInfos.Add(1, slotInfoData);
 
-        slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        slotInfoData.skillIndex = 2;
-        slotInfoData.itemIndex = -1;
-        skillListInfos.Add(2, slotInfoData);
+        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
+        //slotInfoData.skillIndex = 2;
+        //slotInfoData.itemIndex = -1;
+        //skillListInfos.Add(2, slotInfoData);
 
-        slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        slotInfoData.skillIndex = 3;
-        slotInfoData.itemIndex = -1;
-        skillListInfos.Add(3, slotInfoData);
+        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
+        //slotInfoData.skillIndex = 3;
+        //slotInfoData.itemIndex = -1;
+        //skillListInfos.Add(3, slotInfoData);
 
-        slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        slotInfoData.skillIndex = 4;
-        slotInfoData.itemIndex = -1;
-        skillListInfos.Add(4, slotInfoData);
+        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
+        //slotInfoData.skillIndex = 4;
+        //slotInfoData.itemIndex = -1;
+        //skillListInfos.Add(4, slotInfoData);
 
         //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
         //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
@@ -235,7 +242,7 @@ public class PlayerSlotData
         return true;
     }
 
-    // 스킬리스트 정보 가져오기
+    // 캐릭터 정보 가져오기
     private bool CheckCharacterData(int slotIndex, ref Dictionary<int, SlotInfoData> slotInfoDatas)
     {
         // 해당 슬롯에 정보가 없으면 리턴

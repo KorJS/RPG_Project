@@ -13,6 +13,7 @@ public class UICharSlotInfo : MonoBehaviour
         public List<GameObject> emblems;
         public UILabel nickName;
         public UILabel level;
+        public GameObject empty;
     }
 
     public SlotInfo slotInfo;
@@ -46,11 +47,14 @@ public class UICharSlotInfo : MonoBehaviour
 
     public void SetSlotInfo(string emblemType, string nickname, string level)
     {
+        bool isEmpty = true;
+
         for (int i = 0; i < slotInfo.emblems.Count; i++)
         {
             if (string.Compare(emblemType, slotInfo.emblems[i].name) == 0)
             {
                 slotInfo.emblems[i].SetActive(true);
+                isEmpty = false;
             }
             else
             {
@@ -60,6 +64,8 @@ public class UICharSlotInfo : MonoBehaviour
             slotInfo.nickName.text = nickname;
             slotInfo.level.text = level;
         }
+
+        slotInfo.empty.SetActive(isEmpty);
     }
 
 }

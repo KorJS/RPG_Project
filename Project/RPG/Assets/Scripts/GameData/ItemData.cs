@@ -168,7 +168,7 @@ public sealed class ItemData
                         break;
                 }
 
-                Debug.Log("table에 데이타 등록 : " + temp[0]);
+                Debug.Log("item_table에 데이타 등록 : " + temp[0]);
             } // end foreach
         } // end while
 
@@ -176,6 +176,8 @@ public sealed class ItemData
         file.Close();
 
         Debug.Log("파일 읽기 완료 : " + path);
+
+        SkillData.Instance.LoadTalbe();
     }
 
     private void SetEquipmentDate(int index, ref string[] temp)

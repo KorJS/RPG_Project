@@ -5,6 +5,24 @@ using JsonFx.Json; // JsonReader
 
 public class Network_Login : MonoBehaviour
 {
+    private class RecvLoginData
+    {
+        public int acc_index;
+        public string message;
+        public bool isSuccess;
+        public int timestamp;
+        public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();
+    }
+
+    private class RecvJoinData
+    {
+        public int acc_index;
+        public string acc_id;
+        public int timestamp;
+        public string message;
+        public bool isSuccess;
+    }
+
     private Network_Char networkChar = null;
 
     public GameObject loginObj = null;
@@ -30,24 +48,6 @@ public class Network_Login : MonoBehaviour
     public UILabel join_message = null;
     private string join_contents = null;
     private string join_title = null;
-
-    private class RecvLoginData
-    {
-        public int acc_index;
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();
-    }
-
-    private class RecvJoinData
-    {
-        public int acc_index;
-        public string acc_id;
-        public int timestamp;
-        public string message;
-        public bool isSuccess;
-    }
 
     void Awake()
     {

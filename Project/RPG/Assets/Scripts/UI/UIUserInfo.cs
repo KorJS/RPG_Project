@@ -17,6 +17,10 @@ public class UIUserInfo : MonoBehaviour
         public UIProgressBar mpBar;
         public UILabel mpCurrent;
         public UILabel mpMAX;
+
+        public UIProgressBar expBar;
+        public UILabel expCurrent;
+        public UILabel expMAX;
     }
 
     [SerializeField]
@@ -34,19 +38,53 @@ public class UIUserInfo : MonoBehaviour
     // TODO : 레벨은 변경될때 바꾸게 하자
     void Update()
     {
+        LevelUpdate();
+        HpBarUpdate();
+        MpBarUpdate();
+        ExpBarUpdate();
+    }
+
+    public void LevelUpdate()
+    {
         levelNick = "레벨 " + playerInfoData.infoData.level + " " + playerInfoData.infoData.nick;
         userInfoSettings.levelNick.text = levelNick;
+    }
 
-        hp = playerInfoData.infoData.currentHp / playerInfoData.totalMaxHp;
-        userInfoSettings.hpBar.value = hp;
+    public void HpBarUpdate()
+    {
+        float currentHp = playerInfoData.infoData.currentHp;
+        float totalMaxHp = playerInfoData.totalMaxHp;
 
-        userInfoSettings.hpCurrent.text = playerInfoData.infoData.currentHp.ToString();
-        userInfoSettings.hpMAX.text = playerInfoData.totalMaxHp.ToString();
+        userInfoSettings.hpBar.value = currentHp / totalMaxHp;
+        userInfoSettings.hpCurrent.text = ((int)currentHp).ToString();
+        userInfoSettings.hpMAX.text = ((int)totalMaxHp).ToString();
+    }
 
-        mp = playerInfoData.infoData.currentMp / playerInfoData.totalMaxMp;
-        userInfoSettings.mpBar.value = mp;
+    public void MpBarUpdate()
+    {
+        float currentMp = playerInfoData.infoData.currentMp;
+        float totalMaxMp = playerInfoData.totalMaxMp;
 
-        userInfoSettings.mpCurrent.text = playerInfoData.infoData.currentMp.ToString();
-        userInfoSettings.mpMAX.text = playerInfoData.totalMaxMp.ToString();
+        userInfoSettings.mpBar.value = currentMp / totalMaxMp;
+        userInfoSettings.mpCurrent.text = ((int)currentMp).ToString();
+        userInfoSettings.mpMAX.text = ((int)totalMaxMp).ToString();
+    }
+
+    public void ExpBarUpdate()
+    {
+        int currentLevel = playerInfoData.infoData.level;
+        // 만렙이면 리턴
+        if (currentLevel == LevelData.Instance.MAX_Level)
+        {
+            return;
+        }
+        
+        float currentExp = playerInfoData.infoData.exp;
+        // 현재인덱스(다음렙 경험치) = 현재레벨;
+        float maxExp = LevelData.Instance.levelInfos[currentLevel].exp;
+
+        userInfoSettings.expBar.value = currentExp / maxExp;
+        userInfoSettings.expCurrent.text = ((int)currentExp).ToString();
+        userInfoSettings.expMAX.text = ((int)maxExp).ToString();
     }
 }

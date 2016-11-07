@@ -102,6 +102,9 @@ public class NetworkManager : MonoBehaviour {
                         case 1011: Debug.Log("존재하지 않는 슬롯 정보"); break;
                         case 1012: Debug.Log("슬롯 정보 불러오기 실패"); break;
                         case 1013: Debug.Log("슬롯 정보 저장 실패"); break;
+                        case 1014: Debug.Log("상점 정보 불러오기 실패"); break;
+                        case 1015: Debug.Log("상점 정산 실패"); break;
+                        case 1016: Debug.Log("몬스터 정보 불러오기 실패"); break;
                     }
                 }
                 // 실제 처리 결과물

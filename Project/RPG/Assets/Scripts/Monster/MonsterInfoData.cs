@@ -32,9 +32,12 @@ public class MonsterInfoData : MonoBehaviour
     {
         if (isDeath)
         {
+            Debug.Log("exp : " + monsterInfo.exp);
+            PlayerInfoData.Instance.SetExp(monsterInfo.exp);
             monsterState.nextState = TypeData.State.죽음;
             monsterMovemnet.animator.SetTrigger(monsterMovemnet.animationSettings.isDeathTrigger);
             StartCoroutine(monsterMovemnet.Death(5f));
+            gameObject.layer = LayerMask.NameToLayer("Default");
             isDeath = false;
         }
     }
@@ -43,7 +46,7 @@ public class MonsterInfoData : MonoBehaviour
     {
         if (hp < 0)
         {
-            hp /= monsterInfo.defence;
+            hp /= monsterInfo.def;
         }
 
         currentHP += hp;
@@ -51,7 +54,6 @@ public class MonsterInfoData : MonoBehaviour
         if (currentHP <= 0)
         {
             isDeath = true;
-            gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 

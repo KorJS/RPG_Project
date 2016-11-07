@@ -21,13 +21,14 @@ public class MonsterData
 
     // TODO : 지역으로 검색. 해당 지역에 몬스터 정보를 받아온다.
     [System.Serializable]
-    public struct MonsterInfo
+    public class MonsterInfo
     {
+        public int monsterIndex;
         public int monsterType;
         public int areaTpye;
-        public int defence;
+        public int def;
         public float hp;
-        public float exp;
+        public int exp;
         public int glod;
         public int itemType;
         public int itemIndex;
@@ -43,19 +44,13 @@ public class MonsterData
     {
         monsterInfos = new Dictionary<string, MonsterInfo>();
 
-        monsterInfo.name = "블러드 골렘";
-        monsterInfo.fileName = "BloodGolem";
-        monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
-        monsterInfo.areaTpye = (int)TypeData.AreaType.여명의정원;
-        monsterInfo.defence = 30;
-        monsterInfo.hp = 10000;
-        monsterInfos.Add(monsterInfo.fileName + "_Spawns", monsterInfo);
-    }
-
-    // 지역으로 검색해서 받아온 몬스터 정보
-    public void SetMonsterData()
-    {
-
+        //monsterInfo.name = "블러드 골렘";
+        //monsterInfo.fileName = "BloodGolem";
+        //monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
+        //monsterInfo.areaTpye = (int)TypeData.AreaType.여명의정원;
+        //monsterInfo.def = 30;
+        //monsterInfo.hp = 10000;
+        //monsterInfos.Add(monsterInfo.fileName + "_Spawns", monsterInfo);
     }
 
     public bool GetMonsterData(string spawnName, ref MonsterInfo monsterInfo)

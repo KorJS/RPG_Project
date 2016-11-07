@@ -19,26 +19,6 @@ public class Network_Store : MonoBehaviour
         }
     }
 
-    private List<SlotInfo> buy_list = null;
-    private List<SlotInfo> sell_list = null;
-
-    private int acc_index = 0;
-    private int char_index = 0;
-    private string store_load_contents = null;
-    private string store_calculate_contents = null;
-
-    void Awake()
-    {
-        network_store = this;
-        DontDestroyOnLoad(this);
-
-        buy_list = new List<SlotInfo>();
-        sell_list = new List<SlotInfo>();
-
-        store_load_contents = "store_load";
-        store_calculate_contents = "store_calculate";
-    }
-
     public struct SlotInfo
     {
         public int item_index;
@@ -63,6 +43,26 @@ public class Network_Store : MonoBehaviour
         public string message;
         public bool isSuccess;
         public int timestamp;
+    }
+
+    private List<SlotInfo> buy_list = null;
+    private List<SlotInfo> sell_list = null;
+
+    private int acc_index = 0;
+    private int char_index = 0;
+    private string store_load_contents = null;
+    private string store_calculate_contents = null;
+
+    void Awake()
+    {
+        network_store = this;
+        DontDestroyOnLoad(this);
+
+        buy_list = new List<SlotInfo>();
+        sell_list = new List<SlotInfo>();
+
+        store_load_contents = "store_load";
+        store_calculate_contents = "store_calculate";
     }
 
     public void RequestLoadStore(TypeData.AreaType area_type)

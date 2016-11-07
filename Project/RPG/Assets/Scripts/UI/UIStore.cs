@@ -439,7 +439,6 @@ public class UIStore : MonoBehaviour
     {
         foreach (KeyValuePair<int, UISlotInfo> slotList in uiManager.storeListSlots)
         {
-            Debug.Log(slotList.Key);
             slotList.Value.isItemExist = false;
             slotList.Value.slotInfo.itemIndex = -1;
             slotList.Value.slotInfo.itemType = TypeData.ItemType.없음;

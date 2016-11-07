@@ -36,6 +36,7 @@ public class PlayerInfoData
         public int maxHp;
         public int maxMp;
         public string spawnPos;
+        public int areaType;
     }
 
     public InfoData infoData;
@@ -69,5 +70,85 @@ public class PlayerInfoData
         totalDef = infoData.def + _def;
         totalMaxHp = infoData.maxHp + _hp;
         totalMaxMp = infoData.maxMp + _mp;
+    }
+
+    public void SetCurrentHp(float hpValue)
+    {
+        // 데미지인 경우 음수
+        if (hpValue < 0)
+        {
+            hpValue = hpValue - (totalDef / 100f);
+        }
+
+        infoData.currentHp += hpValue;
+
+        if (infoData.currentHp <= 0f)
+        {
+            infoData.currentHp = 0f;
+        }
+    }
+
+    public void SetCurrentMp(float mpValue)
+    {
+        infoData.currentMp += mpValue;
+
+        if (infoData.currentMp <= 0f)
+        {
+            infoData.currentMp = 0f;
+        }
+    }
+
+    // 서버의 level_table 에서 비교 후 맞으면 데이터 처리하는 씩으로 바꾸자. 상점처럼
+    public void SetExp(float _exp)
+    {
+        if (infoData.level == LevelData.Instance.MAX_Level)
+        {
+            infoData.exp = 0;
+            return;
+        }
+
+        Dictionary<int, LevelData.LevelInfo> tempLevelInfo = LevelData.Instance.levelInfos;
+
+        float maxExp = 0f;
+        int MAX_LEVEL = LevelData.Instance.MAX_Level;
+        int currentLevel = infoData.level;
+        float currentExp = infoData.exp;
+
+        // 현재 레벨 부터 만렙까지
+        for (int i = currentLevel; i <= MAX_LEVEL; i++)
+        {
+            maxExp += tempLevelInfo[i].exp;
+
+            // 습득 경험치 + 현재경험치가 다음렙에 필요한 경험치 보다 작을때 i 가 레벨이 됨
+            float up_exp = _exp + currentExp;
+
+            if (up_exp <= maxExp)
+            {
+                infoData.level = i;
+                infoData.exp = up_exp;
+
+                if (i != currentLevel)
+                {
+                    // lv 3 = 10 + 20 + 70 = 100(maxExp)
+                    // ( 50 + 0 ) - ( 100 - 70 ) = 20
+                    infoData.exp = up_exp - (maxExp - LevelData.Instance.levelInfos[i].exp);
+                }
+
+                if (up_exp == maxExp)
+                {
+                    int level = i + 1;
+                    // 만렙을 초과하면 만렙으로
+                    if (level > MAX_LEVEL)
+                    {
+                        level = MAX_LEVEL; // level = i;
+                    }
+
+                    infoData.level = level;
+                    infoData.exp = 0;
+                }
+
+                break;
+            }
+        }
     }
 }

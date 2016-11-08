@@ -130,7 +130,7 @@ public class UICopyPopup : MonoBehaviour
 
                     if (currentInfo.slotInfo.quantity == 0)
                     {
-                        currentInfo.isItemExist = false;
+                        currentInfo.isExist = false;
                         currentInfo.StoreReSetting();
                         CopyCancel();
                         return;
@@ -157,7 +157,7 @@ public class UICopyPopup : MonoBehaviour
 
                     if (currentInfo.slotInfo.quantity == 0)
                     {
-                        currentInfo.isItemExist = false;
+                        currentInfo.isExist = false;
                         currentInfo.slotInfo.itemIndex = -1;
                         currentInfo.slotInfo.itemType = TypeData.ItemType.없음;
                         currentInfo.slotInfo.quantity = 0;

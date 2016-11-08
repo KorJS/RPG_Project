@@ -100,7 +100,7 @@ public class NPCInfoData : MonoBehaviour
             {
                 if (slotIndex >= npcInfo.itemIndexs.Count)
                 {
-                    tempSlotInfo.isItemExist = false;
+                    tempSlotInfo.isExist = false;
                     Debug.Log(slotIndex + " : 슬롯에 들어갈 아이템이 없습니다.");
                     continue;
                 }
@@ -109,12 +109,12 @@ public class NPCInfoData : MonoBehaviour
 
                 if (!itemData.equipmentInfos.ContainsKey(itemIndex))
                 {
-                    tempSlotInfo.isItemExist = false;
+                    tempSlotInfo.isExist = false;
                     Debug.Log(itemIndex + " : 아이템 정보가 존재 하지 않습니다.");
                     continue;
                 }
 
-                tempSlotInfo.isItemExist = true;
+                tempSlotInfo.isExist = true;
                 tempSlotInfo.slotInfo.name = itemData.equipmentInfos[itemIndex].name;
                 tempSlotInfo.slotInfo.iconName = itemData.equipmentInfos[itemIndex].iconName;
                 tempSlotInfo.slotInfo.itemIndex = itemIndex;
@@ -126,7 +126,7 @@ public class NPCInfoData : MonoBehaviour
             {
                 if (slotIndex >= npcInfo.itemIndexs.Count)
                 {
-                    tempSlotInfo.isItemExist = false;
+                    tempSlotInfo.isExist = false;
                     Debug.Log(slotIndex + " : 슬롯에 들어갈 아이템이 없습니다.");
                     continue;
                 }
@@ -135,12 +135,12 @@ public class NPCInfoData : MonoBehaviour
 
                 if (!itemData.cusomableInfos.ContainsKey(itemIndex))
                 {
-                    tempSlotInfo.isItemExist = false;
+                    tempSlotInfo.isExist = false;
                     Debug.Log(itemIndex + " : 아이템 정보가 존재 하지 않습니다.");
                     continue;
                 }
 
-                tempSlotInfo.isItemExist = true;
+                tempSlotInfo.isExist = true;
                 tempSlotInfo.slotInfo.name = itemData.cusomableInfos[itemIndex].name;
                 tempSlotInfo.slotInfo.iconName = itemData.cusomableInfos[itemIndex].iconName;
                 tempSlotInfo.slotInfo.itemIndex = itemIndex;

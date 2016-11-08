@@ -43,7 +43,7 @@ public class UISlotInfo : MonoBehaviour
     public readonly int QUANTITY_MAX = 99; // 인벤토리 슬롯당 최대 수량 - 소모품, 퀘스트템
 
     public int slotIndex = 0; // 슬롯 인덱스
-    public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
+    public bool isExist = false;  // 해당 슬롯에 아이템이 있는지
     public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
     public bool isSkillLearn = false; // 스킬리스트, 배운 스킬인지 아닌지.
 
@@ -55,7 +55,7 @@ public class UISlotInfo : MonoBehaviour
         uiManager = UIManager.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
-        isItemExist = false;
+        isExist = false;
 
         SetSlotIndex(); // 슬롯 인덱스 설정
         CheckType(); // 슬롯 정보 설정
@@ -76,7 +76,7 @@ public class UISlotInfo : MonoBehaviour
     {
         if (slotType == TypeData.SlotType.구매 || slotType == TypeData.SlotType.판매)
         {
-            isItemExist = false;
+            isExist = false;
             SetQuantity();
             slotInfo.itemType = TypeData.ItemType.없음;
             slotInfo.itemIndex = -1;
@@ -86,10 +86,24 @@ public class UISlotInfo : MonoBehaviour
 
     void Update()
     {
+        if (slotSettings.uiCoolTime == null)
+        {
+            return;
+        }
+
         if (isCoolTime)
         {
+            if (slotInfo.coolTime == 0)
+            {
+                isCoolTime = false;
+                return;
+            }
             SetCoolTime();
-            slotSettings.uiCoolTime.gameObject.SetActive(isCoolTime);
+            slotSettings.uiCoolTime.gameObject.SetActive(true);
+        }
+        else if (!isCoolTime && slotSettings.uiCoolTime.gameObject.activeSelf)
+        {
+            slotSettings.uiCoolTime.gameObject.SetActive(false);
         }
     }
 
@@ -104,7 +118,7 @@ public class UISlotInfo : MonoBehaviour
     public void SetSlotIcon()
     {
         // 슬롯에 아이템이 없으면 리턴
-        if (!isItemExist)
+        if (!isExist)
         {
             slotSettings.uiIcon.gameObject.SetActive(false);
             return;
@@ -126,7 +140,7 @@ public class UISlotInfo : MonoBehaviour
             return;
         }
 
-        if (!isItemExist)
+        if (!isExist)
         {
             slotSettings.uiName.text = null;
             return;
@@ -143,7 +157,7 @@ public class UISlotInfo : MonoBehaviour
         }
 
         // 슬롯에 아이템이 없으면 리턴
-        if (!isItemExist)
+        if (!isExist)
         {
             slotSettings.uiQuantity.gameObject.SetActive(false);
             return;
@@ -216,7 +230,7 @@ public class UISlotInfo : MonoBehaviour
         {
             case TypeData.SlotType.캐릭터:
                 {
-                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+                    isExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                 }
                 break;
 
@@ -224,14 +238,14 @@ public class UISlotInfo : MonoBehaviour
             case TypeData.SlotType.단축키:
             case TypeData.SlotType.창고:
                 {
-                    isItemExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
+                    isExist = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                     SetQuantity();
                 }
                 break;
 
             case TypeData.SlotType.스킬리스트:
                 {
-                    isItemExist = true;
+                    isExist = true;
                     isSkillLearn = playerSlotData.GetSlotData(slotType, slotIndex, ref slotInfo);
                     slotSettings.overlapObj.SetActive(!isSkillLearn);
                 }
@@ -277,7 +291,7 @@ public class UISlotInfo : MonoBehaviour
         {
             isCoolTime = false;
             coolTimer = 0f;
-            slotSettings.uiCoolTime.gameObject.SetActive(isCoolTime);
+            slotSettings.uiCoolTime.gameObject.SetActive(false);
 
             // 아이템인 경우
             if (slotInfo.itemIndex != -1)

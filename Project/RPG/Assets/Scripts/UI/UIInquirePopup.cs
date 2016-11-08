@@ -27,6 +27,8 @@ public class UIInquirePopup : MonoBehaviour
         {
             case TypeData.SlotType.인벤토리:
                 {
+                    currentInfo.isCoolTime = false;
+                    currentInfo.coolTimer = 0f;
                     playerSlotData.RemoveSlotData(currentInfo);
                     currentInfo.ReSetting();
                 }

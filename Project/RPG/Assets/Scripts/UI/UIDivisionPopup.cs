@@ -50,7 +50,6 @@ public class UIDivisionPopup : MonoBehaviour
     // 분리할 수량 변화가 생기면 호출되는 함수
     public void ChangDivPopupText()
     {
-        Debug.Log("divQuantityMAX : " + divQuantityMAX + " divQuantity : " + divQuantity);
         divQuantity = int.Parse(divQuantity_Input.label.text);
 
         if (divQuantity > divQuantityMAX)
@@ -58,6 +57,7 @@ public class UIDivisionPopup : MonoBehaviour
             divQuantity_Input.value = divQuantityMAX.ToString();
             divQuantity = divQuantityMAX;
         }
+        Debug.Log("divQuantityMAX : " + divQuantityMAX + " divQuantity : " + divQuantity);
     }
 
     // 수량 증가버튼 눌렀을시 호출되는 함수

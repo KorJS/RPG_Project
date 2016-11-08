@@ -91,7 +91,7 @@ public class UICharater : MonoBehaviour
         
         if ((int)tempEquipmentInfo.equipmentType == targetInfo.slotIndex)
         {
-            if (targetInfo.isItemExist)
+            if (targetInfo.isExist)
             {
                 playerSlotData.SwapSlotData(currentInfo, targetInfo);
             }

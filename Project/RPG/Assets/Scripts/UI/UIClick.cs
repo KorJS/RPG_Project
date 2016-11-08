@@ -97,7 +97,7 @@ public class UIClick : MonoBehaviour
 
             case TypeData.SlotType.상점리스트:
                 {
-                    if (uiSlotInfo.isItemExist)
+                    if (uiSlotInfo.isExist)
                     {
                         uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.구매, 1);
                     }
@@ -140,7 +140,7 @@ public class UIClick : MonoBehaviour
         if (uiManager.windowSettings.storeObj.activeSelf)
         {
             // 클릭한 슬롯에 아이템이 없으면 리턴
-            if (!uiSlotInfo.isItemExist)
+            if (!uiSlotInfo.isExist)
             {
                 return;
             }
@@ -156,7 +156,7 @@ public class UIClick : MonoBehaviour
                 uiStore.changInvenIndexs.Add(uiSlotInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
             }
             Debug.Log(uiSlotInfo.slotIndex);
-            uiSlotInfo.isItemExist = false;
+            uiSlotInfo.isExist = false;
             uiSlotInfo.StoreReSetting();
         }
         // 창고창이 열여있는 경우
@@ -198,12 +198,22 @@ public class UIClick : MonoBehaviour
 
             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
             {
+                // 인벤에 사용한 아이템이 단축창에도 있으면 쿨타임
                 ShortcutItemCoolTime(false);
 
-                // 소모품 사용
+                // 인벤에 사용한 아이템이 인벤의 다른 슬롯에도 있으면 쿨타임
+                InventoryCoolTime(true);
+
+                // 수량 1개 감소
                 uiSlotInfo.slotInfo.quantity -= 1;
+                // 인벤 - 현재 슬롯 수량 변화 > 단축도 같이 변화
                 playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
+                uiSlotInfo.ReSetting();
+                
+                //쿨타임
                 uiSlotInfo.isCoolTime = true;
+                
+                // 아이템 기능
                 ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
             }
         }
@@ -222,7 +232,7 @@ public class UIClick : MonoBehaviour
             case TypeData.SlotInfoType.스킬:
                 {
                     // 무기를 장착하지 않았으면 리턴
-                    if (!uiManager.characterSlots[1].isItemExist)
+                    if (!uiManager.characterSlots[1].isExist)
                     {
                         uiManager.SetMessage("무기를 장착하세요.");
                         return;
@@ -237,18 +247,29 @@ public class UIClick : MonoBehaviour
 
                     uiSlotInfo.isCoolTime = true;
 
+                    // 단축슬롯에 같은 스킬이 있을경우 쿨타임
                     ShortcutSKillCoolTime();
                 }
                 break;
 
             case TypeData.SlotInfoType.아이템:
                 {
+                    // 단축창에 똑같은 아이템이 있으면 쿨타임
                     ShortcutItemCoolTime(true);
+
+                    // 단축창에서 쓴 아이템이 인벤에도 있으면 쿨타임
                     InventoryCoolTime(false);
 
+                    // 수량 1개 감소
                     uiSlotInfo.slotInfo.quantity -= 1;
+                    // 단축 - 현재 슬롯 수량 변화 > 인벤도 같이 변화
                     playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
+                    uiSlotInfo.ReSetting();
+
+                    // 쿨타임
                     uiSlotInfo.isCoolTime = true;
+
+                    // 아이템 기능
                     ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
                 }
                 break;
@@ -278,7 +299,7 @@ public class UIClick : MonoBehaviour
             uiStore.changInvenIndexs.Add(uiSlotInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
         }
 
-        uiSlotInfo.isItemExist = false;
+        uiSlotInfo.isExist = false;
         uiSlotInfo.slotInfo.itemIndex = -1;
         uiSlotInfo.slotInfo.itemType = TypeData.ItemType.없음;
         uiSlotInfo.slotInfo.quantity = 0;
@@ -291,7 +312,7 @@ public class UIClick : MonoBehaviour
         foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
         {
             // 빈 슬롯인 경우 리턴
-            if (!shortCut.Value.isItemExist)
+            if (!shortCut.Value.isExist)
             {
                 continue;
             }
@@ -312,52 +333,48 @@ public class UIClick : MonoBehaviour
         }
     }
 
+    // 인벤>단축 : isShortcutSlot = falas / 단축>단축 : isShortcutSlot = true
     private void ShortcutItemCoolTime(bool isShortcutSlot)
     {
-        Dictionary<int, UISlotInfo> tempShortCuts = uiManager.shortCuts;
-        // 단축창에서 스킬 사용시 쿨타임. - 단축창 같은 아이템도 쿨타임 상태로
-        foreach (var index in tempShortCuts.Keys.ToList())
+        // 단축창에서 아이템 사용시 쿨타임. - 인벤 같은 아이템도 쿨타임 상태로
+        foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
         {
             // 빈 슬롯인 경우 리턴
-            if (!tempShortCuts[index].isItemExist)
+            if (!shortCut.Value.isExist)
             {
-                return;
+                continue;
             }
 
-            // 단축창에서 사용한 아이템일때 / 자신은 제외
-            if (isShortcutSlot && (index == uiSlotInfo.slotIndex))
+            // 인벤에서 사용한 아이템일때 / 자신은 제외
+            if (isShortcutSlot && (shortCut.Key == uiSlotInfo.slotIndex))
             {
                 continue;
             }
 
             // 같은 타입이 아니면 
-            if (tempShortCuts[index].slotInfo.itemType != uiSlotInfo.slotInfo.itemType)
+            if (shortCut.Value.slotInfo.itemType != uiSlotInfo.slotInfo.itemType)
             {
                 continue;
             }
 
             // 같은 인덱스가 아니면
-            if (tempShortCuts[index].slotInfo.itemIndex != uiSlotInfo.slotInfo.itemIndex)
+            if (shortCut.Value.slotInfo.itemIndex != uiSlotInfo.slotInfo.itemIndex)
             {
                 continue;
             }
 
-            tempShortCuts[index].slotInfo.quantity -= 1;
-            Debug.Log(index);
-            UISlotInfo tempUISlotInfo = tempShortCuts[index];
-            playerSlotData.SetSlotData(tempShortCuts[index].slotType, tempShortCuts[index].slotIndex, ref tempUISlotInfo);
-            tempShortCuts[index] = tempUISlotInfo;
-            tempShortCuts[index].isCoolTime = true;
+            shortCut.Value.isCoolTime = true;
         }
     }
 
+    // 단축>인벤
     private void InventoryCoolTime(bool isInventorySlot)
     {
         // 단축창에서 아이템 사용시 쿨타임. - 인벤 같은 아이템도 쿨타임 상태로
         foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
         {
             // 빈 슬롯인 경우 리턴
-            if (!invenSlot.Value.isItemExist)
+            if (!invenSlot.Value.isExist)
             {
                 continue;
             }
@@ -379,12 +396,6 @@ public class UIClick : MonoBehaviour
             {
                 continue;
             }
-
-            invenSlot.Value.slotInfo.quantity -= 1;
-
-            UISlotInfo tempUISlotInfo = uiManager.invenSlots[invenSlot.Key];
-            playerSlotData.SetSlotData(invenSlot.Value.slotType, invenSlot.Value.slotIndex, ref tempUISlotInfo);
-            uiManager.invenSlots[invenSlot.Key] = tempUISlotInfo;
 
             invenSlot.Value.isCoolTime = true;
         }

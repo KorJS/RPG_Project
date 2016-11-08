@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIDragAndDrop : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class UIDragAndDrop : MonoBehaviour
         }
 
         // 드래그 하려는 슬롯에 아이템이 없으면 리턴
-        if (!uiSlotInfo.isItemExist)
+        if (!uiSlotInfo.isExist)
         {
             return;
         }
@@ -133,6 +134,8 @@ public class UIDragAndDrop : MonoBehaviour
 
                 case TypeData.SlotType.단축키:
                     {
+                        uiSlotInfo.isCoolTime = false;
+                        uiSlotInfo.coolTimer = 0f;
                         playerSlotData.RemoveSlotData(uiSlotInfo);
                     }
                     break;
@@ -151,9 +154,76 @@ public class UIDragAndDrop : MonoBehaviour
 
         UISlotInfo targetInfo = targetObj.GetComponent<UISlotInfo>(); // 타겟 정보
 
+        SetCoolTimeInfo(targetInfo);
+
         CheckSlotInfo(targetInfo);
 
         uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
+    }
+
+    private void SetCoolTimeInfo(UISlotInfo targetInfo)
+    {
+        float tempCoolTimer = 0f;
+        bool isTempCoolTime = false;
+
+        switch (uiSlotInfo.slotType)
+        {
+            case TypeData.SlotType.인벤토리:
+                {
+                    if (targetInfo.slotType == TypeData.SlotType.단축키)
+                    {
+                        targetInfo.coolTimer = uiSlotInfo.coolTimer;
+                        targetInfo.isCoolTime = uiSlotInfo.isCoolTime;
+                        return;
+                    }
+                }
+                break;
+
+            case TypeData.SlotType.단축키:
+                {
+                    if (targetInfo.slotType != TypeData.SlotType.단축키)
+                    {
+                        uiSlotInfo.coolTimer = 0f;
+                        uiSlotInfo.isCoolTime = false;
+                        return;
+                    }
+                }
+                break;
+
+            case TypeData.SlotType.스킬리스트:
+                {
+                    if (targetInfo.slotType == TypeData.SlotType.단축키)
+                    {
+                        // 단축슬롯에 같은 스킬이 있다면 그 스킬의 쿨타임정보를 가져옴
+                        foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
+                        {
+                            if (shortCut.Value.slotInfo.skillIndex == uiSlotInfo.slotInfo.skillIndex)
+                            {
+                                targetInfo.coolTimer = shortCut.Value.coolTimer;
+                                targetInfo.isCoolTime = shortCut.Value.isCoolTime;
+                                break;
+                            }
+                        }
+                        return;
+                    }
+                    else { return; }
+                }
+
+            case TypeData.SlotType.캐릭터:
+            case TypeData.SlotType.창고:
+            case TypeData.SlotType.상점리스트:
+            case TypeData.SlotType.판매:
+            case TypeData.SlotType.구매:
+                return;
+        }
+
+        tempCoolTimer = uiSlotInfo.coolTimer;
+        uiSlotInfo.coolTimer = targetInfo.coolTimer;
+        targetInfo.coolTimer = tempCoolTimer;
+
+        isTempCoolTime = uiSlotInfo.isCoolTime;
+        uiSlotInfo.isCoolTime = targetInfo.isCoolTime;
+        targetInfo.isCoolTime = isTempCoolTime;
     }
 
     // (인벤,창고)인경우 놓았을떄 분리 창은 같은 슬롯타입에는 안뜸 
@@ -190,7 +260,7 @@ public class UIDragAndDrop : MonoBehaviour
             {
                 case TypeData.SlotType.인벤토리:
                     {
-                        if (!targetInfo.isItemExist) // 빈 타겟이면
+                        if (!targetInfo.isExist) // 빈 타겟이면
                         {
                             playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
@@ -218,7 +288,7 @@ public class UIDragAndDrop : MonoBehaviour
                 case TypeData.SlotType.창고:
                     {
                         // 타겟이 없으면 교체
-                        if (!targetInfo.isItemExist)
+                        if (!targetInfo.isExist)
                         {
                             playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                         }
@@ -226,6 +296,12 @@ public class UIDragAndDrop : MonoBehaviour
                         else
                         {
                             playerSlotData.SwapSlotData(uiSlotInfo, targetInfo);
+                        }
+
+                        // TODO : 임시. 종료직전에 저장하는걸로 바꾸까?
+                        if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
+                        {
+                            //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
                         }
                     }
                     break;
@@ -272,7 +348,7 @@ public class UIDragAndDrop : MonoBehaviour
                     }
 
                     uiSlotInfo.slotInfo.quantity = 0;
-                    uiSlotInfo.isItemExist = false;
+                    uiSlotInfo.isExist = false;
                     uiSlotInfo.StoreReSetting();
 
                     return;
@@ -354,7 +430,7 @@ public class UIDragAndDrop : MonoBehaviour
                             if (targetInfo.slotType == TypeData.SlotType.단축키)
                             {
                                 // 타겟이 존재 하면 교체
-                                if (targetInfo.isItemExist)
+                                if (targetInfo.isExist)
                                 {
                                     playerSlotData.ChangSlotData(uiSlotInfo, targetInfo);
                                 }

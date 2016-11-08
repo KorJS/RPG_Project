@@ -179,6 +179,9 @@ public class WarriorSkill : MonoBehaviour
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
         playerInput.index = -1;
 
+        // mp 사용
+        playerInfoData.SetCurrentMp(skillInfo.mp);
+
         switch (currentSkillTpye)
         {
             case SkillType.연속공격: { ComboAttack(); } break;

@@ -192,8 +192,8 @@ public class PlayerInput : MonoBehaviour
 
         int index = -1;
 
-        // 대상이 단축 슬롯에 없으면
-        if (!uiManager.shortCuts.ContainsKey(slotIndex))
+        // 대상이 단축 슬롯에 정보가 없으면
+        if (!uiManager.shortCuts[slotIndex].isExist)
         {
             return -1;
         }
@@ -205,7 +205,7 @@ public class PlayerInput : MonoBehaviour
         {
             return -1;
         }
-
+        
         uiSlotInfo.isCoolTime = true;
 
         switch (uiSlotInfo.slotInfo.slotInfoType)
@@ -221,7 +221,7 @@ public class PlayerInput : MonoBehaviour
                     foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
                     {
                         // 빈 슬롯인 경우 리턴
-                        if (!shortCut.Value.isItemExist)
+                        if (!shortCut.Value.isExist)
                         {
                             continue;
                         }
@@ -249,7 +249,7 @@ public class PlayerInput : MonoBehaviour
                     foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
                     {
                         // 빈 슬롯인 경우 리턴
-                        if (!shortCut.Value.isItemExist)
+                        if (!shortCut.Value.isExist)
                         {
                             continue;
                         }
@@ -272,12 +272,6 @@ public class PlayerInput : MonoBehaviour
                             continue;
                         }
 
-                        shortCut.Value.slotInfo.quantity -= 1;
-
-                        UISlotInfo tempUISlotInfo = shortCut.Value;
-                        playerSlotData.SetSlotData(shortCut.Value.slotType, shortCut.Value.slotIndex, ref tempUISlotInfo);
-                        uiManager.invenSlots[shortCut.Key] = tempUISlotInfo;
-
                         shortCut.Value.isCoolTime = true;
                     }
 
@@ -285,7 +279,7 @@ public class PlayerInput : MonoBehaviour
                     foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
                     {
                         // 빈 슬롯인 경우 리턴
-                        if (!invenSlot.Value.isItemExist)
+                        if (!invenSlot.Value.isExist)
                         {
                             continue;
                         }

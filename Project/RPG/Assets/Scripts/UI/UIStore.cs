@@ -178,7 +178,7 @@ public class UIStore : MonoBehaviour
                 int index = slotInfo.Key;
 
                 // 수량 추가
-                slots[index].isItemExist = true;
+                slots[index].isExist = true;
                 slots[index].slotInfo = currentInfo.slotInfo;
                 slots[index].slotInfo.quantity = quantity;
                 slots[index].StoreReSetting();
@@ -197,7 +197,7 @@ public class UIStore : MonoBehaviour
         {
             foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
             {
-                if (invenSlot.Value.isItemExist)
+                if (invenSlot.Value.isExist)
                 {
                     Debug.Log("true : " + invenSlot.Key);
                     continue;
@@ -221,7 +221,7 @@ public class UIStore : MonoBehaviour
                 Debug.Log("장비index o : " + invenSlot.Key);
                 int index = invenSlot.Key;
 
-                invenSlot.Value.isItemExist = true;
+                invenSlot.Value.isExist = true;
                 invenSlot.Value.slotInfo.quantity = 1;
 
                 invenSlot.Value.StoreReSetting();
@@ -426,7 +426,7 @@ public class UIStore : MonoBehaviour
     {
         foreach (KeyValuePair<int, UISlotInfo> slotInfo in slotInfos)
         {
-            slotInfo.Value.isItemExist = false;
+            slotInfo.Value.isExist = false;
             slotInfo.Value.slotInfo.itemIndex = -1;
             slotInfo.Value.slotInfo.itemType = TypeData.ItemType.없음;
             slotInfo.Value.slotInfo.quantity = 0;
@@ -439,7 +439,7 @@ public class UIStore : MonoBehaviour
     {
         foreach (KeyValuePair<int, UISlotInfo> slotList in uiManager.storeListSlots)
         {
-            slotList.Value.isItemExist = false;
+            slotList.Value.isExist = false;
             slotList.Value.slotInfo.itemIndex = -1;
             slotList.Value.slotInfo.itemType = TypeData.ItemType.없음;
             slotList.Value.slotInfo.quantity = 0;
@@ -458,7 +458,7 @@ public class UIStore : MonoBehaviour
             {
                 int index = originalInfo.Key;
                 Debug.Log("originalInfo.Key : " + originalInfo.Key + ", originalInfo.Value : " + originalInfo.Value);
-                uiManager.invenSlots[index].isItemExist = true;
+                uiManager.invenSlots[index].isExist = true;
                 uiManager.invenSlots[index].slotInfo.quantity = originalInfo.Value;
                 uiManager.invenSlots[index].StoreReSetting();
                 currentInfo.StoreReSetting();

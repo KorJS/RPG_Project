@@ -123,8 +123,8 @@ public class UICharater : MonoBehaviour
             }
 
             ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[charSlotInfo.Value.itemIndex];
-            equipmentStat.att += tempEquipmentInfo.attack;
-            equipmentStat.def += tempEquipmentInfo.defence;
+            equipmentStat.att += tempEquipmentInfo.att;
+            equipmentStat.def += tempEquipmentInfo.def;
             equipmentStat.hp += tempEquipmentInfo.hp;
             equipmentStat.mp += tempEquipmentInfo.mp;
     

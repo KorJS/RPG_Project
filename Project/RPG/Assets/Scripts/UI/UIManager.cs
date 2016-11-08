@@ -58,14 +58,16 @@ public class UIManager : MonoBehaviour
     [System.Serializable]
     public class PopupSettings
     {
-        public UILabel    notice_message;   // 공지, 기본 메시지
-        public UILabel    inquire_message;  // NPC와 대화를 하려면 'F'키를 누르시오.
-        public GameObject divisionPopup;    // 분리창
-        public GameObject inquirePopup;     // 확인창 (ex: 아이템을 버릴때)
-        public GameObject copyPopup;        // 상점에 구매목록 판매목록
-        public GameObject warningPopup;     // 경고창
+        public UILabel    notice_message;       // 공지, 기본 메시지
+        public UILabel    inquire_message;      // NPC와 대화를 하려면 'F'키를 누르시오.
+        public GameObject itemDivisionPopup;    // 아이템분리창
+        public GameObject goldDivisionPopup;    // 골드분리창
+        public GameObject inquirePopup;         // 확인창 (ex: 아이템을 버릴때)
+        public GameObject copyPopup;            // 상점에 구매목록 판매목록
+        public GameObject warningPopup;         // 경고창
 
-        public string divW = "DivisionPopup";
+        public string itemDivW = "ItemDivisionPopup";
+        public string goldDivW = "GoldDivisionPopup";
         public string inquireW = "InquirePopup";
         public string copyW = "CopyPopup";
         public string warningW = "WarningPopup";
@@ -94,6 +96,7 @@ public class UIManager : MonoBehaviour
     public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
     public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
     public Dictionary<int, UISlotInfo> characterSlots = null;   // 케릭터 슬롯
+    public Dictionary<int, UISlotInfo> skillListSlots = null;   // 스킬리스트 슬롯
     public SortedDictionary<int, UISlotInfo> invenSlots = null; // 인벤토리
     public SortedDictionary<int, UISlotInfo> buySlots = null;   // 상점 구매목록슬롯
     public SortedDictionary<int, UISlotInfo> sellSlots = null;  // 상점 판매목록슬롯
@@ -105,6 +108,7 @@ public class UIManager : MonoBehaviour
     public GameObject mobHpBarObj = null;
 
     public UILabel playerGold = null;
+    public UILabel storageGold = null;
 
     public bool isUIMode = false;
     public bool isStorage = false;
@@ -130,6 +134,7 @@ public class UIManager : MonoBehaviour
         shortCuts = new Dictionary<int, UISlotInfo>();
         storeListSlots = new Dictionary<int, UISlotInfo>();
         characterSlots = new Dictionary<int, UISlotInfo>();
+        skillListSlots = new Dictionary<int, UISlotInfo>();
         buySlots = new SortedDictionary<int, UISlotInfo>();
         sellSlots = new SortedDictionary<int, UISlotInfo>();
         invenSlots = new SortedDictionary<int, UISlotInfo>();
@@ -154,13 +159,15 @@ public class UIManager : MonoBehaviour
         FindWindow(ref windowSettings.storageObj, windowSettings.storageW);
         FindWindow(ref windowSettings.shortCutObj, windowSettings.shortCutW);
 
-        FindWindow(ref popupSettings.divisionPopup, popupSettings.divW);
+        FindWindow(ref popupSettings.itemDivisionPopup, popupSettings.itemDivW);
+        FindWindow(ref popupSettings.goldDivisionPopup, popupSettings.goldDivW);
         FindWindow(ref popupSettings.inquirePopup, popupSettings.inquireW);
         FindWindow(ref popupSettings.copyPopup, popupSettings.copyW);
         FindWindow(ref popupSettings.warningPopup, popupSettings.warningW);
 
         playerGold = windowSettings.inventoryObj.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
-        SetHoldingGold();
+        storageGold = windowSettings.storageObj.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+        SetGoldLabel(true);
     }
 
     void Update()
@@ -338,7 +345,8 @@ public class UIManager : MonoBehaviour
             Cursor.visible = false;
             isUIMode = false;
 
-            popupSettings.divisionPopup.SetActive(false);
+            //popupSettings.itemDivisionPopup.SetActive(false);
+            //popupSettings.goldDivisionPopup.SetActive(false);
             DisableDragIiem();
             AllCloseWindow();
             windowSettings.uiModeObj.SetActive(false);
@@ -410,9 +418,42 @@ public class UIManager : MonoBehaviour
         tempHpBarObj.GetComponent<UIMonsterHpBar>().SetTarget(targetT);
     }
 
-    public void SetHoldingGold()
+    public void SetGoldLabel(bool isInit)
     {
         playerGold.text = playerInfoData.infoData.gold.ToString();
+        storageGold.text = playerInfoData.infoData.storageGold.ToString();
+
+        if (!isInit)
+        {
+            Network_PlayerInfo.Instance.RequestSavePlayerInfo();
+        }
+    }
+
+    public void SetSkillListUpActive(int currentLevel)
+    {
+        PlayerSkillData playerSkilldata = PlayerSkillData.Instance;
+        Dictionary<int, SkillData.SkillInfo> skillInfos = SkillData.Instance.skillInfos;
+
+        foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in skillInfos)
+        {
+            // 현재 레벨에 배울수 있는 스킬이 아니면 
+            if (skillInfo.Value.level > currentLevel)
+            {
+                continue;
+            }
+
+            // 배운 스킬 이면
+            if (playerSkilldata.GetSkillData(skillInfo.Key))
+            {
+                if (skillListSlots[skillInfo.Key].slotSettings.upBtnObj.activeSelf)
+                {
+                    skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(false);
+                }
+                continue;
+            }
+
+            skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
+        }
     }
 
     public void ShowCharacterBtn()

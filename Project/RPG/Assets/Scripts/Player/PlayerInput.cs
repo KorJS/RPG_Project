@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayerInput : MonoBehaviour
 {
     private PlayerMovement playerMovement = null;
+    private PlayerSlotData playerSlotData = null;
     private PlayerState playerState = null;
     private EquipmentHandler equipHandler = null;
     private UIManager uiManager = null;
@@ -17,7 +18,7 @@ public class PlayerInput : MonoBehaviour
         public string vertical      = "Vertical";       // 상하
         public string horizontal    = "Horizontal";     // 좌우
 
-        public KeyCode jump         = KeyCode.Space;           // 점프
+        public KeyCode jump         = KeyCode.Space;    // 점프
         public KeyCode mouse0       = KeyCode.Mouse0;
         public KeyCode mouse1       = KeyCode.Mouse1;
         public KeyCode c            = KeyCode.C;
@@ -51,6 +52,7 @@ public class PlayerInput : MonoBehaviour
     void Start()
     {
         uiManager = UIManager.Instance;
+        playerSlotData = PlayerSlotData.Instance;
     }
 
     void Update()
@@ -119,7 +121,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1))
         {
             PlayerInfoData.Instance.infoData.gold += 2000;
-            uiManager.SetHoldingGold();
+            uiManager.SetGoldLabel(false);
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
@@ -129,7 +131,7 @@ public class PlayerInput : MonoBehaviour
             {
                 PlayerInfoData.Instance.infoData.gold = 0;
             }
-            uiManager.SetHoldingGold();
+            uiManager.SetGoldLabel(false);
         }
 
         if (Input.GetKeyDown(KeyCode.F3))
@@ -198,6 +200,14 @@ public class PlayerInput : MonoBehaviour
 
         UISlotInfo uiSlotInfo = uiManager.shortCuts[slotIndex].GetComponent<UISlotInfo>();
 
+        // 쿨타임 중이면 리턴
+        if (uiSlotInfo.isCoolTime)
+        {
+            return -1;
+        }
+
+        uiSlotInfo.isCoolTime = true;
+
         switch (uiSlotInfo.slotInfo.slotInfoType)
         {
             case TypeData.SlotInfoType.스킬:
@@ -206,12 +216,101 @@ public class PlayerInput : MonoBehaviour
                     tempKeyCode = keyCode;
                     playerState.nextState = TypeData.State.스킬;
                     playerState.nextMode = TypeData.MODE.전투;
+
+                    // 단축창에서 스킬 사용시 쿨타임. - 단축창 같은 스킬에도 같이 쿨타임 상태로
+                    foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
+                    {
+                        // 빈 슬롯인 경우 리턴
+                        if (!shortCut.Value.isItemExist)
+                        {
+                            continue;
+                        }
+
+                        // 자신은 제외
+                        if (shortCut.Key == uiSlotInfo.slotIndex)
+                        {
+                            continue;
+                        }
+
+                        // 같은 타입이 아니면 
+                        if (shortCut.Value.slotInfo.skillIndex != uiSlotInfo.slotInfo.skillIndex)
+                        {
+                            continue;
+                        }
+
+                        shortCut.Value.isCoolTime = true;
+                    }
                 }
                 break;
 
             case TypeData.SlotInfoType.아이템:
                 {
-                    // TODO : 아이템 이벤트 처리 직접적으로.
+                    // 단축창에서 스킬 사용시 쿨타임. - 단축창 같은 아이템도 쿨타임 상태로
+                    foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
+                    {
+                        // 빈 슬롯인 경우 리턴
+                        if (!shortCut.Value.isItemExist)
+                        {
+                            continue;
+                        }
+
+                        // 자신은 제외
+                        if (shortCut.Key == uiSlotInfo.slotIndex)
+                        {
+                            continue;
+                        }
+
+                        // 같은 타입이 아니면 
+                        if (shortCut.Value.slotInfo.itemType != uiSlotInfo.slotInfo.itemType)
+                        {
+                            continue;
+                        }
+
+                        // 같은 인덱스가 아니면
+                        if (shortCut.Value.slotInfo.itemIndex != uiSlotInfo.slotInfo.itemIndex)
+                        {
+                            continue;
+                        }
+
+                        shortCut.Value.slotInfo.quantity -= 1;
+
+                        UISlotInfo tempUISlotInfo = shortCut.Value;
+                        playerSlotData.SetSlotData(shortCut.Value.slotType, shortCut.Value.slotIndex, ref tempUISlotInfo);
+                        uiManager.invenSlots[shortCut.Key] = tempUISlotInfo;
+
+                        shortCut.Value.isCoolTime = true;
+                    }
+
+                    // 단축창에서 아이템 사용시 쿨타임. - 인벤 같은 아이템도 쿨타임 상태로
+                    foreach (KeyValuePair<int, UISlotInfo> invenSlot in uiManager.invenSlots)
+                    {
+                        // 빈 슬롯인 경우 리턴
+                        if (!invenSlot.Value.isItemExist)
+                        {
+                            continue;
+                        }
+
+                        // 같은 타입이 아니면 
+                        if (invenSlot.Value.slotInfo.itemType != uiSlotInfo.slotInfo.itemType)
+                        {
+                            continue;
+                        }
+
+                        // 같은 인덱스가 아니면
+                        if (invenSlot.Value.slotInfo.itemIndex != uiSlotInfo.slotInfo.itemIndex)
+                        {
+                            continue;
+                        }
+                        UISlotInfo tempUISlotInfo = invenSlot.Value;
+                        playerSlotData.SetSlotData(invenSlot.Value.slotType, invenSlot.Value.slotIndex, ref tempUISlotInfo);
+                        uiManager.invenSlots[invenSlot.Key] = tempUISlotInfo;
+
+                        invenSlot.Value.isCoolTime = true;
+                    }
+
+                    uiSlotInfo.slotInfo.quantity -= 1;
+                    playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
+                    ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
                 }
                 break;
         }

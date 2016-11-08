@@ -23,8 +23,24 @@ public class UIInquirePopup : MonoBehaviour
 
     public void InquireOK()
     {
-        playerSlotData.RemoveSlotData(currentInfo);
-        currentInfo.ReSetting();
+        switch (currentInfo.slotType)
+        {
+            case TypeData.SlotType.인벤토리:
+                {
+                    playerSlotData.RemoveSlotData(currentInfo);
+                    currentInfo.ReSetting();
+                }
+                break;
+
+            case TypeData.SlotType.스킬리스트:
+                {
+                    PlayerSkillData.Instance.AddSkillData(currentInfo.slotInfo.skillIndex);
+                    currentInfo.slotSettings.upBtnObj.SetActive(false);
+                    currentInfo.ReSetting();
+                }
+                break;
+        }
+        
         gameObject.SetActive(false);
     }
 

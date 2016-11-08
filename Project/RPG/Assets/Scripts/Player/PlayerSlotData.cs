@@ -595,7 +595,7 @@ public class PlayerSlotData
     }
     
     // 단축창 수량 검사(소모품, 퀘스트템)
-    private void CheckShorCutMark(TypeData.SlotType slotType, UISlotInfo slotInfo)
+    private void CheckShortCutMark(TypeData.SlotType slotType, UISlotInfo slotInfo)
     {
         // 만약에 장비인 경우
         if (slotInfo.slotInfo.itemType == TypeData.ItemType.장비)
@@ -759,6 +759,7 @@ public class PlayerSlotData
         {
             if (currentItemIndex == invenInfo.Value.itemIndex)
             {
+                Debug.Log("quantity : " + quantity);
                 int index = invenInfo.Key;
                 quantity += inventoryInfos[index].quantity;
             }
@@ -785,7 +786,7 @@ public class PlayerSlotData
         if (slotInfo.slotInfo.quantity <= 0)
         {
             // 인벤, 단축창 수량 변화
-            CheckShorCutMark(slotType, slotInfo);
+            CheckShortCutMark(slotType, slotInfo);
 
             RemoveSlotData(slotInfo);
 
@@ -794,7 +795,7 @@ public class PlayerSlotData
 
 
         // 인벤, 단축창 수량 변화
-        CheckShorCutMark(slotType, slotInfo);
+        CheckShortCutMark(slotType, slotInfo);
 
         return true;
     }
@@ -879,6 +880,7 @@ public class PlayerSlotData
                         slotInfo.itemIndex = tempCurrentSlotInfoDatas[slotIndex].itemIndex;
                         slotInfo.name = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].name;
                         slotInfo.iconName = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].iconName;
+                        slotInfo.coolTime = ItemData.Instance.cusomableInfos[slotInfo.itemIndex].coolTime;
                         slotInfo.quantity = tempCurrentSlotInfoDatas[slotIndex].quantity;
                         slotInfo.itemType = TypeData.ItemType.소모품;
                         slotInfo.slotInfoType = TypeData.SlotInfoType.아이템;

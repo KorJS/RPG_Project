@@ -6,12 +6,12 @@ public class SpawnControl : MonoBehaviour
     // TODO : 자식으로 있는 몬스터 리스폰 시간 체크
     private GameObject monsterObj = null;
 
-    private const float NORMAL_TIME = 60f;
-    private const float ELITE_TIME = 120f;
-    private const float BOSS_TIME = 5f;
+    private const float NORMAL_TIME = 10f;
+    private const float ELITE_TIME = 20f;
+    private const float BOSS_TIME = 30f;
 
     private string spawnTag = null;
-    private float respawnTime = 0f;
+    public float respawnTime = 0f;
     public float respawnTimer = 0f;
 
     public bool isRespawn = false; // 몬스터가 죽으면 true가 되면서 리스폰 타이머 시작

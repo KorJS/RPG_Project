@@ -5,6 +5,7 @@ public class UIDivisionPopup : MonoBehaviour
 {
     private UIManager uiManager = null;
     private PlayerSlotData playerSlotData = null;
+    private PlayerInfoData playerInfoData = null;
 
     private UIInput divQuantity_Input = null; // 입력 수량
 
@@ -14,10 +15,14 @@ public class UIDivisionPopup : MonoBehaviour
     public UISlotInfo currentInfo = null;
     public UISlotInfo targetInfo = null;
 
+    public TypeData.PopupType popupType = TypeData.PopupType.없음;
+    public bool isDeposit = false;
+
     void Awake()
     {
         uiManager = UIManager.Instance;
         playerSlotData = PlayerSlotData.Instance;
+        playerInfoData = PlayerInfoData.Instance;
         divQuantity_Input = transform.FindChild("Input").GetComponent<UIInput>();
     }
 
@@ -83,6 +88,21 @@ public class UIDivisionPopup : MonoBehaviour
         divQuantity_Input.value = divQuantity.ToString();
     }
 
+    // 입금 - true / 출금 - false
+    public void DepositAndWithdraw(bool _isDeposit)
+    {
+        isDeposit = _isDeposit;
+
+        if (isDeposit)
+        {
+            divQuantityMAX = playerInfoData.infoData.gold;
+        }
+        else
+        {
+            divQuantityMAX = playerInfoData.infoData.storageGold;
+        }
+    }
+
     // 인벤토리 -> 창고 (소모품, 퀘템인경우 : 분리 창 On - 분리창 수량 만큼 수량검사, 
     //                 (                    같은 아이템타입, 같은 아이템인덱스, 합치고, 나머지는 현슬롯에 남김, 다옴기는거면 현슬롯 제거)
     //                 (                    같은 아이템타입, 다른 아이템인덱스, 순차대로 빈곳에 추가후 나머지는 현재슬롯에 남김 - 다 옴기는거면 현재슬롯은 제거)
@@ -101,23 +121,49 @@ public class UIDivisionPopup : MonoBehaviour
             DivisionCancel();
             return;
         }
-        // TODO : 분리창수량이 창고에 넣었을때 그 수량이 MAX 치 채우고 남으면 빈곳에 추가
-        // 수량만 알려주고 PlayerSlotData.DivisionSlotData 에서 알아서 처리
-        if (divQuantity == currentInfo.slotInfo.quantity)
-        {
-            currentInfo.slotInfo.quantity = 0;
-        }
-        else if (divQuantity < currentInfo.slotInfo.quantity)
-        {
-            currentInfo.slotInfo.quantity -= divQuantity;
-        }
 
-        // 대상 바꿈
-        playerSlotData.DivisionSlotData(targetInfo.slotType, currentInfo.slotInfo.itemType, currentInfo.slotInfo.itemIndex, divQuantity);
-        // 현재꺼는 따로 수정
-        playerSlotData.SetSlotData(currentInfo.slotType, currentInfo.slotIndex, ref currentInfo);
+        switch (popupType)
+        {
+            case TypeData.PopupType.아이템:
+                {
+                    // TODO : 분리창수량이 창고에 넣었을때 그 수량이 MAX 치 채우고 남으면 빈곳에 추가
+                    // 수량만 알려주고 PlayerSlotData.DivisionSlotData 에서 알아서 처리
+                    if (divQuantity == currentInfo.slotInfo.quantity)
+                    {
+                        currentInfo.slotInfo.quantity = 0;
+                    }
+                    else if (divQuantity < currentInfo.slotInfo.quantity)
+                    {
+                        currentInfo.slotInfo.quantity -= divQuantity;
+                    }
 
-        currentInfo.ReSetting();
+                    // 대상 바꿈
+                    playerSlotData.DivisionSlotData(targetInfo.slotType, currentInfo.slotInfo.itemType, currentInfo.slotInfo.itemIndex, divQuantity);
+                    // 현재꺼는 따로 수정
+                    playerSlotData.SetSlotData(currentInfo.slotType, currentInfo.slotIndex, ref currentInfo);
+
+                    currentInfo.ReSetting();
+                }
+                break;
+
+            case TypeData.PopupType.골드:
+                {
+                    // 입금
+                    if (isDeposit)
+                    {
+                        playerInfoData.infoData.storageGold += divQuantity;
+                        playerInfoData.infoData.gold -= divQuantity;
+                    }
+                    else
+                    {
+                        playerInfoData.infoData.storageGold -= divQuantity;
+                        playerInfoData.infoData.gold += divQuantity;
+                    }
+
+                    uiManager.SetGoldLabel(false);
+                }
+                break;
+        }
 
         gameObject.SetActive(false);
     }

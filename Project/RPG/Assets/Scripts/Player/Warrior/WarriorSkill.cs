@@ -36,8 +36,9 @@ public class WarriorSkill : MonoBehaviour
         없음 = -1,
         연속공격 = 0,
         방패막기,
+        긴급회피,
         압도,
-        난폭한돌진
+        난폭한돌진,
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
@@ -182,6 +183,7 @@ public class WarriorSkill : MonoBehaviour
         {
             case SkillType.연속공격: { ComboAttack(); } break;
             case SkillType.방패막기: { ShieldBlock(); } break;
+            case SkillType.긴급회피: {  } break;
             case SkillType.압도: { Overpower(); } break;
             case SkillType.난폭한돌진: { Rush(); } break;
         }

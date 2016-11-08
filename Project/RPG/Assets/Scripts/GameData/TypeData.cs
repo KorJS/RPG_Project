@@ -96,6 +96,13 @@
         신발,
     };
 
+    public enum CusomableType
+    {
+        없음 = -1,
+        회복 = 0,
+        버프
+    };
+
     // Inventory, ShortCut, Store, Storage, Skill
     public enum SlotType
     {
@@ -128,5 +135,13 @@
     public enum AreaType
     {
         여명의정원 = 0
-    }
+    };
+
+
+    public enum PopupType
+    {
+        없음 = -1,
+        아이템 = 0,
+        골드
+    };
 }

@@ -372,7 +372,7 @@ public class UIStore : MonoBehaviour
         }
 
         playerInfoData.infoData.gold = changG; // 주인공 보유골드 갱신
-        uiManager.SetHoldingGold(); // 인벤 소지금 갱신
+        uiManager.SetGoldLabel(false); // 인벤 소지금 갱신
 
         Network_PlayerInfo.Instance.RequestSavePlayerInfo();
 
@@ -443,6 +443,7 @@ public class UIStore : MonoBehaviour
             slotList.Value.slotInfo.itemIndex = -1;
             slotList.Value.slotInfo.itemType = TypeData.ItemType.없음;
             slotList.Value.slotInfo.quantity = 0;
+            slotList.Value.slotSettings.uiBuyGold.text = null;
 
             slotList.Value.StoreReSetting();
         }

@@ -25,6 +25,7 @@ public class Network_PlayerInfo : MonoBehaviour
         public bool isSuccess;
         public int timestamp;
         public PlayerInfoData.InfoData playerInfoData;
+        public List<int> playerSkillInfos;
     }
 
     private class RecvSavePlayerInfoData
@@ -59,6 +60,7 @@ public class Network_PlayerInfo : MonoBehaviour
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", save_charInfo_contents);
         sendData.Add("player_info", PlayerInfoData.Instance.infoData);
+        sendData.Add("player_skill_info", PlayerSkillData.Instance.skillInfos);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplySavePlayerInfo));
     }
@@ -75,6 +77,7 @@ public class Network_PlayerInfo : MonoBehaviour
 
         Debug.Log(data.message);
         PlayerInfoData.Instance.infoData = data.playerInfoData;
+        PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
     }
 
     public void ReplySavePlayerInfo(string json)

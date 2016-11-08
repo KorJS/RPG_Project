@@ -38,8 +38,8 @@ public sealed class ItemData
         public int sellGold;                            // 판매가격
         public int playerType;                          // 착용직업
         public int level;                               // 착용레벨
-        public int attack;                              // 공격력
-        public int defence;                             // 방어력
+        public int att;                                 // 공격력
+        public int def;                                 // 방어력
         public int hp;                                  // 체력
         public int mp;                                  // 마력
         public string name;                             // 이름
@@ -50,10 +50,14 @@ public sealed class ItemData
     // 소모품 정보
     public struct CusomableInfo
     {
+        public int cusomableType;                       // 소모품타입
         public int buyGold;                             // 구매가격
         public int sellGold;                            // 판매가격
+        public int att;                                 // 공격력
+        public int def;                                 // 방어력
+        public int hp;                                  // 체력
+        public int mp;                                  // 마력
         public float coolTime;                          // 쿨타임
-        public float regeneration;                      // 상승치
         public string name;                             // 이름
         public string iconName;                         // 아이콘 이름
         public string description;                      // 설명
@@ -185,14 +189,14 @@ public sealed class ItemData
         equipmentInfos.Add(index, new EquipmentInfo
         {
             equipmentType   = int.Parse(temp[2]),   // 장비타입
-            buyGold         = int.Parse(temp[3]),   // 구매가격
-            sellGold        = int.Parse(temp[4]),   // 판매가격
-            playerType      = int.Parse(temp[5]),   // 착용직업
-            level           = int.Parse(temp[6]),   // 착용레벨
-            attack          = int.Parse(temp[7]),   // 공격력
-            defence         = int.Parse(temp[8]),   // 방어력
-            hp              = int.Parse(temp[9]),   // 체력
-            mp              = int.Parse(temp[10]),  // 마력
+            buyGold         = int.Parse(temp[4]),   // 구매가격
+            sellGold        = int.Parse(temp[5]),   // 판매가격
+            playerType      = int.Parse(temp[6]),   // 착용직업
+            level           = int.Parse(temp[7]),   // 착용레벨
+            att             = int.Parse(temp[8]),   // 공격력
+            def             = int.Parse(temp[9]),   // 방어력
+            hp              = int.Parse(temp[10]),  // 체력
+            mp              = int.Parse(temp[11]),  // 마력
             name            = temp[13],             // 이름
             iconName        = temp[14],             // 아이콘 이름
             description     = temp[15]              // 설명
@@ -203,10 +207,14 @@ public sealed class ItemData
     {
         cusomableInfos.Add(index, new CusomableInfo
         {
-            buyGold         = int.Parse(temp[3]),   // 구매가격
-            sellGold        = int.Parse(temp[4]),   // 판매가격
-            coolTime        = float.Parse(temp[11]),// 쿨타임
-            regeneration    = float.Parse(temp[12]),// 상승치
+            cusomableType   = int.Parse(temp[3]),   // 소모품타입
+            buyGold         = int.Parse(temp[4]),   // 구매가격
+            sellGold        = int.Parse(temp[5]),   // 판매가격
+            att             = int.Parse(temp[8]),   // 공격력
+            def             = int.Parse(temp[9]),   // 방어력
+            hp              = int.Parse(temp[10]),  // 체력
+            mp              = int.Parse(temp[11]),  // 마력
+            coolTime        = float.Parse(temp[12]),// 쿨타임
             name            = temp[13],             // 이름
             iconName        = temp[14],             // 아이콘 이름
             description     = temp[15]              // 설명
@@ -217,7 +225,7 @@ public sealed class ItemData
     {
         questItemInfos.Add(index, new QuestItemInfo
         {
-            sellGold        = int.Parse(temp[4]),   // 판매가격
+            sellGold        = int.Parse(temp[5]),   // 판매가격
             name            = temp[13],             // 이름
             iconName        = temp[14],             // 아이콘 이름
             description     = temp[15]              // 설명

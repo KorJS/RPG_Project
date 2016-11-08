@@ -36,14 +36,14 @@ public class UIDragAndDrop : MonoBehaviour
         uiInquirePopup = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
         uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
         uiCharacter = uiManager.windowSettings.characterObj.GetComponent<UICharater>();
-        uidivPopup = uiManager.popupSettings.divisionPopup.GetComponent<UIDivisionPopup>();
+        uidivPopup = uiManager.popupSettings.itemDivisionPopup.GetComponent<UIDivisionPopup>();
         uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
     }
 
     void OnDragStart()
     {
         // 이미 드래그래서 분리중이면 새로운 드래그 못하게.
-        if (uiManager.popupSettings.divisionPopup.activeSelf)
+        if (uiManager.popupSettings.itemDivisionPopup.activeSelf)
         {
             return;
         }
@@ -318,7 +318,7 @@ public class UIDragAndDrop : MonoBehaviour
                             // 소모품, 퀘스트템일경우
                             else
                             {
-                                uiManager.popupSettings.divisionPopup.SetActive(true);
+                                uiManager.popupSettings.itemDivisionPopup.SetActive(true);
                                 uidivPopup.DragAndDropInfo(uiSlotInfo, targetInfo);
 
                                 return;

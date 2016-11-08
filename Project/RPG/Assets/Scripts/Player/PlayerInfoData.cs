@@ -70,6 +70,41 @@ public class PlayerInfoData
         totalDef = infoData.def + _def;
         totalMaxHp = infoData.maxHp + _hp;
         totalMaxMp = infoData.maxMp + _mp;
+
+        // 장비 해제시 현재 체력,마력이 총 체력,마력보다 높으면
+        {
+            if (infoData.currentHp > totalMaxHp)
+            {
+                infoData.currentHp = totalMaxHp;
+            }
+
+            if (infoData.currentMp > totalMaxMp)
+            {
+                infoData.currentMp = totalMaxMp;
+            }
+        }
+    }
+
+    // 버프 아이템 사용시 상승 - 쿨타임 종료 후 원래대로
+    public void SetBuff(int _att, int _def, int _hp, int _mp)
+    {
+        totalAtt += _att;
+        totalDef += _def;
+        totalMaxHp += _hp;
+        totalMaxMp += _mp;
+
+        // 장비 해제시 현재 체력,마력이 총 체력,마력보다 높으면
+        {
+            if (infoData.currentHp > totalMaxHp)
+            {
+                infoData.currentHp = totalMaxHp;
+            }
+
+            if (infoData.currentMp > totalMaxMp)
+            {
+                infoData.currentMp = totalMaxMp;
+            }
+        }
     }
 
     public void SetCurrentHp(float hpValue)
@@ -127,6 +162,7 @@ public class PlayerInfoData
                 infoData.level = i;
                 infoData.exp = up_exp;
 
+                // 렙업
                 if (i != currentLevel)
                 {
                     // lv 3 = 10 + 20 + 70 = 100(maxExp)
@@ -146,6 +182,8 @@ public class PlayerInfoData
                     infoData.level = level;
                     infoData.exp = 0;
                 }
+
+                UIManager.Instance.SetSkillListUpActive(i);
 
                 break;
             }

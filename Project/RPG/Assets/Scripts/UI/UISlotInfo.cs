@@ -33,6 +33,7 @@ public class UISlotInfo : MonoBehaviour
         public UILabel uiSellGold;
         public UILabel uiBuyGold;
         public GameObject overlapObj;
+        public GameObject upBtnObj;
         public KeyCode slotKeyCode;
     }
 
@@ -45,6 +46,9 @@ public class UISlotInfo : MonoBehaviour
     public bool isItemExist = false;  // 해당 슬롯에 아이템이 있는지
     public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
     public bool isSkillLearn = false; // 스킬리스트, 배운 스킬인지 아닌지.
+
+    public float coolTimer = 0f;
+    public bool isCoolTime = false;
 
     void Awake()
     {
@@ -80,6 +84,15 @@ public class UISlotInfo : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (isCoolTime)
+        {
+            SetCoolTime();
+            slotSettings.uiCoolTime.gameObject.SetActive(isCoolTime);
+        }
+    }
+
     // 슬롯 인덱스 설정
     private void SetSlotIndex()
     {
@@ -102,7 +115,7 @@ public class UISlotInfo : MonoBehaviour
 
         if (slotSettings.uiIcon.mainTexture == null)
         {
-            Debug.Log("아이콘명에 맞는 아이템이 존재하지 않습니다.");
+            Debug.Log(slotInfo.iconName + " : 맞는 아이템이 존재하지 않습니다.");
         }
     }
 
@@ -171,6 +184,12 @@ public class UISlotInfo : MonoBehaviour
                 }
                 break;
 
+            case TypeData.SlotType.스킬리스트:
+                {
+                    uiManager.skillListSlots.Add(slotIndex, this);
+                }
+                break;
+
             case TypeData.SlotType.상점리스트:
                 {
                     uiManager.storeListSlots.Add(slotIndex, this);
@@ -230,5 +249,41 @@ public class UISlotInfo : MonoBehaviour
     {
         SetSlotIcon();
         SetQuantity();
+    }
+
+    public void SkillListUpBtn()
+    {
+        uiManager.popupSettings.inquirePopup.SetActive(true);
+        uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>().SetMessage(this, "스킬을 배우시겠습니까?");
+    }
+
+    private void SetCoolTime()
+    {
+        coolTimer += Time.deltaTime;
+
+        if (coolTimer > slotInfo.coolTime)
+        {
+            coolTimer = slotInfo.coolTime;
+        }
+
+        float ratio = 1f - (coolTimer / slotInfo.coolTime);
+
+        if (slotSettings.uiCoolTime)
+        {
+            slotSettings.uiCoolTime.fillAmount = ratio;
+        }
+
+        if (slotSettings.uiCoolTime.fillAmount == 0f)
+        {
+            isCoolTime = false;
+            coolTimer = 0f;
+            slotSettings.uiCoolTime.gameObject.SetActive(isCoolTime);
+
+            // 아이템인 경우
+            if (slotInfo.itemIndex != -1)
+            {
+                ItemManager.Instance.CheckItemType((TypeData.ItemType)slotInfo.itemType, slotInfo.itemIndex, isCoolTime);
+            }
+        }
     }
 }

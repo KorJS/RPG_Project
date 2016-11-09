@@ -129,7 +129,7 @@ public class UISlotInfo : MonoBehaviour
 
         if (slotSettings.uiIcon.mainTexture == null)
         {
-            Debug.Log(slotInfo.iconName + " : 맞는 아이템이 존재하지 않습니다.");
+            Debug.Log(slotInfo.slotInfoType + " " + slotInfo.iconName + " : 맞는 아이템이 존재하지 않습니다.");
         }
     }
 

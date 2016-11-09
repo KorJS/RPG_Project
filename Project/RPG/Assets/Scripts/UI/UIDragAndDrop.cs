@@ -36,7 +36,7 @@ public class UIDragAndDrop : MonoBehaviour
     {
         uiInquirePopup = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
         uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
-        uiCharacter = uiManager.windowSettings.characterObj.GetComponent<UICharater>();
+        uiCharacter = uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>();
         uidivPopup = uiManager.popupSettings.itemDivisionPopup.GetComponent<UIDivisionPopup>();
         uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
     }

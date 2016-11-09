@@ -67,16 +67,6 @@ public class Network_Char : MonoBehaviour
         charInfo_contents = "characterInfo_load";
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("selectSlot : " + selectSlot);
-            SceneManager.LoadScene("PlayerTest");
-
-        }
-    }
-
     // 슬롯 표시할 오브젝트
     [System.Serializable]
     public class CreateCharacter

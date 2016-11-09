@@ -6,6 +6,7 @@ public class UISkillList : MonoBehaviour
     [System.Serializable]
     public class SkillListSettings
     {
+        public UIPanel skillListPanel;
         public UITexture skillIcon;
         public UILabel skillName;
         public UILabel skillDescription;
@@ -13,6 +14,11 @@ public class UISkillList : MonoBehaviour
 
     [SerializeField]
     public SkillListSettings skillListSettings;
+
+    void Awake()
+    {
+        skillListSettings.skillListPanel = GetComponent<UIPanel>();
+    }
 
     // 활성화되면 첫번째 슬롯 스킬정보 표시
     void OnEnable()
@@ -33,6 +39,6 @@ public class UISkillList : MonoBehaviour
 
     public void CloseWindows()
     {
-        gameObject.SetActive(false);
+        skillListSettings.skillListPanel.alpha = 0f;
     }
 }

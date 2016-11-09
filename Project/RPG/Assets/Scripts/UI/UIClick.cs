@@ -72,7 +72,7 @@ public class UIClick : MonoBehaviour
                     }
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
-                    uiManager.windowSettings.characterObj.GetComponent<UICharater>().ChangPlayerStat();
+                    uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>().ChangPlayerStat();
                     uiSlotInfo.ReSetting();
                 }
                 break;
@@ -160,7 +160,7 @@ public class UIClick : MonoBehaviour
             uiSlotInfo.StoreReSetting();
         }
         // 창고창이 열여있는 경우
-        else if (uiManager.windowSettings.storageObj.activeSelf) // 인벤 > 창고 수량 전부 넣음
+        else if (uiManager.windowSettings.storagePanel.alpha == 1f) // 인벤 > 창고 수량 전부 넣음
         {
             int quantity = 0;
 
@@ -175,7 +175,7 @@ public class UIClick : MonoBehaviour
             uiSlotInfo.ReSetting();
         }
         // 케릭창이 열여있는 경우
-        else if (uiManager.windowSettings.characterObj.activeSelf)
+        else if (uiManager.windowSettings.characterPanel.alpha == 1f)
         {
             int index = uiSlotInfo.slotInfo.itemIndex;
             ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
@@ -184,7 +184,7 @@ public class UIClick : MonoBehaviour
 
             UISlotInfo targetInfo = uiManager.characterSlots[targetIndex];
 
-            uiManager.windowSettings.characterObj.GetComponent<UICharater>().SetSlotInfo(uiSlotInfo, targetInfo);
+            uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>().SetSlotInfo(uiSlotInfo, targetInfo);
             uiSlotInfo.ReSetting();
         }
         // 그냥 인벤만.

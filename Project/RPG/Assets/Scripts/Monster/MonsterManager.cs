@@ -72,6 +72,7 @@ public class MonsterManager : MonoBehaviour
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();
             infoData.monsterInfo = tempMonsterInfo; // 몬스터 정보
             infoData.SetCurrentHP(tempMonsterInfo.hp); // 몬스터 HP 설정
+            infoData.CheckDropItem(); // 몬스터 드랍아이템 정보
 
             monsterObjs.Add(monsterObj); // 몬스터 등록 - 지역이 바뀌면 제거를 위해서.
         }

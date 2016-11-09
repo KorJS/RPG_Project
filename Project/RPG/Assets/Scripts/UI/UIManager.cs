@@ -26,15 +26,15 @@ public class UIManager : MonoBehaviour
     public class WindowSettings
     {
         // 특수키 에 따라 On/Off
-        public GameObject characterObj;      // 케릭터창 : P
-        public GameObject uiModeObj;         // UIMode : Alt/ESC
-        public GameObject inventoryObj ;     // 소지품 : I
-        public GameObject skillObj;          // 스킬 : K
-        public GameObject questListObj;      // 퀘스트일지 : L
-        public GameObject questObj;          // 퀘스트 : NPC 근처에 있을때 F
-        public GameObject storeObj;          // 상점 : NPC 근처에 있을때 F
-        public GameObject storageObj;        // 창고 : NPC 근처에 있을때 F
-        public GameObject shortCutObj;       // 단축슬롯
+        public UIPanel characterPanel;          // 케릭터창 : P
+        public UIPanel uiModePanel;             // UIMode : Alt/ESC
+        public UIPanel inventoryPanel;          // 소지품 : I
+        public UIPanel skillPanel;              // 스킬 : K
+        public UIPanel questListPanel;          // 퀘스트일지 : L
+        public UIPanel questPanel;              // 퀘스트 : NPC 근처에 있을때 F
+        public UIPanel storagePanel;            // 창고 : NPC 근처에 있을때 F
+        public UIPanel shortCutPanel;           // 단축슬롯
+        public GameObject storeObj;             // 상점 : NPC 근처에 있을때 F
 
         public string characterW = "CharacterW";
         public string uiModeW    = "UIModeW";
@@ -101,8 +101,9 @@ public class UIManager : MonoBehaviour
     public SortedDictionary<int, UISlotInfo> buySlots = null;   // 상점 구매목록슬롯
     public SortedDictionary<int, UISlotInfo> sellSlots = null;  // 상점 판매목록슬롯
 
-    public List<GameObject> windows = null;
-    public List<GameObject> showWindowList = null;
+    public List<GameObject> wObjects = null;
+    public List<UIPanel> windows = null;
+    public List<UIPanel> showWindowList = null;
 
     public GameObject bossHpBarObj = null;
     public GameObject mobHpBarObj = null;
@@ -148,34 +149,31 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         playerInfoData = PlayerInfoData.Instance;
+
         //// window
-        FindWindow(ref windowSettings.characterObj, windowSettings.characterW);
-        FindWindow(ref windowSettings.uiModeObj, windowSettings.uiModeW);
-        FindWindow(ref windowSettings.inventoryObj, windowSettings.inventoryW);
-        FindWindow(ref windowSettings.skillObj, windowSettings.skillW);
-        FindWindow(ref windowSettings.questListObj, windowSettings.questListW);
-        FindWindow(ref windowSettings.questObj, windowSettings.questW);
-        FindWindow(ref windowSettings.storeObj, windowSettings.storeW);
-        FindWindow(ref windowSettings.storageObj, windowSettings.storageW);
-        FindWindow(ref windowSettings.shortCutObj, windowSettings.shortCutW);
+        FindWindow(ref windowSettings.characterPanel, windowSettings.characterW);
+        FindWindow(ref windowSettings.uiModePanel, windowSettings.uiModeW);
+        FindWindow(ref windowSettings.inventoryPanel, windowSettings.inventoryW);
+        FindWindow(ref windowSettings.skillPanel, windowSettings.skillW);
+        FindWindow(ref windowSettings.questListPanel, windowSettings.questListW);
+        FindWindow(ref windowSettings.questPanel, windowSettings.questW);
+        FindWindow(ref windowSettings.storagePanel, windowSettings.storageW);
 
-        FindWindow(ref popupSettings.itemDivisionPopup, popupSettings.itemDivW);
-        FindWindow(ref popupSettings.goldDivisionPopup, popupSettings.goldDivW);
-        FindWindow(ref popupSettings.inquirePopup, popupSettings.inquireW);
-        FindWindow(ref popupSettings.copyPopup, popupSettings.copyW);
-        FindWindow(ref popupSettings.warningPopup, popupSettings.warningW);
+        FindObject(ref windowSettings.storeObj, windowSettings.storeW);
+        FindObject(ref popupSettings.itemDivisionPopup, popupSettings.itemDivW);
+        FindObject(ref popupSettings.goldDivisionPopup, popupSettings.goldDivW);
+        FindObject(ref popupSettings.inquirePopup, popupSettings.inquireW);
+        FindObject(ref popupSettings.copyPopup, popupSettings.copyW);
+        FindObject(ref popupSettings.warningPopup, popupSettings.warningW);
 
-        playerGold = windowSettings.inventoryObj.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
-        storageGold = windowSettings.storageObj.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+        playerGold = windowSettings.inventoryPanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+        storageGold = windowSettings.storagePanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
         SetGoldLabel(true);
     }
 
     void Update()
     {
-        if (!windowSettings.shortCutObj.activeSelf)
-        {
-            windowSettings.shortCutObj.SetActive(true);
-        }
+        //
 
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
@@ -188,12 +186,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void FindWindow(ref GameObject obj, string objName)
+    private void FindWindow(ref UIPanel uiPanel, string name)
+    {
+        if (uiPanel != null)
+        {
+            uiPanel.alpha = 0f;
+            windows.Add(uiPanel);
+            return;
+        }
+
+        uiPanel = GameObject.FindGameObjectWithTag(name).GetComponent<UIPanel>();
+
+        if (uiPanel != null)
+        {
+            windows.Add(uiPanel);
+            uiPanel.alpha = 0f;
+        }
+    }
+
+    private void FindObject(ref GameObject obj, string objName)
     {
         if (obj != null)
         {
             obj.SetActive(false);
-            windows.Add(obj);
+            wObjects.Add(obj);
             return;
         }
 
@@ -201,7 +217,7 @@ public class UIManager : MonoBehaviour
 
         if (obj != null)
         {
-            windows.Add(obj);
+            wObjects.Add(obj);
             obj.SetActive(false);
         }
     }
@@ -214,7 +230,7 @@ public class UIManager : MonoBehaviour
         if (windowSettings.isInventoryW || Input.GetKeyDown(inputKey.inventory))
         {
             windowSettings.isInventoryW = false;
-            showWindowList.Add(windowSettings.inventoryObj);
+            showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList);
         }
 
@@ -222,7 +238,7 @@ public class UIManager : MonoBehaviour
         if (windowSettings.isQuestListW || Input.GetKeyDown(inputKey.questList))
         {
             windowSettings.isQuestListW = false;
-            showWindowList.Add(windowSettings.questListObj);
+            showWindowList.Add(windowSettings.questListPanel);
             ShowWindow(showWindowList);
         }
 
@@ -230,7 +246,7 @@ public class UIManager : MonoBehaviour
         if (windowSettings.isSkillW || Input.GetKeyDown(inputKey.skillList))
         {
             windowSettings.isSkillW = false;
-            showWindowList.Add(windowSettings.skillObj);
+            showWindowList.Add(windowSettings.skillPanel);
             ShowWindow(showWindowList);
         }
 
@@ -238,8 +254,8 @@ public class UIManager : MonoBehaviour
         if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
         {
             windowSettings.isCharacterW = false;
-            showWindowList.Add(windowSettings.characterObj);
-            showWindowList.Add(windowSettings.inventoryObj);
+            showWindowList.Add(windowSettings.characterPanel);
+            showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList);
         }
 
@@ -254,14 +270,14 @@ public class UIManager : MonoBehaviour
         // UI 모드
         if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
-            showWindowList.Add(windowSettings.uiModeObj);
+            showWindowList.Add(windowSettings.uiModePanel);
             ShowWindow(showWindowList);
         }
 
         // 퀘스트창
         if (isQuest)
         {
-            showWindowList.Add(windowSettings.questObj);
+            showWindowList.Add(windowSettings.questPanel);
             ShowWindow(showWindowList);
             isQuest = false;
         }
@@ -269,8 +285,8 @@ public class UIManager : MonoBehaviour
         // 상점
         if (isStore)
         {
-            showWindowList.Add(windowSettings.storeObj);
-            showWindowList.Add(windowSettings.inventoryObj);
+            ShowStore();
+            showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList);
             isStore = false;
         }
@@ -278,8 +294,8 @@ public class UIManager : MonoBehaviour
         // 창고
         if (isStorage)
         {
-            showWindowList.Add(windowSettings.storageObj);
-            showWindowList.Add(windowSettings.inventoryObj);
+            showWindowList.Add(windowSettings.storagePanel);
+            showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList);
             isStorage = false;
         }
@@ -289,12 +305,21 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < windows.Count; i++)
         {
-            if (!windows[i].activeSelf)
+            if (windows[i].alpha == 0f)
             {
                 continue;
             }
 
-            windows[i].SetActive(false);
+            windows[i].alpha = 0f;
+        }
+
+        for (int i = 0; i < wObjects.Count; i++)
+        {
+            if (!wObjects[i].activeSelf)
+            {
+                continue;
+            }
+            wObjects[i].SetActive(false);
         }
 
         Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
@@ -303,22 +328,22 @@ public class UIManager : MonoBehaviour
         Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
-    public void ShowWindow(List<GameObject> winList)
+    public void ShowWindow(List<UIPanel> winList)
     {
-        if (windowSettings.uiModeObj.activeSelf)
+        if (windowSettings.uiModePanel.alpha == 1f)
         {
             bool isActive = false;
 
             for (int i = 0; i < winList.Count; i++)
             {
-                if (!winList[i].activeSelf)
+                if (winList[i].alpha == 0f)
                 {
-                    winList[i].SetActive(true);
+                    winList[i].alpha = 1f;
                     isActive = true;
                 }
             }
             winList.Clear();
-                
+
             if (isActive) { return; }
         }
 
@@ -331,10 +356,10 @@ public class UIManager : MonoBehaviour
             isUIMode = true;
 
             playerInput.InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
-            windowSettings.uiModeObj.SetActive(true);
+            windowSettings.uiModePanel.alpha = 1f;
             for (int i = 0; i < winList.Count; i++)
             {
-                winList[i].SetActive(true);
+                winList[i].alpha = 1f;
             }
             winList.Clear();
         }
@@ -345,16 +370,35 @@ public class UIManager : MonoBehaviour
             Cursor.visible = false;
             isUIMode = false;
 
-            //popupSettings.itemDivisionPopup.SetActive(false);
-            //popupSettings.goldDivisionPopup.SetActive(false);
             DisableDragIiem();
             AllCloseWindow();
-            windowSettings.uiModeObj.SetActive(false);
+            windowSettings.uiModePanel.alpha = 0f;
             for (int i = 0; i < winList.Count; i++)
             {
-                winList[i].SetActive(false);
+                winList[i].alpha = 0f;
             }
             winList.Clear();
+        }
+    }
+
+    public void ShowStore()
+    {
+        if (windowSettings.uiModePanel.alpha == 1f)
+        {
+            if (!windowSettings.storeObj.activeSelf)
+            {
+                windowSettings.storeObj.SetActive(true);
+                return;
+            }
+        }
+
+        if (windowSettings.storeObj.activeSelf)
+        {
+            windowSettings.storeObj.SetActive(false);
+        }
+        else
+        {
+            windowSettings.storeObj.SetActive(true);
         }
     }
 
@@ -414,7 +458,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        tempHpBarObj.SetActive(true);
+        tempHpBarObj.gameObject.SetActive(true);
         tempHpBarObj.GetComponent<UIMonsterHpBar>().SetTarget(targetT);
     }
 

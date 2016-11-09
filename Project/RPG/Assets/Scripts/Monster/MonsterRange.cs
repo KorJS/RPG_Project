@@ -125,7 +125,7 @@ public class MonsterRange : MonoBehaviour
             playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
             monster.targetT = null;
             isTargetAggro = false;
-            monsterInfoData.Reset();
+            monsterInfoData.Reset(false);
             monsterState.nextState = TypeData.State.대기;
             monsterState.nextMode = TypeData.MODE.평화;
         }

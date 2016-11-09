@@ -121,6 +121,11 @@ public class PlayerInfoData
         {
             infoData.currentHp = 0f;
         }
+
+        if (infoData.currentHp > totalMaxHp)
+        {
+            infoData.currentHp = totalMaxHp;
+        }
     }
 
     public void SetCurrentMp(float mpValue)
@@ -130,6 +135,11 @@ public class PlayerInfoData
         if (infoData.currentMp <= 0f)
         {
             infoData.currentMp = 0f;
+        }
+
+        if (infoData.currentMp > totalMaxMp)
+        {
+            infoData.currentMp = totalMaxMp;
         }
     }
 

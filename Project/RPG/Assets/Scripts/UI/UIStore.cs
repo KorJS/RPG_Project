@@ -410,6 +410,8 @@ public class UIStore : MonoBehaviour
 
         originalInfos.Clear();
         changInvenIndexs.Clear();
+
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.인벤토리);
     }
 
     // 정산

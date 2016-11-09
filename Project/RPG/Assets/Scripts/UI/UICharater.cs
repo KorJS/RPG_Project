@@ -15,6 +15,7 @@ public class UICharater : MonoBehaviour
     [System.Serializable]
     public class CharacterSettings
     {
+        public UIPanel characterPanel;
         public UILabel levelNick;
         public UILabel str;
         public UILabel def;
@@ -42,6 +43,7 @@ public class UICharater : MonoBehaviour
         playerInfoData = PlayerInfoData.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
+        characterSettings.characterPanel = GetComponent<UIPanel>();
         equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
     }
 
@@ -141,6 +143,6 @@ public class UICharater : MonoBehaviour
 
     public void CloseWindows()
     {
-        gameObject.SetActive(false);
+        characterSettings.characterPanel.alpha = 0f;
     }
 }

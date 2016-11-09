@@ -11,7 +11,6 @@ public class NPCRange : MonoBehaviour
     public GameObject inquireObj = null; // "대화를 하려면 F키를 누르시오"
 
     private Transform targetT = null;
-    private Collider[] targets;
     private float distance = 0f;
     public bool isPlayer = false;
 
@@ -43,7 +42,7 @@ public class NPCRange : MonoBehaviour
 
     private bool CheckPlayer()
     {
-        targets = Physics.OverlapSphere(npcT.position, distance);
+        Collider[] targets = Physics.OverlapSphere(npcT.position, distance);
 
         foreach (var target in targets)
         {

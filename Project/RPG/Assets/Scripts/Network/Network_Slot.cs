@@ -62,11 +62,6 @@ public class Network_Slot : MonoBehaviour
         delete_slot_contents = "slot_delete";
     }
 
-    public void Ok()
-    {
-        RequestSaveSlot(TypeData.SlotType.인벤토리);
-    }
-
     public void RequestLoadSlot(TypeData.SlotType slotType)
     {
         string table_name = null;

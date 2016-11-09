@@ -80,11 +80,10 @@ public class MonsterMovement : MonoBehaviour
     public IEnumerator Death(float destroyTime)
     {
         yield return new WaitForSeconds(destroyTime);
-
+        monsterInfoData.Reset(true);
         monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
         monsterRange.monster.targetT = null;
         monsterRange.isTargetAggro = false;
-        monsterInfoData.Reset();
         monsterState.nextState = TypeData.State.대기;
         monsterState.nextMode = TypeData.MODE.평화;
         gameObject.SetActive(false);

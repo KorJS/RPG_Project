@@ -30,8 +30,9 @@ public class MonsterData
         public float hp;
         public int exp;
         public int glod;
-        public int itemType;
-        public int itemIndex;
+        public string itemType;
+        public string itemIndex;
+        public string quantity;
         public string name;
         public string fileName;
     }

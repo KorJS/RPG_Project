@@ -24,6 +24,7 @@ public class Network_Store : MonoBehaviour
         public int item_index;
         public int item_type;
         public int quantity;
+        public int gold;
     }
 
     public SlotInfo slotInfo;
@@ -134,6 +135,9 @@ public class Network_Store : MonoBehaviour
         buy_list.Clear();
         sell_list.Clear();
 
+        int buyGold = 0;
+        int sellGold = 0;
+
         if (UIManager.Instance.buySlots.Count != 0)
         {
             foreach (KeyValuePair<int, UISlotInfo> buySlot in UIManager.Instance.buySlots)
@@ -146,7 +150,14 @@ public class Network_Store : MonoBehaviour
                 slotInfo.item_index = buySlot.Value.slotInfo.itemIndex;
                 slotInfo.item_type = (int)buySlot.Value.slotInfo.itemType;
                 slotInfo.quantity = buySlot.Value.slotInfo.quantity;
+
+                CheckGold(slotInfo.item_index, slotInfo.item_type, ref buyGold, ref sellGold);
+                slotInfo.gold = buyGold;
+
                 buy_list.Add(slotInfo);
+
+                buyGold = 0;
+                sellGold = 0;
             }
         }
 
@@ -162,8 +173,41 @@ public class Network_Store : MonoBehaviour
                 slotInfo.item_index = sellSlot.Value.slotInfo.itemIndex;
                 slotInfo.item_type = (int)sellSlot.Value.slotInfo.itemType;
                 slotInfo.quantity = sellSlot.Value.slotInfo.quantity;
+
+                CheckGold(slotInfo.item_index, slotInfo.item_type, ref buyGold, ref sellGold);
+                slotInfo.gold = sellGold;
+
                 sell_list.Add(slotInfo);
+
+                buyGold = 0;
+                sellGold = 0;
             }
+        }
+    }
+
+    private void CheckGold(int index, int itemType, ref int buyGold, ref int sellGold)
+    {
+        switch ((TypeData.ItemType)itemType)
+        {
+            case TypeData.ItemType.장비:
+                {
+                    buyGold = ItemData.Instance.equipmentInfos[index].buyGold;
+                    sellGold = ItemData.Instance.equipmentInfos[index].sellGold;
+                }
+                break;
+
+            case TypeData.ItemType.소모품:
+                {
+                    buyGold = ItemData.Instance.cusomableInfos[index].buyGold;
+                    sellGold = ItemData.Instance.cusomableInfos[index].sellGold;
+                }
+                break;
+
+            case TypeData.ItemType.퀘스트템:
+                {
+                    sellGold = ItemData.Instance.questItemInfos[index].sellGold;
+                }
+                break;
         }
     }
 }

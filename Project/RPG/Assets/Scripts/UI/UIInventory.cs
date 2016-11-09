@@ -4,11 +4,13 @@ using System.Collections;
 public class UIInventory : MonoBehaviour
 {
     private PlayerInfoData playerInfoData = null;
+    private UIPanel inventoryPanel = null;
     public UILabel inventoryGold = null;
 
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
+        inventoryPanel = GetComponent<UIPanel>();
         inventoryGold = transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
     }
 
@@ -24,6 +26,6 @@ public class UIInventory : MonoBehaviour
 
     public void CloseWindows()
     {
-        gameObject.SetActive(false);
+        inventoryPanel.alpha = 0f;
     }
 }

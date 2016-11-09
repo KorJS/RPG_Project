@@ -429,22 +429,17 @@ public class PlayerSlotData
                         // 같은 곳에 수량이 99인지는 마크 등록할때 했음.
                         // 같은게 있으면 채우고
                         // 남으면 다시 또 같은게 있으면 채우고..
-                        int tempInvenSlotIndex = invenSlotInfo.Key;
-                        Debug.Log("tempInvenSlotIndex : " + tempInvenSlotIndex);
+                        int index = invenSlotInfo.Key;
 
-                        tempSlotInfoData = inventoryInfos[tempInvenSlotIndex];
+                        tempSlotInfoData = inventoryInfos[index];
 
                         // 수량이 99개 이면 다음꺼로.
-                        if (inventoryInfos[tempInvenSlotIndex].quantity >= 99) { continue; }
+                        if (inventoryInfos[index].quantity >= 99) { continue; }
 
-                        //int targetQuantity = tempSlotInfoData.quantity;
-                        Debug.Log("전 tempSlotInfoData.quantity : " + tempSlotInfoData.quantity);
                         CheckInvenQuantity(ref divQuantity, ref tempSlotInfoData.quantity, 99);
-                        Debug.Log("후 tempSlotInfoData.quantity : " + tempSlotInfoData.quantity);
-                        //tempSlotInfoData.quantity = targetQuantity;
 
-                        inventoryInfos[tempInvenSlotIndex] = tempSlotInfoData;
-                        GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+                        inventoryInfos[index] = tempSlotInfoData;
+                        UIManager.Instance.invenSlots[index].ReSetting();
                     }
 
                     // 수량이 없으면 리턴
@@ -466,10 +461,10 @@ public class PlayerSlotData
                             break;
                         }
 
-                        int tempInvenSlotIndex = emptySlotInfo.Key;
+                        int index = emptySlotInfo.Key;
 
                         // 만약에 빈곳이 아닐경우 리턴
-                        if (inventoryInfos.ContainsKey(tempInvenSlotIndex))
+                        if (inventoryInfos.ContainsKey(index))
                         {
                             Debug.Log("에러 빈곳이 아님");
                             return;
@@ -478,13 +473,13 @@ public class PlayerSlotData
                         // (0이 될때까지) 추가하고도 수량이 남으면 또 다음 슬롯에 추가.
                         int targetQuantity = 0;
 
-                        tempIndex.Add(tempInvenSlotIndex);
+                        tempIndex.Add(index);
 
                         CheckInvenQuantity(ref divQuantity, ref targetQuantity, 99);
                         
                         tempSlotInfoData.quantity = targetQuantity;
-                        inventoryInfos.Add(tempInvenSlotIndex, tempSlotInfoData); // 추가
-                        GameObject.Find("I_Slot " + tempInvenSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+                        inventoryInfos.Add(index, tempSlotInfoData); // 추가
+                        UIManager.Instance.invenSlots[index].ReSetting();
                     }
 
                     if (tempIndex.Count > 0)
@@ -565,12 +560,12 @@ public class PlayerSlotData
                     foreach (KeyValuePair<int, UISlotInfo.SlotInfo> emptySlotInfo in emptyInvenMark)
                     {
                         // 빈곳이겟지?
-                        int tempSlotIndex = emptySlotInfo.Key;
+                        int index = emptySlotInfo.Key;
                         Debug.Log("tempSlotInfoData : " + tempSlotInfoData.itemIndex);
                         tempSlotInfoData.quantity = divQuantity;
-                        emptyInvenMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
-                        inventoryInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
-                        GameObject.Find("I_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
+                        emptyInvenMark.Remove(index); // 이제 빈곳이 마크에서 아니므로 제거
+                        inventoryInfos.Add(index, tempSlotInfoData); // 추가
+                        UIManager.Instance.invenSlots[index].ReSetting();
                         break;
                     }
                 }
@@ -796,6 +791,9 @@ public class PlayerSlotData
 
         // 인벤, 단축창 수량 변화
         CheckShortCutMark(slotType, slotInfo);
+
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.인벤토리);
+        Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
 
         return true;
     }
@@ -1116,21 +1114,15 @@ public class PlayerSlotData
     {
         if (currentItemType == TypeData.ItemType.장비)
         {
-            Debug.Log("playerSlotData Add");
             CheckEquipmentMark(targetSlotType, currentItemType, currentItemIndex, divQuantity);
-            return;
         }
-
-        if (currentItemType == TypeData.ItemType.소모품)
+        else if (currentItemType == TypeData.ItemType.소모품)
         {
             CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenCusomableMark, ref storageCusomableMark);
-            return;
         }
-
-        if (currentItemType == TypeData.ItemType.퀘스트템)
+        else if (currentItemType == TypeData.ItemType.퀘스트템)
         {
             CheckCAndQMark(targetSlotType, currentItemType, currentItemIndex, divQuantity, ref invenQuestItemMark, ref storageQuestItemMark);
-            return;
         }
 
         Network_Slot.Instance.RequestSaveSlot(targetSlotType);

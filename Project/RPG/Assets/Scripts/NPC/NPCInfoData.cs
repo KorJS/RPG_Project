@@ -19,7 +19,6 @@ public class NPCInfoData : MonoBehaviour
     [System.Serializable]
     public class NPCInfo
     {
-        public GameObject windowObj = null;
         public TypeData.NPCType npcType;
         public TypeData.StoreType storeType;
         public int questIndex;
@@ -31,7 +30,6 @@ public class NPCInfoData : MonoBehaviour
 
     // 상점창 UI
     [SerializeField]
-    public GameObject storeObj = null;
 
     private UISlotInfo tempSlotInfo = null;
 
@@ -43,8 +41,6 @@ public class NPCInfoData : MonoBehaviour
 
         npcMovement = GetComponent<NPCMovement>();
         npcRange = GetComponent<NPCRange>();
-
-        storeObj = uiManager.windowSettings.storeObj;
 
         SetNPCInfo();
     }
@@ -73,7 +69,6 @@ public class NPCInfoData : MonoBehaviour
         {
             case TypeData.NPCType.상인:
                 {
-                    npcInfo.windowObj = uiManager.windowSettings.storeObj;
                     npcInfo.itemIndexs = storeItemListData.itemListInfos[(int)npcInfo.storeType];
                 }
                 break;

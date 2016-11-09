@@ -4,6 +4,7 @@ using System.Collections;
 public class UIStorage : MonoBehaviour
 {
     private PlayerInfoData playerInfoData = null;
+    private UIPanel storagePanel = null;
     public UILabel storageGold = null;
 
     private bool isDeposit = false;
@@ -11,6 +12,7 @@ public class UIStorage : MonoBehaviour
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
+        storagePanel = GetComponent<UIPanel>();
         storageGold = transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
     }
 
@@ -44,6 +46,6 @@ public class UIStorage : MonoBehaviour
 
     public void CloseWindows()
     {
-        gameObject.SetActive(false);
+        storagePanel.alpha = 0f;
     }
 }

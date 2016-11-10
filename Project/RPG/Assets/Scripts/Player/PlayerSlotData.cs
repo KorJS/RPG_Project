@@ -149,13 +149,6 @@ public class PlayerSlotData
         //slotInfoData.quantity = 1;
         //storageInfos.Add(1, slotInfoData);
 
-        foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in SkillData.Instance.skillInfos)
-        {
-            slotInfoData.itemType = (int)TypeData.ItemType.없음;
-            slotInfoData.skillIndex = skillInfo.Key;
-            slotInfoData.itemIndex = -1;
-            skillListInfos.Add(skillInfo.Key, slotInfoData);
-        }
         //slotInfoData.itemType = (int)TypeData.ItemType.없음;
         //slotInfoData.skillIndex = 0;
         //slotInfoData.itemIndex = -1;
@@ -183,6 +176,17 @@ public class PlayerSlotData
 
         //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
         //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
+    }
+
+    public void SetSkillListSlot()
+    {
+        foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in SkillData.Instance.skillInfos)
+        {
+            slotInfoData.itemType = (int)TypeData.ItemType.없음;
+            slotInfoData.skillIndex = skillInfo.Key;
+            slotInfoData.itemIndex = -1;
+            skillListInfos.Add(skillInfo.Key, slotInfoData);
+        }
     }
 
     // 인벤토리 정보 가져오기
@@ -848,8 +852,11 @@ public class PlayerSlotData
             slotInfo.slotInfoType = TypeData.SlotInfoType.스킬;
             slotInfo.itemType = TypeData.ItemType.없음;
 
+            Debug.Log("slotIndex : " + slotType);
+
             if (slotType == TypeData.SlotType.스킬리스트)
             {
+                Debug.Log("slotIndex : " + slotIndex);
                 return PlayerSkillData.Instance.GetSkillData(slotIndex);
             }
         }

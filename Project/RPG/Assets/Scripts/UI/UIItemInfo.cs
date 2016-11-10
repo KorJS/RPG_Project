@@ -21,11 +21,9 @@ public class UIItemInfo : MonoBehaviour
 
     public UISprite uiHover = null;
 
-    public UIButton uiH = null;
-
     void Awake()
     {
-        uiHover = transform.FindChild("BG").GetComponent<UISprite>();
+        uiHover = GetComponent<UISprite>();
         uiHover.alpha = 0.5f;
     }
 
@@ -36,6 +34,7 @@ public class UIItemInfo : MonoBehaviour
 
     void OnClick()
     {
+        // 주인공이 근처에 없으면 리턴
         if (!itemControl.itemSettings.isPlayer)
         {
             return;
@@ -49,11 +48,11 @@ public class UIItemInfo : MonoBehaviour
 
     void OnHover(bool isHover)
     {
+        // 근처에 주인공이 없으면 리턴
         if (!itemControl.itemSettings.isPlayer)
         {
             return;
         }
-        Debug.Log(itemControl.itemSettings.isPlayer);
 
         if (isHover)
         {
@@ -65,6 +64,7 @@ public class UIItemInfo : MonoBehaviour
         }
     }
 
+    // 아이템 마우스 클릭으로 습득하기 위해서 아이템 정보를 받아온다. - 아이템 생성되면서 이름 생성될때 정보 받아온다.
     public void SetItemInfo(Transform _itemT, ItemControl _itemControl, TypeData.ItemType itemType, int itemIndex, int quantity)
     {
         itemT = _itemT;
@@ -74,6 +74,7 @@ public class UIItemInfo : MonoBehaviour
         itemInfo.quantity = quantity;
     }
 
+    // OnClick 에서 왼클릭시 아이템 습득 - 인벤으로
     public void DropItemClick()
     {
         if (!itemControl.itemSettings.isPlayer)
@@ -83,20 +84,5 @@ public class UIItemInfo : MonoBehaviour
         playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemInfo.itemType, itemInfo.itemIndex, itemInfo.quantity);
         Destroy(itemT.gameObject);
         Destroy(gameObject);
-    }
-
-    private void SetPosition()
-    {
-        Vector3 p = Camera.main.WorldToViewportPoint(itemT.position);
-        transform.position = UICamera.mainCamera.ViewportToWorldPoint(p);
-
-        p = transform.localPosition;
-        p.x = Mathf.RoundToInt(p.x);
-        p.y = Mathf.RoundToInt(p.y);
-        p.z = 0f;
-
-        transform.localPosition = p;
-    }
-
-  
+    } 
 }

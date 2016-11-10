@@ -66,7 +66,6 @@ public class CameraControl : MonoBehaviour
     {
         mainCamera = Camera.main;
         pivot = this.transform.GetChild(0);
-
         if (GameObject.FindGameObjectWithTag("Player"))
         {
             uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();

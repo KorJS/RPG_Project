@@ -10,25 +10,25 @@ public class ItemControl : MonoBehaviour
     public class ItemSettings
     {
         [Header("- Item Info -")]
-        public string itemName;
-        public TypeData.ItemType itemType;
-        public int itemIndex;
-        public int quantity;
+        public string               itemName;       // 아이템 이름
+        public TypeData.ItemType    itemType;       // 아이템 타입
+        public int                  itemIndex;      // 아이템 인덱스
+        public int                  quantity;       // 수량
 
         [Header("- Item Control -")]
-        public Transform itemT;
-        public Transform targetT;
-        public float distance;
-        public bool isPlayer;
+        public Transform            itemT;          // 아이템
+        public Transform            targetT;        // 타겟
+        public float                distance;       // 거리 - 주인공 검사
+        public bool                 isPlayer;       // 주인공이 있는지 여부
 
         [Header("- Item UI -")]
-        public GameObject uiItemNameObj;
-        public UILabel uiItemName;
+        public GameObject           uiItemNameObj;  // 아이템 이름 UI
+        public UILabel              uiItemName;     // 아이템 이름
     }
 
     public ItemSettings itemSettings;
 
-    private bool isUIName = false;
+    private bool isUIName = false;  // 아이템이 카레마에 보이는지 여부
 
     void Awake()
     {
@@ -45,13 +45,16 @@ public class ItemControl : MonoBehaviour
 
     void Update()
     {
+        // 주변에 주인공이 있는지 검사
         itemSettings.isPlayer = CheckPlayer();
 
+        // 주인공이 없으면 타겟 제거
         if (!itemSettings.isPlayer)
         {
             itemSettings.targetT = null;
         }
 
+        // 주인공이 주변에 있고 F키를 클릭하면 아이템 습득처리 - 인벤으로
         if (itemSettings.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
             playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemSettings.itemType, itemSettings.itemIndex, itemSettings.quantity);
@@ -59,12 +62,14 @@ public class ItemControl : MonoBehaviour
             Destroy(gameObject);
         }
 
+        // 아이템 이름이 있으면 카메라에 비추어질때 활성화 사라지면 비활성화
         if (itemSettings.uiItemNameObj != null)
         {
             itemSettings.uiItemNameObj.SetActive(isUIName);
         }
     }
 
+    // 아이템 주변에 주인공이 있는지 검사
     private bool CheckPlayer()
     {
         Collider[] targets = Physics.OverlapSphere(itemSettings.itemT.position, itemSettings.distance);
@@ -84,6 +89,7 @@ public class ItemControl : MonoBehaviour
         return false;
     }
 
+    // 아이템 이름 UI 생성
     private void CreateUIName()
     {
         itemSettings.uiItemNameObj = Instantiate(Resources.Load("UI/ItemName")) as GameObject;

@@ -129,6 +129,7 @@ public class SkillData
 
         Debug.Log("파일 읽기 완료 : " + path);
 
+        PlayerSlotData.Instance.SetSkillListSlot();
         LevelData.Instance.LoadTalbe();
     }
 

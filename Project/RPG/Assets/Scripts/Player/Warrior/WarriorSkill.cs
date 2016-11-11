@@ -150,7 +150,7 @@ public class WarriorSkill : MonoBehaviour
         float attack = playerInfoData.totalAtt * skillInfo.attack;
         Debug.Log("attack : " + attack);
         // TODO : SKillInfo의 데미지를 적용
-        enemyObj.GetComponent<MonsterMovement>().SetDamage(-attack);
+        enemyObj.GetComponent<MonsterMovement>().SetDamage(gameObject.transform, -attack);
         uiManager.SetHpBar(enemyObj.transform);
     }
 

@@ -26,6 +26,7 @@ public class Network_MonsterInfo : MonoBehaviour
         public string message;
         public bool isSuccess;
         public List<MonsterData.MonsterInfo> monsterInfos = new List<MonsterData.MonsterInfo>();
+        public List<MonsterData.MonsterSkillInfo> monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
     }
 
     private string monster_load_contents = null;
@@ -62,6 +63,8 @@ public class Network_MonsterInfo : MonoBehaviour
             MonsterData.Instance.monsterInfos.Add(data.monsterInfos[i].fileName + "_Spawns", data.monsterInfos[i]);
         }
 
+        MonsterData.Instance.monsterSkillInfos = data.monsterSkillInfos;
+        Debug.Log(MonsterData.Instance.monsterSkillInfos.Count);
         Debug.Log(data.message);
     }
 }

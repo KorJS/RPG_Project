@@ -75,7 +75,7 @@ public class NetworkManager : MonoBehaviour {
             {
                 index = 1;
             }
-
+            Debug.Log(www.text);
             if (www.text[index] == '{') // JSON 데이타 인가? 
             {
                 // JSON 데이타를 Dictionary로 변환

@@ -39,19 +39,25 @@ public class MonsterData
 
     public MonsterInfo monsterInfo;
 
+    [System.Serializable]
+    public class MonsterSkillInfo
+    {
+        public int monsterIndex;
+        public int skillIndex;
+        public string skillPoint;
+        public int att;
+        public string range;
+        public string aniName;
+    }
+
+    public MonsterSkillInfo monsterSkillInfo;
+
     public Dictionary<string, MonsterInfo> monsterInfos = null;
+    public List<MonsterSkillInfo> monsterSkillInfos = null;
 
     public MonsterData()
     {
         monsterInfos = new Dictionary<string, MonsterInfo>();
-
-        //monsterInfo.name = "블러드 골렘";
-        //monsterInfo.fileName = "BloodGolem";
-        //monsterInfo.monsterType = (int)TypeData.MonsterType.보스;
-        //monsterInfo.areaTpye = (int)TypeData.AreaType.여명의정원;
-        //monsterInfo.def = 30;
-        //monsterInfo.hp = 10000;
-        //monsterInfos.Add(monsterInfo.fileName + "_Spawns", monsterInfo);
     }
 
     public bool GetMonsterData(string spawnName, ref MonsterInfo monsterInfo)
@@ -65,5 +71,32 @@ public class MonsterData
         monsterInfo = monsterInfos[spawnName];
 
         return true;
+    }
+
+    public bool GetMonsterSkillData(int monsterIndex, ref List<MonsterSkillInfo> _monsterSkillInfos)
+    {
+        if (monsterSkillInfos.Count <= 0)
+        {
+            Debug.Log("보스 스킬 정보가 없습니다.");
+            return false;
+        }
+
+        bool isExist = false;
+
+        for (int i = 0; i < monsterSkillInfos.Count; i++)
+        {
+            if (monsterIndex == monsterSkillInfos[i].monsterIndex)
+            {
+                _monsterSkillInfos.Add(monsterSkillInfos[i]);
+                isExist = true;
+            }
+        }
+
+        if (!isExist)
+        {
+            Debug.Log("해당 보스의 스킬 정보가 없습니다");
+        }
+
+        return isExist;
     }
 }

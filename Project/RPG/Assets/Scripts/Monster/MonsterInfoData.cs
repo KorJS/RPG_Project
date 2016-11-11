@@ -9,6 +9,7 @@ public class MonsterInfoData : MonoBehaviour
 {
     // TODO : 몬스터 스폰될때 몬스터 정보을 이 스크립트에 저장 및 수치계산 관리
     public MonsterData.MonsterInfo monsterInfo;
+    public List<MonsterData.MonsterSkillInfo> monsterSkillInfos;
     private MonsterMovement monsterMovemnet = null;
     private MonsterState monsterState = null;
     private ItemManager itemManager = null;
@@ -32,6 +33,7 @@ public class MonsterInfoData : MonoBehaviour
     void Awake()
     {
         dropItems = new Dictionary<int, DropItem>();
+        monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
         monsterT = transform;
         monsterMovemnet = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();
@@ -49,6 +51,7 @@ public class MonsterInfoData : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("monsterSkillInfos : " + monsterSkillInfos.Count);
         if (isDeath)
         {
             itemManager.CreateDropItem(monsterT, monsterInfo, dropItems);
@@ -57,10 +60,10 @@ public class MonsterInfoData : MonoBehaviour
             PlayerInfoData.Instance.SetExp(monsterInfo.exp);
 
             // 상태 변화(죽음)
-            monsterState.nextState = TypeData.State.죽음;
+            monsterState.nextState = TypeData.MonsterState.죽음;
             // 애니메이션 설정
             monsterMovemnet.animator.SetTrigger(monsterMovemnet.animationSettings.isDeathTrigger);
-            StartCoroutine(monsterMovemnet.Death(5f));
+            StartCoroutine(monsterMovemnet.Death(10f));
             
             // HP 비활성화
             ResetHpBar();
@@ -84,7 +87,15 @@ public class MonsterInfoData : MonoBehaviour
         {
             dropItem.itemType = (TypeData.ItemType)int.Parse(itemTypes[i]);
             dropItem.itemIndex = int.Parse(itemIndex[i]);
-            dropItem.quantity = int.Parse(quantity[i]);
+
+            int tempQuantity = 1;
+
+            if (i < quantity.Length)
+            {
+                tempQuantity = int.Parse(quantity[i]);
+            }
+
+            dropItem.quantity = tempQuantity;
             dropItems.Add(i, dropItem);
         }
     }

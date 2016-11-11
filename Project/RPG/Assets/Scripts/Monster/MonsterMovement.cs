@@ -2,17 +2,16 @@
 using System.Collections;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CharacterController))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterInfoData monsterInfoData = null;
     private MonsterRange monsterRange = null;
     private MonsterState monsterState = null;
-    private PlayerEffect playerEffect = null;
 
     [System.Serializable]
     public class AnimationSettings
     {
-        public string modeInt               = "Mode";
         public string stateInt              = "State";
         public string skillTypeInt          = "SkillType";
         public string isDwonTrigger         = "isDwon";
@@ -29,13 +28,10 @@ public class MonsterMovement : MonoBehaviour
 
     public GameObject skillHolderObj = null;
 
-    public float rotationTime = 1.5f;
-    public float rotationTimer = 0f;
-
     public bool isIdle = false;
-    public bool isMove = false;
-    public bool isRot = false;
-    public bool isHit = false;
+    public bool isSkill = false;
+    public bool isSkillWait = false;
+    public bool isDamage = false;
 
     void Awake()
     {
@@ -45,29 +41,35 @@ public class MonsterMovement : MonoBehaviour
         animator = GetComponent<Animator>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
-        isIdle = true;
-
-        SetAnimator();
+        isSkill = false;
+        isSkillWait = true;
+        //SetAnimator();
     }
 
     void OnEnable()
     {
-        isIdle = true;
-        isHit = false;
+        isDamage = false;
+        isSkill = false;
+        isSkillWait = true;
     }
 
     void Update()
     {
         CheckCurrentAnimation();
-        Move();
-        Rotation();
     }
 
     // 데미지
-    public void SetDamage(float damage)
+    public void SetDamage(Transform targetT, float damage)
     {
+        monsterState.nextMode = TypeData.MODE.전투;
         monsterInfoData.SetCurrentHP(damage);
-        isHit = true;
+        isDamage = true;
+
+        // 어글 확정이 안되어있다면
+        if (!monsterRange.isTargetAggro)
+        {
+            monsterRange.monster.targetT = targetT;
+        }
     }
 
     // 다운
@@ -84,19 +86,13 @@ public class MonsterMovement : MonoBehaviour
         monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
         monsterRange.monster.targetT = null;
         monsterRange.isTargetAggro = false;
-        monsterState.nextState = TypeData.State.대기;
+        monsterState.nextState = TypeData.MonsterState.대기;
         monsterState.nextMode = TypeData.MODE.평화;
         gameObject.SetActive(false);
     }
 
-    // 모드
-    public void SetAniMode(TypeData.MODE mode)
-    {
-        animator.SetInteger(animationSettings.modeInt, (int)mode);
-    }
-
     // 상태
-    public void SetAniState(TypeData.State state)
+    public void SetAniState(TypeData.MonsterState state)
     {
         animator.SetInteger(animationSettings.stateInt, (int)state);
     }
@@ -105,93 +101,78 @@ public class MonsterMovement : MonoBehaviour
     public void SetAniSkill(int skillType)
     {
         animator.SetInteger(animationSettings.skillTypeInt, skillType);
-        isIdle = false;
+        isSkillWait = false;
     }
 
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
-        // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("walk"))
-        {
-            isMove = true;
-        }
-        else
-        {
-            isMove = false;
-        }
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("death"))
-        {
-            //animator.ResetTrigger(animationSettings.isDeathTrigger);
-        }
-
-        // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
-        if (!isIdle && animator.GetCurrentAnimatorStateInfo(0).IsName("idle_wait_Bottom"))
+        // 현재 실행 중인 애니메이터가 "skill_wait" 인지
+        if (!isSkillWait && animator.GetCurrentAnimatorStateInfo(0).IsName("skill_wait"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
-            isIdle = true;
+            isSkillWait = true;
         }
     }
 
     // 이동
-    private void Move()
-    {
-        if (!isMove)
-        {
-            return;
-        }
+    //private void Move()
+    //{
+    //    if (!isMove)
+    //    {
+    //        return;
+    //    }
 
-        transform.Translate(0f, 0f, Time.deltaTime * 2f);
-    }
+    //    transform.Translate(0f, 0f, Time.deltaTime * 2f);
+    //}
 
-    private void Rotation()
-    {
-        if (!isRot || !isIdle)
-        {
-            return;
-        }
+    //private void Rotation()
+    //{
+    //    if (!isRot || !isIdle)
+    //    {
+    //        return;
+    //    }
 
-        Vector3 targetPos = monsterRange.tPos;
-        Vector3 monsterPos = monsterRange.mobPos;
+    //    Vector3 targetPos = monsterRange.tPos;
+    //    Vector3 monsterPos = monsterRange.mobPos;
 
-        Vector3 pos = targetPos - monsterPos;
+    //    Vector3 pos = targetPos - monsterPos;
 
-        // 이동 중일때 회전
-        Quaternion q = Quaternion.LookRotation(pos);
-        transform.rotation = Quaternion.Lerp(transform.rotation, q, Time.deltaTime * 2f);
+    //    // 이동 중일때 회전
+    //    Quaternion q = Quaternion.LookRotation(pos);
+    //    transform.rotation = Quaternion.Lerp(transform.rotation, q, Time.deltaTime * 2f);
 
-        rotationTimer += Time.deltaTime;
-        if (rotationTimer > rotationTime)
-        {
-            isRot = false;
-            rotationTimer = 0f;
-        }
-    }
+    //    rotationTimer += Time.deltaTime;
+    //    if (rotationTimer > rotationTime)
+    //    {
+    //        isRot = false;
+    //        rotationTimer = 0f;
+    //    }
+    //}
 
-    // 자식에 아바타를 받아옴
-    private void SetAnimator()
-    {
-        Animator[] animators = GetComponentsInChildren<Animator>();
+    //// 자식에 아바타를 받아옴
+    //private void SetAnimator()
+    //{
+    //    Animator[] animators = GetComponentsInChildren<Animator>();
 
-        if (animators.Length > 0)
-        {
-            for (int i = 0; i < animators.Length; i++)
-            {
-                Animator anim = animators[i];
-                Avatar av = anim.avatar;
+    //    if (animators.Length > 0)
+    //    {
+    //        for (int i = 0; i < animators.Length; i++)
+    //        {
+    //            Animator anim = animators[i];
+    //            Avatar av = anim.avatar;
 
-                if (anim != animator)
-                {
-                    if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
-                    {
-                        continue;
-                    }
+    //            if (anim != animator)
+    //            {
+    //                if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
+    //                {
+    //                    continue;
+    //                }
 
-                    animator.avatar = av;
-                    Destroy(anim);
-                }
-            }
-        }
-    }
+    //                animator.avatar = av;
+    //                Destroy(anim);
+    //            }
+    //        }
+    //    }
+    //}
 }

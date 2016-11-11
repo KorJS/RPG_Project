@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MonsterManager : MonoBehaviour
 {
     private MonsterData.MonsterInfo tempMonsterInfo; // 임시 몬스터 정보를 담아둘 것
+    private List<MonsterData.MonsterSkillInfo> tempMonsterSkillInfos; // 임시 몬스터 스킬 정보를 담아둘 것
 
     public List<GameObject> monsterObjs = null; // 지역 내에 모든 몬스터 - 지역이 바뀌면 제거하기 위해서
 
@@ -12,6 +13,7 @@ public class MonsterManager : MonoBehaviour
 
     void Awake()
     {
+        tempMonsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
         Transform spawnHolder = GameObject.Find("World").transform.FindChild("Spawns");
 
         FindSpawn(spawnHolder, spawns);
@@ -39,6 +41,11 @@ public class MonsterManager : MonoBehaviour
             {
                 Debug.Log(tempSpawn.name + " 몬스터 정보가 없습니다. MonsterData 확인바람");
                 continue;
+            }
+
+            if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
+            {
+                MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref tempMonsterSkillInfos);
             }
 
             // 해당 몬스터의 스폰 지역에 배치
@@ -71,12 +78,21 @@ public class MonsterManager : MonoBehaviour
 
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();
             infoData.monsterInfo = tempMonsterInfo; // 몬스터 정보
+
+            if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
+            {
+                Debug.Log("tempMonsterSkillInfos : " + tempMonsterSkillInfos.Count);
+                infoData.monsterSkillInfos = tempMonsterSkillInfos; // 보스몬스터인 경우 스킬정보
+                Debug.Log("infoData.monsterSkillInfos : " + infoData.monsterSkillInfos.Count);
+            }
+
             infoData.SetCurrentHP(tempMonsterInfo.hp); // 몬스터 HP 설정
             infoData.CheckDropItem(); // 몬스터 드랍아이템 정보
 
             monsterObjs.Add(monsterObj); // 몬스터 등록 - 지역이 바뀌면 제거를 위해서.
         }
 
+        tempMonsterSkillInfos.Clear();
         resource = null;
     }
 }

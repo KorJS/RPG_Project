@@ -8,15 +8,15 @@ public class MonsterState : MonoBehaviour
     public TypeData.MODE currentMode = TypeData.MODE.없음;
     public TypeData.MODE nextMode = TypeData.MODE.없음;
 
-    public TypeData.State currentState = TypeData.State.없음;
-    public TypeData.State nextState = TypeData.State.없음;
+    public TypeData.MonsterState currentState = TypeData.MonsterState.없음;
+    public TypeData.MonsterState nextState = TypeData.MonsterState.없음;
 
     void Awake()
     {
         monsterMovement = GetComponent<MonsterMovement>();
 
-        currentState = TypeData.State.없음;
-        nextState = TypeData.State.대기;
+        currentState = TypeData.MonsterState.없음;
+        nextState = TypeData.MonsterState.대기;
 
         currentMode = TypeData.MODE.없음;
         nextMode = TypeData.MODE.평화;
@@ -24,8 +24,8 @@ public class MonsterState : MonoBehaviour
 
     void OnEnable()
     {
-        currentState = TypeData.State.없음;
-        nextState = TypeData.State.대기;
+        currentState = TypeData.MonsterState.없음;
+        nextState = TypeData.MonsterState.대기;
 
         currentMode = TypeData.MODE.없음;
         nextMode = TypeData.MODE.평화;
@@ -38,13 +38,13 @@ public class MonsterState : MonoBehaviour
 
     private void CheckState()
     {
-        if (nextState == TypeData.State.없음)
+        if (nextState == TypeData.MonsterState.없음)
         {
             return;
         }
 
         currentState = nextState;
-        nextState = TypeData.State.없음;
+        nextState = TypeData.MonsterState.없음;
 
         monsterMovement.SetAniState(currentState);
     }
@@ -58,7 +58,5 @@ public class MonsterState : MonoBehaviour
 
         currentMode = nextMode;
         nextMode = TypeData.MODE.없음;
-
-        monsterMovement.SetAniMode(currentMode);
     }
 }

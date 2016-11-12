@@ -13,7 +13,8 @@ public class KumasSkill : MonoBehaviour
         없음 = -1,
         att01 = 0,
         att02, att03, att04, att05,
-        combo_att01
+        combo_att01,
+        MAX
     }
 
     public SkillType skillType = SkillType.없음;
@@ -54,6 +55,7 @@ public class KumasSkill : MonoBehaviour
 
         if (monsterMovement.isSkill)
         {
+            Debug.Log("?????????????????");
             monsterMovement.isSkill = false;
             StartCoroutine(Attack());
         }
@@ -69,9 +71,13 @@ public class KumasSkill : MonoBehaviour
     {
         while(monsterState.currentState == TypeData.MonsterState.스킬)
         {
-            Debug.Log("?");
-
-            yield return null;
+            yield return new WaitForSeconds(3f);
+            skillType++;
+            if (skillType == SkillType.MAX)
+            {
+                skillType = 0;
+            }
+            monsterMovement.SetAniSkill((int)skillType);
         }
     }
 }

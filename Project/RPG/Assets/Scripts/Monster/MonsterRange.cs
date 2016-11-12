@@ -199,7 +199,7 @@ public class MonsterRange : MonoBehaviour
         }
 
         // 스킬중이면 리턴
-        if (monsterMovement.isSkill)
+        if (monsterMovement.isSkill || !monsterMovement.isSkillWait)
         {
             return;
         }
@@ -219,9 +219,13 @@ public class MonsterRange : MonoBehaviour
 
         monsterState.nextState = TypeData.MonsterState.회전;
 
+        //monsterMovement.animator.applyRootMotion = true;
+        monsterMovement.isRot = true;
+
         // 왼쪽 회전
         if (dp > 0)
         {
+            
             monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isLeftTurnTrigger);
         }
         // 오른쪽 회전
@@ -245,13 +249,18 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        if (monsterState.currentState == TypeData.MonsterState.회전)
+        {
+            return;
+        }
+
         if (monsterState.currentState == TypeData.MonsterState.이동)
         {
             return;
         }
 
         // 스킬중이면 리턴
-        if (!monsterMovement.isSkillWait)
+        if (monsterMovement.isSkill || !monsterMovement.isSkillWait)
         {
             return;
         }
@@ -263,7 +272,7 @@ public class MonsterRange : MonoBehaviour
         Debug.Log("이동 거리 체크 : " + dis);
         // 10m 이상 떨어지면 이동
         if (dis >= monster.moveDis)
-        {
+        {   
             monsterState.nextState = TypeData.MonsterState.이동;
         }
     }
@@ -282,6 +291,11 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        if (monsterState.currentState == TypeData.MonsterState.회전)
+        {
+            return;
+        }
+
         if (monsterState.currentState == TypeData.MonsterState.스킬)
         {
             return;
@@ -291,7 +305,7 @@ public class MonsterRange : MonoBehaviour
         Vector3 targetPos = monster.targetT.position;
 
         float dis = Vector3.Distance(monsterPos, targetPos);
-        Debug.Log("공격 거리 : " + dis);
+        //Debug.Log("공격 거리 : " + dis);
 
         if (dis <= monster.atkDis)
         {

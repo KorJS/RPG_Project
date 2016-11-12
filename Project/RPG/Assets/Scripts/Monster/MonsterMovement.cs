@@ -30,7 +30,7 @@ public class MonsterMovement : MonoBehaviour
 
     public GameObject skillHolderObj = null;
 
-    public bool isIdle = false;
+    public bool isRot = false;
     public bool isSkill = false;
     public bool isSkillWait = false;
     public bool isDamage = false;
@@ -44,6 +44,7 @@ public class MonsterMovement : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
+        isRot = false;
         isSkill = false;
         isSkillWait = true;
         //SetAnimator();
@@ -51,6 +52,7 @@ public class MonsterMovement : MonoBehaviour
 
     void OnEnable()
     {
+        isRot = false;
         isDamage = false;
         isSkill = false;
         isSkillWait = true;
@@ -116,6 +118,15 @@ public class MonsterMovement : MonoBehaviour
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
+        // 현재 실행 중인 애니메이터가 "skill_wait" 인지
+        if (isRot && animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+        {
+            // 스킬이 시전이 끝나면 회전 가능 하게.
+            isRot = false;
+            //animator.applyRootMotion = false;
+            monsterState.nextState = TypeData.MonsterState.대기;
+        }
+
         // 현재 실행 중인 애니메이터가 "skill_wait" 인지
         if (!isSkillWait && animator.GetCurrentAnimatorStateInfo(0).IsName("skill_wait"))
         {

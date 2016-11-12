@@ -45,7 +45,6 @@ public class MonsterManager : MonoBehaviour
 
             if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
             {
-                MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref tempMonsterSkillInfos);
             }
 
             // 해당 몬스터의 스폰 지역에 배치
@@ -78,11 +77,11 @@ public class MonsterManager : MonoBehaviour
 
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();
             infoData.monsterInfo = tempMonsterInfo; // 몬스터 정보
-
+            Debug.Log("monsterType : " + tempMonsterInfo.monsterType);
             if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
             {
-                Debug.Log("tempMonsterSkillInfos : " + tempMonsterSkillInfos.Count);
-                infoData.monsterSkillInfos = tempMonsterSkillInfos; // 보스몬스터인 경우 스킬정보
+                Debug.Log("tempMonsterSkillInfos : " + infoData.monsterSkillInfos.Count);
+                MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref infoData.monsterSkillInfos);
                 Debug.Log("infoData.monsterSkillInfos : " + infoData.monsterSkillInfos.Count);
             }
 
@@ -92,7 +91,6 @@ public class MonsterManager : MonoBehaviour
             monsterObjs.Add(monsterObj); // 몬스터 등록 - 지역이 바뀌면 제거를 위해서.
         }
 
-        tempMonsterSkillInfos.Clear();
         resource = null;
     }
 }

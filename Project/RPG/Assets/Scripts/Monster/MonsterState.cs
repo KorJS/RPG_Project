@@ -34,6 +34,7 @@ public class MonsterState : MonoBehaviour
     void Update()
     {
         CheckState();
+        CheckMode();
     }
 
     private void CheckState()

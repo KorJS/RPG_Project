@@ -42,11 +42,13 @@ public class KumasSkill : MonoBehaviour
 
         if (monsterState.currentMode == TypeData.MODE.평화)
         {
+            ResetSkill();
             return;
         }
 
         if (monsterState.currentState != TypeData.MonsterState.스킬)
         {
+            ResetSkill();
             return;
         }
 

@@ -3,6 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterInfoData monsterInfoData = null;
@@ -25,6 +26,7 @@ public class MonsterMovement : MonoBehaviour
     public AnimationSettings animationSettings;
 
     public Animator animator = null;
+    public NavMeshAgent nav = null;
 
     public GameObject skillHolderObj = null;
 
@@ -39,6 +41,7 @@ public class MonsterMovement : MonoBehaviour
         monsterInfoData = GetComponent<MonsterInfoData>();
         monsterState = GetComponent<MonsterState>();
         animator = GetComponent<Animator>();
+        nav = GetComponent<NavMeshAgent>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
         isSkill = false;
@@ -55,11 +58,17 @@ public class MonsterMovement : MonoBehaviour
 
     void Update()
     {
+        if (monsterState.currentState == TypeData.MonsterState.죽음)
+        {
+            return;
+        }
+
+        Move();
         CheckCurrentAnimation();
     }
 
     // 데미지
-    public void SetDamage(Transform targetT, float damage)
+    public void SetDamage(Transform _targetT, float damage)
     {
         monsterState.nextMode = TypeData.MODE.전투;
         monsterInfoData.SetCurrentHP(damage);
@@ -68,7 +77,7 @@ public class MonsterMovement : MonoBehaviour
         // 어글 확정이 안되어있다면
         if (!monsterRange.isTargetAggro)
         {
-            monsterRange.monster.targetT = targetT;
+            monsterRange.monster.targetT = _targetT;
         }
     }
 
@@ -113,6 +122,28 @@ public class MonsterMovement : MonoBehaviour
             // 스킬이 시전이 끝나면 회전 가능 하게.
             isSkillWait = true;
         }
+    }
+
+    private void Move()
+    {
+        if (!monsterRange.monster.targetT)
+        {
+            return;
+        }
+
+        if (monsterState.currentMode != TypeData.MODE.전투)
+        {
+            return;
+        }
+
+        if (monsterState.currentState != TypeData.MonsterState.이동)
+        {
+            return;
+        }
+
+        Vector3 targetPos = monsterRange.monster.targetT.position;
+        nav.SetDestination(targetPos);
+        //nav.destination = targetPos;
     }
 
     // 이동

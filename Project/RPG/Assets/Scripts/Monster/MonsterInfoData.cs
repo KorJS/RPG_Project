@@ -33,7 +33,7 @@ public class MonsterInfoData : MonoBehaviour
     void Awake()
     {
         dropItems = new Dictionary<int, DropItem>();
-        monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
+        //monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
         monsterT = transform;
         monsterMovemnet = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();
@@ -51,7 +51,6 @@ public class MonsterInfoData : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("monsterSkillInfos : " + monsterSkillInfos.Count);
         if (isDeath)
         {
             itemManager.CreateDropItem(monsterT, monsterInfo, dropItems);
@@ -63,7 +62,7 @@ public class MonsterInfoData : MonoBehaviour
             monsterState.nextState = TypeData.MonsterState.죽음;
             // 애니메이션 설정
             monsterMovemnet.animator.SetTrigger(monsterMovemnet.animationSettings.isDeathTrigger);
-            StartCoroutine(monsterMovemnet.Death(10f));
+            StartCoroutine(monsterMovemnet.Death(5f));
             
             // HP 비활성화
             ResetHpBar();

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class MonsterMovement : MonoBehaviour
@@ -44,10 +43,12 @@ public class MonsterMovement : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
 
         skillHolderObj = transform.FindChild("SkillHolder").gameObject;
+
         isRot = false;
         isSkill = false;
         isSkillWait = true;
-        //SetAnimator();
+
+        SetAnimator();
     }
 
     void OnEnable()
@@ -64,6 +65,11 @@ public class MonsterMovement : MonoBehaviour
         {
             return;
         }
+
+        //if (!isRot)
+        //{
+        //    animator.applyRootMotion = isRot;
+        //}
 
         Move();
         CheckCurrentAnimation();
@@ -118,21 +124,34 @@ public class MonsterMovement : MonoBehaviour
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
-        // 현재 실행 중인 애니메이터가 "skill_wait" 인지
-        if (isRot && animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
-        {
-            // 스킬이 시전이 끝나면 회전 가능 하게.
-            isRot = false;
-            //animator.applyRootMotion = false;
-            monsterState.nextState = TypeData.MonsterState.대기;
-        }
+        //// 현재 실행 중인 애니메이터가 "skill_wait" 인지
+        //if (isRot && animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+        //{
+        //    // 스킬이 시전이 끝나면 회전 가능 하게.
+        //    isRot = false;
+        //    monsterState.nextState = TypeData.MonsterState.대기;
+        //    Debug.Log("?");
+        //}
 
         // 현재 실행 중인 애니메이터가 "skill_wait" 인지
         if (!isSkillWait && animator.GetCurrentAnimatorStateInfo(0).IsName("skill_wait"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
-            isSkillWait = true;
         }
+    }
+
+    public void CheckAniRotation()
+    {
+        isRot = false;
+        monsterState.nextState = TypeData.MonsterState.대기;
+        animator.applyRootMotion = isRot;
+    }
+
+    // 스킬 대기중이면
+    public void CheckAniSkillWait()
+    {
+        Debug.Log("스킬 대기중");
+        isSkillWait = true;
     }
 
     private void Move()
@@ -155,6 +174,32 @@ public class MonsterMovement : MonoBehaviour
         Vector3 targetPos = monsterRange.monster.targetT.position;
         nav.SetDestination(targetPos);
         //nav.destination = targetPos;
+    }
+
+    // 자식에 아바타를 받아옴
+    private void SetAnimator()
+    {
+        Animator[] animators = GetComponentsInChildren<Animator>();
+
+        if (animators.Length > 0)
+        {
+            for (int i = 0; i < animators.Length; i++)
+            {
+                Animator anim = animators[i];
+                Avatar av = anim.avatar;
+
+                if (anim != animator)
+                {
+                    if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
+                    {
+                        continue;
+                    }
+
+                    animator.avatar = av;
+                    Destroy(anim);
+                }
+            }
+        }
     }
 
     // 이동
@@ -189,32 +234,6 @@ public class MonsterMovement : MonoBehaviour
     //    {
     //        isRot = false;
     //        rotationTimer = 0f;
-    //    }
-    //}
-
-    //// 자식에 아바타를 받아옴
-    //private void SetAnimator()
-    //{
-    //    Animator[] animators = GetComponentsInChildren<Animator>();
-
-    //    if (animators.Length > 0)
-    //    {
-    //        for (int i = 0; i < animators.Length; i++)
-    //        {
-    //            Animator anim = animators[i];
-    //            Avatar av = anim.avatar;
-
-    //            if (anim != animator)
-    //            {
-    //                if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
-    //                {
-    //                    continue;
-    //                }
-
-    //                animator.avatar = av;
-    //                Destroy(anim);
-    //            }
-    //        }
     //    }
     //}
 }

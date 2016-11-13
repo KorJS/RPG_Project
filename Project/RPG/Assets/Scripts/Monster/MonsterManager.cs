@@ -43,10 +43,6 @@ public class MonsterManager : MonoBehaviour
                 continue;
             }
 
-            if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
-            {
-            }
-
             // 해당 몬스터의 스폰 지역에 배치
             SetMonsterSpawn(tempSpawn);
         }
@@ -80,7 +76,6 @@ public class MonsterManager : MonoBehaviour
             Debug.Log("monsterType : " + tempMonsterInfo.monsterType);
             if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
             {
-                Debug.Log("tempMonsterSkillInfos : " + infoData.monsterSkillInfos.Count);
                 MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref infoData.monsterSkillInfos);
                 Debug.Log("infoData.monsterSkillInfos : " + infoData.monsterSkillInfos.Count);
             }

@@ -9,7 +9,7 @@ public class MonsterInfoData : MonoBehaviour
 {
     // TODO : 몬스터 스폰될때 몬스터 정보을 이 스크립트에 저장 및 수치계산 관리
     public MonsterData.MonsterInfo monsterInfo;
-    public List<MonsterData.MonsterSkillInfo> monsterSkillInfos;
+    public Dictionary<int, MonsterData.MonsterSkillInfo> monsterSkillInfos;
     private MonsterMovement monsterMovemnet = null;
     private MonsterState monsterState = null;
     private ItemManager itemManager = null;
@@ -32,8 +32,8 @@ public class MonsterInfoData : MonoBehaviour
 
     void Awake()
     {
+        monsterSkillInfos = new Dictionary<int, MonsterData.MonsterSkillInfo>();
         dropItems = new Dictionary<int, DropItem>();
-        //monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
         monsterT = transform;
         monsterMovemnet = GetComponent<MonsterMovement>();
         monsterState = GetComponent<MonsterState>();

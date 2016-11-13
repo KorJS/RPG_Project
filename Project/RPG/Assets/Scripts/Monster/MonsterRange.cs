@@ -60,6 +60,8 @@ public class MonsterRange : MonoBehaviour
 
         monster.monsterLayer = LayerMask.NameToLayer("Monster");
         monster.targetLayer = LayerMask.NameToLayer("Player");
+
+        skillPoint = monster.monsterT.FindChild("SkillPoint");
     }
 
     void Update()
@@ -119,7 +121,7 @@ public class MonsterRange : MonoBehaviour
         // 어글이펙트 활성화 되어있거나 
         // 확정 타겟이 있거나
         // 임시 타겟이 없으면
-        if (isTargetAggro || monster.targetT || !monster.tempTargetT)
+        if (isTargetAggro || !monster.tempTargetT)
         {
             aggroTimer = 0f;
             return;
@@ -138,7 +140,7 @@ public class MonsterRange : MonoBehaviour
         {
             tempT = monster.targetT;
         }
-
+        Debug.Log(monsterMovement.isDamage);
         if (monsterMovement.isDamage || aggroTimer >= monster.aggroTime)
         {
             Debug.Log("tempT : " + tempT.name);
@@ -210,6 +212,7 @@ public class MonsterRange : MonoBehaviour
 
         v2 = monster.monsterT.forward;
         float angle = Vector3.Angle(v1, v2);
+
         //Debug.Log("회전 체크 : " + angle);
         // 지정한 angle 안에 없으면 리턴
         if (angle > monster.rotAngle)
@@ -218,14 +221,11 @@ public class MonsterRange : MonoBehaviour
         }
 
         monsterState.nextState = TypeData.MonsterState.회전;
-
-        //monsterMovement.animator.applyRootMotion = true;
         monsterMovement.isRot = true;
-
+        monsterMovement.animator.applyRootMotion = true;
         // 왼쪽 회전
         if (dp > 0)
         {
-            
             monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isLeftTurnTrigger);
         }
         // 오른쪽 회전
@@ -269,7 +269,7 @@ public class MonsterRange : MonoBehaviour
         Vector3 targetPos = monster.targetT.position;
 
         float dis = Vector3.Distance(monsterPos, targetPos);
-        Debug.Log("이동 거리 체크 : " + dis);
+        //Debug.Log("이동 거리 체크 : " + dis);
         // 10m 이상 떨어지면 이동
         if (dis >= monster.moveDis)
         {   
@@ -305,7 +305,6 @@ public class MonsterRange : MonoBehaviour
         Vector3 targetPos = monster.targetT.position;
 
         float dis = Vector3.Distance(monsterPos, targetPos);
-        //Debug.Log("공격 거리 : " + dis);
 
         if (dis <= monster.atkDis)
         {
@@ -352,7 +351,7 @@ public class MonsterRange : MonoBehaviour
     }
 
     // 공격범위 - 각 스킬별로 위치, 거리, 각도로 타겟 hit판정.
-    public void HitRange(Vector3 skillPos, Vector3 _skillRnage, float skillAngle, float skillAtt)
+    public void HitRange(Vector3 skillPos, Vector3 _skillRnage, float skillAtt)
     {
         // 어글자랑 타겟은 무족건 1명은 있으므로.
         // 어글타겟이 없거나 / 타겟지정이 없으면

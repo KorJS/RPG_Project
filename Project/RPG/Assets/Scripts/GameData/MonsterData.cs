@@ -73,7 +73,7 @@ public class MonsterData
         return true;
     }
 
-    public bool GetMonsterSkillData(int monsterIndex, ref List<MonsterSkillInfo> _monsterSkillInfos)
+    public bool GetMonsterSkillData(int monsterIndex, ref Dictionary<int, MonsterSkillInfo> _monsterSkillInfos)
     {
         if (monsterSkillInfos.Count <= 0)
         {
@@ -87,7 +87,7 @@ public class MonsterData
         {
             if (monsterIndex == monsterSkillInfos[i].monsterIndex)
             {
-                _monsterSkillInfos.Add(monsterSkillInfos[i]);
+                _monsterSkillInfos.Add(monsterSkillInfos[i].skillIndex, monsterSkillInfos[i]);
                 isExist = true;
             }
         }

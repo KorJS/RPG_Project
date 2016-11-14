@@ -20,6 +20,7 @@ public class WarriorSkill : MonoBehaviour
         public string isEndComboTrigger     = "isEndCombo";
         public string isCombo01Trigger      = "isCombo01";
         public string isCombo02Trigger      = "isCombo02";
+        public string isTumblingTrigger     = "isTumbling";
         public string isOverpowerTrigger    = "isOverpower";
         public string isRushBool            = "isRush";
         public string isStartBlockTrigger   = "isStartBlock";
@@ -46,7 +47,7 @@ public class WarriorSkill : MonoBehaviour
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
     private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
 
-    public float comboTimer = 0f;    // 연속공격 입력타이머
+    public float comboTimer = 0f;           // 연속공격 입력타이머
     public bool isComboTime = false;        // 콤보 타임이 지났는지
     public bool isCombo = false;            // 몇번 콤보 공격인지
 
@@ -198,7 +199,7 @@ public class WarriorSkill : MonoBehaviour
         {
             case SkillType.연속공격: { ComboAttack(); } break;
             case SkillType.방패막기: { ShieldBlock(); } break;
-            case SkillType.긴급회피: {  } break;
+            case SkillType.긴급회피: { Tumbling(); } break;
             case SkillType.압도: { Overpower(); } break;
             case SkillType.난폭한돌진: { Rush(); } break;
         }
@@ -287,6 +288,19 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.isBlock = isBlock;
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
+    }
+
+    // 긴급회피
+    private void Tumbling()
+    {
+        playerMovement.charCtrl.enabled = false;
+        playerMovement.SetAniSkill((int)currentSkillTpye);
+        playerMovement.animator.SetTrigger(warriorAniSettings.isTumblingTrigger);
+    }
+
+    public void TumblingEnd()
+    {
+        playerMovement.charCtrl.enabled = true;
     }
 
     // 압도

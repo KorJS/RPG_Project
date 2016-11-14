@@ -85,6 +85,17 @@ public class WarriorSkill : MonoBehaviour
             isCombo = false;
         }
 
+        if (currentSkillTpye == SkillType.없음)
+        {
+            playerMovement.animator.ResetTrigger(playerMovement.animationSettings.isDamageTrigger);
+        }
+
+        if (playerMovement.isDamage)
+        {
+            playerMovement.animator.ResetTrigger(warriorAniSettings.isCombo01Trigger);
+            playerMovement.animator.ResetTrigger(warriorAniSettings.isCombo02Trigger);
+        }
+
         CheckCurrentAniState();
         SwitchSkill();
         CheckComboTime();
@@ -139,6 +150,7 @@ public class WarriorSkill : MonoBehaviour
                 {
                     // 범위 안에 있으면 Hit
                     //Debug.Log(target.name);
+                    playerMovement.isHit = true;
                     Damage(target.gameObject);
                 }
             }

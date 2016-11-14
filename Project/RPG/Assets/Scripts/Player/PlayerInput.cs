@@ -139,6 +139,11 @@ public class PlayerInput : MonoBehaviour
             PlayerInfoData.Instance.totalAtt += 99999;
         }
 
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            PlayerInfoData.Instance.SetExp(99999);
+        }
+
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
         {
             Debug.Log("aaaaaaaaaaaaaa");
@@ -174,7 +179,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.Damage();
+            playerMovement.Damage(0);
         }
     }
 

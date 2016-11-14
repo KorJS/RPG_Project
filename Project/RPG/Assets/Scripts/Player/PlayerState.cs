@@ -86,6 +86,7 @@ public class PlayerState : MonoBehaviour
         if (playerMovement.isHit)
         {
             combatTimer = 0f;
+            playerMovement.isHit = false;
         }
 
         if (combatTimer >= noHitCombatTime)

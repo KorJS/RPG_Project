@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class KumasSkill : MonoBehaviour
 {
@@ -8,12 +9,30 @@ public class KumasSkill : MonoBehaviour
     private MonsterRange monsterRange = null;
     private MonsterMovement monsterMovement = null;
 
+    [System.Serializable]
+    public class KumasEffectSettings
+    {
+        public Transform leftPoint_s;
+        public Transform rightPoint_s;
+        public Transform leftPoint_e;
+        public Transform rightPoint_e;
+        public Transform mouthPoint;
+        public Transform effectHolder;
+
+        public List<GameObject> iceBallObjs;
+        public GameObject breathObj;
+    }
+
+    [SerializeField]
+    public KumasEffectSettings effects;
+
     public enum SkillType
     {
         없음 = -1,
         att01 = 0,
-        att02, att03, att04, att05,
-        combo01,
+        att02, combo01,
+        att05,
+        
         MAX
     }
 
@@ -23,6 +42,9 @@ public class KumasSkill : MonoBehaviour
     private Vector3 skillRange = Vector3.zero;
     private float skillAtt = 0f;
 
+    private int iceBallCount = 0;
+    private bool isBreath = false;
+
     void Awake()
     {
         monsterInfoData = GetComponent<MonsterInfoData>();
@@ -30,7 +52,11 @@ public class KumasSkill : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterMovement = GetComponent<MonsterMovement>();
 
+        effects.effectHolder = GameObject.Find("MonsterEffectPool").transform;
         skillType = SkillType.없음;
+
+        // 스킬 이펙트 생성
+        CreateEffect();
     }
 
     void OnEnable()
@@ -64,6 +90,26 @@ public class KumasSkill : MonoBehaviour
         }
     }
 
+    private void CreateEffect()
+    {
+        var resource = Resources.Load("Effect/Monster/IceBall");
+
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject obj = Instantiate(resource) as GameObject;
+            obj.transform.SetParent(effects.effectHolder);
+            obj.transform.position = Vector3.zero;
+            obj.SetActive(false);
+            effects.iceBallObjs.Add(obj);
+        }
+
+        resource = Resources.Load("Effect/Monster/Breath");
+        effects.breathObj = Instantiate(resource) as GameObject;
+        effects.breathObj.transform.SetParent(effects.effectHolder);
+        effects.breathObj.transform.position = Vector3.zero;
+        effects.breathObj.SetActive(false);
+    }
+
     // 애니메이션 이벤트 - 스킬이 끝날때쯤 호출
     public void ResetSkill()
     {
@@ -72,20 +118,22 @@ public class KumasSkill : MonoBehaviour
 
     IEnumerator Attack()
     {
-        while(monsterState.currentState == TypeData.MonsterState.스킬)
+        while (monsterState.currentState == TypeData.MonsterState.스킬)
         {
             if (monsterMovement.isSkillWait)
             {
                 Debug.Log("스킬 Go");
                 skillType++;
+
                 if (skillType == SkillType.MAX)
                 {
-                    skillType = 0;
+                    skillType = SkillType.att01;
                 }
+
                 monsterMovement.SetAniSkill((int)skillType);
             }
 
-            yield return null;
+            yield return new WaitForSeconds(2f);
         }
     }
 
@@ -126,28 +174,75 @@ public class KumasSkill : MonoBehaviour
         Hit((int)SkillType.att02);
     }
 
-    // 썬더 스톰
-    public void Att03()
-    {
-        Hit((int)SkillType.att03);
-    }
-
-    // 마력볼
-    public void Att04()
-    {
-        Hit((int)SkillType.att04);
-    }
-
     // 브레스
     public void Att05()
     {
-        Hit((int)SkillType.att05);
+        isBreath = true;
+        StartCoroutine(Breath());
     }
     
-    // 연속 마력볼
+    public IEnumerator Breath()
+    {
+        
+        while (isBreath)
+        {
+            yield return new WaitForSeconds(1f);
+
+            if (!isBreath)
+            {
+                break;
+            }
+
+            Hit((int)SkillType.att05);
+        }
+    }
+
+    // 연속 아이스볼
     public void Combo01()
     {
-        Hit((int)SkillType.combo01);
+        if (iceBallCount >= effects.iceBallObjs.Count)
+        {
+            iceBallCount = 0;
+        }
+        Debug.Log(iceBallCount);
+        Transform tempT_s = null;
+        Transform tempT_e = null;
 
+        if (iceBallCount % 2 == 0)
+        {
+            tempT_s = effects.rightPoint_s;
+            tempT_e = effects.rightPoint_e;
+        }
+        else
+        {
+            tempT_s = effects.leftPoint_s;
+            tempT_e = effects.leftPoint_e;
+        }
+
+        effects.iceBallObjs[iceBallCount].transform.position = tempT_s.position;
+        effects.iceBallObjs[iceBallCount].SetActive(true);
+
+        BallControl ballControl = effects.iceBallObjs[iceBallCount].GetComponent<BallControl>();
+        ballControl.SetBall(tempT_s, tempT_e.position, skillPos, skillRange, skillAtt);
+
+        iceBallCount++;
+    }
+
+    public void StartBreath()
+    {
+        effects.breathObj.transform.SetParent(effects.mouthPoint);
+        effects.breathObj.transform.localPosition = Vector3.zero;
+        effects.breathObj.transform.localRotation = Quaternion.identity;
+        effects.breathObj.SetActive(true);
+    }
+
+    public void EndBreath()
+    {
+        if (effects.breathObj.activeSelf)
+        {
+            isBreath = false;
+            effects.breathObj.transform.SetParent(effects.effectHolder);
+            effects.breathObj.SetActive(false);
+        }
     }
 }

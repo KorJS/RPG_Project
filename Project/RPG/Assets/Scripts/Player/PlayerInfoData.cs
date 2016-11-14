@@ -109,11 +109,14 @@ public class PlayerInfoData
 
     public void SetCurrentHp(float hpValue)
     {
+        Debug.Log("전 : " + hpValue);
+
         // 데미지인 경우 음수
         if (hpValue < 0)
         {
             hpValue = hpValue - (totalDef / 100f);
         }
+        Debug.Log("후 : " + hpValue);
 
         infoData.currentHp += hpValue;
 
@@ -144,12 +147,14 @@ public class PlayerInfoData
     }
 
     // 서버의 level_table 에서 비교 후 맞으면 데이터 처리하는 씩으로 바꾸자. 상점처럼
-    public void SetExp(float _exp)
+    public bool SetExp(float _exp)
     {
+        bool isLevelUp = false;
+
         if (infoData.level == LevelData.Instance.MAX_Level)
         {
             infoData.exp = 0;
-            return;
+            return isLevelUp;
         }
 
         Dictionary<int, LevelData.LevelInfo> tempLevelInfo = LevelData.Instance.levelInfos;
@@ -178,6 +183,7 @@ public class PlayerInfoData
                     // lv 3 = 10 + 20 + 70 = 100(maxExp)
                     // ( 50 + 0 ) - ( 100 - 70 ) = 20
                     infoData.exp = up_exp - (maxExp - LevelData.Instance.levelInfos[i].exp);
+                    isLevelUp = true;
                 }
 
                 if (up_exp == maxExp)
@@ -198,5 +204,7 @@ public class PlayerInfoData
                 break;
             }
         }
+
+        return isLevelUp;
     }
 }

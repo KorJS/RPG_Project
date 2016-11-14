@@ -76,10 +76,18 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 데미지
-    public void Damage()
+    public void Damage(float damage)
     {
         animator.SetTrigger(animationSettings.isDamageTrigger);
+
+        if (!isBlock)
+        {
+            Debug.Log(damage);
+            PlayerInfoData.Instance.SetCurrentHp(damage);
+        }
         isDamage = true;
+
+        playerState.nextMode = TypeData.MODE.전투;
     }
 
     // 모드

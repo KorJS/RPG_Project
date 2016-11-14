@@ -12,6 +12,7 @@ public class MonsterInfoData : MonoBehaviour
     public Dictionary<int, MonsterData.MonsterSkillInfo> monsterSkillInfos;
     private MonsterMovement monsterMovemnet = null;
     private MonsterState monsterState = null;
+    private PlayerEffect playerEffect = null;
     private ItemManager itemManager = null;
 
     public struct DropItem
@@ -42,6 +43,8 @@ public class MonsterInfoData : MonoBehaviour
     void Start()
     {
         itemManager = ItemManager.Instance;
+
+        playerEffect = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEffect>();
     }
 
     void OnEnable()
@@ -56,7 +59,10 @@ public class MonsterInfoData : MonoBehaviour
             itemManager.CreateDropItem(monsterT, monsterInfo, dropItems);
 
             // 주인공 경험치 습득
-            PlayerInfoData.Instance.SetExp(monsterInfo.exp);
+            if (PlayerInfoData.Instance.SetExp(monsterInfo.exp))
+            {
+                playerEffect.CheckActiveEffect("LevelUp", true);
+            }
 
             // 상태 변화(죽음)
             monsterState.nextState = TypeData.MonsterState.죽음;

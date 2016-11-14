@@ -140,7 +140,7 @@ public class MonsterRange : MonoBehaviour
         {
             tempT = monster.targetT;
         }
-        Debug.Log(monsterMovement.isDamage);
+        
         if (monsterMovement.isDamage || aggroTimer >= monster.aggroTime)
         {
             Debug.Log("tempT : " + tempT.name);
@@ -303,11 +303,12 @@ public class MonsterRange : MonoBehaviour
 
         Vector3 monsterPos = monster.monsterT.position;
         Vector3 targetPos = monster.targetT.position;
-
+       
         float dis = Vector3.Distance(monsterPos, targetPos);
 
         if (dis <= monster.atkDis)
         {
+            Debug.Log("스킬스킬스킬스킬");
             monsterMovement.nav.stoppingDistance = monster.atkDis;
             monsterState.nextState = TypeData.MonsterState.스킬;
             monsterMovement.isSkill = true;
@@ -343,7 +344,10 @@ public class MonsterRange : MonoBehaviour
             }
             playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
             monster.targetT = null;
+            monster.tempTargetT = null;
             isTargetAggro = false;
+            aggroTimer = 0f;
+            monsterMovement.nav.ResetPath();
             monsterInfoData.Reset(false);
             monsterState.nextState = TypeData.MonsterState.대기;
             monsterState.nextMode = TypeData.MODE.평화;
@@ -365,9 +369,9 @@ public class MonsterRange : MonoBehaviour
         skillPoint.localPosition = new Vector3(skillPos.x, 1f, skillPos.z);
         skillRnage = _skillRnage;
 
-        attTargets = Physics.OverlapBox(skillPoint.position, skillRnage);
+        Collider[] _attTargets = Physics.OverlapBox(skillPoint.position, skillRnage);
 
-        foreach (Collider target in attTargets)
+        foreach (Collider target in _attTargets)
         {
             // 주인공이 아닌경우
             if (target.gameObject.layer != monster.targetLayer)
@@ -376,9 +380,9 @@ public class MonsterRange : MonoBehaviour
             }
 
             Debug.Log("targetName : " + target.name + " Attack : " + skillAtt);
-            PlayerInfoData.Instance.SetCurrentHp(-skillAtt);
             // 주인공 Hit
-            target.GetComponent<PlayerMovement>().isHit = true;
+            PlayerMovement playerMovement = target.GetComponent<PlayerMovement>();
+            playerMovement.Damage(-skillAtt);
         }
     }
 }

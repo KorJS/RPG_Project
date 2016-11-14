@@ -27,7 +27,7 @@ public class MonsterMovement : MonoBehaviour
     public Animator animator = null;
     public NavMeshAgent nav = null;
 
-    public GameObject skillHolderObj = null;
+    public GameObject effectHolderObj = null;
 
     public bool isRot = false;
     public bool isSkill = false;
@@ -42,7 +42,7 @@ public class MonsterMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
 
-        skillHolderObj = transform.FindChild("SkillHolder").gameObject;
+        effectHolderObj = transform.FindChild("EffectHolder").gameObject;
 
         isRot = false;
         isSkill = false;
@@ -190,7 +190,7 @@ public class MonsterMovement : MonoBehaviour
 
                 if (anim != animator)
                 {
-                    if (string.Compare(anim.transform.parent.name, skillHolderObj.name) == 0)
+                    if (string.Compare(anim.transform.parent.name, effectHolderObj.name) == 0)
                     {
                         continue;
                     }

@@ -2,9 +2,9 @@
 {
     public enum GameDataState
     {
-        불러오기 = 0,
-        저장
-    }
+        시작,
+        종료
+    };
 
     // Warrior, Magician, Priest
     public enum PlayerType

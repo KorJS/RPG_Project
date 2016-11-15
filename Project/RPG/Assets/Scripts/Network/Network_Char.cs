@@ -41,6 +41,11 @@ public class Network_Char : MonoBehaviour
     public GameObject pwObj = null;
     public GameObject slotsObj = null;
 
+    public UIPanel lodingPanel = null;
+    public UIProgressBar lodingBar = null;
+    private const float lodingTime = 5f;
+    private float lodingTimer = 0f;
+
     public UIInput nickname = null;
     public UILabel message = null;
     
@@ -65,6 +70,9 @@ public class Network_Char : MonoBehaviour
         create_contents = "character_create";
         delete_contents = "character_delete";
         charInfo_contents = "characterInfo_load";
+
+        lodingPanel.alpha = 0f;
+        lodingBar.value = 0f;
     }
 
     // 슬롯 표시할 오브젝트
@@ -183,6 +191,11 @@ public class Network_Char : MonoBehaviour
             return;
         }
 
+        if (createObj.activeSelf)
+        {
+            createObj.SetActive(false);
+        }
+
         PlayerInfoData.Instance.infoData = data.playerInfoData;
         PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
 
@@ -201,9 +214,21 @@ public class Network_Char : MonoBehaviour
 
     IEnumerator SceneLoad()
     {
-        yield return new WaitForSeconds(5f);
+        lodingPanel.alpha = 1f;
+        while (true)
+        {
+            lodingBar.value = lodingTimer / lodingTime;
 
-        SceneManager.LoadScene("PlayerTest");
+            lodingTimer += Time.deltaTime;
+
+            if (lodingTimer >= lodingTime)
+            {
+                lodingTimer = 0f;
+                SceneManager.LoadScene("PlayerTest");
+            }
+
+            yield return null;
+        }
     }
 
     public void RequestCreate()

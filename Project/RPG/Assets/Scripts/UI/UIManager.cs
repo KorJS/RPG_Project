@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
         public UIPanel questPanel;              // 퀘스트 : NPC 근처에 있을때 F
         public UIPanel storagePanel;            // 창고 : NPC 근처에 있을때 F
         public UIPanel shortCutPanel;           // 단축슬롯
+        public UIPanel optionPanel;             // 옵션 : O
         public GameObject storeObj;             // 상점 : NPC 근처에 있을때 F
 
         public string characterW = "CharacterW";
@@ -45,6 +46,7 @@ public class UIManager : MonoBehaviour
         public string storeW     = "StoreW";
         public string storageW   = "StorageW";
         public string shortCutW  = "ShortCutW";
+        public string optionW    = "OptionW";
 
         public bool isCharacterW = false;
         public bool isInventoryW = false;
@@ -85,6 +87,7 @@ public class UIManager : MonoBehaviour
         public KeyCode questList        = KeyCode.L;        // 퀘스트일지 L
         public KeyCode skillList        = KeyCode.K;        // 스킬창 L
         public KeyCode worldMap         = KeyCode.M;        // 월드맵 M
+        public KeyCode option           = KeyCode.O;        // 옵션 O
         public KeyCode special          = KeyCode.F;        // 대화
         public KeyCode uiChangeLAlt     = KeyCode.LeftAlt;  // UI 전환 LeftAlt
         public KeyCode uiChangeESC      = KeyCode.Escape;   // UI 전환 ESC
@@ -125,6 +128,10 @@ public class UIManager : MonoBehaviour
     public GameObject tempDraggingPanel = null; // 드래그중인것 복사한거
     public UITexture tempIcon = null; // 드래그중인 Icon
 
+    private GameObject damageTxtHolder = null; // 데미지 텍스트 부모
+    private List<GameObject> damageTxtObjs = null; // 데미지 텍스트 풀
+    private int damageTxtCount = 0; // 풀 카운트
+
     void Awake()
     {
         uiManager = this;
@@ -144,6 +151,10 @@ public class UIManager : MonoBehaviour
         mobHpBarObj = GameObject.Find("MonsterPanel");
         bossHpBarObj.SetActive(false);
         mobHpBarObj.SetActive(false);
+
+        damageTxtHolder = GameObject.Find("DamageHolder");
+        damageTxtObjs = new List<GameObject>();
+        CreateDamageTxt();
     }
 
     void Start()
@@ -158,6 +169,7 @@ public class UIManager : MonoBehaviour
         FindWindow(ref windowSettings.questListPanel, windowSettings.questListW);
         FindWindow(ref windowSettings.questPanel, windowSettings.questW);
         FindWindow(ref windowSettings.storagePanel, windowSettings.storageW);
+        FindWindow(ref windowSettings.optionPanel, windowSettings.optionW);
 
         FindObject(ref windowSettings.storeObj, windowSettings.storeW);
         FindObject(ref popupSettings.itemDivisionPopup, popupSettings.itemDivW);
@@ -173,8 +185,6 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        //
-
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
 
@@ -184,6 +194,48 @@ public class UIManager : MonoBehaviour
         {
             Network_PlayerInfo.Instance.RequestSavePlayerInfo();
         }
+    }
+
+    // 데미지 텍스트 생성
+    private void CreateDamageTxt()
+    {
+        var resource = Resources.Load("Effect/DamageTxt");
+
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(resource) as GameObject;
+            obj.layer = UICamera.mainCamera.gameObject.layer;
+            obj.transform.SetParent(damageTxtHolder.transform);
+            obj.transform.localScale = Vector3.one;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.transform.localPosition = Vector3.one;
+
+            obj.SetActive(false);
+            damageTxtObjs.Add(obj);
+        }
+    }
+    
+    // 데이미 텍스트 배치
+    public void SetDamageTxt(Transform targetT, float damage)
+    {
+        if (damageTxtCount == damageTxtObjs.Count)
+        {
+            damageTxtCount = 0;
+        }
+
+        damageTxtObjs[damageTxtCount].SetActive(true);
+        damageTxtObjs[damageTxtCount].GetComponent<UILabel>().text = ((int)damage).ToString();
+        Vector3 p = Camera.main.WorldToViewportPoint(targetT.position);
+        damageTxtObjs[damageTxtCount].transform.position = UICamera.mainCamera.ViewportToWorldPoint(p);
+
+        p = damageTxtObjs[damageTxtCount].transform.localPosition;
+        p.x = Mathf.RoundToInt(p.x + 1f);
+        p.y = Mathf.RoundToInt(p.y + 2f);
+        p.z = 0f;
+
+        damageTxtObjs[damageTxtCount].transform.localPosition = p;
+
+        damageTxtCount++;
     }
 
     private void FindWindow(ref UIPanel uiPanel, string name)
@@ -260,11 +312,11 @@ public class UIManager : MonoBehaviour
         }
 
         //  옵션
-        if (windowSettings.isOptionW) //|| Input.GetKeyDown(inputKey.option))
+        if (windowSettings.isOptionW || Input.GetKeyDown(inputKey.option))
         {
             windowSettings.isOptionW = false;
-            //showWindowList.Add(windowSettings.optionObj);
-            //ShowWindow(showWindowList);
+            showWindowList.Add(windowSettings.optionPanel);
+            ShowWindow(showWindowList);
         }
 
         // UI 모드

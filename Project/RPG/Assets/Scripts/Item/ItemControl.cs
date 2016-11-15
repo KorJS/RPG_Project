@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ItemControl : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class ItemControl : MonoBehaviour
 
     public ItemSettings itemSettings;
 
+    private GameObject itemNameHolder = null;
+
     private bool isUIName = false;  // 아이템이 카레마에 보이는지 여부
 
     void Awake()
@@ -40,6 +43,8 @@ public class ItemControl : MonoBehaviour
     void Start()
     {
         playerSlotData = PlayerSlotData.Instance;
+        itemNameHolder = GameObject.Find("ItemNameHolder");
+
         CreateUIName();
     }
 
@@ -58,6 +63,9 @@ public class ItemControl : MonoBehaviour
         if (itemSettings.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
             playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemSettings.itemType, itemSettings.itemIndex, itemSettings.quantity);
+
+            // 단축슬롯 검색
+            CheckShortCutInfo();
             Destroy(itemSettings.uiItemNameObj);
             Destroy(gameObject);
         }
@@ -66,6 +74,24 @@ public class ItemControl : MonoBehaviour
         if (itemSettings.uiItemNameObj != null)
         {
             itemSettings.uiItemNameObj.SetActive(isUIName);
+        }
+    }
+
+    private void CheckShortCutInfo()
+    {
+        foreach (KeyValuePair<int, UISlotInfo> shortcut in UIManager.Instance.shortCuts)
+        {
+            if (itemSettings.itemType != shortcut.Value.slotInfo.itemType)
+            {
+                continue;
+            }
+
+            if (itemSettings.itemIndex != shortcut.Value.slotInfo.itemIndex)
+            {
+                continue;
+            }
+
+            
         }
     }
 
@@ -94,7 +120,7 @@ public class ItemControl : MonoBehaviour
     {
         itemSettings.uiItemNameObj = Instantiate(Resources.Load("UI/ItemName")) as GameObject;
         itemSettings.uiItemNameObj.layer = UICamera.mainCamera.gameObject.layer;
-        itemSettings.uiItemNameObj.transform.SetParent(GameObject.Find("ItemNameHolder").transform);
+        itemSettings.uiItemNameObj.transform.SetParent(itemNameHolder.transform);
         itemSettings.uiItemNameObj.transform.localScale = Vector3.one;
         itemSettings.uiItemNameObj.transform.localRotation = Quaternion.identity;
         itemSettings.uiItemNameObj.transform.localPosition = Vector3.one;

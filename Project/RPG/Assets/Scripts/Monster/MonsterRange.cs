@@ -84,9 +84,18 @@ public class MonsterRange : MonoBehaviour
             }
         }
 
-        if (monsterState.currentState == TypeData.MonsterState.스턴)
+        if (monsterState.currentState == TypeData.MonsterState.데미지)
         {
             return;
+        }
+
+        if (isTargetAggro)
+        {
+            if (!playerEffect)
+            {
+                Debug.Log("PlayerEffect Script Null");
+            }
+            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
         }
 
         SearchTarget();
@@ -366,7 +375,6 @@ public class MonsterRange : MonoBehaviour
 
         if (dis <= monster.atkDis)
         {
-            Debug.Log("스킬스킬스킬스킬");
             monsterMovement.nav.stoppingDistance = monster.atkDis;
             monsterState.nextState = TypeData.MonsterState.스킬;
             monsterMovement.isSkill = true;

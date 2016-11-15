@@ -72,7 +72,7 @@ public class KumasSkill : MonoBehaviour
             return;
         }
 
-        if (monsterState.currentState == TypeData.MonsterState.스턴)
+        if (monsterState.currentState == TypeData.MonsterState.데미지)
         {
             return;
         }

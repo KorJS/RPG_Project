@@ -10,6 +10,7 @@ public class WarriorSkill : MonoBehaviour
     private PlayerMovement playerMovement = null;
     private PlayerInput playerInput = null;
     private PlayerState playerState = null;
+    private PlayerEffect playerEffect = null;
     private WarriorEffect warriorEffect = null;
     private UIManager uiManager = null;
 
@@ -62,7 +63,7 @@ public class WarriorSkill : MonoBehaviour
     private KeyCode blockKeyCode = KeyCode.None;
 
     private Transform rushHolder = null;
-    private List<MonsterMovement> rushMob = null;
+    public List<MonsterMovement> rushMob = null;
 
     void Awake()
     {
@@ -71,6 +72,7 @@ public class WarriorSkill : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerInput = GetComponent<PlayerInput>();
         playerState = GetComponent<PlayerState>();
+        playerEffect = GetComponent<PlayerEffect>();
         warriorEffect = GetComponent<WarriorEffect>();
 
         currentSkillTpye = SkillType.없음;
@@ -92,7 +94,7 @@ public class WarriorSkill : MonoBehaviour
             isCombo = false;
         }
 
-        if (currentSkillTpye == SkillType.없음)
+        if (currentSkillTpye != SkillType.연속공격 && currentSkillTpye != SkillType.방패막기)
         {
             playerMovement.animator.ResetTrigger(playerMovement.animationSettings.isDamageTrigger);
         }
@@ -106,7 +108,7 @@ public class WarriorSkill : MonoBehaviour
         CheckCurrentAniState();
         SwitchSkill();
         CheckComboTime();
-        ChekRuchTime();
+        ChekRushTime();
     }
 
     void OnDrawGizmos()
@@ -138,6 +140,8 @@ public class WarriorSkill : MonoBehaviour
     // 각 스킬별로 공격범위에 있는 적 검색
     public void SeachSkillRange()
     {
+        bool isDamage = false;
+
         Vector3 playerPos = transform.position; // 범위의 중점.
 
         skillAngle = skillInfo.angle;
@@ -160,7 +164,14 @@ public class WarriorSkill : MonoBehaviour
                     playerMovement.isHit = true;
                     Damage(target.gameObject);
                 }
+
+                isDamage = true;
             }
+        }
+
+        if (isDamage)
+        {
+            playerEffect.CheckActiveEffect("Hit", true);
         }
     }
 
@@ -177,7 +188,10 @@ public class WarriorSkill : MonoBehaviour
         // TODO : SKillInfo의 데미지를 적용
         if (currentSkillTpye == SkillType.난폭한돌진)
         {
-            rushMob.Add(mob);
+            if (!rushMob.Contains(mob))
+            {
+                rushMob.Add(mob);
+            }
             mob.RushDamage(rushHolder);
             return;
         }
@@ -343,23 +357,41 @@ public class WarriorSkill : MonoBehaviour
     }
 
     // 난폭한 돌진 유지시간 체크
-    private void ChekRuchTime()
+    private void ChekRushTime()
     {
-        if (!isRush || currentSkillTpye == SkillType.방패막기)
+        if (!isRush)
         {
+            rushTimer = RUSHTIME;
+            return;
+        }
+
+        if (currentSkillTpye == SkillType.방패막기)
+        {
+            RushMonsterOut(); // 한번 호출
             rushTimer = RUSHTIME;
             isRush = false;
             return;
         }
 
+        SeachSkillRange();
         rushTimer -= Time.deltaTime;
         playerMovement.Rotation(1f, 0f, true); // 전방 방향 지속
 
         if (rushTimer < 0f)
         {
+            RushMonsterOut();
             rushTimer = RUSHTIME;
             isRush = false;
             playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);
+        }
+    }
+
+    // 난폭한돌진 하는동안 붙어있던 몬스터들 때어놓는다
+    private void RushMonsterOut()
+    {
+        for (int i = 0; i < rushMob.Count; i++)
+        {
+            rushMob[i].RushEnd();
         }
     }
 }

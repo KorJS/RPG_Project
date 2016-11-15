@@ -14,6 +14,9 @@ public class WarriorEffect : MonoBehaviour
         public string blockDamage   = "BlockDamage";
         public string overpower     = "Overpower";
         public string rush          = "Rush";
+
+        public GameObject blockTxtObj;
+        public TweenScale blockTween;
     }
 
     public EffectSettings effectSettings;
@@ -30,6 +33,9 @@ public class WarriorEffect : MonoBehaviour
         warriorSkill = GetComponent<WarriorSkill>();
         effects = new Dictionary<string, GameObject>();
         skillHolder = transform.FindChild("SkillHolder");
+        effectSettings.blockTxtObj = GameObject.Find("BlockTxtEffect");
+        effectSettings.blockTween = effectSettings.blockTxtObj.transform.GetChild(0).GetComponent<TweenScale>();
+        effectSettings.blockTxtObj.SetActive(false);
 
         ResourceLoad();
     }
@@ -84,6 +90,11 @@ public class WarriorEffect : MonoBehaviour
             {
                 effects[effectSettings.block].SetActive(false);
             }
+
+            if (effectSettings.blockTxtObj.activeSelf)
+            {
+                effectSettings.blockTxtObj.SetActive(false);
+            }
             return;
         }
 
@@ -99,6 +110,13 @@ public class WarriorEffect : MonoBehaviour
         //    return;
         //}
 
+        if (effectSettings.blockTxtObj.activeSelf)
+        {
+            effectSettings.blockTxtObj.SetActive(false);
+            effectSettings.blockTween.ResetToBeginning();
+        }
+        effectSettings.blockTxtObj.SetActive(true);
+        effectSettings.blockTween.Play();
         effects[effectSettings.blockDamage].SetActive(true);
 
         // TODO : 검색.. 계속하게 되는데. 나중에 수정하자

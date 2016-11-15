@@ -65,117 +65,6 @@ public class PlayerSlotData
 
         emptyInvenMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.소모품;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 0;
-        //slotInfoData.quantity = 90;
-        //inventoryInfos.Add(1, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.소모품;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 1;
-        //slotInfoData.quantity = 20;
-        //inventoryInfos.Add(2, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.소모품;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 0;
-        //slotInfoData.quantity = 10;
-        //inventoryInfos.Add(4, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 0;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(6, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 1;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(7, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 2;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(10, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 3;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(9, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 4;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(3, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 5;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(11, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 6;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(12, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 7;
-        //slotInfoData.quantity = 1;
-        //inventoryInfos.Add(16, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 0;
-        //slotInfoData.itemIndex = -1;
-        //shortCutInfos.Add(7, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.소모품;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 2;
-        //slotInfoData.quantity = 10;
-        //storageInfos.Add(2, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.장비;
-        //slotInfoData.skillIndex = -1;
-        //slotInfoData.itemIndex = 0;
-        //slotInfoData.quantity = 1;
-        //storageInfos.Add(1, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 0;
-        //slotInfoData.itemIndex = -1;
-        //skillListInfos.Add(0, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 1;
-        //slotInfoData.itemIndex = -1;
-        //skillListInfos.Add(1, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 2;
-        //slotInfoData.itemIndex = -1;
-        //skillListInfos.Add(2, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 3;
-        //slotInfoData.itemIndex = -1;
-        //skillListInfos.Add(3, slotInfoData);
-
-        //slotInfoData.itemType = (int)TypeData.ItemType.없음;
-        //slotInfoData.skillIndex = 4;
-        //slotInfoData.itemIndex = -1;
-        //skillListInfos.Add(4, slotInfoData);
-
-        //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.캐릭터);
-        //Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
     public void SetSkillListSlot()
@@ -444,6 +333,7 @@ public class PlayerSlotData
 
                         inventoryInfos[index] = tempSlotInfoData;
                         UIManager.Instance.invenSlots[index].ReSetting();
+                        CheckShortCutMark(targetSlotType, UIManager.Instance.invenSlots[index]);
                     }
 
                     // 수량이 없으면 리턴
@@ -484,6 +374,7 @@ public class PlayerSlotData
                         tempSlotInfoData.quantity = targetQuantity;
                         inventoryInfos.Add(index, tempSlotInfoData); // 추가
                         UIManager.Instance.invenSlots[index].ReSetting();
+                        CheckShortCutMark(targetSlotType, UIManager.Instance.invenSlots[index]);
                     }
 
                     if (tempIndex.Count > 0)
@@ -565,7 +456,7 @@ public class PlayerSlotData
                     {
                         // 빈곳이겟지?
                         int index = emptySlotInfo.Key;
-                        Debug.Log("tempSlotInfoData : " + tempSlotInfoData.itemIndex);
+                        
                         tempSlotInfoData.quantity = divQuantity;
                         emptyInvenMark.Remove(index); // 이제 빈곳이 마크에서 아니므로 제거
                         inventoryInfos.Add(index, tempSlotInfoData); // 추가

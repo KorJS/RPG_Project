@@ -85,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(damage);
             PlayerInfoData.Instance.SetCurrentHp(damage);
         }
+
         isDamage = true;
 
         playerState.nextMode = TypeData.MODE.전투;

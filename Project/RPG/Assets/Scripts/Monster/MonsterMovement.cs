@@ -83,13 +83,14 @@ public class MonsterMovement : MonoBehaviour
             nav.enabled = false;
         }
 
-        monsterState.nextState = TypeData.MonsterState.스턴;
-
+        monsterState.nextState = TypeData.MonsterState.데미지;
+        animator.SetTrigger(animationSettings.isDamageTrigger);
         transform.SetParent(tempHoleder);
     }
 
     public void RushEnd()
     {
+        monsterState.nextMode = TypeData.MODE.전투;
         monsterState.nextState = TypeData.MonsterState.대기;
         transform.SetParent(monsterInfoData.parentT);
 
@@ -102,6 +103,7 @@ public class MonsterMovement : MonoBehaviour
     // 데미지
     public void SetDamage(Transform _targetT, float damage)
     {
+        UIManager.Instance.SetDamageTxt(transform, damage);
         monsterState.nextMode = TypeData.MODE.전투;
         monsterInfoData.SetCurrentHP(damage);
         isDamage = true;

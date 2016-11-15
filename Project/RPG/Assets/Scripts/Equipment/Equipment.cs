@@ -48,10 +48,14 @@ public class Equipment : MonoBehaviour
         {
             slashEffect = this.transform.FindChild("Slash").gameObject;
         }
+    }
 
-        if (GameObject.FindGameObjectWithTag("Player"))
+    void Start()
+    {
+        playerState = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerState>();
+        if (playerState == null)
         {
-            playerState = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerState>();
+            Debug.Log("???????????????????????????????????????????");
         }
     }
 

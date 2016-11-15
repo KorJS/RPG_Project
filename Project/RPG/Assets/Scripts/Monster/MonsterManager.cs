@@ -68,7 +68,6 @@ public class MonsterManager : MonoBehaviour
             monsterSpawns[i].GetComponent<SpawnControl>().SetChild(monsterObj);
 
             monsterObj.layer = LayerMask.NameToLayer("Monster");
-            monsterObj.transform.localPosition = Vector3.zero;
             monsterObj.name = tempMonsterInfo.fileName; // 이름 (Clone) 제거
 
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();

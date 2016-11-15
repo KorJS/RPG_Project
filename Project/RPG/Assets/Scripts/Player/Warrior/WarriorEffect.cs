@@ -119,4 +119,15 @@ public class WarriorEffect : MonoBehaviour
 
         effects[effectSettings.overpower].SetActive(true);
     }
+
+    public void RushEffect()
+    {
+        if (effects[effectSettings.rush].activeSelf)
+        {
+            effects[effectSettings.rush].transform.SetParent(skillHolder);
+            effects[effectSettings.rush].SetActive(false);
+        }
+
+        effects[effectSettings.rush].SetActive(true);
+    }
 }

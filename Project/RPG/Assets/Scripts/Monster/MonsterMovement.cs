@@ -41,6 +41,7 @@ public class MonsterMovement : MonoBehaviour
         monsterState = GetComponent<MonsterState>();
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
+        nav.enabled = false;
 
         effectHolderObj = transform.FindChild("EffectHolder").gameObject;
 
@@ -73,6 +74,29 @@ public class MonsterMovement : MonoBehaviour
 
         Move();
         CheckCurrentAnimation();
+    }
+
+    public void RushDamage(Transform tempHoleder)
+    {
+        if (nav.enabled)
+        {
+            nav.enabled = false;
+        }
+
+        monsterState.nextState = TypeData.MonsterState.스턴;
+
+        transform.SetParent(tempHoleder);
+    }
+
+    public void RushEnd()
+    {
+        monsterState.nextState = TypeData.MonsterState.대기;
+        transform.SetParent(monsterInfoData.parentT);
+
+        if (!nav.enabled)
+        {
+            nav.enabled = true;
+        }
     }
 
     // 데미지
@@ -140,11 +164,15 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
-    public void CheckAniRotation()
+    public void RotationEnd()
     {
         isRot = false;
         monsterState.nextState = TypeData.MonsterState.대기;
-        animator.applyRootMotion = isRot;
+
+        if (animator.applyRootMotion)
+        {
+            animator.applyRootMotion = false;
+        }
     }
 
     // 스킬 대기중이면
@@ -172,6 +200,12 @@ public class MonsterMovement : MonoBehaviour
         }
 
         Vector3 targetPos = monsterRange.monster.targetT.position;
+
+        if (!nav.enabled)
+        {
+            nav.enabled = true;
+        }
+
         nav.SetDestination(targetPos);
         //nav.destination = targetPos;
     }

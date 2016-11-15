@@ -27,6 +27,7 @@ public class MonsterInfoData : MonoBehaviour
     public Dictionary<int, DropItem> dropItems = null;
 
     private Transform monsterT;
+    public Transform parentT;
 
     public float currentHP = 0f;
     public bool isDeath = false;
@@ -45,6 +46,7 @@ public class MonsterInfoData : MonoBehaviour
         itemManager = ItemManager.Instance;
 
         playerEffect = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEffect>();
+        parentT = transform.parent;
     }
 
     void OnEnable()

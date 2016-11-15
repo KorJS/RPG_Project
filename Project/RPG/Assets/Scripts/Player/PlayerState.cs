@@ -25,7 +25,10 @@ public class PlayerState : MonoBehaviour
 
         currentState = TypeData.State.없음;
         nextState = TypeData.State.없음;
+    }
 
+    void Start()
+    {
         playerMovement.SetAniMode(currentMode);
         equipHandler.ChangeMode(currentMode);
     }

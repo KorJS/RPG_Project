@@ -852,11 +852,8 @@ public class PlayerSlotData
             slotInfo.slotInfoType = TypeData.SlotInfoType.스킬;
             slotInfo.itemType = TypeData.ItemType.없음;
 
-            Debug.Log("slotIndex : " + slotType);
-
             if (slotType == TypeData.SlotType.스킬리스트)
             {
-                Debug.Log("slotIndex : " + slotIndex);
                 return PlayerSkillData.Instance.GetSkillData(slotIndex);
             }
         }

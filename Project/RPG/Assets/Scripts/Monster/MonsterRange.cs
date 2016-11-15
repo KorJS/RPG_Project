@@ -55,8 +55,7 @@ public class MonsterRange : MonoBehaviour
         monsterState = GetComponent<MonsterState>();
 
         monster.monsterT = transform;
-        monster.originPos = transform.position;
-        monster.originRot = transform.rotation;
+        
 
         monster.monsterLayer = LayerMask.NameToLayer("Monster");
         monster.targetLayer = LayerMask.NameToLayer("Player");
@@ -64,9 +63,28 @@ public class MonsterRange : MonoBehaviour
         skillPoint = monster.monsterT.FindChild("SkillPoint");
     }
 
+    void Start()
+    {
+        monster.originPos = transform.position;
+        monster.originRot = transform.rotation;
+    }
+
     void Update()
     {
         if (monsterState.currentState == TypeData.MonsterState.죽음)
+        {
+            return;
+        }
+
+        if (monsterState.currentState != TypeData.MonsterState.회전)
+        {
+            if (monsterMovement.animator.applyRootMotion)
+            {
+                monsterMovement.animator.applyRootMotion = false;
+            }
+        }
+
+        if (monsterState.currentState == TypeData.MonsterState.스턴)
         {
             return;
         }
@@ -79,6 +97,14 @@ public class MonsterRange : MonoBehaviour
         CheckOriginDistance();
     }
 
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (string.Compare(hit.collider.tag, "Safe") == 0)
+        {
+            Reset();
+        }
+    }
+
     void OnDrawGizmos()
     {
         if (skillPoint == null)
@@ -88,6 +114,29 @@ public class MonsterRange : MonoBehaviour
         Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
         Vector3 testPos = new Vector3(skillRnage.x * 2f + 0.1f, skillRnage.y * 2f + 0.1f, skillRnage.z * 2f + 0.1f);
         Gizmos.DrawCube(skillPoint.position, testPos);
+    }
+
+    private void Reset()
+    {
+        Debug.Log("리셋");
+        // TODO : 어글이펙트 비활성화.
+        if (!playerEffect)
+        {
+            Debug.Log("PlayerEffect Script Null");
+        }
+        playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+        monster.targetT = null;
+        monster.tempTargetT = null;
+        isTargetAggro = false;
+        aggroTimer = 0f;
+        if (!monsterMovement.nav.enabled)
+        {
+            monsterMovement.nav.enabled = true;
+        }
+        monsterMovement.nav.ResetPath();
+        monsterInfoData.Reset(false);
+        monsterState.nextState = TypeData.MonsterState.대기;
+        monsterState.nextMode = TypeData.MODE.평화;
     }
 
     // 범위내의 타겟이 있는지 검색후 임시 타켓지정
@@ -175,6 +224,10 @@ public class MonsterRange : MonoBehaviour
             monster.tempTargetT = null;
             isTargetAggro = false;
             aggroTimer = 0f;
+            if (!monsterMovement.nav.enabled)
+            {
+                monsterMovement.nav.enabled = true;
+            }
             monsterMovement.nav.ResetPath();
             monsterState.nextMode = TypeData.MODE.평화;
         }
@@ -222,7 +275,12 @@ public class MonsterRange : MonoBehaviour
 
         monsterState.nextState = TypeData.MonsterState.회전;
         monsterMovement.isRot = true;
-        monsterMovement.animator.applyRootMotion = true;
+
+        if (!monsterMovement.animator.applyRootMotion)
+        {
+            monsterMovement.animator.applyRootMotion = true;
+        }
+
         // 왼쪽 회전
         if (dp > 0)
         {
@@ -337,20 +395,7 @@ public class MonsterRange : MonoBehaviour
 
         if (peaceDis > monster.inactiveAggroDis)
         {
-            // TODO : 어글이펙트 비활성화.
-            if (!playerEffect)
-            {
-                Debug.Log("PlayerEffect Script Null");
-            }
-            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
-            monster.targetT = null;
-            monster.tempTargetT = null;
-            isTargetAggro = false;
-            aggroTimer = 0f;
-            monsterMovement.nav.ResetPath();
-            monsterInfoData.Reset(false);
-            monsterState.nextState = TypeData.MonsterState.대기;
-            monsterState.nextMode = TypeData.MODE.평화;
+            Reset();
         }
     }
 

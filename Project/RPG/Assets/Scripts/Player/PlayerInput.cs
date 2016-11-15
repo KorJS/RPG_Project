@@ -53,6 +53,8 @@ public class PlayerInput : MonoBehaviour
     {
         uiManager = UIManager.Instance;
         playerSlotData = PlayerSlotData.Instance;
+
+        UIManager.Instance.SetSkillListUpActive(PlayerInfoData.Instance.infoData.level);
     }
 
     void Update()

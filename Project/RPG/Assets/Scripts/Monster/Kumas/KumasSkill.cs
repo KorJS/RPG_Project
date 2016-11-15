@@ -68,6 +68,12 @@ public class KumasSkill : MonoBehaviour
     {
         if (monsterState.currentState == TypeData.MonsterState.죽음)
         {
+            DeathResetEffect();
+            return;
+        }
+
+        if (monsterState.currentState == TypeData.MonsterState.스턴)
+        {
             return;
         }
 
@@ -79,7 +85,6 @@ public class KumasSkill : MonoBehaviour
 
         if (monsterState.currentState != TypeData.MonsterState.스킬)
         {
-            ResetSkill();
             return;
         }
 
@@ -108,6 +113,27 @@ public class KumasSkill : MonoBehaviour
         effects.breathObj.transform.SetParent(effects.effectHolder);
         effects.breathObj.transform.position = Vector3.zero;
         effects.breathObj.SetActive(false);
+    }
+
+
+    public void DeathResetEffect()
+    {
+        for (int i = 0; i < effects.iceBallObjs.Count; i++)
+        {
+            if (effects.iceBallObjs[i].activeSelf)
+            {
+                effects.iceBallObjs[i].transform.SetParent(effects.effectHolder);
+                effects.iceBallObjs[i].transform.position = Vector3.zero;
+                effects.iceBallObjs[i].SetActive(false);
+            }
+        }
+
+        if (effects.breathObj.activeSelf)
+        {
+            effects.breathObj.transform.SetParent(effects.effectHolder);
+            effects.breathObj.transform.position = Vector3.zero;
+            effects.breathObj.SetActive(false);
+        }
     }
 
     // 애니메이션 이벤트 - 스킬이 끝날때쯤 호출
@@ -186,7 +212,7 @@ public class KumasSkill : MonoBehaviour
         
         while (isBreath)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             if (!isBreath)
             {

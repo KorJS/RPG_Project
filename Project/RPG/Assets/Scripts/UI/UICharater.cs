@@ -44,11 +44,11 @@ public class UICharater : MonoBehaviour
         playerSlotData = PlayerSlotData.Instance;
 
         characterSettings.characterPanel = GetComponent<UIPanel>();
-        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
     }
 
     void Start()
     {
+        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
         ChangPlayerStat();
     }
 

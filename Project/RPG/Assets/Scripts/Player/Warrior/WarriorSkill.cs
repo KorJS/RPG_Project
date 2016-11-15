@@ -38,8 +38,8 @@ public class WarriorSkill : MonoBehaviour
         연속공격 = 0,
         방패막기,
         긴급회피,
-        압도,
         난폭한돌진,
+        압도,
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
@@ -61,6 +61,9 @@ public class WarriorSkill : MonoBehaviour
 
     private KeyCode blockKeyCode = KeyCode.None;
 
+    private Transform rushHolder = null;
+    private List<MonsterMovement> rushMob = null;
+
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
@@ -71,6 +74,9 @@ public class WarriorSkill : MonoBehaviour
         warriorEffect = GetComponent<WarriorEffect>();
 
         currentSkillTpye = SkillType.없음;
+
+        rushHolder = transform.FindChild("RushHolder");
+        rushMob = new List<MonsterMovement>();
     }
 
     void Start()
@@ -161,10 +167,21 @@ public class WarriorSkill : MonoBehaviour
     private void Damage(GameObject enemyObj)
     {
         float attack = playerInfoData.totalAtt * skillInfo.attack;
-        Debug.Log("attack : " + attack);
-        // TODO : SKillInfo의 데미지를 적용
-        enemyObj.GetComponent<MonsterMovement>().SetDamage(gameObject.transform, -attack);
+
         uiManager.SetHpBar(enemyObj.transform);
+
+        MonsterMovement mob = enemyObj.GetComponent<MonsterMovement>();
+
+        Debug.Log("attack : " + attack);
+        
+        // TODO : SKillInfo의 데미지를 적용
+        if (currentSkillTpye == SkillType.난폭한돌진)
+        {
+            rushMob.Add(mob);
+            mob.RushDamage(rushHolder);
+            return;
+        }
+        mob.SetDamage(gameObject.transform, -attack);
     }
 
     // TODO : 다음에는 Queue와 입력시간 Timer를 사용해서 지정한 Time 안에 입력이 없을시 연속으로 안나가게 막하볼까..
@@ -223,8 +240,6 @@ public class WarriorSkill : MonoBehaviour
     // 연속공격
     private void ComboAttack()
     {
-        //SeachSkillRange();
-
         playerMovement.SetAniSkill((int)currentSkillTpye);
 
         // 콤보 공격 방향 성정
@@ -280,7 +295,6 @@ public class WarriorSkill : MonoBehaviour
         // TODO : 나중에 변경
         skillAngle = 90f;
         skillDistance = 2f;
-        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isStartBlockTrigger);
@@ -308,7 +322,6 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 70f;
         skillDistance = 4f;
-        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isOverpowerTrigger);
@@ -323,7 +336,6 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 90f;
         skillDistance = 4f;
-        //SeachSkillRange();
 
         playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;

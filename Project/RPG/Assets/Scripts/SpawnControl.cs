@@ -31,6 +31,8 @@ public class SpawnControl : MonoBehaviour
     {
         child.transform.SetParent(transform);
         monsterObj = child;
+        child.transform.localPosition = Vector3.zero;
+        child.transform.rotation = transform.rotation;
     }
 
     private void SetRespawnTime()

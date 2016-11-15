@@ -483,12 +483,14 @@ public class UIManager : MonoBehaviour
             // 현재 레벨에 배울수 있는 스킬이 아니면 
             if (skillInfo.Value.level > currentLevel)
             {
+                Debug.Log("배울수 없는 스킬 : " +  skillInfo.Value.name);
                 continue;
             }
 
             // 배운 스킬 이면
             if (playerSkilldata.GetSkillData(skillInfo.Key))
             {
+                Debug.Log("배운스킬 : " + skillInfo.Value.name);
                 if (skillListSlots[skillInfo.Key].slotSettings.upBtnObj.activeSelf)
                 {
                     skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(false);
@@ -497,6 +499,7 @@ public class UIManager : MonoBehaviour
             }
 
             skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
+            Debug.Log("배울수 있는 : " + skillInfo.Value.name);
         }
     }
 

@@ -72,12 +72,12 @@ public class MonsterManager : MonoBehaviour
 
             MonsterInfoData infoData = monsterObj.GetComponent<MonsterInfoData>();
             infoData.monsterInfo = tempMonsterInfo; // 몬스터 정보
+
             Debug.Log("monsterType : " + tempMonsterInfo.monsterType);
-            if (tempMonsterInfo.monsterType == (int)TypeData.MonsterType.보스)
-            {
-                MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref infoData.monsterSkillInfos);
-                Debug.Log("infoData.monsterSkillInfos : " + infoData.monsterSkillInfos.Count);
-            }
+
+            MonsterData.Instance.GetMonsterSkillData(tempMonsterInfo.monsterIndex, ref infoData.monsterSkillInfos);
+
+            Debug.Log("infoData.monsterSkillInfos : " + infoData.monsterSkillInfos.Count);
 
             infoData.SetCurrentHP(tempMonsterInfo.hp); // 몬스터 HP 설정
             infoData.CheckDropItem(); // 몬스터 드랍아이템 정보

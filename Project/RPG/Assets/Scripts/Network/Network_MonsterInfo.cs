@@ -60,6 +60,7 @@ public class Network_MonsterInfo : MonoBehaviour
 
         for (int i = 0; i < data.monsterInfos.Count; i++)
         {
+            Debug.Log("fileName : " + data.monsterInfos[i].fileName);
             MonsterData.Instance.monsterInfos.Add(data.monsterInfos[i].fileName + "_Spawns", data.monsterInfos[i]);
         }
 

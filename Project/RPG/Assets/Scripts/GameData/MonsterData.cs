@@ -77,7 +77,7 @@ public class MonsterData
     {
         if (monsterSkillInfos.Count <= 0)
         {
-            Debug.Log("보스 스킬 정보가 없습니다.");
+            Debug.Log("몬스터 스킬 정보가 없습니다.");
             return false;
         }
 
@@ -94,7 +94,7 @@ public class MonsterData
 
         if (!isExist)
         {
-            Debug.Log("해당 보스의 스킬 정보가 없습니다");
+            Debug.Log("해당 몬스터의 스킬 정보가 없습니다");
         }
 
         return isExist;

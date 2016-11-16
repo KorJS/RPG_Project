@@ -190,8 +190,6 @@ public class KumasSkill : MonoBehaviour
     {
         // 데미지
         Hit((int)SkillType.att01);
-
-        // 이펙트
     }
 
     // 내려찍기

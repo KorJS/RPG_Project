@@ -3,6 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
 public class MonsterMovement : MonoBehaviour
 {
     private MonsterInfoData monsterInfoData = null;
@@ -67,13 +68,7 @@ public class MonsterMovement : MonoBehaviour
             return;
         }
 
-        //if (!isRot)
-        //{
-        //    animator.applyRootMotion = isRot;
-        //}
-
         Move();
-        CheckCurrentAnimation();
     }
 
     public void RushDamage(Transform tempHoleder)
@@ -145,25 +140,6 @@ public class MonsterMovement : MonoBehaviour
     {
         animator.SetInteger(animationSettings.skillTypeInt, skillType);
         isSkillWait = false;
-    }
-
-    // 현재 애니메이션 상태
-    private void CheckCurrentAnimation()
-    {
-        //// 현재 실행 중인 애니메이터가 "skill_wait" 인지
-        //if (isRot && animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
-        //{
-        //    // 스킬이 시전이 끝나면 회전 가능 하게.
-        //    isRot = false;
-        //    monsterState.nextState = TypeData.MonsterState.대기;
-        //    Debug.Log("?");
-        //}
-
-        // 현재 실행 중인 애니메이터가 "skill_wait" 인지
-        if (!isSkillWait && animator.GetCurrentAnimatorStateInfo(0).IsName("skill_wait"))
-        {
-            // 스킬이 시전이 끝나면 회전 가능 하게.
-        }
     }
 
     public void RotationEnd()

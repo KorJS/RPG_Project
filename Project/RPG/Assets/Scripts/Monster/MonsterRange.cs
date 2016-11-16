@@ -114,7 +114,6 @@ public class MonsterRange : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("OnControllerColliderHit????????");
         if (string.Compare(hit.collider.tag, "Safe") == 0)
         {
             Debug.Log("OnControllerColliderHit");

@@ -46,7 +46,7 @@ public class WarriorSkill : MonoBehaviour
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
 
     private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
-    private const float RUSHTIME = 1.5f;    // 난폭한 돌진 지속타임
+    private const float RUSHTIME = 2.5f;    // 난폭한 돌진 지속타임
 
     public float comboTimer = 0f;           // 연속공격 입력타이머
     public bool isComboTime = false;        // 콤보 타임이 지났는지
@@ -103,6 +103,7 @@ public class WarriorSkill : MonoBehaviour
         {
             playerMovement.animator.ResetTrigger(warriorAniSettings.isCombo01Trigger);
             playerMovement.animator.ResetTrigger(warriorAniSettings.isCombo02Trigger);
+            playerMovement.isDamage = false;
         }
 
         CheckCurrentAniState();
@@ -131,6 +132,7 @@ public class WarriorSkill : MonoBehaviour
             {
                 blockKeyCode = KeyCode.None;
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
+                playerMovement.animator.ResetTrigger(playerMovement.animationSettings.isDamageTrigger);
                 isBlock = false;
                 playerMovement.isBlock = isBlock;
             }
@@ -140,7 +142,7 @@ public class WarriorSkill : MonoBehaviour
     // 각 스킬별로 공격범위에 있는 적 검색
     public void SeachSkillRange()
     {
-        bool isDamage = false;
+        bool isHit = false;
 
         Vector3 playerPos = transform.position; // 범위의 중점.
 
@@ -165,11 +167,11 @@ public class WarriorSkill : MonoBehaviour
                     Damage(target.gameObject);
                 }
 
-                isDamage = true;
+                isHit = true;
             }
         }
 
-        if (isDamage)
+        if (isHit)
         {
             playerEffect.CheckActiveEffect("Hit", true);
         }

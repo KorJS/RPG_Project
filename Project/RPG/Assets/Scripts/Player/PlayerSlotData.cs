@@ -67,6 +67,24 @@ public class PlayerSlotData
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
     }
 
+    public void DataClear()
+    {
+        characterInfos.Clear();
+        inventoryInfos.Clear();
+        shortCutInfos.Clear();
+        storageInfos.Clear();
+        skillListInfos.Clear();
+
+        invenCusomableMark.Clear();
+        invenQuestItemMark.Clear();
+        storageCusomableMark.Clear();
+        storageQuestItemMark.Clear();
+        shortCutMark.Clear();
+
+        emptyInvenMark.Clear();
+        emptyStorageMark.Clear();
+    }
+
     public void SetSkillListSlot()
     {
         foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in SkillData.Instance.skillInfos)

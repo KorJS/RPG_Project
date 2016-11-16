@@ -214,7 +214,10 @@ public class Network_Char : MonoBehaviour
 
     IEnumerator SceneLoad()
     {
+        yield return new WaitForSeconds(1f);
+
         lodingPanel.alpha = 1f;
+
         while (true)
         {
             lodingBar.value = lodingTimer / lodingTime;

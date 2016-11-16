@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -17,12 +18,64 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public TypeData.GameState gameState = TypeData.GameState.없음;
+
+    private bool bPaused = false;  // 어플리케이션이 내려진 상태인지 아닌지의 스테이트를 저장하기 위한 변수
+    private float showSplashTimout = 2f;
+    private bool allowQuitting = false;
+
     void Awake()
     {
         gameManager = this;
         DontDestroyOnLoad(this);
 
+        gameState = TypeData.GameState.시작;
+
         CreatePlayer();
+    }
+
+    // 어플을 내렸으때 실행되는 함수
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            bPaused = true;
+            // todo : 어플리케이션을 내리는 순간에 처리할 행동들 /
+        }
+        else
+        {
+            if (bPaused)
+            {
+                bPaused = false;
+                //todo : 내려놓은 어플리케이션을 다시 올리는 순간에 처리할 행동들 
+            }
+        }
+    }
+
+    // 어플을 종료 하는 순간 실행되는 함수
+    void OnApplicationQuit()
+    {
+        StartCoroutine(DelayedQuit());
+
+        if (!allowQuitting)
+        {
+            Application.CancelQuit();
+        }
+    }
+
+    // 종료 딜레이 준다.
+    IEnumerator DelayedQuit()
+    {
+        if (PlayerInfoData.Instance.infoData != null)
+        {
+            Network_PlayerInfo.Instance.RequestSavePlayerInfo();
+        }
+
+        yield return new WaitForSeconds(showSplashTimout);
+
+        allowQuitting = true;
+
+        Application.Quit();
     }
 
     private void CreatePlayer()
@@ -54,5 +107,57 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public void DataClear(bool isAreaData)
+    {
+        if (isAreaData)
+        {
+            MonsterData.Instance.DataClear();
+            StoreItemListData.Instance.DataClear();
+            return;
+        }
+
+        ItemData.Instance.DataClear();
+        LevelData.Instance.DataClear();
+        SkillData.Instance.DataClear();
+        PlayerInfoData.Instance.DataClear();
+        PlayerSlotData.Instance.DataClear();
+        PlayerSkillData.Instance.DataClear();
+        UIManager.Instance.DataClear();
+        MonsterData.Instance.DataClear();
+        StoreItemListData.Instance.DataClear();
+    }
+
+    public void Logout()
+    {
+        gameState = TypeData.GameState.종료;
+
+        StartCoroutine(LogoutSavePlayerData());
+    }
+
+    IEnumerator LogoutSavePlayerData()
+    {
+        Network_PlayerInfo.Instance.RequestSavePlayerInfo();
+
+        DataClear(false);
+
+        yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene("LoginScene");
+    }
+
+    public void GameExit()
+    {
+        gameState = TypeData.GameState.종료;
+
+        StartCoroutine(GameExitSavePlayerData());
+    }
+
+    IEnumerator GameExitSavePlayerData()
+    {
+        yield return new WaitForSeconds(3f);
+
+        Application.Quit();
     }
 }

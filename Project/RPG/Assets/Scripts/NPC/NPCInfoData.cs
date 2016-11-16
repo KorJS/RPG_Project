@@ -47,6 +47,11 @@ public class NPCInfoData : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         if (npcRange.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
             npcMovement.SetAniState();

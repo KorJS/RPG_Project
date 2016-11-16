@@ -231,4 +231,11 @@ public sealed class ItemData
             description     = temp[15]              // 설명
         });
     }
+
+    public void DataClear()
+    {
+        equipmentInfos.Clear();
+        cusomableInfos.Clear();
+        questItemInfos.Clear();
+    }
 }

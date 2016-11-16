@@ -64,6 +64,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         Vector3 playerPos = transform.position;
 
         PlayerInfoData.Instance.infoData.spawnPos = playerPos.x + "," + playerPos.y + "," + playerPos.z;

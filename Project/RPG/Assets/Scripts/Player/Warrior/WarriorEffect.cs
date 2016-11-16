@@ -42,6 +42,11 @@ public class WarriorEffect : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         BlockEffect();
         //BlockDamageEffect();
     }

@@ -29,6 +29,11 @@ public class UIMonsterHpBar : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         if (hpBarSettings.targetT == null)
         {
             return;

@@ -35,6 +35,11 @@ public class PlayerState : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         CheckState();
         CheckMode();
         PeaceFromCombat();

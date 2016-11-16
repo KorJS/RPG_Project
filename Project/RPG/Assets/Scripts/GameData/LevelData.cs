@@ -133,4 +133,9 @@ public class LevelData
             exp = int.Parse(temp[1])    // 경험치
         });
     }
+
+    public void DataClear()
+    {
+        levelInfos.Clear();
+    }
 }

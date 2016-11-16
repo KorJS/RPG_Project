@@ -53,4 +53,9 @@ public class PlayerSkillData
 
         return true;
     }
+
+    public void DataClear()
+    {
+        skillInfos.Clear();
+    }
 }

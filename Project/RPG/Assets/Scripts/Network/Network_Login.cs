@@ -174,4 +174,9 @@ public class Network_Login : MonoBehaviour
         pw.value = null;
         title.text = login_title;
     }
+
+    public void GameExit()
+    {
+        Application.Quit();
+    }
 }

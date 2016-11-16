@@ -149,4 +149,9 @@ public class SkillData
             description = temp[10]              // 설명
         });
     }
+
+    public void DataClear()
+    {
+        skillInfos.Clear();
+    }
 }

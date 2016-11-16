@@ -38,4 +38,10 @@ public class StoreItemListData
         itemIndexs = _itemIndexs;
         itemListInfos.Add((int)storeType, itemIndexs);
     }
+
+    public void DataClear()
+    {
+        itemListInfos.Clear();
+        itemIndexs.Clear();
+    }
 }

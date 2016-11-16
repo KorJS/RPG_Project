@@ -1,8 +1,9 @@
 ﻿public class TypeData
 {
-    public enum GameDataState
+    public enum GameState
     {
-        시작,
+        없음 = -1,
+        시작 = 0,
         종료
     };
 

@@ -99,4 +99,10 @@ public class MonsterData
 
         return isExist;
     }
+
+    public void DataClear()
+    {
+        monsterInfos.Clear();
+        monsterSkillInfos.Clear();
+    }
 }

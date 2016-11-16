@@ -71,6 +71,12 @@ public class MonsterRange : MonoBehaviour
 
     void Update()
     {
+        // 다음에는 상속 꼭 쓰자..
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         if (monsterState.currentState == TypeData.MonsterState.죽음)
         {
             return;
@@ -108,8 +114,10 @@ public class MonsterRange : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        Debug.Log("OnControllerColliderHit????????");
         if (string.Compare(hit.collider.tag, "Safe") == 0)
         {
+            Debug.Log("OnControllerColliderHit");
             Reset();
         }
     }

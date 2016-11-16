@@ -30,6 +30,11 @@ public class NPCRange : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         isPlayer = CheckPlayer();
 
         if (!isPlayer)

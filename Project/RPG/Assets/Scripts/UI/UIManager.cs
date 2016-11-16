@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
     public UITexture tempIcon = null; // 드래그중인 Icon
 
     private GameObject damageTxtHolder = null; // 데미지 텍스트 부모
-    private List<GameObject> damageTxtObjs = null; // 데미지 텍스트 풀
+    public List<GameObject> damageTxtObjs = null; // 데미지 텍스트 풀
     private int damageTxtCount = 0; // 풀 카운트
 
     void Awake()
@@ -185,6 +185,11 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
 
@@ -194,6 +199,17 @@ public class UIManager : MonoBehaviour
         {
             Network_PlayerInfo.Instance.RequestSavePlayerInfo();
         }
+    }
+
+    public void DataClear()
+    {
+        shortCuts.Clear();
+        storeListSlots.Clear();
+        characterSlots.Clear();
+        skillListSlots.Clear();
+        buySlots.Clear();
+        sellSlots.Clear();
+        invenSlots.Clear();
     }
 
     // 데미지 텍스트 생성

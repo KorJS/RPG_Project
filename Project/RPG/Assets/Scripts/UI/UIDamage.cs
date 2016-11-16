@@ -26,6 +26,11 @@ public class UIDamage : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         if (!twAlpha.enabled)
         {
             gameObject.SetActive(false);

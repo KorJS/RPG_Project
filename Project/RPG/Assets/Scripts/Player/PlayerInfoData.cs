@@ -207,4 +207,9 @@ public class PlayerInfoData
 
         return isLevelUp;
     }
+
+    public void DataClear()
+    {
+        infoData = null;
+    }
 }

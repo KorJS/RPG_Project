@@ -59,6 +59,11 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
 
         InputShortCutkey();

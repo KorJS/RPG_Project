@@ -86,6 +86,11 @@ public class UISlotInfo : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        {
+            return;
+        }
+
         if (slotSettings.uiCoolTime == null)
         {
             return;

@@ -91,12 +91,15 @@ public class ItemManager : MonoBehaviour
             int quantity = dropItem.Value.quantity;
             Debug.Log("type : " + itemType + " index : " + itemIndex + " quantity : " + quantity);
 
+            GameObject resources = null;
+
             switch (itemType)
             {
                 case TypeData.ItemType.장비:
                     {
                         itemName = itemData.equipmentInfos[itemIndex].name;
                         iconName = itemData.equipmentInfos[itemIndex].iconName;
+                        resources = Resources.Load("Item/EquipmentBox") as GameObject;
                     }
                     break;
 
@@ -104,6 +107,15 @@ public class ItemManager : MonoBehaviour
                     {
                         itemName = itemData.cusomableInfos[itemIndex].name;
                         iconName = itemData.cusomableInfos[itemIndex].iconName;
+
+                        if ((TypeData.CusomableType)itemData.cusomableInfos[itemIndex].cusomableType == TypeData.CusomableType.회복)
+                        {
+                            resources = Resources.Load("Item/Potion") as GameObject;
+                        }
+                        else
+                        {
+                            resources = Resources.Load("Item/CusomableBox") as GameObject;
+                        }
                     }
                     break;
 
@@ -111,11 +123,10 @@ public class ItemManager : MonoBehaviour
                     {
                         itemName = itemData.questItemInfos[itemIndex].name;
                         iconName = itemData.questItemInfos[itemIndex].iconName;
+                        resources = Resources.Load("Item/Scroll") as GameObject;
                     }
                     break;
             }
-
-            var resources = Resources.Load("Item/" + iconName);
 
             // 몬스터 위치 기준으로 랜덤위치에 스폰되게 설정
             Vector3 spawnPos = monsterT.position;

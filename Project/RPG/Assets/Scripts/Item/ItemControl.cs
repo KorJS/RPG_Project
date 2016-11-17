@@ -134,6 +134,7 @@ public class ItemControl : MonoBehaviour
     // 아이템 이름 위치 설정
     private void SetPosition()
     {
+
         Vector3 p = Camera.main.WorldToViewportPoint(itemSettings.itemT.position);
         itemSettings.uiItemNameObj.transform.position = UICamera.mainCamera.ViewportToWorldPoint(p);
 

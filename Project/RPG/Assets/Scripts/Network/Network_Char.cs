@@ -242,6 +242,12 @@ public class Network_Char : MonoBehaviour
             return;
         }
 
+        if (selectPlayerType != (int)TypeData.PlayerType.기사)
+        {
+            message.text = "선택하신 캐릭터는 개발중입니다.";
+            return;
+        }
+
         Dictionary<string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", create_contents);
         sendData.Add("acc_index", acc_index);
@@ -320,6 +326,7 @@ public class Network_Char : MonoBehaviour
 
     public void MagicianBtn()
     {
+        message.text = "마법사 캐릭터는 개발중입니다.";
         selectPlayerType = (int)TypeData.PlayerType.마법사;
         createCharacter.warriorObj.SetActive(false);
         createCharacter.magicianObj.SetActive(true);
@@ -328,6 +335,7 @@ public class Network_Char : MonoBehaviour
 
     public void PriestBtn()
     {
+        message.text = "사제 캐릭터는 개발중입니다.";
         selectPlayerType = (int)TypeData.PlayerType.사제;
         createCharacter.warriorObj.SetActive(false);
         createCharacter.magicianObj.SetActive(false);

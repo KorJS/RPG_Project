@@ -5,6 +5,7 @@ using System.Collections;
 public class CameraControl : MonoBehaviour
 {
     private UIManager uiManager = null;
+    private UIJoystick uiJoystick = null;
 
     [System.Serializable]
     public class CameraSettings
@@ -64,6 +65,8 @@ public class CameraControl : MonoBehaviour
 
     void Awake()
     {
+        //uiJoystick = GameObject.FindGameObjectWithTag("RotJoystick").GetComponent<UIJoystick>();
+
         mainCamera = Camera.main;
         pivot = this.transform.GetChild(0);
         if (GameObject.FindGameObjectWithTag("Player"))
@@ -148,6 +151,9 @@ public class CameraControl : MonoBehaviour
 
         newX += cameraSettings.mouseXSensitivity * Input.GetAxis(input.verticalAxis);
         newY -= cameraSettings.mouseYSensitivity * Input.GetAxis(input.horizontalAxis);
+
+        //newX += cameraSettings.mouseXSensitivity * uiJoystick.joyStickPosY;
+        //newY -= cameraSettings.mouseYSensitivity * uiJoystick.joyStickPosX;
 
         Vector3 eulerAngleAxis = new Vector3();
         eulerAngleAxis.x = newY;

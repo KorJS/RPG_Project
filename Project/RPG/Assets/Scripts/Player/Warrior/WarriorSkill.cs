@@ -93,6 +93,12 @@ public class WarriorSkill : MonoBehaviour
             return;
 
         }
+
+        if (playerState.currentState == TypeData.State.죽음)
+        {
+            return;
+        }
+
         // 스킬 서브상태머신을 빠져나오면 콤보 모션초기화
         if (playerMovement.isEndSkillPoint)
         {

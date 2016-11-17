@@ -39,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
     public bool isEndSkillPoint = false;    // 스킬 서브상태머신 빠져왔는지.
     public bool isBlock = false;            // 방패막기 중에는 공격 안받음
 
+    private GameObject respawnObj = null;
+    private float deathTimer = 0;
+    private bool isDeath = false;
+
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -60,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
         float z = float.Parse(strPos[2]);
         
         transform.position = new Vector3(x, y, z);
+
+        respawnObj = GameObject.Find("PlayerRespawn");
     }
 
     void Update()
@@ -67,6 +73,16 @@ public class PlayerMovement : MonoBehaviour
         if (GameManager.Instance.gameState == TypeData.GameState.종료)
         {
             return;
+        }
+
+        if (!isDeath && PlayerInfoData.Instance.infoData.currentHp <= 0)
+        {
+            isDeath = true;
+            gameObject.layer = LayerMask.NameToLayer("Default");
+            playerState.nextState = TypeData.State.죽음;
+            animator.SetTrigger(animationSettings.isDeathTrigger);
+            charCtrl.enabled = false;
+            StartCoroutine(Death());
         }
 
         Vector3 playerPos = transform.position;
@@ -78,6 +94,32 @@ public class PlayerMovement : MonoBehaviour
 
         // 현재 애니메이션 상태 확인
         CheckCurrentAnimation();
+    }
+
+    IEnumerator Death()
+    {
+        while (isDeath)
+        {
+            UIManager.Instance.SetMessage("부활까지 남은 시간 : " + Mathf.RoundToInt(deathTimer));
+
+            deathTimer += Time.deltaTime;
+
+            if (deathTimer >= 10)
+            {
+                PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp;
+                deathTimer = 0f;
+                transform.position = respawnObj.transform.position;
+                transform.rotation = respawnObj.transform.rotation;
+                playerState.nextState = TypeData.State.대기;
+                playerState.nextMode = TypeData.MODE.평화;
+                gameObject.layer = LayerMask.NameToLayer("Player");
+                charCtrl.enabled = true;
+                isDeath = false;
+            }
+
+            yield return null;
+        }
+
     }
 
     // 데미지

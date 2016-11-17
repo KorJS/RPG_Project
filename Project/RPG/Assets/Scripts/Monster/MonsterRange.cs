@@ -95,6 +95,14 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        if (monster.targetT != null)
+        {
+            if (monster.targetT.GetComponent<PlayerState>().currentState == TypeData.State.죽음)
+            {
+                Reset();
+            }
+        }
+
         if (isTargetAggro)
         {
             if (!playerEffect)

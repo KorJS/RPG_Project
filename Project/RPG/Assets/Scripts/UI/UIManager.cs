@@ -53,6 +53,7 @@ public class UIManager : MonoBehaviour
         public bool isSkillW = false;
         public bool isQuestListW = false;
         public bool isOptionW = false;
+        public bool isUIModeW = false;
     }
 
     public WindowSettings windowSettings;
@@ -335,10 +336,11 @@ public class UIManager : MonoBehaviour
         }
 
         // UI 모드
-        if (Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
+        if (windowSettings.isUIModeW || Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
             showWindowList.Add(windowSettings.uiModePanel);
             ShowWindow(showWindowList);
+            windowSettings.isUIModeW = false;
         }
 
         // 퀘스트창
@@ -568,6 +570,11 @@ public class UIManager : MonoBehaviour
             skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
             Debug.Log("배울수 있는 : " + skillInfo.Value.name);
         }
+    }
+
+    public void ShowUIModeBtn()
+    {
+        windowSettings.isUIModeW = true;
     }
 
     public void ShowCharacterBtn()

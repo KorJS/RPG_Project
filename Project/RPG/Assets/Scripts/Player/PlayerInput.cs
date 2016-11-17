@@ -10,6 +10,7 @@ public class PlayerInput : MonoBehaviour
     private EquipmentHandler equipHandler = null;
     private UIManager uiManager = null;
     private UIInventory uiInventory = null;
+    public UIJoystick uiJoystick = null;
 
     // 키 입력 정보
     [System.Serializable]
@@ -47,6 +48,7 @@ public class PlayerInput : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
+        //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
     void Start()
@@ -64,6 +66,12 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
+        if (playerState.currentState == TypeData.State.죽음)
+        {
+            return;
+        }
+
+        //InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);
         InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
 
         InputShortCutkey();
@@ -148,45 +156,39 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F4))
         {
+            PlayerInfoData.Instance.totalAtt -= 99999;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
             PlayerInfoData.Instance.SetExp(99999);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            PlayerInfoData.Instance.infoData.currentHp = 1;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F8))
+        {
+            playerState.nextMode = TypeData.MODE.평화;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            playerState.nextMode = TypeData.MODE.전투;
+            playerMovement.Damage(0);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
         {
             Debug.Log("aaaaaaaaaaaaaa");
-        }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            playerState.nextMode = TypeData.MODE.평화;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            equipHandler.SetWeapon(null, false);
-            equipHandler.SetSubWeapon(null, false);
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            weapon = Instantiate(Resources.Load("Equipment/Vergos_Lance_Weapon")) as GameObject;
-            shield = Instantiate(Resources.Load("Equipment/Vergos_Lance_Subweapon")) as GameObject;
-            equipHandler.SetWeapon(weapon, true);
-            equipHandler.SetSubWeapon(shield, true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.isHit = true;
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            playerMovement.isHit = false;
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.Damage(0);
         }
     }
 

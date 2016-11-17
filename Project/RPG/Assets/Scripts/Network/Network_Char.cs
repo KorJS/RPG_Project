@@ -41,6 +41,7 @@ public class Network_Char : MonoBehaviour
     public GameObject pwObj = null;
     public GameObject slotsObj = null;
 
+    public UIPanel rightPanel = null;
     public UIPanel lodingPanel = null;
     public UIProgressBar lodingBar = null;
     private const float lodingTime = 5f;
@@ -196,6 +197,11 @@ public class Network_Char : MonoBehaviour
             createObj.SetActive(false);
         }
 
+        if (rightPanel.alpha == 1f)
+        {
+            rightPanel.alpha = 0f;
+        }
+
         PlayerInfoData.Instance.infoData = data.playerInfoData;
         PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
 
@@ -318,6 +324,7 @@ public class Network_Char : MonoBehaviour
 
     public void WarriorBtn()
     {
+        message.text = "기사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.기사;
         createCharacter.warriorObj.SetActive(true);
         createCharacter.magicianObj.SetActive(false);

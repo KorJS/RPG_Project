@@ -119,6 +119,7 @@ public class UIManager : MonoBehaviour
     public bool isStorage = false;
     public bool isStore = false;
     public bool isQuest = false;
+    public bool isFKey = false;
 
     private const float MESSAGETIME = 2f;
     private float messageTimer = 0f;
@@ -420,8 +421,8 @@ public class UIManager : MonoBehaviour
         if (!isUIMode)
         {
             // 마우스 커서 상태
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
             isUIMode = true;
 
             playerInput.InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
@@ -435,8 +436,8 @@ public class UIManager : MonoBehaviour
         // UI 모드이면 UI 해제
         else if (isUIMode)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
             isUIMode = false;
 
             DisableDragIiem();
@@ -570,6 +571,11 @@ public class UIManager : MonoBehaviour
             skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
             Debug.Log("배울수 있는 : " + skillInfo.Value.name);
         }
+    }
+
+    public void ShowFKey()
+    {
+        isFKey = true;
     }
 
     public void ShowUIModeBtn()

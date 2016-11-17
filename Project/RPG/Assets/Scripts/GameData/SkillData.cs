@@ -80,52 +80,90 @@ public class SkillData
 
     public void LoadTalbe()
     {
-        string path = pathForDocumentsFile("Tables/skill_table.csv");
+        string path = "Tables/skill_table";
 
-        if (File.Exists(path) == false)
+        TextAsset ta = Resources.Load(path) as TextAsset;
+
+        if (ta == null)
         {
             Debug.Log("파일이 존재하지 않습니다!!" + path);
-            return;
         }
-
-        string str = null;
 
         skillInfos.Clear();
 
-        FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read); // 읽기 전용으로 불러옴
-        StreamReader sr = new StreamReader(file);
+        string[] datas = Regex.Split(ta.text, "\r\n");
 
-        while ((str = sr.ReadLine()) != null)
+        foreach (string data in datas)
         {
-            string[] datas = Regex.Split(str, "\r\n");
-
-            foreach (string data in datas)
+            // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
+            if ((data == "") || (data.Length == 0))
             {
-                // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
-                if ((data == "") || (data.Length == 0))
-                {
-                    break;
-                }
+                break;
+            }
 
-                // # 문자로 시자갛느 데이타는 무시한다.
-                if (data[0] == '#')
-                {
-                    continue;
-                }
+            // # 문자로 시자갛느 데이타는 무시한다.
+            if (data[0] == '#')
+            {
+                continue;
+            }
 
-                string[] temp = data.Split(',');
-                int index = int.Parse(temp[0]);
+            string[] temp = data.Split(',');
+            int index = int.Parse(temp[0]);
 
-                TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+            TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
 
-                SetSkillDate(index, ref temp);
+            SetSkillDate(index, ref temp);
 
-                Debug.Log("skill_table에 데이타 등록 : " + temp[0]);
-            } // end foreach
-        } // end while
+            Debug.Log("skill_table에 데이타 등록 : " + temp[0]);
 
-        sr.Close();
-        file.Close();
+        } // end foreach
+
+        //string path = pathForDocumentsFile("Tables/skill_table.csv");
+
+        //if (File.Exists(path) == false)
+        //{
+        //    Debug.Log("파일이 존재하지 않습니다!!" + path);
+        //    return;
+        //}
+
+        //string str = null;
+
+        //skillInfos.Clear();
+
+        //FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read); // 읽기 전용으로 불러옴
+        //StreamReader sr = new StreamReader(file);
+
+        //while ((str = sr.ReadLine()) != null)
+        //{
+        //    string[] datas = Regex.Split(str, "\r\n");
+
+        //    foreach (string data in datas)
+        //    {
+        //        // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
+        //        if ((data == "") || (data.Length == 0))
+        //        {
+        //            break;
+        //        }
+
+        //        // # 문자로 시자갛느 데이타는 무시한다.
+        //        if (data[0] == '#')
+        //        {
+        //            continue;
+        //        }
+
+        //        string[] temp = data.Split(',');
+        //        int index = int.Parse(temp[0]);
+
+        //        TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+
+        //        SetSkillDate(index, ref temp);
+
+        //        Debug.Log("skill_table에 데이타 등록 : " + temp[0]);
+        //    } // end foreach
+        //} // end while
+
+        //sr.Close();
+        //file.Close();
 
         Debug.Log("파일 읽기 완료 : " + path);
 

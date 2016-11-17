@@ -112,72 +112,126 @@ public sealed class ItemData
 
     public void LoadTalbe()
     {
-        string path = pathForDocumentsFile("Tables/item_table.csv");
+        string path = "Tables/item_table";
 
-        if (File.Exists(path) == false)
+        TextAsset ta = Resources.Load(path) as TextAsset;
+
+        if (ta == null)
         {
             Debug.Log("파일이 존재하지 않습니다!!" + path);
-            return;
         }
 
-        string str = null;
-        equipmentInfos.Clear();
-        cusomableInfos.Clear();
-        questItemInfos.Clear();
+        string[] datas = Regex.Split(ta.text, "\r\n");
 
-        FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read); // 읽기 전용으로 불러옴
-        StreamReader sr = new StreamReader(file);
-
-        while ((str = sr.ReadLine()) != null)
+        foreach (string data in datas)
         {
-            string[] datas = Regex.Split(str, "\r\n");
-
-            foreach (string data in datas)
+            // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
+            if ((data == "") || (data.Length == 0))
             {
-                // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
-                if ((data == "") || (data.Length == 0))
-                {
+                break;
+            }
+
+            // # 문자로 시자갛느 데이타는 무시한다.
+            if (data[0] == '#')
+            {
+                continue;
+            }
+
+            string[] temp = data.Split(',');
+            int index = int.Parse(temp[0]);
+
+            TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+
+            switch (itemType)
+            {
+                case TypeData.ItemType.장비:
+                    {
+                        SetEquipmentDate(index, ref temp);
+                    }
                     break;
-                }
 
-                // # 문자로 시자갛느 데이타는 무시한다.
-                if (data[0] == '#')
-                {
-                    continue;
-                }
+                case TypeData.ItemType.소모품:
+                    {
+                        SetCusomableData(index, ref temp);
+                    }
+                    break;
 
-                string[] temp = data.Split(',');
-                int index = int.Parse(temp[0]);
+                case TypeData.ItemType.퀘스트템:
+                    {
+                        SetQuestItemData(index, ref temp);
+                    }
+                    break;
+            }
 
-                TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+            Debug.Log("item_table에 데이타 등록 : " + temp[0]);
+        } // end foreach
 
-                switch (itemType)
-                {
-                    case TypeData.ItemType.장비:
-                        {
-                            SetEquipmentDate(index, ref temp);
-                        }
-                        break;
+        //string path = pathForDocumentsFile("Tables/item_table.csv");
 
-                    case TypeData.ItemType.소모품:
-                        {
-                            SetCusomableData(index, ref temp);
-                        }
-                        break;
+        //if (File.Exists(path) == false)
+        //{
+        //    Debug.Log("파일이 존재하지 않습니다!!" + path);
+        //    return;
+        //}
 
-                    case TypeData.ItemType.퀘스트템:
-                        {
-                            SetQuestItemData(index, ref temp);
-                        }
-                        break;
-                }
+        //string str = null;
+        //equipmentInfos.Clear();
+        //cusomableInfos.Clear();
+        //questItemInfos.Clear();
 
-                Debug.Log("item_table에 데이타 등록 : " + temp[0]);
-            } // end foreach
-        } // end while
+        //FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read); // 읽기 전용으로 불러옴
+        //StreamReader sr = new StreamReader(file);
 
-        sr.Close();
-        file.Close();
+        //while ((str = sr.ReadLine()) != null)
+        //{
+        //    string[] datas = Regex.Split(str, "\r\n");
+
+        //    foreach (string data in datas)
+        //    {
+        //        // 데이타가 존재하지 ㅇ낳으면 freach()문을 빠져 나간다.
+        //        if ((data == "") || (data.Length == 0))
+        //        {
+        //            break;
+        //        }
+
+        //        // # 문자로 시자갛느 데이타는 무시한다.
+        //        if (data[0] == '#')
+        //        {
+        //            continue;
+        //        }
+
+        //        string[] temp = data.Split(',');
+        //        int index = int.Parse(temp[0]);
+
+        //        TypeData.ItemType itemType = (TypeData.ItemType)int.Parse(temp[1]);
+
+        //        switch (itemType)
+        //        {
+        //            case TypeData.ItemType.장비:
+        //                {
+        //                    SetEquipmentDate(index, ref temp);
+        //                }
+        //                break;
+
+        //            case TypeData.ItemType.소모품:
+        //                {
+        //                    SetCusomableData(index, ref temp);
+        //                }
+        //                break;
+
+        //            case TypeData.ItemType.퀘스트템:
+        //                {
+        //                    SetQuestItemData(index, ref temp);
+        //                }
+        //                break;
+        //        }
+
+        //        Debug.Log("item_table에 데이타 등록 : " + temp[0]);
+        //    } // end foreach
+        //} // end while
+
+        //sr.Close();
+        //file.Close();
 
         Debug.Log("파일 읽기 완료 : " + path);
 

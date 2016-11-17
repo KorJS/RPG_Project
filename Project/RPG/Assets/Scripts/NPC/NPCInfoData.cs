@@ -52,7 +52,7 @@ public class NPCInfoData : MonoBehaviour
             return;
         }
 
-        if (npcRange.isPlayer && Input.GetKeyDown(KeyCode.F))
+        if (npcRange.isPlayer && (Input.GetKeyDown(KeyCode.F) || uiManager.isFKey))
         {
             npcMovement.SetAniState();
 
@@ -65,6 +65,7 @@ public class NPCInfoData : MonoBehaviour
             {
                 uiManager.isStorage = true;
             }
+            uiManager.isFKey = false;
         }
     }
 

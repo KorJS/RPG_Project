@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
 
         DataClear(false);
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         SceneManager.LoadScene("LoginScene");
     }
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GameExitSavePlayerData()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         Application.Quit();
     }

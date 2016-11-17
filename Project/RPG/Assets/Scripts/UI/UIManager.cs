@@ -135,7 +135,6 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         uiManager = this;
-        DontDestroyOnLoad(this);
 
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 

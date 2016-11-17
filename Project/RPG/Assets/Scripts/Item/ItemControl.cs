@@ -134,6 +134,21 @@ public class ItemControl : MonoBehaviour
     // 아이템 이름 위치 설정
     private void SetPosition()
     {
+        Vector3 cameraPos = Camera.main.transform.position;
+        cameraPos.y = 0f;
+
+        float dis = Vector3.Distance(cameraPos, itemSettings.itemT.position);
+
+        // 아이템 이름이 활성화 상태에서 거리가 15m 멀어지면 비활성화
+        if (itemSettings.uiItemNameObj.activeSelf && dis > 20f)
+        {
+            isUIName = false;
+        }
+        // 아이템 이름이 비활성화 상태에서 거리가 15m 내에 들어오면 활성화
+        else if (!itemSettings.uiItemNameObj.activeSelf && dis <= 20f)
+        {
+            isUIName = true;
+        }
 
         Vector3 p = Camera.main.WorldToViewportPoint(itemSettings.itemT.position);
         itemSettings.uiItemNameObj.transform.position = UICamera.mainCamera.ViewportToWorldPoint(p);

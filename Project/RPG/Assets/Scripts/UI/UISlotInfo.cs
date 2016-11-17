@@ -28,7 +28,9 @@ public class UISlotInfo : MonoBehaviour
     {
         public UITexture uiIcon;
         public UILabel uiName;
+        public UILabel uiLevel;
         public UISprite uiCoolTime;
+        public UILabel uiCoolTimeLabel;
         public UILabel uiQuantity;
         public UILabel uiSellGold;
         public UILabel uiBuyGold;
@@ -152,6 +154,11 @@ public class UISlotInfo : MonoBehaviour
         }
 
         slotSettings.uiName.text = slotInfo.name;
+
+        if (slotType == TypeData.SlotType.스킬리스트)
+        {
+            slotSettings.uiLevel.text = "Lv " + SkillData.Instance.skillInfos[slotInfo.skillIndex].level.ToString();
+        }
     }
 
     public void SetQuantity()
@@ -290,6 +297,7 @@ public class UISlotInfo : MonoBehaviour
         if (slotSettings.uiCoolTime)
         {
             slotSettings.uiCoolTime.fillAmount = ratio;
+            slotSettings.uiCoolTimeLabel.text = (Mathf.RoundToInt(slotInfo.coolTime - coolTimer)).ToString();
         }
 
         if (slotSettings.uiCoolTime.fillAmount == 0f)

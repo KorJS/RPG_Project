@@ -278,6 +278,8 @@ public class Network_Char : MonoBehaviour
         WarriorBtn();
         createObj.SetActive(false);
         CheckSlotinfo(data.characterInfos);
+
+        message.text = data.message;
     }
 
     public void RequestDelete()

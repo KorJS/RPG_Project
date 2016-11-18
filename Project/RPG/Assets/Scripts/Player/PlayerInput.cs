@@ -48,7 +48,7 @@ public class PlayerInput : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
-        uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
+        //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
     void Start()
@@ -71,8 +71,8 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);
-        //InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
+        //InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);
+        InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
 
         InputShortCutkey();
         

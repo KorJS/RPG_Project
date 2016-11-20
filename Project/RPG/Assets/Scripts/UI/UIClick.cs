@@ -42,6 +42,10 @@ public class UIClick : MonoBehaviour
         if (UICamera.currentKey == KeyCode.Mouse0)
         {
             SetSkillDescription();
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                CheckSlotType();
+            }
         }
 
         // 마우스 우클릭

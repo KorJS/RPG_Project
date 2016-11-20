@@ -6,7 +6,7 @@ public class UIStore : MonoBehaviour
 {
     private UIManager uiManager = null;
     private PlayerInfoData playerInfoData = null;
-    private PlayerSlotData playerSlotDate = null;
+    private PlayerSlotData playerSlotData = null;
 
     [System.Serializable]
     public class StoreSettings
@@ -32,7 +32,7 @@ public class UIStore : MonoBehaviour
     {
         originalInfos = new Dictionary<int, int>();
         playerInfoData = PlayerInfoData.Instance;
-        playerSlotDate = PlayerSlotData.Instance;
+        playerSlotData = PlayerSlotData.Instance;
     }
 
     void Start()
@@ -60,12 +60,12 @@ public class UIStore : MonoBehaviour
         if (_currentInfo.slotType == TypeData.SlotType.인벤토리)
         {
             // 인벤슬롯 원본 수량정보 기억해두기
-            if (originalInfos.ContainsKey(_currentInfo.slotIndex))
+            if (!originalInfos.ContainsKey(_currentInfo.slotIndex))
             {
-                _currentInfo.slotInfo.quantity += copyQuantity;
-            }
-            else
-            {
+                //Debug.Log("전 originalInfos[_currentInfo.slotIndex] : " + originalInfos[_currentInfo.slotIndex]);
+                //originalInfos[_currentInfo.slotIndex] += copyQuantity;
+                //Debug.Log("후 originalInfos[_currentInfo.slotIndex] : " + originalInfos[_currentInfo.slotIndex]);
+          
                 int tempQuantity = _currentInfo.slotInfo.quantity;
                 if (_currentInfo.slotInfo.itemType == TypeData.ItemType.장비) { tempQuantity = 1; }
                 originalInfos.Add(_currentInfo.slotIndex, tempQuantity);
@@ -75,6 +75,7 @@ public class UIStore : MonoBehaviour
         currentInfo = _currentInfo;
         targetType = _targetType;
         quantity = copyQuantity;
+
         CheckCopyItem();
 
         SetChangeG();
@@ -87,12 +88,12 @@ public class UIStore : MonoBehaviour
         {
             if (currentInfo.slotType == TypeData.SlotType.구매)
             {
-                BuyAmount(quantity, false);
+                BuyAmount(false);
             }
             else if (currentInfo.slotType == TypeData.SlotType.판매)
             {
-                InvenRecoverItem();
-                SellAmount(quantity, false);
+                SellAmount(false);
+                InvenRecoverItem(); // 인벤복구후 quantity 변수의 값이 변화
             }
         }
         else
@@ -103,7 +104,7 @@ public class UIStore : MonoBehaviour
                     {
                         // 상점리스트에서 옴 - 추가
                         AddItem(ref uiManager.buySlots);
-                        BuyAmount(quantity, true);
+                        BuyAmount(true);
                     }
                     break;
 
@@ -111,7 +112,7 @@ public class UIStore : MonoBehaviour
                     {
                         // 인벤에서 옴 - 추가
                         AddItem(ref uiManager.sellSlots);
-                        SellAmount(quantity, true);
+                        SellAmount(true);
                     }
                     break;
             }
@@ -162,7 +163,7 @@ public class UIStore : MonoBehaviour
             // 빈 곳이 없으면 경고창 - 빈곳이 있으면 넣고. if문 빠져나옴
             if (!CheckEmptySlot(ref slots))
             {
-                // 빈 곳도 없으면 경고창On - 슬롯부족
+                // TODO : 상점 빈 곳도 없으면 경고창On - 슬롯부족
             }
         }
     }
@@ -249,8 +250,12 @@ public class UIStore : MonoBehaviour
                     continue;
                 }
 
+                Debug.Log(invenSlot.Key + " 인벤 quantity : " + invenSlot.Value.slotInfo.quantity);
+
                 // 같은 타입에 같은 인덱스가 있으면
                 CheckInvenQuantity(ref invenSlot.Value.slotInfo.quantity);
+
+                invenSlot.Value.isExist = true;
 
                 invenSlot.Value.StoreReSetting();
             }
@@ -275,7 +280,7 @@ public class UIStore : MonoBehaviour
     }
 
     // 구매금액 설정
-    private void BuyAmount(int quantity, bool isAdd)
+    private void BuyAmount(bool isAdd)
     {
         int buyAmount = int.Parse(storeSettings.buyAmount.text);
         int total = 0;
@@ -296,7 +301,7 @@ public class UIStore : MonoBehaviour
     }
 
     // 판매금액 설정
-    private void SellAmount(int quantity, bool isAdd)
+    private void SellAmount(bool isAdd)
     {
         int sellAmount = int.Parse(storeSettings.sellAmount.text);
         int total = 0;
@@ -381,7 +386,7 @@ public class UIStore : MonoBehaviour
         {
             int index = changInvenIndexs[i];
             UISlotInfo tempUISlotInfo = uiManager.invenSlots[index];
-            playerSlotDate.SetSlotData(tempUISlotInfo.slotType, tempUISlotInfo.slotIndex, ref tempUISlotInfo);
+            playerSlotData.SetSlotData(tempUISlotInfo.slotType, tempUISlotInfo.slotIndex, ref tempUISlotInfo);
         }
 
         // 구매한 아이템 인벤에 추가
@@ -396,7 +401,7 @@ public class UIStore : MonoBehaviour
             int itemIndex = buyInfo.Value.slotInfo.itemIndex;
             int itemQuantity = buyInfo.Value.slotInfo.quantity;
 
-            playerSlotDate.AddSlotData(TypeData.SlotType.인벤토리, itemType, itemIndex, itemQuantity);
+            playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemType, itemIndex, itemQuantity);
 
             buyInfo.Value.ReSetting();
             buyInfo.Value.SetQuantity();

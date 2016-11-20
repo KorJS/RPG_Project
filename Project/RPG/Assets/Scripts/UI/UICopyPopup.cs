@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class UICopyPopup : MonoBehaviour
 {
+    private PlayerSlotData playerSlotData = null;
     private UIManager uiManager = null;
     private UIStore uiStore = null;
     private UIInput copyQuantity_Input = null; // 입력 수량
@@ -16,6 +17,7 @@ public class UICopyPopup : MonoBehaviour
 
     void Awake()
     {
+        playerSlotData = PlayerSlotData.Instance;
         uiManager = UIManager.Instance;
         copyQuantity_Input = transform.FindChild("Input").GetComponent<UIInput>();
     }
@@ -39,6 +41,9 @@ public class UICopyPopup : MonoBehaviour
 
     public void DragAndDropInfo(UISlotInfo _currentInfo, UISlotInfo _targetInfo)
     {
+        currentInfo = null;
+        targetInfo = null;
+
         currentInfo = _currentInfo;
         targetInfo = _targetInfo;
 
@@ -49,6 +54,7 @@ public class UICopyPopup : MonoBehaviour
         }
         // 처음 표시 : 현재 옮길수 최대 수량
         copyQuantityMAX = currentInfo.slotInfo.quantity;
+        Debug.Log("DragAndDropInfo : " + currentInfo.slotInfo.quantity);
     }
 
     // 분리할 수량 변화가 생기면 호출되는 함수
@@ -117,12 +123,16 @@ public class UICopyPopup : MonoBehaviour
         {
             case TypeData.SlotType.인벤토리:
                 {
+                    Debug.Log("전전 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
                     // 판매목록 수량만큼 추가
                     uiStore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
 
+                    Debug.Log("전 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
+
                     // 인벤 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;
-
+                    Debug.Log("후 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
+                    Debug.Log("copyQuantity : " + copyQuantity);
                     if (!uiStore.changInvenIndexs.Contains(currentInfo.slotIndex))
                     {
                         uiStore.changInvenIndexs.Add(currentInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
@@ -154,6 +164,8 @@ public class UICopyPopup : MonoBehaviour
 
                     // 구매, 판매목록 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;
+
+                    Debug.Log("currentInfo.slotInfo.quantity  : " + currentInfo.slotInfo.quantity);
 
                     if (currentInfo.slotInfo.quantity == 0)
                     {

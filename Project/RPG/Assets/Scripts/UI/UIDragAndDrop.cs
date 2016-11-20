@@ -253,6 +253,9 @@ public class UIDragAndDrop : MonoBehaviour
         //      빈 타겟 : 교체
         if (uiSlotInfo.slotType == targetInfo.slotType)
         {
+            // 상점 활성화중에는 같은 슬롯끼리 드래그앤드롭 안됨
+            if (uistore.gameObject.activeSelf) { return; }
+
             // 현재 슬롯 인덱스랑 타겟 슬롯 인덱스가 같으면 
             if (uiSlotInfo.slotIndex == targetInfo.slotIndex) { return; }
             

@@ -140,6 +140,7 @@ public class Network_Store : MonoBehaviour
 
         if (UIManager.Instance.buySlots.Count != 0)
         {
+            Debug.Log("CheckStoreSlot 구매슬롯");
             foreach (KeyValuePair<int, UISlotInfo> buySlot in UIManager.Instance.buySlots)
             {
                 if (buySlot.Value.slotInfo.itemIndex == -1)
@@ -163,6 +164,7 @@ public class Network_Store : MonoBehaviour
 
         if (UIManager.Instance.sellSlots.Count != 0)
         {
+            Debug.Log("CheckStoreSlot 판매슬롯");
             foreach (KeyValuePair<int, UISlotInfo> sellSlot in UIManager.Instance.sellSlots)
             {
                 if (sellSlot.Value.slotInfo.itemIndex == -1)

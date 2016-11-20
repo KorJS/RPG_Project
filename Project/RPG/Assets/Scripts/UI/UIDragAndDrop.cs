@@ -13,13 +13,14 @@ public class UIDragAndDrop : MonoBehaviour
     private UICopyPopup uiCopyPopup = null;
     private UIDivisionPopup uidivPopup = null;
     public UISlotInfo uiSlotInfo = null;
+    private UIClick uiClick = null;
 
     private UIRoot root = null;
     private Transform parent = null;
     private GameObject draggedObject = null; // 드래그중인 icon
     private GameObject tempDraggingPanel = null; // 드래그중인 panel
 
-    private bool isDragging = false; // 드래그중인지
+    public bool isDragging = false; // 드래그중인지
 
     void Awake()
     {
@@ -27,8 +28,9 @@ public class UIDragAndDrop : MonoBehaviour
         playerSlotData = PlayerSlotData.Instance;
 
         equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
-        uiSlotInfo = this.GetComponent<UISlotInfo>();
-        parent = this.transform.parent;
+        uiSlotInfo = GetComponent<UISlotInfo>();
+        uiClick = GetComponent<UIClick>();
+        parent = transform.parent;
         root = NGUITools.FindInParents<UIRoot>(parent);
     }
 
@@ -41,6 +43,15 @@ public class UIDragAndDrop : MonoBehaviour
         uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
     }
 
+    void OnPress(bool isPress)
+    {
+        // TODO : 아직 버그가..
+        if (!isPress && !isDragging && Application.platform == RuntimePlatform.Android)
+        {
+            uiClick.SetSkillDescription();
+            uiClick.CheckSlotType();
+        }
+    }
     void OnDragStart()
     {
         // 이미 드래그래서 분리중이면 새로운 드래그 못하게.

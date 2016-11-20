@@ -81,6 +81,11 @@ public class CameraControl : MonoBehaviour
         {
             if (Application.isPlaying)
             {
+                if (UICamera.Raycast(Input.mousePosition))
+                {
+                    return;
+                }
+
                 // UI 모드가 아닐때 회전가능
                 if (!uiManager.isUIMode)
                 {

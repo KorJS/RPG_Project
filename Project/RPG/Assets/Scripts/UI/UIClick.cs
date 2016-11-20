@@ -12,6 +12,7 @@ public class UIClick : MonoBehaviour
     private PlayerSlotData playerSlotData = null;
     private EquipmentHandler equipHandler = null;
 
+    private UIDragAndDrop uiDragAndDrop = null;
     public UISlotInfo uiSlotInfo = null;
     private UISkillList uiSkillList = null;
 
@@ -28,6 +29,7 @@ public class UIClick : MonoBehaviour
         skillData = SkillData.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
+        uiDragAndDrop = GetComponent<UIDragAndDrop>();
         uiSlotInfo = GetComponent<UISlotInfo>();
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -53,18 +55,19 @@ public class UIClick : MonoBehaviour
 
     void OnPress(bool isPress)
     {
-        if (isPress && Application.platform == RuntimePlatform.Android)
+        if (!isPress && !uiDragAndDrop.isDragging && Application.platform == RuntimePlatform.Android)
         {
             SetSkillDescription();
             CheckSlotType();
         }
+
         if (uiSlotInfo.slotType == TypeData.SlotType.단축키)
         {
             isClick = isPress;
         }
     }
 
-    private void CheckSlotType()
+    public void CheckSlotType()
     {
         switch (uiSlotInfo.slotType)
         {
@@ -118,7 +121,7 @@ public class UIClick : MonoBehaviour
         }
     }
 
-    private void SetSkillDescription()
+    public void SetSkillDescription()
     {
         // 마우스 왼클릭이 아니면 리턴
         if (UICamera.currentKey != KeyCode.Mouse0)

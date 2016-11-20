@@ -123,16 +123,12 @@ public class UICopyPopup : MonoBehaviour
         {
             case TypeData.SlotType.인벤토리:
                 {
-                    Debug.Log("전전 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
                     // 판매목록 수량만큼 추가
                     uiStore.CopySlotInfo(currentInfo, targetInfo.slotType, copyQuantity);
 
-                    Debug.Log("전 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
-
                     // 인벤 수량 변화
                     currentInfo.slotInfo.quantity -= copyQuantity;
-                    Debug.Log("후 currentInfo.slotInfo.quantity : " + currentInfo.slotInfo.quantity);
-                    Debug.Log("copyQuantity : " + copyQuantity);
+
                     if (!uiStore.changInvenIndexs.Contains(currentInfo.slotIndex))
                     {
                         uiStore.changInvenIndexs.Add(currentInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신

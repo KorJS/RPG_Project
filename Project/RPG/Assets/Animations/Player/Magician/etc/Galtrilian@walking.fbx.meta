@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d1dd371775965d046a0a60615ff104c4
-timeCreated: 1479354680
+guid: 54cdf8210c16a5f41835637d8a8c39a8
+timeCreated: 1479354678
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -154,7 +154,10 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'mixamo.com' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
+      improve retargeting quality.\n\t'Spine2' is inbetween humanoid transforms and
+      has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 3

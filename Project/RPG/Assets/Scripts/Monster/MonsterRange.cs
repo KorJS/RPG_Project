@@ -143,12 +143,13 @@ public class MonsterRange : MonoBehaviour
     private void Reset()
     {
         Debug.Log("리셋");
-        // TODO : 어글이펙트 비활성화.
-        if (!playerEffect)
+
+        if (playerEffect != null)
         {
-            Debug.Log("PlayerEffect Script Null");
+            // TODO : 어글이펙트 비활성화
+            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
         }
-        playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+      
         monster.targetT = null;
         monster.tempTargetT = null;
         isTargetAggro = false;
@@ -216,16 +217,12 @@ public class MonsterRange : MonoBehaviour
         
         if (monsterMovement.isDamage || aggroTimer >= monster.aggroTime)
         {
-            Debug.Log("tempT : " + tempT.name);
-
             playerEffect = tempT.GetComponent<PlayerEffect>();
 
-            if (!playerEffect)
+            if (playerEffect != null)
             {
-                Debug.Log("PlayerEffect Script Null");
+                playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
             }
-
-            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
 
             monster.targetT = tempT; // 타겟 확정
             isTargetAggro = true; // 타겟 어그로

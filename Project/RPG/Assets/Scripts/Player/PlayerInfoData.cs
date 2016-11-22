@@ -45,6 +45,10 @@ public class PlayerInfoData
     public int totalDef = 0;
     public int totalMaxHp = 0;
     public int totalMaxMp = 0;
+    public string buffAtt = null;
+    public string buffDef = null;
+    public string buffHp = null;
+    public string buffMp = null;
 
     public PlayerInfoData()
     {
@@ -88,6 +92,16 @@ public class PlayerInfoData
     // 버프 아이템 사용시 상승 - 쿨타임 종료 후 원래대로
     public void SetBuff(int _att, int _def, int _hp, int _mp)
     {
+        buffAtt = "\n\t [FFFFFFFF] + [0000FFFF]" + _att.ToString();
+        buffDef = "\n\t [FFFFFFFF] + [0000FFFF]" + _def.ToString();
+        buffHp = "\n\t [FFFFFFFF] + [0000FFFF]" + _hp.ToString();
+        buffMp = "\n\t [FFFFFFFF] + [0000FFFF]" + _mp.ToString();
+
+        if (_att <= 0) { buffAtt = null; }
+        if (_def <= 0) { buffDef = null; }
+        if (_hp <= 0) { buffHp = null; }
+        if (_mp <= 0) { buffMp = null; }
+
         totalAtt += _att;
         totalDef += _def;
         totalMaxHp += _hp;

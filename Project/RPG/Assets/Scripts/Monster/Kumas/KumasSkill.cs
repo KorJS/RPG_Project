@@ -52,7 +52,7 @@ public class KumasSkill : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterMovement = GetComponent<MonsterMovement>();
 
-        effects.effectHolder = GameObject.Find("MonsterEffectPool").transform;
+        effects.effectHolder = GameObject.Find("UnequipEffectPool").transform;
         skillType = SkillType.없음;
 
         // 스킬 이펙트 생성
@@ -247,7 +247,7 @@ public class KumasSkill : MonoBehaviour
         effects.iceBallObjs[iceBallCount].SetActive(true);
 
         BallControl ballControl = effects.iceBallObjs[iceBallCount].GetComponent<BallControl>();
-        ballControl.SetBall(tempT_s, tempT_e.position, skillPos, skillRange, skillAtt);
+        ballControl.SetBall(gameObject.transform, tempT_s, tempT_e.position, skillPos, skillRange, 5, skillAtt, "IceBall");
 
         iceBallCount++;
     }

@@ -183,7 +183,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F9))
         {
             playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.Damage(0);
+            playerMovement.SetDamage(0);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
@@ -316,9 +316,10 @@ public class PlayerInput : MonoBehaviour
                         invenSlot.Value.isCoolTime = true;
                     }
 
+                    ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
+
                     uiSlotInfo.slotInfo.quantity -= 1;
                     playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
-                    ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
                 }
                 break;
         }

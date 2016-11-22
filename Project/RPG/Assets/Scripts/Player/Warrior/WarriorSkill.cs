@@ -14,7 +14,7 @@ public class WarriorSkill : MonoBehaviour
     private WarriorEffect warriorEffect = null;
     private UIManager uiManager = null;
 
-    // 워리어 애니메이션 파라미터명 설정
+    // 애니메이션 파라미터명 설정
     [System.Serializable]
     public class WarriorAniSettings
     {
@@ -97,12 +97,6 @@ public class WarriorSkill : MonoBehaviour
         if (playerState.currentState == TypeData.State.죽음)
         {
             return;
-        }
-
-        // 스킬 서브상태머신을 빠져나오면 콤보 모션초기화
-        if (playerMovement.isEndSkillPoint)
-        {
-            isCombo = false;
         }
 
         if (currentSkillTpye != SkillType.연속공격 && currentSkillTpye != SkillType.방패막기)
@@ -303,7 +297,7 @@ public class WarriorSkill : MonoBehaviour
 
         comboTimer += Time.deltaTime;
 
-        // 3초 안에 클릭 못할시. 1콤에서 끝
+        // 1.5초 안에 클릭 못할시. 1콤에서 끝
         if (comboTimer > COMBOTIME)
         {
             playerMovement.animator.SetTrigger(warriorAniSettings.isEndComboTrigger);

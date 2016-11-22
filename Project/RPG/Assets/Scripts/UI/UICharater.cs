@@ -84,7 +84,13 @@ public class UICharater : MonoBehaviour
             }
             Debug.Log("Equipment/" + tempEquipmentInfo.iconName + "_Weapon");
             weaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Weapon")) as GameObject;
-            subWeaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon")) as GameObject;
+
+            GameObject resource = Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon") as GameObject;
+
+            if (resource != null)
+            {
+                subWeaponObj = Instantiate(Resources.Load("Equipment/" + tempEquipmentInfo.iconName + "_Subweapon")) as GameObject;
+            }
 
             // 무기 장착
             equipHandler.SetWeapon(weaponObj, true);
@@ -139,6 +145,14 @@ public class UICharater : MonoBehaviour
         characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def;
         characterSettings.hp.text = playerInfoData.infoData.maxHp.ToString() + "  + [00FF00FF]" + equipmentStat.hp;
         characterSettings.mp.text = playerInfoData.infoData.maxMp.ToString() + "  + [00FF00FF]" + equipmentStat.mp;
+    }
+
+    public void SetBuffStat()
+    {
+        characterSettings.str.text = playerInfoData.infoData.att.ToString() + "  + [00FF00FF]" + equipmentStat.att + playerInfoData.buffAtt;
+        characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def + playerInfoData.buffDef;
+        characterSettings.hp.text = playerInfoData.infoData.maxHp.ToString() + "  + [00FF00FF]" + equipmentStat.hp + playerInfoData.buffHp;
+        characterSettings.mp.text = playerInfoData.infoData.maxMp.ToString() + "  + [00FF00FF]" + equipmentStat.mp + playerInfoData.buffMp;
     }
 
     public void CloseWindows()

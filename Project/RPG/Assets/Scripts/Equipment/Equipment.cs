@@ -55,7 +55,7 @@ public class Equipment : MonoBehaviour
         playerState = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerState>();
         if (playerState == null)
         {
-            Debug.Log("???????????????????????????????????????????");
+            Debug.Log("PlayerState Null");
         }
     }
 
@@ -115,7 +115,7 @@ public class Equipment : MonoBehaviour
     {
         if (isChangMode)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.8f);
         }
 
         this.transform.SetParent(locationSettings.unequipT);

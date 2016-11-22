@@ -36,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
     public bool isHit = false;              // 공격해 맞혔으면 true - 각 스킬스크립트에서 전달 받자
     public bool isDamage = false;           // 공격에 맞았으면 true - 몬스터로부터 맞았으면.
     public bool isIdle = false;             // 스킬 끝나고 idle 상태
-    public bool isEndSkillPoint = false;    // 스킬 서브상태머신 빠져왔는지.
     public bool isBlock = false;            // 방패막기 중에는 공격 안받음
 
     private GameObject respawnObj = null;
@@ -51,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         camera = Camera.main;
 
-        isHit = isDamage = isEndSkillPoint = false;
+        isHit = isDamage = false;
         isIdle = true; // 대기상태
 
         //SetAnimator();
@@ -123,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 데미지
-    public void Damage(float damage)
+    public void SetDamage(float damage)
     {
         animator.SetTrigger(animationSettings.isDamageTrigger);
 
@@ -153,8 +152,8 @@ public class PlayerMovement : MonoBehaviour
     // 스킬
     public void SetAniSkill(int skillTpye)
     {
-        isEndSkillPoint = false; // 스킬 서브상태머신 안에 있으므로 false
-        isIdle = false; // 스킬 중일때 회전 막기.
+        Debug.Log("?");
+        isIdle = false; // 스킬 중일때 회전 / 스킬 막기.
         animator.SetInteger(animationSettings.skillTpyeInt, skillTpye);
     }
 
@@ -207,18 +206,18 @@ public class PlayerMovement : MonoBehaviour
     // 현재 애니메이션 상태
     private void CheckCurrentAnimation()
     {
-        // 현재 실행 중인 애니메이터가 "Skill_End_Point" 인지
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Skill_End_Point"))
-        {
-            isEndSkillPoint = true;
-        }
-
         // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_Botton"))
         {
             // 스킬이 시전이 끝나면 회전 가능 하게.
-            isIdle = true;
+            //isIdle = true;
         }
+    }
+
+    // 스킬이 시전이 끝나면 회전 가능 하게.
+    public void IdleBotton()
+    {
+        isIdle = true;
     }
 
     //// 자식에 아바타를 받아옴

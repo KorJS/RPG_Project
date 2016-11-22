@@ -235,7 +235,9 @@ public sealed class ItemData
 
         Debug.Log("파일 읽기 완료 : " + path);
 
-        SkillData.Instance.LoadTalbe();
+        LevelData.Instance.LoadTalbe();
+
+        //SkillData.Instance.LoadTalbe();
     }
 
     private void SetEquipmentDate(int index, ref string[] temp)

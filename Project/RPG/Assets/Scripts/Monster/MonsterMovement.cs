@@ -25,6 +25,7 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
+    public CharacterController charCtrl = null;
     public Animator animator = null;
     public NavMeshAgent nav = null;
 
@@ -40,6 +41,7 @@ public class MonsterMovement : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterInfoData = GetComponent<MonsterInfoData>();
         monsterState = GetComponent<MonsterState>();
+        charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
         nav.enabled = false;
@@ -55,6 +57,7 @@ public class MonsterMovement : MonoBehaviour
 
     void OnEnable()
     {
+        charCtrl.enabled = true;
         isRot = false;
         isDamage = false;
         isSkill = false;
@@ -119,7 +122,10 @@ public class MonsterMovement : MonoBehaviour
     // 죽음
     public IEnumerator Death(float destroyTime)
     {
+        charCtrl.enabled = false;
+
         yield return new WaitForSeconds(destroyTime);
+
         monsterInfoData.Reset(true);
         monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
         monsterRange.monster.targetT = null;

@@ -32,7 +32,7 @@ public class SkillData
 
     // TODO : 데이터를 받아올때 각 스킬별로 스킬렙업시 상승 효과도 같이 받아와서 PlayerSkillData에서 처리
     // 케릭 직업에 맞게 데이터를 받아온다
-    public struct SkillInfo
+    public class SkillInfo
     {
         public int skillIndex;      // 인덱스
         public int level;           // 습득 필요레벨
@@ -53,6 +53,22 @@ public class SkillData
     public SkillData()
     {
         skillInfos = new Dictionary<int, SkillInfo>();
+    }
+
+    public void SetSkillInfo(List<SkillInfo> _skillInfos)
+    {
+        for (int i = 0; i < _skillInfos.Count; i++)
+        {
+            if (skillInfos.ContainsKey(_skillInfos[i].skillIndex))
+            {
+                Debug.Log("SetSkillInfo : 중복 스킬 정보");
+                return;
+            }
+            Debug.Log("skillIndex : " + _skillInfos[i].name);
+            skillInfos.Add(_skillInfos[i].skillIndex, _skillInfos[i]);
+        }
+
+        PlayerSlotData.Instance.SetSkillListSlot();
     }
 
     public string pathForDocumentsFile(string fileName)

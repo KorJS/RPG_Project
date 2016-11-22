@@ -134,6 +134,10 @@ public class UIManager : MonoBehaviour
     public List<GameObject> damageTxtObjs = null; // 데미지 텍스트 풀
     private int damageTxtCount = 0; // 풀 카운트
 
+    // 방어 성공 UI이펙트
+    public GameObject blockTxtObj = null;
+    public TweenScale blockTween = null;
+
     void Awake()
     {
         uiManager = this;
@@ -152,6 +156,10 @@ public class UIManager : MonoBehaviour
         mobHpBarObj = GameObject.Find("MonsterPanel");
         bossHpBarObj.SetActive(false);
         mobHpBarObj.SetActive(false);
+
+        blockTxtObj = GameObject.Find("BlockTxtEffect");
+        blockTween = blockTxtObj.transform.GetChild(0).GetComponent<TweenScale>();
+        blockTxtObj.SetActive(false);
 
         damageTxtHolder = GameObject.Find("DamageHolder");
         damageTxtObjs = new List<GameObject>();

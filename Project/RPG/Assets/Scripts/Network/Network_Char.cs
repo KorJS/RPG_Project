@@ -32,6 +32,7 @@ public class Network_Char : MonoBehaviour
         public int timestamp;
         public PlayerInfoData.InfoData playerInfoData;
         public List<int> playerSkillInfos;
+        public List<SkillData.SkillInfo> skillInfos;
     }
 
     public GameObject loginObj = null;
@@ -173,11 +174,14 @@ public class Network_Char : MonoBehaviour
         // Login에 acc_index, char_index 로 정보 가져옴
         // 케릭정보, 케릭창 슬롯, 단축슬롯, 인벤토리 슬롯, 창고슬롯
         int char_index = slotInfos[selectSlot].char_index;
+        int player_type = slotInfos[selectSlot].player_type;
+        Debug.Log("player_type : " + player_type);
 
-        Dictionary<string, object> sendData = new Dictionary<string, object>();
+        Dictionary <string, object> sendData = new Dictionary<string, object>();
         sendData.Add("contents", charInfo_contents);
         sendData.Add("acc_index", acc_index);
         sendData.Add("char_index", char_index);
+        sendData.Add("player_type", player_type);
 
         StartCoroutine(NetworkManager.Instance.ProcessNetwork(sendData, ReplyInGame));
     }
@@ -204,6 +208,7 @@ public class Network_Char : MonoBehaviour
 
         PlayerInfoData.Instance.infoData = data.playerInfoData;
         PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
+        SkillData.Instance.SetSkillInfo(data.skillInfos);
 
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.인벤토리);
         Network_Slot.Instance.RequestLoadSlot(TypeData.SlotType.창고);
@@ -248,7 +253,7 @@ public class Network_Char : MonoBehaviour
             return;
         }
 
-        if (selectPlayerType != (int)TypeData.PlayerType.기사)
+        if (selectPlayerType == (int)TypeData.PlayerType.사제)
         {
             message.text = "선택하신 캐릭터는 개발중입니다.";
             return;
@@ -335,7 +340,7 @@ public class Network_Char : MonoBehaviour
 
     public void MagicianBtn()
     {
-        message.text = "마법사 캐릭터는 개발중입니다.";
+        message.text = "마법사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.마법사;
         createCharacter.warriorObj.SetActive(false);
         createCharacter.magicianObj.SetActive(true);

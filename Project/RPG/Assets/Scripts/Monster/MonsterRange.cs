@@ -447,7 +447,7 @@ public class MonsterRange : MonoBehaviour
             Debug.Log("targetName : " + target.name + " Attack : " + skillAtt);
             // 주인공 Hit
             PlayerMovement playerMovement = target.GetComponent<PlayerMovement>();
-            playerMovement.Damage(-skillAtt);
+            playerMovement.SetDamage(-skillAtt);
         }
     }
 }

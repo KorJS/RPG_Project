@@ -476,7 +476,7 @@ public class PlayerSlotData
                         int index = emptySlotInfo.Key;
                         
                         tempSlotInfoData.quantity = divQuantity;
-                        emptyInvenMark.Remove(index); // 이제 빈곳이 마크에서 아니므로 제거
+                        emptyInvenMark.Remove(index); // 이제 빈곳이 아니므로 제거
                         inventoryInfos.Add(index, tempSlotInfoData); // 추가
                         UIManager.Instance.invenSlots[index].ReSetting();
                         break;
@@ -491,7 +491,7 @@ public class PlayerSlotData
                         int tempSlotIndex = emptySlotInfo.Key;
 
                         tempSlotInfoData.quantity = divQuantity;
-                        emptyStorageMark.Remove(tempSlotIndex); // 이제 빈곳이 마크에서 아니므로 제거
+                        emptyStorageMark.Remove(tempSlotIndex); // 이제 빈곳이 아니므로 제거
                         storageInfos.Add(tempSlotIndex, tempSlotInfoData); // 추가
                         GameObject.Find("W_Slot " + tempSlotIndex).GetComponent<UISlotInfo>().ReSetting();
                         break;

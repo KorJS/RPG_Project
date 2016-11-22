@@ -21,6 +21,8 @@ public class ItemManager : MonoBehaviour
     private ItemData itemData = null;
     private PlayerInfoData playerInfoData = null;
 
+    private List<int> buffStates = null;
+
     void Awake()
     {
         itemManager = this;
@@ -28,10 +30,13 @@ public class ItemManager : MonoBehaviour
 
         itemData = ItemData.Instance;
         playerInfoData = PlayerInfoData.Instance;
+
+        buffStates = new List<int>();
     }
 
     public void CheckItemType(TypeData.ItemType itemType, int itemIndex, bool isCoolTime)
     {
+        Debug.Log("itemType : " + itemType + " itemIndex : " + itemIndex + " isCoolTime : " + isCoolTime);
         if (itemType == TypeData.ItemType.소모품)
         {
             if (!itemData.cusomableInfos.ContainsKey(itemIndex))
@@ -39,7 +44,7 @@ public class ItemManager : MonoBehaviour
                 Debug.Log("아이템 정보가 없는 " + itemIndex + " 소모품");
                 return;
             }
-
+            Debug.Log("itemIndex : " + itemIndex);
             CusomableItem(itemIndex, isCoolTime);
         }
     }
@@ -49,7 +54,7 @@ public class ItemManager : MonoBehaviour
         ItemData.CusomableInfo cusomableInfo = itemData.cusomableInfos[itemIndex];
 
         TypeData.CusomableType cusomableType = (TypeData.CusomableType)cusomableInfo.cusomableType;
-
+        Debug.Log("cusomableType : " + cusomableType);
         switch (cusomableType)
         {
             case TypeData.CusomableType.회복:
@@ -68,11 +73,30 @@ public class ItemManager : MonoBehaviour
 
                     if (isCoolTime)
                     {
+                        Debug.Log("????????");
+                        // 같은 아이템의 버프인경우 리턴
+                        if (buffStates.Contains(itemIndex))
+                        {
+                            return;
+                        }
+
                         playerInfoData.SetBuff(att, def, hp, mp);
+                        buffStates.Add(itemIndex);
+
+                        UIManager.Instance.windowSettings.characterPanel.GetComponent<UICharater>().SetBuffStat();
                     }
                     else
                     {
+                        // 같은 아이템의 버프가 없는 경우 리턴
+                        if (!buffStates.Contains(itemIndex))
+                        {
+                            return;
+                        }
+
                         playerInfoData.SetBuff(-att, -def, -hp, -mp);
+                        buffStates.Remove(itemIndex);
+
+                        UIManager.Instance.windowSettings.characterPanel.GetComponent<UICharater>().SetBuffStat();
                     }
                 }
                 break;

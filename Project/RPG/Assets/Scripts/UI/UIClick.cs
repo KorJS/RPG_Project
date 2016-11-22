@@ -206,6 +206,12 @@ public class UIClick : MonoBehaviour
 
             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
             {
+                //쿨타임
+                uiSlotInfo.isCoolTime = true;
+
+                // 아이템 기능
+                ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
+
                 // 인벤에 사용한 아이템이 단축창에도 있으면 쿨타임
                 ShortcutItemCoolTime(false);
 
@@ -217,12 +223,6 @@ public class UIClick : MonoBehaviour
                 // 인벤 - 현재 슬롯 수량 변화 > 단축도 같이 변화
                 playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
                 uiSlotInfo.ReSetting();
-                
-                //쿨타임
-                uiSlotInfo.isCoolTime = true;
-                
-                // 아이템 기능
-                ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
             }
         }
     }
@@ -262,6 +262,12 @@ public class UIClick : MonoBehaviour
 
             case TypeData.SlotInfoType.아이템:
                 {
+                    // 쿨타임
+                    uiSlotInfo.isCoolTime = true;
+
+                    // 아이템 기능
+                    ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
+
                     // 단축창에 똑같은 아이템이 있으면 쿨타임
                     ShortcutItemCoolTime(true);
 
@@ -273,12 +279,6 @@ public class UIClick : MonoBehaviour
                     // 단축 - 현재 슬롯 수량 변화 > 인벤도 같이 변화
                     playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
                     uiSlotInfo.ReSetting();
-
-                    // 쿨타임
-                    uiSlotInfo.isCoolTime = true;
-
-                    // 아이템 기능
-                    ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
                 }
                 break;
         }

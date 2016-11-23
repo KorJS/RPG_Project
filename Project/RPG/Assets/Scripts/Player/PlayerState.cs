@@ -12,7 +12,7 @@ public class PlayerState : MonoBehaviour
     public TypeData.State currentState = TypeData.State.없음;
     public TypeData.State nextState = TypeData.State.없음;
 
-    private float noHitCombatTime = 8f; // 전투모드에서 전투가 없을때 평화모드로 전환될 시간
+    private float noHitCombatTime = 5f; // 전투모드에서 전투가 없을때 평화모드로 전환될 시간
     public float combatTimer = 0f;
 
     void Awake()
@@ -35,7 +35,7 @@ public class PlayerState : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }

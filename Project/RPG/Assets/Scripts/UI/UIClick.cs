@@ -220,7 +220,7 @@ public class UIClick : MonoBehaviour
 
                 // 수량 1개 감소
                 uiSlotInfo.slotInfo.quantity -= 1;
-                // 인벤 - 현재 슬롯 수량 변화 > 단축도 같이 변화
+
                 playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
                 uiSlotInfo.ReSetting();
             }

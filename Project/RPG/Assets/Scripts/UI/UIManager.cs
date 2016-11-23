@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
+    private GameManager gameManager = null;
+    private PlayerInput playerInput = null;
+    private PlayerInfoData playerInfoData = null;
+
     private static UIManager uiManager = null;
     public static UIManager Instance
     {
@@ -17,9 +21,6 @@ public class UIManager : MonoBehaviour
             return uiManager;
         }
     }
-
-    private PlayerInput playerInput = null;
-    private PlayerInfoData playerInfoData = null;
 
     // 윈도우 정보
     [System.Serializable]
@@ -140,7 +141,14 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        uiManager = this;
+        if (uiManager == null)
+        {
+            uiManager = this;
+        }
+        else if (uiManager != this)
+        {
+            Destroy(uiManager);
+        }
 
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
 
@@ -168,6 +176,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameManager.Instance;
         playerInfoData = PlayerInfoData.Instance;
 
         //// window
@@ -194,7 +203,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }
@@ -579,6 +588,22 @@ public class UIManager : MonoBehaviour
             skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
             Debug.Log("배울수 있는 : " + skillInfo.Value.name);
         }
+    }
+
+    // 로그아웃
+    public void Logout()
+    {
+        gameManager.nextGameState = TypeData.GameState.종료;
+
+        StartCoroutine(gameManager.LogoutSavePlayerData());
+    }
+    
+    // 게임종료
+    public void GameExit()
+    {
+        gameManager.nextGameState = TypeData.GameState.종료;
+
+        StartCoroutine(gameManager.GameExitSavePlayerData());
     }
 
     public void ShowFKey()

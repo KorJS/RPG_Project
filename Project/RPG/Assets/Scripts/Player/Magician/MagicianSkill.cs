@@ -17,6 +17,7 @@ public class MagicianSkill : MonoBehaviour
     [System.Serializable]
     public class MagicianAniSettings
     {
+        public string isEndComboTrigger = "isEndCombo";
         public string isFireBall = "isFireBall";
     }
 
@@ -36,6 +37,11 @@ public class MagicianSkill : MonoBehaviour
     // TODO : 공격 범위.
     public float skillAngle = 0f;
     public float skillDistance = 0f;
+
+    private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
+
+    public float comboTimer = 0f;           // 연속공격 입력타이머
+    public bool isComboTime = false;        // 콤보 타임이 지났는지
 
     void Awake()
     {
@@ -57,7 +63,7 @@ public class MagicianSkill : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
 
@@ -69,6 +75,31 @@ public class MagicianSkill : MonoBehaviour
         }
 
         SwitchSkill();
+        CheckComboTime();
+    }
+
+    // 연속으로 스킬 사용중인지 타임 체크
+    // 연속으로 스킬 1.5초안에 입력이 안들어오면 대기상태로
+    private void CheckComboTime()
+    {
+        // 연속타임중이 아닐때 / 스킬이 끝나고 idle(서브상태머신 안에있는) 상태일떄 / 스킬상태가 아닐때
+        if (!isComboTime || !playerMovement.isIdle || playerState.currentState != TypeData.State.스킬)
+        {
+            comboTimer = 0f; // 콤보타임 초기화
+            return;
+        }
+
+        comboTimer += Time.deltaTime;
+
+        // 1.5초 안에 클릭 못할시. 1콤에서 끝
+        if (comboTimer > COMBOTIME)
+        {
+            Debug.Log("?");
+            comboTimer = 0f;
+            isComboTime = false;
+            playerMovement.animator.SetTrigger(magicianAniSettings.isEndComboTrigger);
+            playerState.nextState = TypeData.State.대기;
+        }
     }
 
     // 각 스킬별로 공격범위에 있는 적 검색
@@ -139,6 +170,8 @@ public class MagicianSkill : MonoBehaviour
 
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
         playerInput.index = -1;
+
+        isComboTime = true;
 
         // mp 사용
         playerInfoData.SetCurrentMp(skillInfo.mp);

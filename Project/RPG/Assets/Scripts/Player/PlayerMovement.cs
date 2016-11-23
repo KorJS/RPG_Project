@@ -42,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
     private float deathTimer = 0;
     private bool isDeath = false;
 
+    public AudioClip deathBGM = null;
+
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -69,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }
@@ -80,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Default");
             playerState.nextState = TypeData.State.죽음;
             animator.SetTrigger(animationSettings.isDeathTrigger);
+            SoundManager.Instance.PlaySingle(deathBGM);
             charCtrl.enabled = false;
             StartCoroutine(Death());
         }
@@ -152,7 +155,6 @@ public class PlayerMovement : MonoBehaviour
     // 스킬
     public void SetAniSkill(int skillTpye)
     {
-        Debug.Log("?");
         isIdle = false; // 스킬 중일때 회전 / 스킬 막기.
         animator.SetInteger(animationSettings.skillTpyeInt, skillTpye);
     }
@@ -169,6 +171,11 @@ public class PlayerMovement : MonoBehaviour
         if (v != 0 || h != 0)
         {
             playerState.nextState = TypeData.State.이동;
+        }
+
+        if (v == 0 && h == 0)
+        {
+            playerState.nextState = TypeData.State.대기;
         }
 
         animator.SetFloat(animationSettings.moveVFloat, v);

@@ -690,7 +690,7 @@ public class PlayerSlotData
         tempSlotInfoData.quantity = slotInfo.slotInfo.quantity;
         tempCurrentSlotInfoDatas[slotIndex] = tempSlotInfoData;
 
-        // 슬롯이 0보다 적으면 데이터 삭제
+        // 수량이 0보다 적으면 데이터 삭제
         if (slotInfo.slotInfo.quantity <= 0)
         {
             // 인벤, 단축창 수량 변화

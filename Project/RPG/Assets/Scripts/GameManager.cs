@@ -18,20 +18,38 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public TypeData.GameState gameState = TypeData.GameState.없음;
+    public TypeData.GameState currentGameState = TypeData.GameState.없음;
+    public TypeData.GameState nextGameState = TypeData.GameState.없음;
 
     private bool bPaused = false;  // 어플리케이션이 내려진 상태인지 아닌지의 스테이트를 저장하기 위한 변수
     private float showSplashTimout = 2f;
     private bool allowQuitting = false;
 
+    public AudioClip inGameBGM = null;
+
     void Awake()
     {
-        gameManager = this;
+        if (gameManager == null)
+        {
+            gameManager = this;
+        }
+        else if (gameManager != this)
+        {
+            Destroy(gameObject);
+        }
+          
         DontDestroyOnLoad(this);
 
-        gameState = TypeData.GameState.시작;
+        nextGameState = TypeData.GameState.시작;
+
+        SoundManager.Instance.PlayBackMusic(inGameBGM);
 
         CreatePlayer();
+    }
+
+    void Update()
+    {
+        CheckGameState();
     }
 
     // 어플을 내렸으때 실행되는 함수
@@ -78,7 +96,18 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    private void CreatePlayer()
+    private void CheckGameState()
+    {
+        if (nextGameState == TypeData.GameState.없음)
+        {
+            return;
+        }
+
+        currentGameState = nextGameState;
+        nextGameState = TypeData.GameState.없음;
+    }
+
+    public void CreatePlayer()
     {
         TypeData.PlayerType playerType = (TypeData.PlayerType)PlayerInfoData.Instance.infoData.playerType;
 
@@ -129,32 +158,20 @@ public class GameManager : MonoBehaviour
         StoreItemListData.Instance.DataClear();
     }
 
-    public void Logout()
+    public IEnumerator LogoutSavePlayerData()
     {
-        gameState = TypeData.GameState.종료;
+        yield return new WaitForSeconds(1f);
 
-        StartCoroutine(LogoutSavePlayerData());
-    }
-
-    IEnumerator LogoutSavePlayerData()
-    {
         Network_PlayerInfo.Instance.RequestSavePlayerInfo();
 
-        DataClear(false);
+        gameManager.DataClear(false);
 
         yield return new WaitForSeconds(2f);
 
         SceneManager.LoadScene("LoginScene");
     }
 
-    public void GameExit()
-    {
-        gameState = TypeData.GameState.종료;
-
-        StartCoroutine(GameExitSavePlayerData());
-    }
-
-    IEnumerator GameExitSavePlayerData()
+    public IEnumerator GameExitSavePlayerData()
     {
         yield return new WaitForSeconds(2f);
 

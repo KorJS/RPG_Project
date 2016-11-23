@@ -61,7 +61,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }
@@ -319,7 +319,9 @@ public class PlayerInput : MonoBehaviour
                     ItemManager.Instance.CheckItemType((TypeData.ItemType)uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.isCoolTime);
 
                     uiSlotInfo.slotInfo.quantity -= 1;
+
                     playerSlotData.SetSlotData(uiSlotInfo.slotType, uiSlotInfo.slotIndex, ref uiSlotInfo);
+                    uiSlotInfo.ReSetting();
                 }
                 break;
         }

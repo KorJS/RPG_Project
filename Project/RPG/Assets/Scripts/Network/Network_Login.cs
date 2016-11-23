@@ -23,6 +23,7 @@ public class Network_Login : MonoBehaviour
         public bool isSuccess;
     }
 
+    private SoundManager soundManager = null;
     private Network_Char networkChar = null;
 
     public GameObject loginObj = null;
@@ -49,9 +50,11 @@ public class Network_Login : MonoBehaviour
     private string join_contents = null;
     private string join_title = null;
 
+    public AudioClip introBGM = null;
+
     void Awake()
     {
-        networkChar = GameObject.Find("CharManager").GetComponent<Network_Char>();
+        networkChar = GameObject.Find("Network_Char").GetComponent<Network_Char>();
         login_contents = "login";
         login_title = "로그인";
 
@@ -65,6 +68,12 @@ public class Network_Login : MonoBehaviour
         joinObj.SetActive(false);
         charObj.SetActive(false);
         createObj.SetActive(false);
+    }
+
+    void Start()
+    {
+        soundManager = SoundManager.Instance;
+        soundManager.PlayBackMusic(introBGM);
     }
 
     public void RequestLogin()

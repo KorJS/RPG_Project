@@ -11,24 +11,32 @@ public class NetworkManager : MonoBehaviour {
 
     //===============================================
     // Sinlgeton Code
-    public static NetworkManager _instance = null;
+    public static NetworkManager networkManager = null;
     public static NetworkManager Instance
     {
         get
         {
-            if (_instance == null)
+            if (networkManager == null)
             {
                 // MonoBehaviour에서는 new를 만들 수 없다.
                 Debug.LogError("Singleton is Null");
             }
-            return _instance;
+            return networkManager;
         }
     }
 
     // Awake에서 자신을 인스턴스로 등록 한다.
     void Awake()
     {
-        _instance = this;
+        if (networkManager == null)
+        {
+            networkManager = this;
+        }
+        else if (networkManager != this)
+        {
+            Destroy(gameObject);
+        }
+
         // 다른 씬으로 넘어가더라도 메모리에서 삭제하지 않는다.
         DontDestroyOnLoad(this);
     }

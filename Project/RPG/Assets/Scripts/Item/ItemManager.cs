@@ -25,7 +25,14 @@ public class ItemManager : MonoBehaviour
 
     void Awake()
     {
-        itemManager = this;
+        if (itemManager == null)
+        {
+            itemManager = this;
+        }
+        else if (itemManager != this)
+        {
+            Destroy(gameObject);
+        }
         DontDestroyOnLoad(this);
 
         itemData = ItemData.Instance;
@@ -49,6 +56,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    // 소모품 - 회복 / 버프 구분지어 효과 적용
     private void CusomableItem(int itemIndex, bool isCoolTime)
     {
         ItemData.CusomableInfo cusomableInfo = itemData.cusomableInfos[itemIndex];
@@ -71,9 +79,9 @@ public class ItemManager : MonoBehaviour
                     int hp = cusomableInfo.hp;
                     int mp = cusomableInfo.mp;
 
+                    // 버프 사용하면
                     if (isCoolTime)
                     {
-                        Debug.Log("????????");
                         // 같은 아이템의 버프인경우 리턴
                         if (buffStates.Contains(itemIndex))
                         {
@@ -85,6 +93,7 @@ public class ItemManager : MonoBehaviour
 
                         UIManager.Instance.windowSettings.characterPanel.GetComponent<UICharater>().SetBuffStat();
                     }
+                    // 버프가 끝나면
                     else
                     {
                         // 같은 아이템의 버프가 없는 경우 리턴
@@ -103,7 +112,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    // 드랍 아이템 생성
+    // 드랍 아이템 오브젝트 생성
     public void CreateDropItem(Transform monsterT, MonsterData.MonsterInfo monsterInfo, Dictionary<int, MonsterInfoData.DropItem> dropItems)
     {
         foreach (KeyValuePair<int, MonsterInfoData.DropItem> dropItem in dropItems)

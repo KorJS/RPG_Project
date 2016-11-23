@@ -40,7 +40,15 @@ public class Network_PlayerInfo : MonoBehaviour
 
     void Awake()
     {
-        network_playerInfo = this;
+        if (network_playerInfo == null)
+        {
+            network_playerInfo = this;
+        }
+        else if (network_playerInfo != this)
+        {
+            Destroy(gameObject);
+        }
+
         load_charInfo_contents = "characterInfo_load";
         save_charInfo_contents = "characterInfo_save";
     }

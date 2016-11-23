@@ -33,7 +33,15 @@ public class Network_MonsterInfo : MonoBehaviour
 
     void Awake()
     {
-        network_MonsterInfo = this;
+        if (network_MonsterInfo == null)
+        {
+            network_MonsterInfo = this;
+        }
+        else if (network_MonsterInfo != this)
+        {
+            Destroy(gameObject);
+        }
+
         DontDestroyOnLoad(this);
 
         monster_load_contents = "monster_load";

@@ -28,7 +28,6 @@ public class WarriorSkill : MonoBehaviour
         public string isEndBlockTrigger     = "isEndBlock";
     }
 
-    [SerializeField]
     public WarriorAniSettings warriorAniSettings;
 
     private SkillData.SkillInfo skillInfo; // 스킬 정보
@@ -88,10 +87,9 @@ public class WarriorSkill : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
-
         }
 
         if (playerState.currentState == TypeData.State.죽음)
@@ -289,7 +287,7 @@ public class WarriorSkill : MonoBehaviour
     private void CheckComboTime()
     {
         // 콤보타임중이 아닐때 / 스킬이 끝나고 idle(서브상태머신 안에있는) 상태일떄 / 스킬상태가 아닐때
-        if (!isComboTime || playerState.currentState != TypeData.State.스킬)
+        if (!isComboTime || !playerMovement.isIdle || playerState.currentState != TypeData.State.스킬)
         {
             comboTimer = 0f; // 콤보타임 초기화
             return;
@@ -349,7 +347,7 @@ public class WarriorSkill : MonoBehaviour
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
 
-        warriorEffect.OverpowerEffect();
+        //warriorEffect.OverpowerEffect();
     }
 
     // 난폭한 돌진

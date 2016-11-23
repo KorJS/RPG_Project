@@ -38,7 +38,7 @@ public class UIUserInfo : MonoBehaviour
     // TODO : 레벨은 변경될때 바꾸게 하자
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }

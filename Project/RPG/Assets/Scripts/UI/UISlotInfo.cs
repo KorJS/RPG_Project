@@ -52,6 +52,10 @@ public class UISlotInfo : MonoBehaviour
     public float coolTimer = 0f;
     public bool isCoolTime = false;
 
+    // TODO : 다음 프로젝트때 쿨타임 구조 신경쓸것
+    // 1개인 소모품인 경우 사용시 삭제후 바로 습득하게 되면 쿨타임 초기화 되는 버그 발생.
+    // 1개인경우 화면에 안보이게 하고 쿨타임은 적용 - 쿨타임 종료시 슬롯에서 제거
+
     void Awake()
     {
         uiManager = UIManager.Instance;
@@ -88,7 +92,7 @@ public class UISlotInfo : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.gameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
         {
             return;
         }
@@ -106,7 +110,6 @@ public class UISlotInfo : MonoBehaviour
                 return;
             }
             SetCoolTime();
-            slotSettings.uiCoolTime.gameObject.SetActive(true);
         }
         else if (!isCoolTime && slotSettings.uiCoolTime.gameObject.activeSelf)
         {
@@ -181,7 +184,7 @@ public class UISlotInfo : MonoBehaviour
             slotSettings.uiQuantity.gameObject.SetActive(true);
             slotSettings.uiQuantity.text = slotInfo.quantity.ToString();
         }
-        else
+        else // 1개 일때
         {
             slotSettings.uiQuantity.gameObject.SetActive(false);
         }
@@ -285,6 +288,8 @@ public class UISlotInfo : MonoBehaviour
 
     private void SetCoolTime()
     {
+        slotSettings.uiCoolTime.gameObject.SetActive(true);
+
         coolTimer += Time.deltaTime;
 
         if (coolTimer > slotInfo.coolTime)
@@ -300,7 +305,7 @@ public class UISlotInfo : MonoBehaviour
             slotSettings.uiCoolTimeLabel.text = (Mathf.RoundToInt(slotInfo.coolTime - coolTimer)).ToString();
         }
 
-        if (slotSettings.uiCoolTime.fillAmount == 0f)
+        if (ratio <= 0f)
         {
             isCoolTime = false;
             coolTimer = 0f;

@@ -56,7 +56,15 @@ public class Network_Store : MonoBehaviour
 
     void Awake()
     {
-        network_store = this;
+        if (network_store == null)
+        {
+            network_store = this;
+        }
+        else if (network_store != this)
+        {
+            Destroy(gameObject);
+        }
+
         DontDestroyOnLoad(this);
 
         buy_list = new List<SlotInfo>();

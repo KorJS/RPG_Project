@@ -62,6 +62,11 @@ public class Network_Char : MonoBehaviour
     public int selectSlot = 0;
     public int selectPlayerType = 0;
 
+    public AudioClip introBGM = null;
+    public AudioClip warriorBGM = null;
+    public AudioClip magicianBGM = null;
+    public AudioClip priestBGM = null;
+
     void Awake()
     {
         charSlotInfos = new Dictionary<int, UICharSlotInfo>();
@@ -239,6 +244,11 @@ public class Network_Char : MonoBehaviour
             {
                 lodingTimer = 0f;
                 SceneManager.LoadScene("PlayerTest");
+
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.nextGameState = TypeData.GameState.시작;
+                }
             }
 
             yield return null;
@@ -278,6 +288,7 @@ public class Network_Char : MonoBehaviour
             return;
         }
 
+        SoundManager.Instance.PlayBackMusic(introBGM);
         mark.Clear();
         nickname.value = null;
         WarriorBtn();
@@ -325,12 +336,14 @@ public class Network_Char : MonoBehaviour
 
     public void CreateCancelBtn()
     {
+        SoundManager.Instance.PlayBackMusic(introBGM);
         createCharacter.nickName.value = null;
         createObj.SetActive(false);
     }
 
     public void WarriorBtn()
     {
+        SoundManager.Instance.PlayBackMusic(warriorBGM);
         message.text = "기사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.기사;
         createCharacter.warriorObj.SetActive(true);
@@ -340,6 +353,7 @@ public class Network_Char : MonoBehaviour
 
     public void MagicianBtn()
     {
+        SoundManager.Instance.PlayBackMusic(magicianBGM);
         message.text = "마법사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.마법사;
         createCharacter.warriorObj.SetActive(false);
@@ -349,6 +363,7 @@ public class Network_Char : MonoBehaviour
 
     public void PriestBtn()
     {
+        SoundManager.Instance.PlayBackMusic(priestBGM);
         message.text = "사제 캐릭터는 개발중입니다.";
         selectPlayerType = (int)TypeData.PlayerType.사제;
         createCharacter.warriorObj.SetActive(false);

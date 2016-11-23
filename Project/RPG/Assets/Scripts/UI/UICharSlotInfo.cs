@@ -22,7 +22,7 @@ public class UICharSlotInfo : MonoBehaviour
 
     void Awake()
     {
-        networkChar = GameObject.Find("CharManager").GetComponent<Network_Char>();
+        networkChar = GameObject.Find("Network_Char").GetComponent<Network_Char>();
         SetSlotIndex();
         networkChar.charSlotInfos.Add(slotInfo.slotIndex, this);
     }

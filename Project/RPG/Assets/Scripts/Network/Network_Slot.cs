@@ -53,7 +53,15 @@ public class Network_Slot : MonoBehaviour
     // Awake에서 자신을 인스턴스로 등록 한다.
     void Awake()
     {
-        network_slot = this;
+        if (network_slot == null)
+        {
+            network_slot = this;
+        }
+        else if (network_slot != this)
+        {
+            Destroy(gameObject);
+        }
+
         // 다른 씬으로 넘어가더라도 메모리에서 삭제하지 않는다.
         DontDestroyOnLoad(this);
 

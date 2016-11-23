@@ -23,6 +23,7 @@ public class NPCInfoData : MonoBehaviour
         public TypeData.StoreType storeType;
         public int questIndex;
         public List<int> itemIndexs;
+        public AudioClip talkBGM;
     }
 
     [SerializeField]

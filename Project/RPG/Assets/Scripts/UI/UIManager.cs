@@ -109,6 +109,7 @@ public class UIManager : MonoBehaviour
     public List<GameObject> wObjects = null;
     public List<UIPanel> windows = null;
     public List<UIPanel> showWindowList = null;
+    public List<AudioClip> audioList = null;
 
     public GameObject bossHpBarObj = null;
     public GameObject mobHpBarObj = null;
@@ -138,6 +139,9 @@ public class UIManager : MonoBehaviour
     // 방어 성공 UI이펙트
     public GameObject blockTxtObj = null;
     public TweenScale blockTween = null;
+
+    public AudioClip windowsOpenBGM = null;
+    public AudioClip windowsCloseBGM = null;
 
     void Awake()
     {
@@ -425,6 +429,7 @@ public class UIManager : MonoBehaviour
             {
                 if (winList[i].alpha == 0f)
                 {
+                    SoundManager.Instance.PlaySingleUI(windowsOpenBGM);
                     winList[i].alpha = 1f;
                     isActive = true;
                 }
@@ -437,9 +442,12 @@ public class UIManager : MonoBehaviour
         // UI 모드 아니면 UI모드로
         if (!isUIMode)
         {
+            SoundManager.Instance.PlaySingleUI(windowsOpenBGM);
+
             // 마우스 커서 상태
-            //Cursor.lockState = CursorLockMode.None;
-            //Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             isUIMode = true;
 
             playerInput.InputMove(0f, 0f); // 동작(이동, 회전) 멈추게.
@@ -453,8 +461,10 @@ public class UIManager : MonoBehaviour
         // UI 모드이면 UI 해제
         else if (isUIMode)
         {
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = false;
+            SoundManager.Instance.PlaySingleUI(windowsCloseBGM);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             isUIMode = false;
 
             DisableDragIiem();

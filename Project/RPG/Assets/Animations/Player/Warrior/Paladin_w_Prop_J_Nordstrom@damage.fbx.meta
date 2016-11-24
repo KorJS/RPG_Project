@@ -142,7 +142,7 @@ ModelImporter:
     400132: Spine2
     400134: Sword_joint
     7400000: damage
-    7400002: sword_and_shield_impact_1
+    7400002: damage
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -169,7 +169,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: sword_and_shield_impact_1
+      name: damage
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 21

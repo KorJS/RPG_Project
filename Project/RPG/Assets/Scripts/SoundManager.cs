@@ -17,10 +17,12 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    public AudioSource voiceSource = null;
     public AudioSource efxSource = null;
+    public AudioSource uiSource = null;
     public AudioSource musicSource = null;
 
-    public float lowPitchRange = 0.95f;
+    public float lowPitchRange = 0.65f;
     public float highPitchRange = 1.05f;
 
     void Awake()
@@ -46,13 +48,35 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlaySingle(AudioClip clip)
+    public void PlaySingleUI(AudioClip clip)
     {
-        efxSource.clip = clip;
-        efxSource.Play();
+        uiSource.clip = clip;
+        uiSource.PlayOneShot(uiSource.clip);
     }
 
-    public void RandomizeSfx(params AudioClip[] clips)
+    public void PlaySingleEfx(AudioClip clip)
+    {
+        efxSource.clip = clip;
+        efxSource.PlayOneShot(efxSource.clip);
+    }
+
+    public void RandomEfx(params AudioClip[] clips)
+    {
+        int randomIndex = Random.Range(0, clips.Length);
+        float randomPitch = Random.Range(lowPitchRange, highPitchRange);
+
+        efxSource.pitch = 0.8f;
+        efxSource.clip = clips[randomIndex];
+        efxSource.PlayOneShot(efxSource.clip);
+    }
+
+    public void PlaySingleVoice(AudioClip clip)
+    {
+        efxSource.clip = clip;
+        efxSource.PlayOneShot(efxSource.clip);
+    }
+
+    public void RandomVoice(params AudioClip[] clips)
     {
         if (efxSource.isPlaying)
         {
@@ -62,8 +86,8 @@ public class SoundManager : MonoBehaviour
         int randomIndex = Random.Range(0, clips.Length);
         float randomPitch = Random.Range(lowPitchRange, highPitchRange);
 
-        efxSource.pitch = randomPitch;
-        efxSource.clip = clips[randomIndex];
-        efxSource.Play();
+        voiceSource.pitch = 1f;
+        voiceSource.clip = clips[randomIndex];
+        voiceSource.Play();
     }
 }

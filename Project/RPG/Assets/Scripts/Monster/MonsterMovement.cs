@@ -89,7 +89,7 @@ public class MonsterMovement : MonoBehaviour
     public void RushEnd()
     {
         monsterState.nextMode = TypeData.MODE.전투;
-        monsterState.nextState = TypeData.MonsterState.대기;
+        monsterState.nextState = TypeData.MonsterState.이동;
         transform.SetParent(monsterInfoData.parentT);
 
         if (!nav.enabled)
@@ -127,7 +127,10 @@ public class MonsterMovement : MonoBehaviour
         yield return new WaitForSeconds(destroyTime);
 
         monsterInfoData.Reset(true);
-        monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+        if (monsterRange.playerEffect != null)
+        {
+            monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+        }
         monsterRange.monster.targetT = null;
         monsterRange.isTargetAggro = false;
         monsterState.nextState = TypeData.MonsterState.대기;

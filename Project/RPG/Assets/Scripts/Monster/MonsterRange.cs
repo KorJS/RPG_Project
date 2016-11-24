@@ -48,6 +48,8 @@ public class MonsterRange : MonoBehaviour
     public float aggroTimer = 0f; // 어글 타이머
     public bool isTargetAggro = false; // 어글이펙트가 활성화 되어있는지
 
+    public AudioClip aggroBGM = null;
+
     void Awake()
     {
         monsterInfoData = GetComponent<MonsterInfoData>();
@@ -86,7 +88,16 @@ public class MonsterRange : MonoBehaviour
         {
             if (monsterMovement.animator.applyRootMotion)
             {
+                Debug.Log("회전 아님");
                 monsterMovement.animator.applyRootMotion = false;
+            }
+        }
+        else if (monsterState.currentState == TypeData.MonsterState.회전)
+        {
+            if (!monsterMovement.animator.applyRootMotion)
+            {
+                Debug.Log("회전임");
+                monsterMovement.animator.applyRootMotion = true;
             }
         }
 
@@ -231,6 +242,8 @@ public class MonsterRange : MonoBehaviour
             monsterState.nextState = TypeData.MonsterState.이동;
             monsterMovement.isDamage = false;
 
+            SoundManager.Instance.PlaySingleEfx(aggroBGM); // 어그로 사운드
+
             return;
         }
 
@@ -287,7 +300,7 @@ public class MonsterRange : MonoBehaviour
         v2 = monster.monsterT.forward;
         float angle = Vector3.Angle(v1, v2);
 
-        //Debug.Log("회전 체크 : " + angle);
+        Debug.Log("회전 체크 : " + angle);
         // 지정한 angle 안에 없으면 리턴
         if (angle > monster.rotAngle)
         {
@@ -429,10 +442,13 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        bool isPlayer = false;
+
         Vector3 monsterPos = monster.monsterT.position;
 
         skillPoint.localPosition = new Vector3(skillPos.x, 1f, skillPos.z);
         skillRnage = _skillRnage;
+        skillPoint.localScale = _skillRnage;
 
         Collider[] _attTargets = Physics.OverlapBox(skillPoint.position, skillRnage);
 
@@ -448,6 +464,38 @@ public class MonsterRange : MonoBehaviour
             // 주인공 Hit
             PlayerMovement playerMovement = target.GetComponent<PlayerMovement>();
             playerMovement.SetDamage(-skillAtt);
+            isPlayer = true;
+        }
+
+        if (!isPlayer)
+        {
+            Rotation();
+        }
+    }
+
+    private void Rotation()
+    {
+        Vector3 v1 = monster.monsterT.position - monster.targetT.position;
+        Vector3 v2 = monster.monsterT.right;
+        float dp = Vector3.Dot(v1, v2);
+
+        monsterMovement.isRot = true;
+        monsterState.nextState = TypeData.MonsterState.회전;
+
+        if (!monsterMovement.animator.applyRootMotion)
+        {
+            monsterMovement.animator.applyRootMotion = true;
+        }
+
+        // 왼쪽 회전
+        if (dp > 0)
+        {
+            monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isLeftTurnTrigger);
+        }
+        // 오른쪽 회전
+        else
+        {
+            monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isRightTurnTrigger);
         }
     }
 }

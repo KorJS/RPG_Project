@@ -211,6 +211,8 @@ public class Network_Char : MonoBehaviour
             rightPanel.alpha = 0f;
         }
 
+        SoundManager.Instance.PlayBackMusic(introBGM);
+
         PlayerInfoData.Instance.infoData = data.playerInfoData;
         PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
         SkillData.Instance.SetSkillInfo(data.skillInfos);

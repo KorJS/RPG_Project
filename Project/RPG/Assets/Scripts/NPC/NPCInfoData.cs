@@ -23,7 +23,7 @@ public class NPCInfoData : MonoBehaviour
         public TypeData.StoreType storeType;
         public int questIndex;
         public List<int> itemIndexs;
-        public AudioClip talkBGM;
+        public AudioClip[] talkBGM;
     }
 
     [SerializeField]
@@ -56,6 +56,7 @@ public class NPCInfoData : MonoBehaviour
         if (npcRange.isPlayer && (Input.GetKeyDown(KeyCode.F) || uiManager.isFKey))
         {
             npcMovement.SetAniState();
+            SoundManager.Instance.RandomVoice(npcInfo.talkBGM);
 
             if (npcInfo.npcType == TypeData.NPCType.상인)
             {

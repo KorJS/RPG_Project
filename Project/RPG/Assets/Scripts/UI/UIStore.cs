@@ -28,6 +28,8 @@ public class UIStore : MonoBehaviour
     private int playerGold = 0;
     private int quantity = 0;
 
+    public AudioClip calculateBtnBGM = null;
+
     void Awake()
     {
         originalInfos = new Dictionary<int, int>();
@@ -376,6 +378,8 @@ public class UIStore : MonoBehaviour
             return;
         }
 
+        SoundManager.Instance.PlaySingleUI(calculateBtnBGM);
+
         playerInfoData.infoData.gold = changG; // 주인공 보유골드 갱신
         uiManager.SetGoldLabel(false); // 인벤 소지금 갱신
 
@@ -425,7 +429,15 @@ public class UIStore : MonoBehaviour
         int buyAmount = int.Parse(storeSettings.buyAmount.text);
         int sellAmount = int.Parse(storeSettings.sellAmount.text);
         int changeG = int.Parse(storeSettings.changeG.text);
+
         Debug.Log("buyAmount : " + buyAmount + " sellAmount : " + sellAmount + " changeG : " + changeG);
+
+        if (buyAmount == 0 && sellAmount == 0)
+        {
+            Debug.Log("구매화 판매 하려는 아이템이 없습니다.");
+            return;
+        }
+
         Network_Store.Instance.RequestCalculate(buyAmount, sellAmount, changeG);
     }
 

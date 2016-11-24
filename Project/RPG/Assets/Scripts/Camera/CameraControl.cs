@@ -73,6 +73,7 @@ public class CameraControl : MonoBehaviour
         {
             uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         }
+        autoTargetPlayer = true;
     }
 
     void Update()

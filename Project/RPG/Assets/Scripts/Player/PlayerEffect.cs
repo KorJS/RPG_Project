@@ -9,7 +9,6 @@ public class PlayerEffect : MonoBehaviour
     {
         public string aggro = "Aggro";
         public string levelup = "LevelUp";
-        public string hit = "Hit";
     }
 
     [SerializeField]
@@ -39,10 +38,6 @@ public class PlayerEffect : MonoBehaviour
         // 레벨업
         obj = Resources.Load(effectPath + effectSettings.levelup) as GameObject;
         effects.Add(effectSettings.levelup, CreateEffectObj(obj, effectSettings.levelup));
-
-        // 타격
-        obj = Resources.Load(effectPath + effectSettings.hit) as GameObject;
-        effects.Add(effectSettings.hit, CreateEffectObj(obj, effectSettings.hit));
 
         obj = null;
     }

@@ -15,6 +15,7 @@ public class WarriorEffect : MonoBehaviour
         public string blockDamage   = "BlockDamage";
         public string overpower     = "Overpower";
         public string rush          = "Rush";
+        public string hit           = "Hit";
     }
 
     public EffectSettings effectSettings;
@@ -47,7 +48,7 @@ public class WarriorEffect : MonoBehaviour
             return;
         }
 
-        BlockEffect();
+        //BlockEffect();
         //BlockDamageEffect();
     }
 
@@ -65,6 +66,9 @@ public class WarriorEffect : MonoBehaviour
 
         obj = Resources.Load(effectPath + effectSettings.rush) as GameObject;
         effects.Add(effectSettings.rush, CreateEffectObj(obj, effectSettings.rush));
+
+        obj = Resources.Load(effectPath + effectSettings.hit) as GameObject;
+        effects.Add(effectSettings.hit, CreateEffectObj(obj, effectSettings.hit));
 
         obj = null;
     }
@@ -132,6 +136,15 @@ public class WarriorEffect : MonoBehaviour
         }
     }
 
+    public void BlockEndEffect()
+    {
+        if (uiManager.blockTxtObj.activeSelf)
+        {
+            uiManager.blockTxtObj.SetActive(false);
+            uiManager.blockTween.ResetToBeginning();
+        }
+    }
+
     public void OverpowerEffect()
     {
         if (effects[effectSettings.overpower].activeSelf)
@@ -152,5 +165,15 @@ public class WarriorEffect : MonoBehaviour
         }
 
         effects[effectSettings.rush].SetActive(true);
+    }
+
+    public void ComboHitEffect(bool isEffect)
+    {
+        if (isEffect && effects[effectSettings.hit].activeSelf)
+        {
+            return;
+        }
+
+        effects[effectSettings.hit].SetActive(isEffect);
     }
 }

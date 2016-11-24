@@ -12,6 +12,7 @@ public class WarriorSkill : MonoBehaviour
     private PlayerState playerState = null;
     private PlayerEffect playerEffect = null;
     private WarriorEffect warriorEffect = null;
+    private WarriorSound warriorSound = null;
     private UIManager uiManager = null;
 
     // 애니메이션 파라미터명 설정
@@ -64,6 +65,8 @@ public class WarriorSkill : MonoBehaviour
     private Transform rushHolder = null;
     public List<MonsterMovement> rushMob = null;
 
+    public AudioClip[] hitsBGN = null;
+
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
@@ -73,6 +76,7 @@ public class WarriorSkill : MonoBehaviour
         playerState = GetComponent<PlayerState>();
         playerEffect = GetComponent<PlayerEffect>();
         warriorEffect = GetComponent<WarriorEffect>();
+        warriorSound = GetComponent<WarriorSound>();
 
         currentSkillTpye = SkillType.없음;
 
@@ -95,11 +99,6 @@ public class WarriorSkill : MonoBehaviour
         if (playerState.currentState == TypeData.State.죽음)
         {
             return;
-        }
-
-        if (currentSkillTpye != SkillType.연속공격 && currentSkillTpye != SkillType.방패막기)
-        {
-            playerMovement.animator.ResetTrigger(playerMovement.animationSettings.isDamageTrigger);
         }
 
         if (playerMovement.isDamage)
@@ -145,7 +144,7 @@ public class WarriorSkill : MonoBehaviour
     // 각 스킬별로 공격범위에 있는 적 검색
     public void SeachSkillRange()
     {
-        bool isHit = false;
+        bool _isHit = false;
 
         Vector3 playerPos = transform.position; // 범위의 중점.
 
@@ -168,15 +167,17 @@ public class WarriorSkill : MonoBehaviour
                     //Debug.Log(target.name);
                     playerMovement.isHit = true;
                     Damage(target.gameObject);
+
+                    _isHit = true;
                 }
 
-                isHit = true;
             }
         }
 
-        if (isHit)
+        if (_isHit)
         {
-            playerEffect.CheckActiveEffect("Hit", true);
+            warriorEffect.ComboHitEffect(true);
+            SoundManager.Instance.RandomEfx(hitsBGN);
         }
     }
 
@@ -227,9 +228,6 @@ public class WarriorSkill : MonoBehaviour
 
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
         playerInput.index = -1;
-
-        // mp 사용
-        playerInfoData.SetCurrentMp(skillInfo.mp);
 
         switch (currentSkillTpye)
         {
@@ -359,6 +357,8 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);
+
+        warriorSound.SetRushBGM();
     }
 
     // 난폭한 돌진 유지시간 체크

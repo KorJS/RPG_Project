@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerInput : MonoBehaviour
 {
+    private PlayerInfoData playerInfoData = null;
     private PlayerMovement playerMovement = null;
     private PlayerSlotData playerSlotData = null;
     private PlayerState playerState = null;
@@ -54,6 +55,7 @@ public class PlayerInput : MonoBehaviour
     void Start()
     {
         uiManager = UIManager.Instance;
+        playerInfoData = PlayerInfoData.Instance;
         playerSlotData = PlayerSlotData.Instance;
 
         UIManager.Instance.SetSkillListUpActive(PlayerInfoData.Instance.infoData.level);
@@ -219,14 +221,32 @@ public class PlayerInput : MonoBehaviour
         {
             return -1;
         }
-        
-        uiSlotInfo.isCoolTime = true;
 
         switch (uiSlotInfo.slotInfo.slotInfoType)
         {
             case TypeData.SlotInfoType.스킬:
                 {
-                    index = uiSlotInfo.slotInfo.skillIndex;
+                    int tempIndex = uiSlotInfo.slotInfo.skillIndex;
+
+                    SkillData.SkillInfo skillInfo = SkillData.Instance.skillInfos[tempIndex];
+
+                    // mp 사용
+                    float currentMp = playerInfoData.infoData.currentMp;
+
+                    // mp가 부족하면 리턴
+                    if (-skillInfo.mp > currentMp)
+                    {
+                        playerState.nextState = TypeData.State.이동;
+                        uiManager.SetMessage("MP가 부족합니다.");
+                        return -1;
+                    }
+
+                    index = tempIndex;
+
+                    playerInfoData.SetCurrentMp(skillInfo.mp);
+
+                    uiSlotInfo.isCoolTime = true;
+
                     tempKeyCode = keyCode;
                     playerState.nextState = TypeData.State.스킬;
                     playerState.nextMode = TypeData.MODE.전투;
@@ -259,6 +279,8 @@ public class PlayerInput : MonoBehaviour
 
             case TypeData.SlotInfoType.아이템:
                 {
+                    uiSlotInfo.isCoolTime = true;
+
                     // 단축창에서 스킬 사용시 쿨타임. - 단축창 같은 아이템도 쿨타임 상태로
                     foreach (KeyValuePair<int, UISlotInfo> shortCut in uiManager.shortCuts)
                     {

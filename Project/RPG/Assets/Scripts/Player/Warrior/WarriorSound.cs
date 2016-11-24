@@ -8,12 +8,18 @@ public class WarriorSound : MonoBehaviour
     [System.Serializable]
     public class AudioSettings
     {
-        public AudioClip comboBGM;
+        public AudioClip combo01BGM;
+        public AudioClip combo02BGM;
+        public AudioClip comboAtt01BGM;
+        public AudioClip comboAtt02BGM;
         public AudioClip tumblingBGM;
         public AudioClip overpowerBGM;
         public AudioClip rushBGM;
         public AudioClip startBlockBGM;
-        public AudioClip damageBlockBGM;
+        public AudioClip shieldDefence01BGM;
+        public AudioClip shieldDefence02BGM;
+        public AudioClip shieldDefence03BGM;
+        public AudioClip shieldDefence04BGM;
     }
 
     [SerializeField]
@@ -26,26 +32,32 @@ public class WarriorSound : MonoBehaviour
 
     public void SetComboBGM()
     {
-        
+        soundManager.RandomVoice(audioSettings.combo01BGM, audioSettings.combo02BGM);
+        soundManager.RandomEfx(audioSettings.comboAtt01BGM, audioSettings.comboAtt02BGM);
     }
 
     public void SetTumblingBGM()
     {
-
+        soundManager.PlaySingleEfx(audioSettings.tumblingBGM);
     }
 
     public void SetOverpowerBGM()
     {
+        soundManager.PlaySingleEfx(audioSettings.overpowerBGM);
+    }
 
+    public void SetRushBGM()
+    {
+        soundManager.PlaySingleEfx(audioSettings.rushBGM);
     }
 
     public void SetStartBlockBGM()
     {
-
+        soundManager.PlaySingleEfx(audioSettings.startBlockBGM);
     }
 
     public void SetDamageBlockBGM()
     {
-
+        soundManager.RandomEfx(audioSettings.shieldDefence01BGM, audioSettings.shieldDefence02BGM, audioSettings.shieldDefence03BGM, audioSettings.shieldDefence04BGM);
     }
 }

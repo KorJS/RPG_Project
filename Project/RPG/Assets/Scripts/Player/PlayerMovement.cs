@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Default");
             playerState.nextState = TypeData.State.죽음;
             animator.SetTrigger(animationSettings.isDeathTrigger);
-            SoundManager.Instance.PlaySingle(deathBGM);
+            SoundManager.Instance.PlaySingleVoice(deathBGM);
             charCtrl.enabled = false;
             StartCoroutine(Death());
         }
@@ -127,7 +127,11 @@ public class PlayerMovement : MonoBehaviour
     // 데미지
     public void SetDamage(float damage)
     {
-        animator.SetTrigger(animationSettings.isDamageTrigger);
+        if (playerState.currentMode == TypeData.MODE.평화 || playerState.currentState == TypeData.State.스킬)
+        {
+            Debug.Log("?");
+            animator.SetTrigger(animationSettings.isDamageTrigger);
+        }
 
         if (!isBlock)
         {
@@ -171,11 +175,6 @@ public class PlayerMovement : MonoBehaviour
         if (v != 0 || h != 0)
         {
             playerState.nextState = TypeData.State.이동;
-        }
-
-        if (v == 0 && h == 0)
-        {
-            playerState.nextState = TypeData.State.대기;
         }
 
         animator.SetFloat(animationSettings.moveVFloat, v);
@@ -224,6 +223,7 @@ public class PlayerMovement : MonoBehaviour
     // 스킬이 시전이 끝나면 회전 가능 하게.
     public void IdleBotton()
     {
+        animator.ResetTrigger(animationSettings.isDamageTrigger);
         isIdle = true;
     }
 

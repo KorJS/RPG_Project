@@ -17,7 +17,7 @@ public class KumasSkill : MonoBehaviour
         public Transform leftPoint_e;
         public Transform rightPoint_e;
         public Transform mouthPoint;
-        public Transform effectHolder;
+        public Transform unequipEffectHolder;
 
         public List<GameObject> iceBallObjs;
         public GameObject breathObj;
@@ -52,7 +52,7 @@ public class KumasSkill : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterMovement = GetComponent<MonsterMovement>();
 
-        effects.effectHolder = GameObject.Find("UnequipEffectPool").transform;
+        effects.unequipEffectHolder = GameObject.Find("UnequipEffectPool").transform;
         skillType = SkillType.없음;
 
         // 스킬 이펙트 생성
@@ -102,16 +102,16 @@ public class KumasSkill : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             GameObject obj = Instantiate(resource) as GameObject;
-            obj.transform.SetParent(effects.effectHolder);
-            obj.transform.position = Vector3.zero;
+            obj.transform.SetParent(effects.unequipEffectHolder);
+            obj.transform.localPosition = Vector3.zero;
             obj.SetActive(false);
             effects.iceBallObjs.Add(obj);
         }
 
         resource = Resources.Load("Effect/Monster/Breath");
         effects.breathObj = Instantiate(resource) as GameObject;
-        effects.breathObj.transform.SetParent(effects.effectHolder);
-        effects.breathObj.transform.position = Vector3.zero;
+        effects.breathObj.transform.SetParent(effects.unequipEffectHolder);
+        effects.breathObj.transform.localPosition = Vector3.zero;
         effects.breathObj.SetActive(false);
     }
 
@@ -122,17 +122,17 @@ public class KumasSkill : MonoBehaviour
         {
             if (effects.iceBallObjs[i].activeSelf)
             {
-                effects.iceBallObjs[i].transform.SetParent(effects.effectHolder);
-                effects.iceBallObjs[i].transform.position = Vector3.zero;
                 effects.iceBallObjs[i].SetActive(false);
+                effects.iceBallObjs[i].transform.SetParent(effects.unequipEffectHolder);
+                effects.iceBallObjs[i].transform.localPosition = Vector3.zero;
             }
         }
 
         if (effects.breathObj.activeSelf)
         {
-            effects.breathObj.transform.SetParent(effects.effectHolder);
-            effects.breathObj.transform.position = Vector3.zero;
             effects.breathObj.SetActive(false);
+            effects.breathObj.transform.SetParent(effects.unequipEffectHolder);
+            effects.breathObj.transform.localPosition = Vector3.zero;
         }
     }
 
@@ -265,7 +265,7 @@ public class KumasSkill : MonoBehaviour
         if (effects.breathObj.activeSelf)
         {
             isBreath = false;
-            effects.breathObj.transform.SetParent(effects.effectHolder);
+            effects.breathObj.transform.SetParent(effects.unequipEffectHolder);
             effects.breathObj.SetActive(false);
         }
     }

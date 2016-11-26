@@ -541,7 +541,7 @@ public class UIManager : MonoBehaviour
     {
         GameObject tempHpBarObj = null;
 
-        if (string.Compare(targetT.parent.tag, "BossSpawn") == 0)
+        if (string.Compare(targetT.tag, "Boss") == 0)
         {
             tempHpBarObj = bossHpBarObj;
         }

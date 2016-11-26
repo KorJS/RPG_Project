@@ -467,10 +467,10 @@ public class MonsterRange : MonoBehaviour
             isPlayer = true;
         }
 
-        if (!isPlayer)
-        {
-            Rotation();
-        }
+        //if (!isPlayer)
+        //{
+        //    Rotation();
+        //}
     }
 
     private void Rotation()

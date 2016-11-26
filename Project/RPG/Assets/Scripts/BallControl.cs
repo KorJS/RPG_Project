@@ -49,6 +49,7 @@ public class BallControl : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
+        Debug.Log("col layer " + col.gameObject.layer);
         if (col.gameObject.layer == ballSettings.targetLayer)
         {
             Debug.Log("Ball");
@@ -58,15 +59,15 @@ public class BallControl : MonoBehaviour
             {
                 case UserType.주인공:
                     {
-                        playerMovement = col.GetComponent<PlayerMovement>();
-                        playerMovement.SetDamage(-ballSettings.att);
+                        monsterMovement = col.GetComponent<MonsterMovement>();
+                        monsterMovement.SetDamage(ballSettings.userT, -ballSettings.att);
                     }
                     break;
 
                 case UserType.몬스터:
                     {
-                        monsterMovement = col.GetComponent<MonsterMovement>();
-                        monsterMovement.SetDamage(ballSettings.userT, -ballSettings.att);
+                        playerMovement = col.GetComponent<PlayerMovement>();
+                        playerMovement.SetDamage(-ballSettings.att);
                     }
                     break;
             }
@@ -131,5 +132,6 @@ public class BallControl : MonoBehaviour
     {
         ballT.SetParent(ballSettings.holder);
         ballT.localPosition = Vector3.zero;
+        ballT.gameObject.SetActive(false);
     }
 }

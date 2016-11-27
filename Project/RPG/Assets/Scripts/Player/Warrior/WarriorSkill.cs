@@ -300,7 +300,6 @@ public class WarriorSkill : MonoBehaviour
             comboTimer = 0f;
             isComboTime = false;
             isCombo = false; // 1콤보에서 끊겨서 다음 모션초기화 1콤으로
-            playerState.nextState = TypeData.State.대기;
         }
     }
 
@@ -344,8 +343,6 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.animator.SetTrigger(warriorAniSettings.isOverpowerTrigger);
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
-
-        //warriorEffect.OverpowerEffect();
     }
 
     // 난폭한 돌진

@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController charCtrl = null;
     public Animator animator = null;
-    private Camera camera = null;
+    private Camera mainCamera = null;
     private Vector3 rotation = Vector3.zero;
 
     public bool isHit = false;              // 공격해 맞혔으면 true - 각 스킬스크립트에서 전달 받자
@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         playerState = GetComponent<PlayerState>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        camera = Camera.main;
+        mainCamera = Camera.main;
 
         isHit = isDamage = false;
         isIdle = true; // 대기상태
@@ -93,9 +93,6 @@ public class PlayerMovement : MonoBehaviour
 
         // 공격해 맞혔으면 true
         animator.SetBool(animationSettings.hitBool, isHit);
-
-        // 현재 애니메이션 상태 확인
-        CheckCurrentAnimation();
     }
 
     IEnumerator Death()
@@ -127,9 +124,8 @@ public class PlayerMovement : MonoBehaviour
     // 데미지
     public void SetDamage(float damage)
     {
-        if (playerState.currentMode == TypeData.MODE.평화 || playerState.currentState == TypeData.State.스킬)
+        //if (playerState.currentMode == TypeData.MODE.평화 || playerState.currentState == TypeData.State.스킬)
         {
-            Debug.Log("?");
             animator.SetTrigger(animationSettings.isDamageTrigger);
         }
 
@@ -190,11 +186,11 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        Vector3 forword = camera.transform.forward;
+        Vector3 forword = mainCamera.transform.forward;
         forword.y = 0f;
         forword = forword.normalized;
 
-        Vector3 right = camera.transform.right;
+        Vector3 right = mainCamera.transform.right;
         right.y = 0f;
         right = right.normalized;
 
@@ -209,42 +205,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // 현재 애니메이션 상태
-    private void CheckCurrentAnimation()
-    {
-        // 현재 실행 중인 애니메이터가 "Idle_Botton" 인지
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle_Botton"))
-        {
-            // 스킬이 시전이 끝나면 회전 가능 하게.
-            //isIdle = true;
-        }
-    }
-
     // 스킬이 시전이 끝나면 회전 가능 하게.
     public void IdleBotton()
     {
+        playerState.nextState = TypeData.State.대기;
         animator.ResetTrigger(animationSettings.isDamageTrigger);
         isIdle = true;
     }
-
-    //// 자식에 아바타를 받아옴
-    //private void SetAnimator()
-    //{
-    //    Animator[] animators = GetComponentsInChildren<Animator>();
-
-    //    if (animators.Length > 0)
-    //    {
-    //        for (int i = 0; i < animators.Length; i++)
-    //        {
-    //            Animator anim = animators[i];
-    //            Avatar av = anim.avatar;
-
-    //            if (anim != animator)
-    //            {
-    //                animator.avatar = av;
-    //                Destroy(anim);
-    //            }
-    //        }
-    //    }
-    //}
 }

@@ -247,7 +247,7 @@ public class KumasSkill : MonoBehaviour
         effects.iceBallObjs[iceBallCount].SetActive(true);
 
         BallControl ballControl = effects.iceBallObjs[iceBallCount].GetComponent<BallControl>();
-        ballControl.SetBall(gameObject.transform, tempT_s, tempT_e.position, skillPos, skillRange, 5, skillAtt, "IceBall");
+        ballControl.SetBall(gameObject.transform, tempT_s.position, tempT_e.position, 5, 15, skillAtt, "IceBall");
 
         iceBallCount++;
     }

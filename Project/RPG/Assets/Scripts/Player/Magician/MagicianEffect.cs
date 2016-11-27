@@ -21,6 +21,8 @@ public class MagicianEffect : MonoBehaviour
     [SerializeField]
     public MagicianEffectSettings effects;
 
+    private int fireBallCount = 0;
+
     void Awake()
     {
         magicianSkill = GetComponent<MagicianSkill>();
@@ -66,5 +68,22 @@ public class MagicianEffect : MonoBehaviour
                 effects.fireBallObjs[i].transform.localPosition = Vector3.zero;
             }
         }
+    }
+
+    public void FireBall(Vector3 lookPos, float skillAtt)
+    {
+        if (fireBallCount >= effects.fireBallObjs.Count)
+        {
+            fireBallCount = 0;
+        }
+
+        // 사용자, ball 처음위치, 방향, 스피드, 최대거리, 공격력, 히트이펙트이름
+        effects.fireBallObjs[fireBallCount].transform.position = effects.rightPoint.position;
+        effects.fireBallObjs[fireBallCount].SetActive(true);
+
+        BallControl ballControl = effects.fireBallObjs[fireBallCount].GetComponent<BallControl>();
+        ballControl.SetBall(gameObject.transform, effects.rightPoint.position, lookPos, 8, 15, skillAtt, "FireBall");
+
+        fireBallCount++;
     }
 }

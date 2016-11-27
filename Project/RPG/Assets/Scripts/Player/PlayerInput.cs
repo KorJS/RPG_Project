@@ -44,11 +44,20 @@ public class PlayerInput : MonoBehaviour
     public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
     public bool isClick = false;
 
+    public Vector3 targetPos = Vector3.zero;
+    private Transform playerT = null;
+    private Camera mainCamera = null;
+    private int layerMark = 0;
+
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
+
+        playerT = GetComponent<Transform>();
+        mainCamera = Camera.main;
+        layerMark = (-1) - (1 << LayerMask.NameToLayer("Player"));
         //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
@@ -80,6 +89,42 @@ public class PlayerInput : MonoBehaviour
         
         // Test
         InputKey();
+
+        CheckCrossHairDistance();
+    }
+
+    // 크로스헤어 거리측정
+    private void CheckCrossHairDistance()
+    {
+        if (uiManager.crossHair == null || uiManager.chDistance == null)
+        {
+            Debug.LogError("CrossHair Object Or Label Null");
+            return;
+        }
+
+        bool isTarget = false;
+        int x = Screen.width / 2;
+        int y = Screen.height / 2;
+
+        Ray ray = mainCamera.ScreenPointToRay(new Vector3(x, y));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMark))
+        {
+            targetPos = hit.point; // 마법스킬용
+
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Monster"))
+            {
+                float dis = Vector3.Distance(playerT.position, hit.point);
+                uiManager.chDistance.text = Mathf.RoundToInt(dis).ToString() + "m";
+                isTarget = true;
+            }
+        }
+
+        if (!isTarget)
+        {
+            uiManager.chDistance.text = "0m";
+        }
     }
 
     // 방향키 입력

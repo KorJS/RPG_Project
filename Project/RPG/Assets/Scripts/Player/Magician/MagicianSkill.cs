@@ -94,7 +94,6 @@ public class MagicianSkill : MonoBehaviour
         // 1.5초 안에 클릭 못할시. 1콤에서 끝
         if (comboTimer > COMBOTIME)
         {
-            Debug.Log("?");
             comboTimer = 0f;
             isComboTime = false;
             playerMovement.animator.SetTrigger(magicianAniSettings.isEndComboTrigger);
@@ -199,6 +198,7 @@ public class MagicianSkill : MonoBehaviour
 
     private void FireBall()
     {
+        magicianEffect.FireBall(playerInput.targetPos, skillInfo.attack);
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(magicianAniSettings.isFireBall);
     }

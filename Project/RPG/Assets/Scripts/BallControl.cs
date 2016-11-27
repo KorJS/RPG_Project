@@ -19,7 +19,7 @@ public class BallControl : MonoBehaviour
         public UserType     userType    = UserType.없음;
 
         public Transform    userT;
-        public Transform    orignT;
+        public Vector3      orignT;
 
         public int          targetLayer;
 
@@ -29,8 +29,7 @@ public class BallControl : MonoBehaviour
         public GameObject   hitEffectObj;
         public string       hitEffectName;
 
-        public Vector3      skillPos;
-        public Vector3      skillRange;
+        public float        limitDis;
         public float        att;
         public float        speed;
     }
@@ -52,7 +51,6 @@ public class BallControl : MonoBehaviour
         Debug.Log("col layer " + col.gameObject.layer);
         if (col.gameObject.layer == ballSettings.targetLayer)
         {
-            Debug.Log("Ball");
             Debug.Log("targetName : " + col.name + " Attack : " + ballSettings.att);
 
             switch (ballSettings.userType)
@@ -88,7 +86,7 @@ public class BallControl : MonoBehaviour
 
             if (isShot)
             {
-                if (Vector3.Distance(ballSettings.orignT.position, transform.position) > 15)
+                if (Vector3.Distance(ballSettings.orignT, transform.position) > ballSettings.limitDis)
                 {
                     ResetBall();
                 }
@@ -107,7 +105,8 @@ public class BallControl : MonoBehaviour
         ballT.gameObject.SetActive(false);
     }
 
-    public void SetBall(Transform userT, Transform orignT, Vector3 lookPos, Vector3 skillPos, Vector3 skillRange, int speed, float att, string hitEffectName)
+    // 사용자, ball 처음위치
+    public void SetBall(Transform userT, Vector3 orignT, Vector3 lookPos, int speed, int limitDis, float att, string hitEffectName)
     {
         ballSettings.hitEffectObj = Instantiate(Resources.Load("Effect/Hit_" + hitEffectName)) as GameObject;
         ballSettings.hitEffectObj.transform.SetParent(ballT);
@@ -115,14 +114,13 @@ public class BallControl : MonoBehaviour
 
         ballSettings.userT = userT;
         ballSettings.orignT = orignT;
-        ballSettings.skillPos = skillPos;
-        ballSettings.skillRange = skillRange;
-        ballSettings.att = att;
         ballSettings.speed = speed;
+        ballSettings.limitDis = limitDis;
+        ballSettings.att = att;
 
         isShot = true;
         ballT.SetParent(null);
-        Vector3 v = lookPos - ballSettings.orignT.position;
+        Vector3 v = lookPos - ballSettings.orignT;
         ballT.rotation = Quaternion.LookRotation(v);
 
         StartCoroutine(UpdatePos());

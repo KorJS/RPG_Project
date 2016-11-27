@@ -123,25 +123,29 @@ public class UIManager : MonoBehaviour
     public bool isQuest = false;
     public bool isFKey = false;
 
-    private const float MESSAGETIME = 2f;
-    private float messageTimer = 0f;
-    private bool isMessage = false;
+    private const float     MESSAGETIME = 2f;
+    private float           messageTimer = 0f;
+    private bool            isMessage = false;
 
-    public int divQuantity = 0; // 분리한 수량
+    public int              divQuantity = 0;            // 분리한 수량
 
-    public GameObject tempDraggingPanel = null; // 드래그중인것 복사한거
-    public UITexture tempIcon = null; // 드래그중인 Icon
+    public GameObject       tempDraggingPanel = null;   // 드래그중인것 복사한거
+    public UITexture        tempIcon = null;            // 드래그중인 Icon
 
-    private GameObject damageTxtHolder = null; // 데미지 텍스트 부모
-    public List<GameObject> damageTxtObjs = null; // 데미지 텍스트 풀
-    private int damageTxtCount = 0; // 풀 카운트
+    private GameObject      damageTxtHolder = null;     // 데미지 텍스트 부모
+    public List<GameObject> damageTxtObjs = null;       // 데미지 텍스트 풀
+    private int             damageTxtCount = 0;         // 풀 카운트
 
     // 방어 성공 UI이펙트
-    public GameObject blockTxtObj = null;
-    public TweenScale blockTween = null;
+    public GameObject       blockTxtObj = null;
+    public TweenScale       blockTween = null;
 
-    public AudioClip windowsOpenBGM = null;
-    public AudioClip windowsCloseBGM = null;
+    public AudioClip        windowsOpenBGM = null;
+    public AudioClip        windowsCloseBGM = null;
+
+    private Transform       playerT = null;             // 주인공
+    public GameObject       crossHair = null;           // 크로스헤어
+    public UILabel          chDistance = null;          // 거리
 
     void Awake()
     {
@@ -154,7 +158,8 @@ public class UIManager : MonoBehaviour
             Destroy(uiManager);
         }
 
-        playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
+        playerT = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        playerInput = playerT.GetComponent<PlayerInput>();
 
         shortCuts = new Dictionary<int, UISlotInfo>();
         storeListSlots = new Dictionary<int, UISlotInfo>();

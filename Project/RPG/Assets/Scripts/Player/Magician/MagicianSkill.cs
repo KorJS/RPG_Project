@@ -30,7 +30,10 @@ public class MagicianSkill : MonoBehaviour
     {
         없음 = -1,
         파이어볼 = 0,
-        긴급회피,
+        마력방패,
+        텔레포트,
+        오염의저주,
+        운석낙하
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬

@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
         public string stateInt              = "State";
         public string skillTpyeInt          = "SkillType";
         public string hitBool               = "isHit";
+        public string isBlockTrigger        = "isBlock";
         public string isDamageTrigger       = "isDamage";
         public string isDeathTrigger        = "isDeath";
     }
@@ -122,21 +123,31 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // 데미지
-    public void SetDamage(float damage)
+    public void SetDamage(Transform monsterT, float damage)
     {
         //if (playerState.currentMode == TypeData.MODE.평화 || playerState.currentState == TypeData.State.스킬)
         {
-            animator.SetTrigger(animationSettings.isDamageTrigger);
         }
 
-        if (!isBlock)
+        if (isBlock)
         {
-            Debug.Log(damage);
-            PlayerInfoData.Instance.SetCurrentHp(damage);
+            if (CheckRange(monsterT))
+            {
+                animator.SetTrigger(animationSettings.isBlockTrigger);
+                return;
+            }
+            else
+            {
+                isBlock = false;
+            }
         }
+
+        animator.SetTrigger(animationSettings.isDamageTrigger);
+
+        Debug.Log(damage);
+        PlayerInfoData.Instance.SetCurrentHp(damage);
 
         isDamage = true;
-
         playerState.nextMode = TypeData.MODE.전투;
     }
 
@@ -211,5 +222,29 @@ public class PlayerMovement : MonoBehaviour
         playerState.nextState = TypeData.State.대기;
         animator.ResetTrigger(animationSettings.isDamageTrigger);
         isIdle = true;
+    }
+
+    // 방패막기
+    private bool CheckRange(Transform monsterT)
+    {
+        Vector3 heading = transform.TransformDirection(Vector3.forward);
+        Vector3 other = monsterT.position - transform.position;
+
+        heading.y = 0f;
+        other.y = 0f;
+
+        heading.Normalize();
+        other.Normalize();
+
+        float dp = Vector3.Dot(heading, other);
+
+        if (dp > Mathf.Cos(90f * Mathf.Deg2Rad))
+        {
+            Debug.Log("방어성공");
+            return true;
+        }
+
+        Debug.Log("방어실패");
+        return false;
     }
 }

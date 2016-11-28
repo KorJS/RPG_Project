@@ -134,7 +134,6 @@ public class WarriorSkill : MonoBehaviour
             {
                 blockKeyCode = KeyCode.None;
                 playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
-                playerMovement.animator.ResetTrigger(playerMovement.animationSettings.isDamageTrigger);
                 isBlock = false;
                 playerMovement.isBlock = isBlock;
             }
@@ -170,7 +169,6 @@ public class WarriorSkill : MonoBehaviour
 
                     _isHit = true;
                 }
-
             }
         }
 

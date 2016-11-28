@@ -240,7 +240,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F9))
         {
             playerState.nextMode = TypeData.MODE.전투;
-            playerMovement.SetDamage(0);
+            playerMovement.SetDamage(null, 0);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))

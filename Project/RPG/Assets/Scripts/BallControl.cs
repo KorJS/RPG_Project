@@ -63,7 +63,7 @@ public class BallControl : MonoBehaviour
                 case UserType.몬스터:
                     {
                         playerMovement = col.GetComponent<PlayerMovement>();
-                        playerMovement.SetDamage(-ballSettings.att);
+                        playerMovement.SetDamage(ballSettings.userT, -ballSettings.att);
                     }
                     break;
             }

@@ -242,7 +242,7 @@ public class UIManager : MonoBehaviour
     // 데미지 텍스트 생성
     private void CreateDamageTxt()
     {
-        var resource = Resources.Load("Effect/DamageTxt");
+        var resource = Resources.Load("UI/DamageTxt");
 
         for (int i = 0; i < 20; i++)
         {

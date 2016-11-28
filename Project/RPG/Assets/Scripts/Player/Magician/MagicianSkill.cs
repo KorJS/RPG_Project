@@ -30,6 +30,7 @@ public class MagicianSkill : MonoBehaviour
     {
         없음 = -1,
         파이어볼 = 0,
+        긴급회피,
     };
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
@@ -198,8 +199,14 @@ public class MagicianSkill : MonoBehaviour
 
     private void FireBall()
     {
-        magicianEffect.FireBall(playerInput.targetPos, skillInfo.attack);
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(magicianAniSettings.isFireBall);
+
+        playerMovement.Rotation(1f, 0f, true); // 전방 방향
+    }
+
+    public void FireBallEvent()
+    {
+        magicianEffect.FireBall(playerInput.targetPos, skillInfo.attack);
     }
 }

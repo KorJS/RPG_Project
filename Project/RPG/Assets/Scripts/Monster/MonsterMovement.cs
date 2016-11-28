@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(CharacterController))]
+//[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
 public class MonsterMovement : MonoBehaviour
@@ -25,6 +25,7 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
+    public Collider col = null;
     public CharacterController charCtrl = null;
     public Animator animator = null;
     public NavMeshAgent nav = null;
@@ -41,6 +42,7 @@ public class MonsterMovement : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterInfoData = GetComponent<MonsterInfoData>();
         monsterState = GetComponent<MonsterState>();
+        //col = GetComponent<Collider>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
@@ -57,6 +59,7 @@ public class MonsterMovement : MonoBehaviour
 
     void OnEnable()
     {
+        //col.enabled = true;
         charCtrl.enabled = true;
         isRot = false;
         isDamage = false;
@@ -123,6 +126,7 @@ public class MonsterMovement : MonoBehaviour
     public IEnumerator Death(float destroyTime)
     {
         charCtrl.enabled = false;
+        //col.enabled = false;
 
         yield return new WaitForSeconds(destroyTime);
 

@@ -43,12 +43,10 @@ public class BallControl : MonoBehaviour
     void Awake()
     {
         ballT = transform;
-        ballSettings.holder = GameObject.Find("UnequipEffectPool").transform;
     }
 
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log("col layer " + col.gameObject.layer);
         if (col.gameObject.layer == ballSettings.targetLayer)
         {
             Debug.Log("targetName : " + col.name + " Attack : " + ballSettings.att);
@@ -71,8 +69,10 @@ public class BallControl : MonoBehaviour
             }
 
             ballSettings.hitEffectObj.SetActive(true);
-            ballSettings.hitEffectObj.transform.position = ballT.position;
-            StartCoroutine(HitEffect());
+            //ballSettings.hitEffectObj.transform.position = ballT.position;
+            //isShot = false;
+            //ballT.gameObject.SetActive(false);
+            //StartCoroutine(HitEffect());
 
             ResetBall();
         }
@@ -98,26 +98,30 @@ public class BallControl : MonoBehaviour
 
     IEnumerator HitEffect()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         isShot = false;
-        ballSettings.hitEffectObj.SetActive(false);
         ballT.gameObject.SetActive(false);
     }
 
-    // 사용자, ball 처음위치
     public void SetBall(Transform userT, Vector3 orignT, Vector3 lookPos, int speed, int limitDis, float att, string hitEffectName)
     {
-        ballSettings.hitEffectObj = Instantiate(Resources.Load("Effect/Hit_" + hitEffectName)) as GameObject;
-        ballSettings.hitEffectObj.transform.SetParent(ballT);
-        ballSettings.hitEffectObj.SetActive(false);
+        ballSettings.userT = userT; // 사용자
+        ballSettings.holder = userT.FindChild("SkillHolder");
+        ballSettings.orignT = orignT; // 발사 첫 위치
+        ballSettings.speed = speed; // 속도
+        ballSettings.limitDis = limitDis; // 제한거리
+        ballSettings.att = att; // 공격력
 
-        ballSettings.userT = userT;
-        ballSettings.orignT = orignT;
-        ballSettings.speed = speed;
-        ballSettings.limitDis = limitDis;
-        ballSettings.att = att;
-
+        // hit 이펙트
+        if (ballSettings.hitEffectObj == null)
+        {
+            ballSettings.hitEffectObj = Instantiate(Resources.Load("Effect/Hit_" + hitEffectName)) as GameObject;
+            ballSettings.hitEffectObj.GetComponent<EffectSetting>().infoSettings.effectHoler = ballSettings.holder;
+            ballSettings.hitEffectObj.transform.SetParent(ballT);
+            ballSettings.hitEffectObj.SetActive(false);
+        }
+        
         isShot = true;
         ballT.SetParent(null);
         Vector3 v = lookPos - ballSettings.orignT;
@@ -128,6 +132,7 @@ public class BallControl : MonoBehaviour
 
     private void ResetBall()
     {
+        isShot = false;
         ballT.SetParent(ballSettings.holder);
         ballT.localPosition = Vector3.zero;
         ballT.gameObject.SetActive(false);

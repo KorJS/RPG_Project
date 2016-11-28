@@ -48,6 +48,7 @@ public class PlayerInput : MonoBehaviour
     private Transform playerT = null;
     private Camera mainCamera = null;
     private int layerMark = 0;
+    private Ray rayTest;
 
     void Awake()
     {
@@ -57,7 +58,7 @@ public class PlayerInput : MonoBehaviour
 
         playerT = GetComponent<Transform>();
         mainCamera = Camera.main;
-        layerMark = (-1) - (1 << LayerMask.NameToLayer("Player"));
+        layerMark = (-1) - (1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
         //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
@@ -93,6 +94,13 @@ public class PlayerInput : MonoBehaviour
         CheckCrossHairDistance();
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawLine(Camera.main.transform.position, targetPos);
+    }
+
     // 크로스헤어 거리측정
     private void CheckCrossHairDistance()
     {
@@ -107,11 +115,13 @@ public class PlayerInput : MonoBehaviour
         int y = Screen.height / 2;
 
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(x, y));
+
         RaycastHit hit;
+        rayTest = ray;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMark))
         {
-            targetPos = hit.point; // 마법스킬용
+            targetPos = hit.point;
 
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Monster"))
             {

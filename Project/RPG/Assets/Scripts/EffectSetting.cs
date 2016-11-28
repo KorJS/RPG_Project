@@ -40,7 +40,6 @@ public class EffectSetting : MonoBehaviour
     void Awake()
     {
         particleSys = GetComponent<ParticleSystem>();
-        infoSettings.effectHoler = GameObject.FindGameObjectWithTag("Player").transform.FindChild("SkillHolder");
     }
     
     // 활성화 될때 이펙트를 지정된 장소에 배치
@@ -88,6 +87,8 @@ public class EffectSetting : MonoBehaviour
         if (equipType == EquipType.비장착)
         {
             transform.SetParent(infoSettings.effectHoler);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
         }
         gameObject.SetActive(false);
     }

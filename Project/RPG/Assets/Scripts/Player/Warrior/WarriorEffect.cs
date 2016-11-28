@@ -6,6 +6,7 @@ public class WarriorEffect : MonoBehaviour
 {
     private PlayerMovement playerMovement = null;
     private WarriorSkill warriorSkill = null;
+    private WarriorSound warriorSound = null;
     private UIManager uiManager = null;
 
     [System.Serializable]
@@ -30,6 +31,7 @@ public class WarriorEffect : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         warriorSkill = GetComponent<WarriorSkill>();
+        warriorSound = GetComponent<WarriorSound>();
         effects = new Dictionary<string, GameObject>();
         skillHolder = transform.FindChild("SkillHolder");
 
@@ -81,6 +83,7 @@ public class WarriorEffect : MonoBehaviour
         obj.transform.SetParent(skillHolder);
         obj.GetComponent<EffectSetting>().infoSettings.effectHoler = skillHolder;
         obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
         obj.SetActive(false);
 
         return obj;
@@ -165,6 +168,7 @@ public class WarriorEffect : MonoBehaviour
         }
 
         effects[effectSettings.rush].SetActive(true);
+        warriorSound.SetRushBGM();
     }
 
     public void ComboHitEffect(bool isEffect)

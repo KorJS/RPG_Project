@@ -354,8 +354,6 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);
-
-        warriorSound.SetRushBGM();
     }
 
     // 난폭한 돌진 유지시간 체크

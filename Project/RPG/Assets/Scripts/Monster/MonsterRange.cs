@@ -131,14 +131,15 @@ public class MonsterRange : MonoBehaviour
         CheckOriginDistance();
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (string.Compare(hit.collider.tag, "Safe") == 0)
-        {
-            Debug.Log("OnControllerColliderHit");
-            Reset();
-        }
-    }
+    //void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    Debug.Log("OnControllerColliderHit");
+    //    if (string.Compare(hit.collider.tag, "Safe") == 0)
+    //    {
+    //        Debug.Log("OnControllerColliderHit");
+    //        Reset();
+    //    }
+    //}
 
     void OnDrawGizmos()
     {
@@ -206,7 +207,7 @@ public class MonsterRange : MonoBehaviour
         // 어글이펙트 활성화 되어있거나 
         // 확정 타겟이 있거나
         // 임시 타겟이 없으면
-        if (isTargetAggro || !monster.tempTargetT)
+        if (isTargetAggro || (!monster.targetT && !monster.tempTargetT))
         {
             aggroTimer = 0f;
             return;
@@ -300,7 +301,7 @@ public class MonsterRange : MonoBehaviour
         v2 = monster.monsterT.forward;
         float angle = Vector3.Angle(v1, v2);
 
-        Debug.Log("회전 체크 : " + angle);
+        //Debug.Log("회전 체크 : " + angle);
         // 지정한 angle 안에 없으면 리턴
         if (angle > monster.rotAngle)
         {

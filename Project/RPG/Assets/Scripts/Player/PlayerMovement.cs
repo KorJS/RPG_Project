@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isBlock = false;            // 방패막기 중에는 공격 안받음
 
     private GameObject respawnObj = null;
-    private float deathTimer = 0;
+    private float deathTimer = 10;
     private bool isDeath = false;
 
     public AudioClip deathBGM = null;
@@ -102,12 +102,12 @@ public class PlayerMovement : MonoBehaviour
         {
             UIManager.Instance.SetMessage("부활까지 남은 시간 : " + Mathf.RoundToInt(deathTimer));
 
-            deathTimer += Time.deltaTime;
+            deathTimer -= Time.deltaTime;
 
-            if (deathTimer >= 10)
+            if (deathTimer <= 0)
             {
                 PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp;
-                deathTimer = 0f;
+                deathTimer = 10f;
                 transform.position = respawnObj.transform.position;
                 transform.rotation = respawnObj.transform.rotation;
                 playerState.nextState = TypeData.State.대기;

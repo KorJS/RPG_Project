@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: b4c937da170d60c418bc6c1450f24c2e
-timeCreated: 1479354680
+guid: 22dbcde681113f547aae73313546a4ff
+timeCreated: 1479354677
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -141,7 +141,7 @@ ModelImporter:
     400130: Spine
     400132: Spine1
     400134: Spine2
-    7400000: standing_1H_cast_spell_01
+    7400000: meteor
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -168,10 +168,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: standing_1H_cast_spell_01
+      name: meteor
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 57
+      lastFrame: 98
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

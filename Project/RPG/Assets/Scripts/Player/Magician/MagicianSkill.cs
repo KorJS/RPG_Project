@@ -18,7 +18,11 @@ public class MagicianSkill : MonoBehaviour
     public class MagicianAniSettings
     {
         public string isEndComboTrigger = "isEndCombo";
-        public string isFireBall = "isFireBall";
+        public string isFireBallTrigger = "isFireBall";
+        public string isMpCondensingTrigger = "isMpCondensing";
+        public string isTeleport = "isTeleport";
+        public string isIceStorm = "isIceStorm";
+        public string isMeteor = "isMeteor";
     }
 
     [SerializeField]
@@ -30,9 +34,9 @@ public class MagicianSkill : MonoBehaviour
     {
         없음 = -1,
         파이어볼 = 0,
-        마력방패,
+        마력응집,
         텔레포트,
-        오염의저주,
+        얼음폭풍,
         운석낙하
     };
 
@@ -146,7 +150,7 @@ public class MagicianSkill : MonoBehaviour
 
         MonsterMovement mob = enemyObj.GetComponent<MonsterMovement>();
 
-        Debug.Log("attack : " + attack);
+        Debug.Log("totalAtt : " + playerInfoData.totalAtt + " / attack : " + attack);
 
         mob.SetDamage(gameObject.transform, -attack);
     }
@@ -203,13 +207,36 @@ public class MagicianSkill : MonoBehaviour
     private void FireBall()
     {
         playerMovement.SetAniSkill((int)currentSkillTpye);
-        playerMovement.animator.SetTrigger(magicianAniSettings.isFireBall);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isFireBallTrigger);
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
     }
 
-    public void FireBallEvent()
+    // 파이어볼 이펙트 생성(공격력 및 타겟점 전달)
+    public void SetFireBallEffect()
     {
         magicianEffect.FireBall(playerInput.targetPos, skillInfo.attack);
+    }
+
+    private void MpCondensing()
+    {
+        playerMovement.SetAniSkill((int)currentSkillTpye);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isMpCondensingTrigger);
+    }
+
+    private void Teleport()
+    {
+        playerMovement.SetAniSkill((int)currentSkillTpye);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isTeleport);
+    }
+
+    private void IceStorm()
+    {
+
+    }
+
+    private void Meteor()
+    {
+
     }
 }

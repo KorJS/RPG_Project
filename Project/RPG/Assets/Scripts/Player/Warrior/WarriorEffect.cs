@@ -17,15 +17,16 @@ public class WarriorEffect : MonoBehaviour
         public string overpower     = "Overpower";
         public string rush          = "Rush";
         public string hit           = "Hit";
+
+        public Transform skillHolder;
+        public string effectPath;
     }
 
     public EffectSettings effectSettings;
 
     public Dictionary<string, GameObject> effects = null;
 
-    private Transform skillHolder = null;
 
-    public string effectPath = "Effect/Player/Warrior/";
 
     void Awake()
     {
@@ -33,8 +34,8 @@ public class WarriorEffect : MonoBehaviour
         warriorSkill = GetComponent<WarriorSkill>();
         warriorSound = GetComponent<WarriorSound>();
         effects = new Dictionary<string, GameObject>();
-        skillHolder = transform.FindChild("SkillHolder");
-
+        effectSettings.skillHolder = transform.FindChild("SkillHolder");
+        effectSettings.effectPath = "Effect/Player/Warrior/";
         ResourceLoad();
     }
 
@@ -57,19 +58,19 @@ public class WarriorEffect : MonoBehaviour
     // 이펙트 리소스 로드
     private void ResourceLoad()
     {
-        GameObject obj = Resources.Load(effectPath + effectSettings.block) as GameObject;
+        GameObject obj = Resources.Load(effectSettings.effectPath + effectSettings.block) as GameObject;
         effects.Add(effectSettings.block, CreateEffectObj(obj, effectSettings.block));
 
-        obj = Resources.Load(effectPath + effectSettings.blockDamage) as GameObject;
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.blockDamage) as GameObject;
         effects.Add(effectSettings.blockDamage, CreateEffectObj(obj, effectSettings.blockDamage));
 
-        obj = Resources.Load(effectPath + effectSettings.overpower) as GameObject;
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.overpower) as GameObject;
         effects.Add(effectSettings.overpower, CreateEffectObj(obj, effectSettings.overpower));
 
-        obj = Resources.Load(effectPath + effectSettings.rush) as GameObject;
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.rush) as GameObject;
         effects.Add(effectSettings.rush, CreateEffectObj(obj, effectSettings.rush));
 
-        obj = Resources.Load(effectPath + effectSettings.hit) as GameObject;
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.hit) as GameObject;
         effects.Add(effectSettings.hit, CreateEffectObj(obj, effectSettings.hit));
 
         obj = null;
@@ -80,8 +81,8 @@ public class WarriorEffect : MonoBehaviour
     {
         GameObject obj = Instantiate(effectObj) as GameObject;
         obj.name = effectName;
-        obj.transform.SetParent(skillHolder);
-        obj.GetComponent<EffectSetting>().infoSettings.effectHoler = skillHolder;
+        obj.transform.SetParent(effectSettings.skillHolder);
+        obj.GetComponent<EffectSetting>().infoSettings.effectHoler = effectSettings.skillHolder;
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
         obj.SetActive(false);
@@ -152,7 +153,10 @@ public class WarriorEffect : MonoBehaviour
     {
         if (effects[effectSettings.overpower].activeSelf)
         {
-            effects[effectSettings.overpower].transform.SetParent(skillHolder);
+            if (effects[effectSettings.overpower].transform.parent != effectSettings.skillHolder)
+            {
+                effects[effectSettings.overpower].transform.SetParent(effectSettings.skillHolder);
+            }
             effects[effectSettings.overpower].SetActive(false);
         }
 
@@ -163,7 +167,6 @@ public class WarriorEffect : MonoBehaviour
     {
         if (effects[effectSettings.rush].activeSelf)
         {
-            effects[effectSettings.rush].transform.SetParent(skillHolder);
             effects[effectSettings.rush].SetActive(false);
         }
 

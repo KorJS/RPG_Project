@@ -238,7 +238,7 @@ public class PlayerMovement : MonoBehaviour
 
         float dp = Vector3.Dot(heading, other);
 
-        if (dp > Mathf.Cos(90f * Mathf.Deg2Rad))
+        if (dp > Mathf.Cos(75f * Mathf.Deg2Rad))
         {
             Debug.Log("방어성공");
             return true;

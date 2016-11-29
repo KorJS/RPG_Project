@@ -130,10 +130,15 @@ public class WarriorSkill : MonoBehaviour
 
         if (isBlock)
         {
-            if (Input.GetKeyUp(blockKeyCode) || playerInput.isClick)
+            if (Input.GetKeyUp(blockKeyCode) || playerInput.isClick || !playerMovement.isBlock)
             {
                 blockKeyCode = KeyCode.None;
-                playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
+
+                if (playerMovement.isBlock)
+                {
+                    playerMovement.animator.SetTrigger(warriorAniSettings.isEndBlockTrigger);
+                }
+
                 isBlock = false;
                 playerMovement.isBlock = isBlock;
             }

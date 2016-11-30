@@ -15,11 +15,7 @@ public class WarriorSound : MonoBehaviour
         public AudioClip tumblingBGM;
         public AudioClip overpowerBGM;
         public AudioClip rushBGM;
-        public AudioClip startBlockBGM;
-        public AudioClip shieldDefence01BGM;
-        public AudioClip shieldDefence02BGM;
-        public AudioClip shieldDefence03BGM;
-        public AudioClip shieldDefence04BGM;
+        public AudioClip[] shieldDefenceBGM;
     }
 
     [SerializeField]
@@ -51,13 +47,8 @@ public class WarriorSound : MonoBehaviour
         soundManager.PlaySingleEfx(audioSettings.rushBGM);
     }
 
-    public void SetStartBlockBGM()
-    {
-        soundManager.PlaySingleEfx(audioSettings.startBlockBGM);
-    }
-
     public void SetDamageBlockBGM()
     {
-        soundManager.RandomEfx(audioSettings.shieldDefence01BGM, audioSettings.shieldDefence02BGM, audioSettings.shieldDefence03BGM, audioSettings.shieldDefence04BGM);
+        soundManager.RandomEfx(audioSettings.shieldDefenceBGM);
     }
 }

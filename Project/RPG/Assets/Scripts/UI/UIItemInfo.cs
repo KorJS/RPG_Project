@@ -12,7 +12,6 @@ public class UIItemInfo : MonoBehaviour
         public TypeData.ItemType itemType;
         public int itemIndex;
         public int quantity;
-
     }
 
     public ItemInfo itemInfo;

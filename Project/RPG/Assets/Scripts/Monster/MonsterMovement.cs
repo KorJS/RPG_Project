@@ -25,7 +25,6 @@ public class MonsterMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    public Collider col = null;
     public CharacterController charCtrl = null;
     public Animator animator = null;
     public NavMeshAgent nav = null;
@@ -42,7 +41,6 @@ public class MonsterMovement : MonoBehaviour
         monsterRange = GetComponent<MonsterRange>();
         monsterInfoData = GetComponent<MonsterInfoData>();
         monsterState = GetComponent<MonsterState>();
-        //col = GetComponent<Collider>();
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
@@ -59,7 +57,6 @@ public class MonsterMovement : MonoBehaviour
 
     void OnEnable()
     {
-        //col.enabled = true;
         charCtrl.enabled = true;
         isRot = false;
         isDamage = false;
@@ -105,6 +102,7 @@ public class MonsterMovement : MonoBehaviour
     public void SetDamage(Transform _targetT, float damage)
     {
         UIManager.Instance.SetDamageTxt(transform, damage);
+        UIManager.Instance.SetHpBar(transform);
         monsterState.nextMode = TypeData.MODE.전투;
         monsterInfoData.SetCurrentHP(damage);
         isDamage = true;

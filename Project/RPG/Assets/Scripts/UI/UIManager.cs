@@ -569,6 +569,7 @@ public class UIManager : MonoBehaviour
         playerGold.text = playerInfoData.infoData.gold.ToString();
         storageGold.text = playerInfoData.infoData.storageGold.ToString();
 
+        // 처음 설정
         if (!isInit)
         {
             Network_PlayerInfo.Instance.RequestSavePlayerInfo();

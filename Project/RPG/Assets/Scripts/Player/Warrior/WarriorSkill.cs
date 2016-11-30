@@ -188,7 +188,7 @@ public class WarriorSkill : MonoBehaviour
     {
         float attack = playerInfoData.totalAtt * skillInfo.attack;
 
-        uiManager.SetHpBar(enemyObj.transform);
+        //uiManager.SetHpBar(enemyObj.transform);
 
         MonsterMovement mob = enemyObj.GetComponent<MonsterMovement>();
 

@@ -146,7 +146,7 @@ public class MagicianSkill : MonoBehaviour
     {
         float attack = playerInfoData.totalAtt * skillInfo.attack;
 
-        uiManager.SetHpBar(enemyObj.transform);
+        //uiManager.SetHpBar(enemyObj.transform);
 
         MonsterMovement mob = enemyObj.GetComponent<MonsterMovement>();
 
@@ -186,6 +186,10 @@ public class MagicianSkill : MonoBehaviour
         switch (currentSkillTpye)
         {
             case SkillType.파이어볼: { FireBall(); } break;
+            case SkillType.마력응집: { MpCondensing(); } break;
+            case SkillType.텔레포트: { Teleport(); } break;
+            case SkillType.얼음폭풍: { IceStorm(); } break;
+            case SkillType.운석낙하: { Meteor(); } break;
         }
     }
 
@@ -197,6 +201,10 @@ public class MagicianSkill : MonoBehaviour
         switch (currentSkillTpye)
         {
             case SkillType.파이어볼:
+            case SkillType.마력응집:
+            case SkillType.텔레포트:
+            case SkillType.얼음폭풍:
+            case SkillType.운석낙하:
                 isLock = !playerMovement.isIdle; // 스킬 사용중이므로 idle 상태가 아님 false !false == true
                 break;
         }
@@ -215,7 +223,7 @@ public class MagicianSkill : MonoBehaviour
     // 파이어볼 이펙트 생성(공격력 및 타겟점 전달)
     public void SetFireBallEffect()
     {
-        magicianEffect.FireBall(playerInput.targetPos, skillInfo.attack);
+        magicianEffect.FireBall(playerInput.targetPos, playerInfoData.totalAtt * skillInfo.attack);
     }
 
     private void MpCondensing()
@@ -237,6 +245,7 @@ public class MagicianSkill : MonoBehaviour
 
     private void Meteor()
     {
-
+        playerMovement.SetAniSkill((int)currentSkillTpye);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isMeteor);
     }
 }

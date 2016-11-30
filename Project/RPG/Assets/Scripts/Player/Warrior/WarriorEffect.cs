@@ -33,9 +33,12 @@ public class WarriorEffect : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         warriorSkill = GetComponent<WarriorSkill>();
         warriorSound = GetComponent<WarriorSound>();
+
         effects = new Dictionary<string, GameObject>();
+
         effectSettings.skillHolder = transform.FindChild("SkillHolder");
         effectSettings.effectPath = "Effect/Player/Warrior/";
+
         ResourceLoad();
     }
 

@@ -29,7 +29,7 @@ public class MonsterData
         public int def;
         public float hp;
         public int exp;
-        public int glod;
+        public int gold;
         public string itemType;
         public string itemIndex;
         public string quantity;

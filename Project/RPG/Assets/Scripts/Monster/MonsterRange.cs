@@ -451,9 +451,9 @@ public class MonsterRange : MonoBehaviour
         skillRnage = _skillRnage;
         skillPoint.localScale = _skillRnage;
 
-        Collider[] _attTargets = Physics.OverlapBox(skillPoint.position, skillRnage);
+        Collider[] targets = Physics.OverlapBox(skillPoint.position, skillRnage);
 
-        foreach (Collider target in _attTargets)
+        foreach (Collider target in targets)
         {
             // 주인공이 아닌경우
             if (target.gameObject.layer != monster.targetLayer)

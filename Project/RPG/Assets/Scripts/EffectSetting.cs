@@ -85,8 +85,6 @@ public class EffectSetting : MonoBehaviour
         debugTimer += Time.deltaTime;
 
         //SetActiveAndHolder();
-
-        CheckEffectRange(); // 지속, 비장착 스킬 (메태오, 얼음폭풍) 직접 범위 내에 적 검사후 데미지 처리
     }
 
     private void SetInfo()
@@ -135,7 +133,7 @@ public class EffectSetting : MonoBehaviour
         animator.SetTrigger("isShot");
     }
 
-    private void CheckEffectRange()
+    public void Attack()
     {
         if (equipType != EquipType.비장착 && continueType != ContinueType.지속)
         {
@@ -143,6 +141,20 @@ public class EffectSetting : MonoBehaviour
         }
 
         // 비장착이고 지속인 이펙트
+
+        Collider[] targets = Physics.OverlapSphere(transform.position, infoSettings.skillDis);
+
+        foreach (Collider target in targets)
+        {
+            if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
+            {
+                // 범위 안에 있으면 Hit
+                //Debug.Log(target.name);
+                MonsterMovement mob = target.GetComponent<MonsterMovement>();
+
+                mob.SetDamage(gameObject.transform, infoSettings.skillAtt);
+            }
+        }
     }
 
     //// TODO : 여러개의 파티클이 있을경우 부모가 끝났고 자식은 아직 실행중일 경우. 버그 발생할듯?..  각 활성화 타이머 지정

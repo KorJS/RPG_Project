@@ -36,6 +36,8 @@ public class MagicianEffect : MonoBehaviour
         magicianSkill = GetComponent<MagicianSkill>();
         playerState = GetComponent<PlayerState>();
 
+        effects = new Dictionary<string, GameObject>();
+
         effectSettings.skillHolder = transform.FindChild("SkillHolder");
         effectSettings.effectPath = "Effect/Player/Magician/";
 
@@ -61,17 +63,17 @@ public class MagicianEffect : MonoBehaviour
     // 이펙트 리소스 로드
     private void ResourceLoad()
     {
-        GameObject obj = Resources.Load(effectSettings.effectPath + effectSettings.mpCondensing) as GameObject;
-        effects.Add(effectSettings.mpCondensing, CreateEffectObj(obj, effectSettings.mpCondensing));
+        GameObject obj;/*= Resources.Load(effectSettings.effectPath + effectSettings.mpCondensing) as GameObject;*/
+        //effects.Add(effectSettings.mpCondensing, CreateEffectObj(obj, effectSettings.mpCondensing));
 
-        obj = Resources.Load(effectSettings.effectPath + effectSettings.startTeleport) as GameObject;
-        effects.Add(effectSettings.startTeleport, CreateEffectObj(obj, effectSettings.startTeleport));
+        //obj = Resources.Load(effectSettings.effectPath + effectSettings.startTeleport) as GameObject;
+        //effects.Add(effectSettings.startTeleport, CreateEffectObj(obj, effectSettings.startTeleport));
 
-        obj = Resources.Load(effectSettings.effectPath + effectSettings.endTeleport) as GameObject;
-        effects.Add(effectSettings.endTeleport, CreateEffectObj(obj, effectSettings.endTeleport));
+        //obj = Resources.Load(effectSettings.effectPath + effectSettings.endTeleport) as GameObject;
+        //effects.Add(effectSettings.endTeleport, CreateEffectObj(obj, effectSettings.endTeleport));
 
-        obj = Resources.Load(effectSettings.effectPath + effectSettings.iceStorm) as GameObject;
-        effects.Add(effectSettings.iceStorm, CreateEffectObj(obj, effectSettings.iceStorm));
+        //obj = Resources.Load(effectSettings.effectPath + effectSettings.iceStorm) as GameObject;
+        //effects.Add(effectSettings.iceStorm, CreateEffectObj(obj, effectSettings.iceStorm));
 
         obj = Resources.Load(effectSettings.effectPath + effectSettings.meteor) as GameObject;
         effects.Add(effectSettings.meteor, CreateEffectObj(obj, effectSettings.meteor));
@@ -196,5 +198,6 @@ public class MagicianEffect : MonoBehaviour
         }
 
         effects[effectSettings.meteor].SetActive(true);
+        //TODO : effectSetting 스크립트 호출
     }
 }

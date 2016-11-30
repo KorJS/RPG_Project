@@ -179,7 +179,7 @@ public class ItemManager : MonoBehaviour
             itemSettings.quantity = quantity;
 
             resources = null;
-        }
 
+        } // end foreach
     }
 }

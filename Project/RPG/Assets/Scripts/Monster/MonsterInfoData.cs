@@ -60,6 +60,9 @@ public class MonsterInfoData : MonoBehaviour
         {
             itemManager.CreateDropItem(monsterT, monsterInfo, dropItems);
 
+            // 주인공 골드 습득 및 인벤골드표시 갱신
+            PlayerInfoData.Instance.infoData.gold += monsterInfo.gold;
+            UIManager.Instance.SetGoldLabel(false);
             // 주인공 경험치 습득
             if (PlayerInfoData.Instance.SetExp(monsterInfo.exp))
             {

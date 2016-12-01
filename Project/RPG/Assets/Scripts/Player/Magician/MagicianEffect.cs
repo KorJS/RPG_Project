@@ -6,6 +6,7 @@ public class MagicianEffect : MonoBehaviour
 {
     private MagicianSkill magicianSkill = null;
     private PlayerState playerState = null;
+    private PlayerMovement playerMovement = null;
 
     [System.Serializable]
     public class MagicianEffectSettings
@@ -29,14 +30,19 @@ public class MagicianEffect : MonoBehaviour
 
     public Dictionary<string, GameObject> effects = null;
 
+    private SkinnedMeshRenderer[] meshes = null;
+
     private int fireBallCount = 0;
 
     void Awake()
     {
         magicianSkill = GetComponent<MagicianSkill>();
         playerState = GetComponent<PlayerState>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         effects = new Dictionary<string, GameObject>();
+
+        meshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 
         effectSettings.skillHolder = transform.FindChild("SkillHolder");
         effectSettings.effectPath = "Effect/Player/Magician/";
@@ -66,14 +72,14 @@ public class MagicianEffect : MonoBehaviour
         GameObject obj;/*= Resources.Load(effectSettings.effectPath + effectSettings.mpCondensing) as GameObject;*/
         //effects.Add(effectSettings.mpCondensing, CreateEffectObj(obj, effectSettings.mpCondensing));
 
-        //obj = Resources.Load(effectSettings.effectPath + effectSettings.startTeleport) as GameObject;
-        //effects.Add(effectSettings.startTeleport, CreateEffectObj(obj, effectSettings.startTeleport));
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.startTeleport) as GameObject;
+        effects.Add(effectSettings.startTeleport, CreateEffectObj(obj, effectSettings.startTeleport));
 
-        //obj = Resources.Load(effectSettings.effectPath + effectSettings.endTeleport) as GameObject;
-        //effects.Add(effectSettings.endTeleport, CreateEffectObj(obj, effectSettings.endTeleport));
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.endTeleport) as GameObject;
+        effects.Add(effectSettings.endTeleport, CreateEffectObj(obj, effectSettings.endTeleport));
 
-        //obj = Resources.Load(effectSettings.effectPath + effectSettings.iceStorm) as GameObject;
-        //effects.Add(effectSettings.iceStorm, CreateEffectObj(obj, effectSettings.iceStorm));
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.iceStorm) as GameObject;
+        effects.Add(effectSettings.iceStorm, CreateEffectObj(obj, effectSettings.iceStorm));
 
         obj = Resources.Load(effectSettings.effectPath + effectSettings.meteor) as GameObject;
         effects.Add(effectSettings.meteor, CreateEffectObj(obj, effectSettings.meteor));
@@ -159,6 +165,16 @@ public class MagicianEffect : MonoBehaviour
         effects[effectSettings.startTeleport].SetActive(true);
     }
 
+    IEnumerator TeleportMeshDisable()
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < meshes.Length; i++)
+        {
+            meshes[i].enabled = false;
+        }
+    }
+
     public void EndTeleportEffect()
     {
         if (effects[effectSettings.endTeleport].activeSelf)
@@ -167,6 +183,18 @@ public class MagicianEffect : MonoBehaviour
         }
 
         effects[effectSettings.endTeleport].SetActive(true);
+
+        for (int i = 0; i < meshes.Length; i++)
+        {
+            meshes[i].enabled = true;
+        }
+
+        Vector3 playerPos = transform.position;
+        playerPos.z += 10f;
+
+        transform.position = playerPos;
+
+        playerMovement.charCtrl.enabled = true;
     }
 
     public void IceStormEffect(float skillAngle, float skillDistance, float skillAtt)
@@ -183,9 +211,11 @@ public class MagicianEffect : MonoBehaviour
 
         effects[effectSettings.iceStorm].SetActive(true);
 
+        EffectSetting effect = effects[effectSettings.iceStorm].GetComponent<EffectSetting>();
+        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt);
     }
 
-    public void MeteorEffect()
+    public void MeteorEffect(float skillAngle, float skillDistance, float skillAtt)
     {
         if (effects[effectSettings.meteor].activeSelf)
         {
@@ -196,8 +226,11 @@ public class MagicianEffect : MonoBehaviour
 
             effects[effectSettings.meteor].SetActive(false);
         }
+        
 
         effects[effectSettings.meteor].SetActive(true);
-        //TODO : effectSetting 스크립트 호출
+     
+        EffectSetting effect = effects[effectSettings.meteor].GetComponent<EffectSetting>();
+        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt);
     }
 }

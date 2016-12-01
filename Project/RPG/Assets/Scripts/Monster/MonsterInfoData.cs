@@ -49,9 +49,12 @@ public class MonsterInfoData : MonoBehaviour
         parentT = transform.parent;
     }
 
+    // 리젠되서 활성화가 되면
     void OnEnable()
     {
         currentHP = monsterInfo.hp;
+        monsterState.nextMode = TypeData.MODE.평화;
+        monsterState.nextState = TypeData.MonsterState.대기;
     }
 
     void Update()

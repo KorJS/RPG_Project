@@ -60,6 +60,8 @@ public class EffectSetting : MonoBehaviour
     // 활성화 될때 이펙트를 지정된 장소에 배치
     void OnEnable()
     {
+        debugTimer = 0f;
+
         SetInfo();
         CheckType();
 
@@ -133,9 +135,10 @@ public class EffectSetting : MonoBehaviour
         animator.SetTrigger("isShot");
     }
 
+    // 운석낙하(각 운석마다 데미지 - 애니매이션에서 이벤트함수로)
     public void Attack()
     {
-        if (equipType != EquipType.비장착 && continueType != ContinueType.지속)
+        if (equipType != EquipType.비장착 && continueType != ContinueType.비지속)
         {
             return;
         }
@@ -152,8 +155,28 @@ public class EffectSetting : MonoBehaviour
                 //Debug.Log(target.name);
                 MonsterMovement mob = target.GetComponent<MonsterMovement>();
 
-                mob.SetDamage(gameObject.transform, infoSettings.skillAtt);
+                mob.SetDamage(gameObject.transform, -infoSettings.skillAtt);
             }
+        }
+    }
+
+    // 얼음폭풍 같은 도트데미지.(애니매이션에서 이벤트함수로)
+    public IEnumerator DotAttack()
+    {
+        if (equipType != EquipType.비장착 && continueType != ContinueType.비지속)
+        {
+            yield return null;  
+        }
+
+        float count = 0f;
+
+        while (count <= 3)
+        {
+            Attack();
+
+            yield return new WaitForSeconds(1f);
+
+            count++;
         }
     }
 

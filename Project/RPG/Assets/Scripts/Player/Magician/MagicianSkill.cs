@@ -61,6 +61,7 @@ public class MagicianSkill : MonoBehaviour
         playerEffect = GetComponent<PlayerEffect>();
         magicianEffect = GetComponent<MagicianEffect>();
 
+
         currentSkillTpye = SkillType.없음;
     }
 
@@ -232,20 +233,44 @@ public class MagicianSkill : MonoBehaviour
         playerMovement.animator.SetTrigger(magicianAniSettings.isMpCondensingTrigger);
     }
 
+    // 버그 - 도착지점에 땅이 있는지 갈수 있는곳인지 체크......
+    // 레이를 쏴서 체크
+    // 텔레포트
     private void Teleport()
     {
+        playerMovement.charCtrl.enabled = false;
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(magicianAniSettings.isTeleport);
+
+        playerMovement.Rotation(1f, 0f, true); // 전방 방향
     }
 
+    // 얼음폭풍
     private void IceStorm()
     {
-
+        playerMovement.SetAniSkill((int)currentSkillTpye);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isIceStorm);
     }
 
+    // 얼음폭풍 이펙트, 스킬정보 설정
+    public void SetIceStormEffect()
+    {
+        // 이펙트 활성화 하면서 이펙트설정스크립트에 데미지 전달해서 범위내에 몬스터 데미지 적용
+        magicianEffect.IceStormEffect(skillInfo.angle, skillInfo.distance, playerInfoData.totalAtt * skillInfo.attack);
+    }
+
+    // 운석낙하
     private void Meteor()
     {
+        
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(magicianAniSettings.isMeteor);
+    }
+
+    // 운석낙하 이펙트, 스킬정보 설정
+    public void SetMeteorEffect()
+    {
+        // 이펙트 활성화 하면서 이펙트설정스크립트에 데미지 전달해서 범위내에 몬스터 데미지 적용
+        magicianEffect.MeteorEffect(skillInfo.angle, skillInfo.distance, playerInfoData.totalAtt * skillInfo.attack);
     }
 }

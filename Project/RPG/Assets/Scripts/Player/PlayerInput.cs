@@ -281,6 +281,11 @@ public class PlayerInput : MonoBehaviour
         {
             case TypeData.SlotInfoType.스킬:
                 {
+                    if (!playerMovement.isIdle)
+                    {
+                        return -1;
+                    }
+
                     int tempIndex = uiSlotInfo.slotInfo.skillIndex;
 
                     SkillData.SkillInfo skillInfo = SkillData.Instance.skillInfos[tempIndex];

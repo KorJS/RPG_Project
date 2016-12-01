@@ -131,15 +131,13 @@ public class MonsterRange : MonoBehaviour
         CheckOriginDistance();
     }
 
-    //void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    Debug.Log("OnControllerColliderHit");
-    //    if (string.Compare(hit.collider.tag, "Safe") == 0)
-    //    {
-    //        Debug.Log("OnControllerColliderHit");
-    //        Reset();
-    //    }
-    //}
+    void OnTriggerEnter(Collider col)
+    {
+        if (string.Compare(col.tag, "Safe") == 0)
+        {
+            Reset();
+        }
+    }
 
     void OnDrawGizmos()
     {

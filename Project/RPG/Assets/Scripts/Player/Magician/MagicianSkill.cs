@@ -29,7 +29,7 @@ public class MagicianSkill : MonoBehaviour
     [SerializeField]
     public MagicianAniSettings magicianAniSettings;
 
-    private SkillData.SkillInfo skillInfo; // 스킬 정보
+    public SkillData.SkillInfo skillInfo; // 스킬 정보
 
     public enum SkillType
     {
@@ -183,7 +183,10 @@ public class MagicianSkill : MonoBehaviour
         isComboTime = true;
 
         // mp 사용
-        playerInfoData.SetCurrentMp(skillInfo.mp);
+        if (currentSkillTpye != SkillType.마력응집)
+        {
+            playerInfoData.SetCurrentMp(skillInfo.mp);
+        }
 
         switch (currentSkillTpye)
         {
@@ -195,28 +198,10 @@ public class MagicianSkill : MonoBehaviour
         }
     }
 
-    // 특정스킬 사용중에는 입력 안들어오게 막기
-    private bool LockSkill()
-    {
-        bool isLock = false;
-
-        switch (currentSkillTpye)
-        {
-            case SkillType.파이어볼:
-            case SkillType.마력응집:
-            case SkillType.텔레포트:
-            case SkillType.얼음폭풍:
-            case SkillType.운석낙하:
-                isLock = !playerMovement.isIdle; // 스킬 사용중이므로 idle 상태가 아님 false !false == true
-                break;
-        }
-
-        return isLock;
-    }
-
     // 특정스킬 연속 사용하게 하기
     private void UnLockSkill()
     {
+        //playerMovement.isIdle = true;
     }
 
     private void FireBall()

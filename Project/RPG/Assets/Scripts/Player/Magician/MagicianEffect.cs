@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MagicianEffect : MonoBehaviour
 {
     private MagicianSkill magicianSkill = null;
+    private PlayerInfoData playerInfoData = null;
     private PlayerState playerState = null;
     private PlayerMovement playerMovement = null;
 
@@ -44,6 +45,7 @@ public class MagicianEffect : MonoBehaviour
         magicianSkill = GetComponent<MagicianSkill>();
         playerState = GetComponent<PlayerState>();
         playerMovement = GetComponent<PlayerMovement>();
+        playerInfoData = PlayerInfoData.Instance;
 
         effects = new Dictionary<string, GameObject>();
 
@@ -182,12 +184,17 @@ public class MagicianEffect : MonoBehaviour
         effects[effectSettings.startMpCondensing].SetActive(false);
         effects[effectSettings.loopMpCondensing].SetActive(true);
 
-        yield return new WaitForSeconds(3.8f);
+        yield return new WaitForSeconds(3.9f);
 
-        effects[effectSettings.loopMpCondensing].SetActive(false);
         effects[effectSettings.endMpCondensing].SetActive(true);
+        effects[effectSettings.loopMpCondensing].SetActive(false);
+
         playerMovement.animator.SetTrigger(magicianSkill.magicianAniSettings.isEndMpCondensingTrigger);
+
+        playerInfoData.SetCurrentMp(magicianSkill.skillInfo.mp);
+
         yield return new WaitForSeconds(1.38f);
+
         effects[effectSettings.endMpCondensing].SetActive(false);
 
     }

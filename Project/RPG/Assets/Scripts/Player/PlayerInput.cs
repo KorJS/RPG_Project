@@ -97,7 +97,11 @@ public class PlayerInput : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(mainCamera.transform.position, targetPos);
+
+        if (mainCamera != null)
+        {
+            Gizmos.DrawLine(mainCamera.transform.position, targetPos);
+        }
     }
 
     // 크로스헤어 거리측정
@@ -302,8 +306,6 @@ public class PlayerInput : MonoBehaviour
                     }
 
                     index = tempIndex;
-
-                    playerInfoData.SetCurrentMp(skillInfo.mp);
 
                     uiSlotInfo.isCoolTime = true;
 

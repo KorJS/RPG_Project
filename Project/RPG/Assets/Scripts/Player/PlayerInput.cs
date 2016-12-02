@@ -58,7 +58,7 @@ public class PlayerInput : MonoBehaviour
 
         playerT = GetComponent<Transform>();
         mainCamera = Camera.main;
-        layerMark = (-1) - (1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
+        layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
         //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
@@ -97,8 +97,7 @@ public class PlayerInput : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-
-        Gizmos.DrawLine(Camera.main.transform.position, targetPos);
+        Gizmos.DrawLine(mainCamera.transform.position, targetPos);
     }
 
     // 크로스헤어 거리측정
@@ -281,6 +280,7 @@ public class PlayerInput : MonoBehaviour
         {
             case TypeData.SlotInfoType.스킬:
                 {
+                    // 스킬 사용중이면 리턴
                     if (!playerMovement.isIdle)
                     {
                         return -1;

@@ -10,8 +10,7 @@ public class MagicianSound : MonoBehaviour
     {
         public AudioClip[] fireballBGM;
         public AudioClip mpCondensingBGM;
-        public AudioClip startTeleportBGM;
-        public AudioClip endTeleportBGM;
+        public AudioClip teleportBGM;
         public AudioClip iceStormBGM;
         public AudioClip meteorAuraBGM;
         public AudioClip[] meteorShotBGM;
@@ -25,27 +24,22 @@ public class MagicianSound : MonoBehaviour
         soundManager = SoundManager.Instance;
     }
 
-    public void FireBallBGM()
+    public void SetFireBallBGM()
     {
         soundManager.RandomEfx(audioSettings.fireballBGM);
     }
 
-    public void MpCondensingBGM()
+    public void SetMpCondensingBGM()
     {
         soundManager.PlaySingleEfx(audioSettings.mpCondensingBGM);
     }
 
-    public void StartTeleportBGM()
+    public void SetTeleportBGM()
     {
-        soundManager.PlaySingleEfx(audioSettings.startTeleportBGM);
+        soundManager.PlaySingleEfx(audioSettings.teleportBGM);
     }
 
-    public void EndTeleportBGM()
-    {
-        soundManager.PlaySingleEfx(audioSettings.endTeleportBGM);
-    }
-
-    public void IceStormBGM()
+    public void SetIceStormBGM()
     {
         soundManager.PlaySingleEfx(audioSettings.iceStormBGM);
     }

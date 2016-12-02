@@ -12,7 +12,9 @@ public class MagicianEffect : MonoBehaviour
     public class MagicianEffectSettings
     {
         public string fireBall = "FireBall";
-        public string mpCondensing = "MpCondensing";
+        public string startMpCondensing = "StartMpCondensing";
+        public string loopMpCondensing = "LoopMpCondensing";
+        public string endMpCondensing = "EndMpCondensing";
         public string startTeleport = "StartTeleport";
         public string endTeleport = "EndTeleport";
         public string iceStorm = "IceStorm";
@@ -32,6 +34,9 @@ public class MagicianEffect : MonoBehaviour
 
     private SkinnedMeshRenderer[] meshes = null;
 
+    private Transform teleportPointT;
+    public Vector3 telWallPos;
+
     private int fireBallCount = 0;
 
     void Awake()
@@ -43,6 +48,8 @@ public class MagicianEffect : MonoBehaviour
         effects = new Dictionary<string, GameObject>();
 
         meshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        teleportPointT = transform.FindChild("TeleportPoint");
 
         effectSettings.skillHolder = transform.FindChild("SkillHolder");
         effectSettings.effectPath = "Effect/Player/Magician/";
@@ -69,8 +76,14 @@ public class MagicianEffect : MonoBehaviour
     // 이펙트 리소스 로드
     private void ResourceLoad()
     {
-        GameObject obj;/*= Resources.Load(effectSettings.effectPath + effectSettings.mpCondensing) as GameObject;*/
-        //effects.Add(effectSettings.mpCondensing, CreateEffectObj(obj, effectSettings.mpCondensing));
+        GameObject obj = Resources.Load(effectSettings.effectPath + effectSettings.startMpCondensing) as GameObject;
+        effects.Add(effectSettings.startMpCondensing, CreateEffectObj(obj, effectSettings.startMpCondensing));
+
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.loopMpCondensing) as GameObject;
+        effects.Add(effectSettings.loopMpCondensing, CreateEffectObj(obj, effectSettings.loopMpCondensing));
+
+        obj = Resources.Load(effectSettings.effectPath + effectSettings.endMpCondensing) as GameObject;
+        effects.Add(effectSettings.endMpCondensing, CreateEffectObj(obj, effectSettings.endMpCondensing));
 
         obj = Resources.Load(effectSettings.effectPath + effectSettings.startTeleport) as GameObject;
         effects.Add(effectSettings.startTeleport, CreateEffectObj(obj, effectSettings.startTeleport));
@@ -145,21 +158,50 @@ public class MagicianEffect : MonoBehaviour
         fireBallCount++;
     }
 
-    public void MpCondensingEffect()
+    IEnumerator MpCondensingEffect()
     {
-        if (effects[effectSettings.mpCondensing].activeSelf)
+        if (effects[effectSettings.startMpCondensing].activeSelf)
         {
-            effects[effectSettings.mpCondensing].SetActive(false);
+            effects[effectSettings.startMpCondensing].SetActive(false);
         }
 
-        effects[effectSettings.mpCondensing].SetActive(true);
+        if (effects[effectSettings.loopMpCondensing].activeSelf)
+        {
+            effects[effectSettings.loopMpCondensing].SetActive(false);
+        }
+
+        if (effects[effectSettings.endMpCondensing].activeSelf)
+        {
+            effects[effectSettings.endMpCondensing].SetActive(false);
+        }
+
+        effects[effectSettings.startMpCondensing].SetActive(true);
+
+        yield return new WaitForSeconds(0.8f);
+
+        effects[effectSettings.startMpCondensing].SetActive(false);
+        effects[effectSettings.loopMpCondensing].SetActive(true);
+
+        yield return new WaitForSeconds(3.8f);
+
+        effects[effectSettings.loopMpCondensing].SetActive(false);
+        effects[effectSettings.endMpCondensing].SetActive(true);
+        playerMovement.animator.SetTrigger(magicianSkill.magicianAniSettings.isEndMpCondensingTrigger);
+        yield return new WaitForSeconds(1.38f);
+        effects[effectSettings.endMpCondensing].SetActive(false);
+
     }
 
-    public void StartTeleportEffect()
+    public void StartTeleportEffect(Vector3 _telWallPos)
     {
         if (effects[effectSettings.startTeleport].activeSelf)
         {
             effects[effectSettings.startTeleport].SetActive(false);
+        }
+
+        if (telWallPos != Vector3.zero)
+        {
+            telWallPos = _telWallPos;
         }
 
         effects[effectSettings.startTeleport].SetActive(true);
@@ -189,10 +231,17 @@ public class MagicianEffect : MonoBehaviour
             meshes[i].enabled = true;
         }
 
-        Vector3 playerPos = transform.position;
-        playerPos.z += 10f;
-
-        transform.position = playerPos;
+        // 순간이동 범위 내에 벽이 있으면 벽 앞으로 이동
+        if (magicianSkill.telWallPos != Vector3.zero)
+        {
+            transform.localPosition = magicianSkill.telWallPos;
+            telWallPos = Vector3.zero;
+        }
+        // 범위내에 없으면 10m 순간이동
+        else
+        {
+            transform.localPosition = teleportPointT.position;
+        }
 
         playerMovement.charCtrl.enabled = true;
     }

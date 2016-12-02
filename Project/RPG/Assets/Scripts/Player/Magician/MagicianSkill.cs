@@ -19,7 +19,8 @@ public class MagicianSkill : MonoBehaviour
     {
         public string isEndComboTrigger = "isEndCombo";
         public string isFireBallTrigger = "isFireBall";
-        public string isMpCondensingTrigger = "isMpCondensing";
+        public string isStartMpCondensingTrigger = "isStartMpCondensing";
+        public string isEndMpCondensingTrigger = "isEndMpCondensing";
         public string isTeleport = "isTeleport";
         public string isIceStorm = "isIceStorm";
         public string isMeteor = "isMeteor";
@@ -51,6 +52,9 @@ public class MagicianSkill : MonoBehaviour
     public float comboTimer = 0f;           // 연속공격 입력타이머
     public bool isComboTime = false;        // 콤보 타임이 지났는지
 
+    public Vector3 telWallPos; // 여기위치에 레이쏨
+    private int layerMark = 0;
+
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
@@ -61,8 +65,9 @@ public class MagicianSkill : MonoBehaviour
         playerEffect = GetComponent<PlayerEffect>();
         magicianEffect = GetComponent<MagicianEffect>();
 
-
         currentSkillTpye = SkillType.없음;
+
+        layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
     }
 
     void Start()
@@ -158,12 +163,8 @@ public class MagicianSkill : MonoBehaviour
 
     private void SwitchSkill()
     {
-        // 특정스킬 사용중에는 입력 안들어오게 막기
-        if (LockSkill())
-        {
-            playerInput.index = -1;
-            return;
-        }
+        // 특정스킬 연속사용하기
+        UnLockSkill();
 
         // 클릭한 곳에 스킬이 없거나
         if (playerInput.index < 0)
@@ -213,6 +214,11 @@ public class MagicianSkill : MonoBehaviour
         return isLock;
     }
 
+    // 특정스킬 연속 사용하게 하기
+    private void UnLockSkill()
+    {
+    }
+
     private void FireBall()
     {
         playerMovement.SetAniSkill((int)currentSkillTpye);
@@ -230,19 +236,56 @@ public class MagicianSkill : MonoBehaviour
     private void MpCondensing()
     {
         playerMovement.SetAniSkill((int)currentSkillTpye);
-        playerMovement.animator.SetTrigger(magicianAniSettings.isMpCondensingTrigger);
+        playerMovement.animator.SetTrigger(magicianAniSettings.isStartMpCondensingTrigger);
     }
 
-    // 버그 - 도착지점에 땅이 있는지 갈수 있는곳인지 체크......
-    // 레이를 쏴서 체크
     // 텔레포트
     private void Teleport()
     {
+        playerMovement.Rotation(1f, 0f, true); // 전방 방향
+
+        // 레이를 쏴서 체크 - 벽이 있으면 벽앞으로 이동하게 하기위해서
+        CheckTeleportPosition(ref telWallPos);
+
+        // 장애물이 있으면 전달
+        if (telWallPos != Vector3.zero)
+        {
+            magicianEffect.StartTeleportEffect(telWallPos);
+        }
+        else
+        {
+            magicianEffect.StartTeleportEffect(Vector3.zero);
+        }
+        
         playerMovement.charCtrl.enabled = false;
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(magicianAniSettings.isTeleport);
+    }
 
-        playerMovement.Rotation(1f, 0f, true); // 전방 방향
+    Vector3 hitPos = Vector3.zero;
+
+    // 순간이동 장애물 검사
+    private void CheckTeleportPosition(ref Vector3 _telWallPos)
+    {
+        _telWallPos = Vector3.zero;
+
+        Vector3 v = transform.position;
+        v.y = 1.5f;
+        RaycastHit hit;
+
+        if (Physics.Raycast(v, transform.forward, out hit, 10f, layerMark))
+        {
+            Debug.Log("hit name : " + hit.collider.name);
+            _telWallPos = hit.point;
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Vector3 v = transform.position;
+        v.y = 1.5f;
+        Gizmos.DrawLine(v, telWallPos);
     }
 
     // 얼음폭풍

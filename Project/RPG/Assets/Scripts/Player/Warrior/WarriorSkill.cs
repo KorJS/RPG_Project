@@ -211,12 +211,8 @@ public class WarriorSkill : MonoBehaviour
     // Queue를 사용해서 입력한것을 순서대로 넣고 빼서 스킬 시전을 하면.. 이상하려나..
     private void SwitchSkill()
     {
-        // 특정스킬 사용중에는 입력 안들어오게 막기
-        if (LockSkill())
-        {
-            playerInput.index = -1;
-            return;
-        }
+        // 특정스킬 연속사용하기
+        UnLockSkill();
 
         // 클릭한 곳에 스킬이 없거나
         if (playerInput.index < 0)
@@ -242,19 +238,15 @@ public class WarriorSkill : MonoBehaviour
         }
     }
 
-    // 특정스킬 사용중에는 입력 안들어오게 막기
-    private bool LockSkill()
+    // 특정스킬 연속 사용하게 하기
+    private void UnLockSkill()
     {
-        bool isLock = false;
-
         switch (currentSkillTpye)
         {
-            case SkillType.압도:
-                isLock = !playerMovement.isIdle; // 스킬 사용중이므로 idle 상태가 아님 false !false == true
+            case SkillType.연속공격:
+                playerMovement.isIdle = true;
                 break;
         }
-
-        return isLock;
     }
 
     // 연속공격
@@ -353,7 +345,7 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 90f;
         skillDistance = 4f;
-
+        warriorSound.SetRushBGM();
         playerMovement.SetAniSkill((int)currentSkillTpye);
         isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);

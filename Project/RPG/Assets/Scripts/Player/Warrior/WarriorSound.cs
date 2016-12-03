@@ -15,6 +15,7 @@ public class WarriorSound : MonoBehaviour
         public AudioClip tumblingBGM;
         public AudioClip overpowerBGM;
         public AudioClip rushBGM;
+        public AudioClip[] damageBGM;
         public AudioClip[] shieldDefenceBGM;
     }
 
@@ -45,6 +46,11 @@ public class WarriorSound : MonoBehaviour
     public void SetRushBGM()
     {
         soundManager.PlaySingleEfx(audioSettings.rushBGM);
+    }
+
+    public void SetDamageBGM()
+    {
+        soundManager.RandomVoice(audioSettings.damageBGM);
     }
 
     public void SetDamageBlockBGM()

@@ -120,7 +120,7 @@ public class MonsterRange : MonoBehaviour
             {
                 Debug.Log("PlayerEffect Script Null");
             }
-            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
+            playerEffect.CheckActiveEffect(playerEffect.effectSettings.aggro, true);
         }
 
         SearchTarget();
@@ -157,7 +157,7 @@ public class MonsterRange : MonoBehaviour
         if (playerEffect != null)
         {
             // TODO : 어글이펙트 비활성화
-            playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+            playerEffect.CheckActiveEffect(playerEffect.effectSettings.aggro, false);
         }
       
         monster.targetT = null;
@@ -231,7 +231,7 @@ public class MonsterRange : MonoBehaviour
 
             if (playerEffect != null)
             {
-                playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), true);
+                playerEffect.CheckActiveEffect(playerEffect.effectSettings.aggro, true);
             }
 
             monster.targetT = tempT; // 타겟 확정

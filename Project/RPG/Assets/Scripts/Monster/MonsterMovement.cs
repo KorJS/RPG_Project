@@ -131,7 +131,7 @@ public class MonsterMovement : MonoBehaviour
         monsterInfoData.Reset(true);
         if (monsterRange.playerEffect != null)
         {
-            monsterRange.playerEffect.CheckActiveEffect(TypeData.PlayerEffect.Aggro.ToString(), false);
+            monsterRange.playerEffect.CheckActiveEffect(monsterRange.playerEffect.effectSettings.aggro, false);
         }
         monsterRange.monster.targetT = null;
         monsterRange.isTargetAggro = false;

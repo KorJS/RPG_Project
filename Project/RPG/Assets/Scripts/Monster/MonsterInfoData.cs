@@ -69,7 +69,7 @@ public class MonsterInfoData : MonoBehaviour
             // 주인공 경험치 습득
             if (PlayerInfoData.Instance.SetExp(monsterInfo.exp))
             {
-                playerEffect.CheckActiveEffect("LevelUp", true);
+                playerEffect.CheckActiveEffect(playerEffect.effectSettings.levelup, true);
             }
 
             // 상태 변화(죽음)

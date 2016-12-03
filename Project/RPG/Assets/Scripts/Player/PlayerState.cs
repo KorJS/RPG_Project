@@ -72,7 +72,7 @@ public class PlayerState : MonoBehaviour
         equipHandler.ChangeMode(currentMode);
     }
 
-    // 전투모드에서 15초동안 hit가 없다면 평화모드로
+    // 전투모드에서 5초동안 hit가 없다면 평화모드로
     private void PeaceFromCombat()
     {
         if (currentMode != TypeData.MODE.전투 || currentState == TypeData.State.스킬)

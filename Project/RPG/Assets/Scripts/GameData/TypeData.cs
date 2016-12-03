@@ -16,11 +16,6 @@
         사제
     };
 
-    public enum PlayerEffect
-    {
-        Aggro = 0
-    };
-
     // Normal, Elite, Boss
     public enum MonsterType
     {

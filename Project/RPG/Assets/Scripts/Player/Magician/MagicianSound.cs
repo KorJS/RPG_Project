@@ -14,6 +14,7 @@ public class MagicianSound : MonoBehaviour
         public AudioClip iceStormBGM;
         public AudioClip meteorAuraBGM;
         public AudioClip[] meteorShotBGM;
+        public AudioClip[] damageBGM;
     }
 
     [SerializeField]
@@ -42,5 +43,10 @@ public class MagicianSound : MonoBehaviour
     public void SetIceStormBGM()
     {
         soundManager.PlaySingleEfx(audioSettings.iceStormBGM);
+    }
+
+    public void SetDamageBGM()
+    {
+        soundManager.RandomVoice(audioSettings.damageBGM);
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PlayerEffect : MonoBehaviour
 {
+    private PlayerState playerState = null;
+
     [System.Serializable]
     public class EffectSettings
     {
@@ -22,10 +24,20 @@ public class PlayerEffect : MonoBehaviour
 
     void Awake()
     {
+        playerState = GetComponent<PlayerState>();
+
         effects = new Dictionary<string, GameObject>();
         effectHolder = transform.FindChild("EffectHolder");
 
         ResourceLoad();
+    }
+
+    void Update()
+    {
+        if (effects[effectSettings.aggro].activeSelf)
+        {
+            playerState.combatTimer = 0f;
+        }
     }
 
     // 이펙트 리소스 로드

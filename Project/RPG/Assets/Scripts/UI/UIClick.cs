@@ -78,6 +78,7 @@ public class UIClick : MonoBehaviour
                         equipHandler.SetWeapon(null, false);
                         equipHandler.SetSubWeapon(null, false);
                     }
+
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
                     uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>().ChangPlayerStat();

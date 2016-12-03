@@ -21,6 +21,12 @@ public class UICharater : MonoBehaviour
         public UILabel def;
         public UILabel hp;
         public UILabel mp;
+
+        public AudioClip swordBGM;
+        public AudioClip bookBGM;
+        public AudioClip bodyBGM;
+        public AudioClip handBGM;
+        public AudioClip legBGM;
     }
 
     [SerializeField]
@@ -69,9 +75,12 @@ public class UICharater : MonoBehaviour
         {
             return;
         }
-        
+
+
         int index = currentInfo.slotInfo.itemIndex;
         ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index]; // 장착하려는 장비
+
+        SetSound(tempEquipmentInfo);
 
         // 무기
         if (targetInfo.slotIndex == 1)
@@ -153,6 +162,37 @@ public class UICharater : MonoBehaviour
         characterSettings.def.text = playerInfoData.infoData.def.ToString() + "  + [00FF00FF]" + equipmentStat.def + playerInfoData.buffDef;
         characterSettings.hp.text = playerInfoData.infoData.maxHp.ToString() + "  + [00FF00FF]" + equipmentStat.hp + playerInfoData.buffHp;
         characterSettings.mp.text = playerInfoData.infoData.maxMp.ToString() + "  + [00FF00FF]" + equipmentStat.mp + playerInfoData.buffMp;
+    }
+
+    private void SetSound(ItemData.EquipmentInfo equipmentInfo)
+    {
+        switch ((TypeData.EquipmentType)equipmentInfo.equipmentType)
+        {
+            case TypeData.EquipmentType.무기:
+                {
+                    if (equipmentInfo.playerType == (int)TypeData.PlayerType.기사)
+                    {
+                        SoundManager.Instance.PlaySingleUI(characterSettings.swordBGM);
+                    }
+                    else if (equipmentInfo.playerType == (int)TypeData.PlayerType.마법사)
+                    {
+                        SoundManager.Instance.PlaySingleUI(characterSettings.bookBGM);
+                    }
+                }
+                break;
+
+            case TypeData.EquipmentType.갑옷:
+                { SoundManager.Instance.PlaySingleUI(characterSettings.bodyBGM); }
+                break;
+
+            case TypeData.EquipmentType.장갑:
+                { SoundManager.Instance.PlaySingleUI(characterSettings.handBGM); }
+                break;
+
+            case TypeData.EquipmentType.신발:
+                { SoundManager.Instance.PlaySingleUI(characterSettings.legBGM); }
+                break;
+        }
     }
 
     public void CloseWindows()

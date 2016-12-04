@@ -14,6 +14,7 @@ public class WarriorSkill : MonoBehaviour
     private WarriorEffect warriorEffect = null;
     private WarriorSound warriorSound = null;
     private UIManager uiManager = null;
+    private CameraControl cameraCtrl = null;
 
     // 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -77,6 +78,7 @@ public class WarriorSkill : MonoBehaviour
         playerEffect = GetComponent<PlayerEffect>();
         warriorEffect = GetComponent<WarriorEffect>();
         warriorSound = GetComponent<WarriorSound>();
+        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         currentSkillTpye = SkillType.없음;
 
@@ -405,5 +407,10 @@ public class WarriorSkill : MonoBehaviour
         {
             rushMob[i].RushEnd();
         }
+    }
+
+    public void Shake()
+    {
+        cameraCtrl.Shake();
     }
 }

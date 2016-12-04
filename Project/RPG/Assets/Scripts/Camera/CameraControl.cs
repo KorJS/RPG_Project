@@ -28,6 +28,10 @@ public class CameraControl : MonoBehaviour
 
         [Header("-Visual Options-")]
         public float hidMeshWheenDistance   = 0.5f;         // 주인공 매쉬를 숨길 거리
+
+        [Header("-Shake-")]
+        private float shakeAmount           = 0f;           // 강도
+        private float shakeTimer            = 0f;           // 지속시간
     }
 
     [SerializeField]
@@ -274,5 +278,15 @@ public class CameraControl : MonoBehaviour
             float originalFieldOfView = Mathf.Lerp(mainCamera.fieldOfView, cameraSettings.fieldOfView, Time.deltaTime * cameraSettings.zoomSpeed);
             mainCamera.fieldOfView = originalFieldOfView;
         }
+    }
+
+    // 카메라 흔들림
+    public void Shake()
+    {
+        float randX = Random.Range(0.7f, -0.7f);
+        float randY = Random.Range(0.7f, -0.7f);
+        float randZ = Random.Range(0.7f, -0.7f);
+
+        transform.position += new Vector3(randX, randY, randZ);
     }
 }

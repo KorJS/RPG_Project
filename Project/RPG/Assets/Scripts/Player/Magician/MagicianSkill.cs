@@ -12,6 +12,7 @@ public class MagicianSkill : MonoBehaviour
     private PlayerEffect playerEffect = null;
     private MagicianEffect magicianEffect = null;
     private UIManager uiManager = null;
+    private CameraControl cameraCtrl = null;
 
     // 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -64,6 +65,7 @@ public class MagicianSkill : MonoBehaviour
         playerState = GetComponent<PlayerState>();
         playerEffect = GetComponent<PlayerEffect>();
         magicianEffect = GetComponent<MagicianEffect>();
+        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         currentSkillTpye = SkillType.없음;
 
@@ -300,5 +302,10 @@ public class MagicianSkill : MonoBehaviour
     {
         // 이펙트 활성화 하면서 이펙트설정스크립트에 데미지 전달해서 범위내에 몬스터 데미지 적용
         magicianEffect.MeteorEffect(skillInfo.angle, skillInfo.distance, playerInfoData.totalAtt * skillInfo.attack);
+    }
+
+    public void Shake()
+    {
+        cameraCtrl.Shake();
     }
 }

@@ -4,6 +4,8 @@ using System.Collections;
 // 비장착일 경우의 실행하는 스크립트
 public class EffectSetting : MonoBehaviour
 {
+    private CameraControl cameraCtrl = null;
+
     public enum EquipType
     {
         없음 = -1,
@@ -55,8 +57,10 @@ public class EffectSetting : MonoBehaviour
     void Awake()
     {
         particleSys = GetComponent<ParticleSystem>();
+
+        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
     }
-    
+
     // 활성화 될때 이펙트를 지정된 장소에 배치
     void OnEnable()
     {
@@ -178,6 +182,11 @@ public class EffectSetting : MonoBehaviour
 
             count++;
         }
+    }
+
+    public void Shake()
+    {
+        cameraCtrl.Shake();
     }
 
     //// TODO : 여러개의 파티클이 있을경우 부모가 끝났고 자식은 아직 실행중일 경우. 버그 발생할듯?..  각 활성화 타이머 지정

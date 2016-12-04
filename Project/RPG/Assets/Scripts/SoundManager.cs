@@ -21,6 +21,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource efxSource = null;
     public AudioSource uiSource = null;
     public AudioSource musicSource = null;
+    public AudioSource systemSource = null;
 
     //public float lowPitchRange = 0.65f;
     //public float highPitchRange = 1.05f;
@@ -53,6 +54,13 @@ public class SoundManager : MonoBehaviour
         uiSource.clip = clip;
         uiSource.PlayOneShot(uiSource.clip);
     }
+
+    public void PlaySingleSystem(AudioClip clip)
+    {
+        systemSource.clip = clip;
+        uiSource.PlayOneShot(systemSource.clip);
+    }
+
 
     public void PlaySingleEfx(AudioClip clip)
     {

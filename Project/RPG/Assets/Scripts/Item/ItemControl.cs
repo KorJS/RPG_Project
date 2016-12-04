@@ -62,7 +62,7 @@ public class ItemControl : MonoBehaviour
         // 주인공이 주변에 있고 F키를 클릭하면 아이템 습득처리 - 인벤으로
         if (itemSettings.isPlayer && Input.GetKeyDown(KeyCode.F))
         {
-            SoundManager.Instance.PlaySingleUI(UIManager.Instance.pickupBGM);
+            SoundManager.Instance.PlaySingleUI(UIManager.Instance.uiSounds.pickupBGM);
 
             Debug.Log(itemSettings.quantity);
             playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemSettings.itemType, itemSettings.itemIndex, itemSettings.quantity);

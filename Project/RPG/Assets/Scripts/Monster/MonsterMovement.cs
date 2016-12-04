@@ -101,7 +101,7 @@ public class MonsterMovement : MonoBehaviour
     // 데미지
     public void SetDamage(Transform _targetT, float damage)
     {
-        UIManager.Instance.SetDamageTxt(transform, damage);
+        UIManager.Instance.SetDamageTxt(transform, damage, Color.white);
         UIManager.Instance.SetHpBar(transform);
         monsterState.nextMode = TypeData.MODE.전투;
         monsterInfoData.SetCurrentHP(damage);

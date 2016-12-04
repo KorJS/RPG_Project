@@ -142,6 +142,8 @@ public class WarriorSkill : MonoBehaviour
                 isBlock = false;
                 playerMovement.isBlock = isBlock;
             }
+
+            
         }
     }
 
@@ -228,6 +230,8 @@ public class WarriorSkill : MonoBehaviour
         currentSkillTpye = (SkillType)index; // 현제 스킬타입 설정
         playerInput.index = -1;
 
+        playerInfoData.SetCurrentMp(skillInfo.mp);
+
         switch (currentSkillTpye)
         {
             case SkillType.연속공격: { ComboAttack(); } break;
@@ -313,6 +317,19 @@ public class WarriorSkill : MonoBehaviour
         playerMovement.isBlock = isBlock;
 
         playerMovement.Rotation(1f, 0f, true); // 전방 방향
+
+        StartCoroutine(ContinueMPBlock()); // 방패막기 중에 mp 지속 감소
+    }
+
+    // 방패막기 중에 mp 지속 감소
+    IEnumerator ContinueMPBlock()
+    {
+        while (isBlock)
+        {
+            yield return new WaitForSeconds(1.5f);
+
+            playerInfoData.SetCurrentMp(skillInfo.mp / 10f);
+        }
     }
 
     // 긴급회피

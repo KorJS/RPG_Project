@@ -19,3 +19,4 @@ MagicArsenal
 Books
 Low Poly Fantasy Sword
 Fantasy Shield Pack FREE
+FloatingText

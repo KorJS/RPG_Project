@@ -314,7 +314,10 @@ public class UISlotInfo : MonoBehaviour
             // 아이템인 경우
             if (slotInfo.itemIndex != -1)
             {
-                ItemManager.Instance.CheckItemType((TypeData.ItemType)slotInfo.itemType, slotInfo.itemIndex, isCoolTime);
+                if ((int)TypeData.CusomableType.버프 == ItemData.Instance.cusomableInfos[slotInfo.itemIndex].cusomableType)
+                {
+                    ItemManager.Instance.CheckItemType((TypeData.ItemType)slotInfo.itemType, slotInfo.itemIndex, isCoolTime);
+                }
             }
         }
     }

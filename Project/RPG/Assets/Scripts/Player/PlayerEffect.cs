@@ -11,6 +11,8 @@ public class PlayerEffect : MonoBehaviour
     {
         public string aggro = "Aggro";
         public string levelup = "LevelUp";
+        public string recoveryPotion = "RecoveryPotion";
+        public string buffPotion = "BuffPotion";
     }
 
     [SerializeField]

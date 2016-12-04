@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour
         public UIPanel shortCutPanel;           // 단축슬롯
         public UIPanel optionPanel;             // 옵션 : O
         public GameObject storeObj;             // 상점 : NPC 근처에 있을때 F
+        public UIPanel fadePanel;               // 페드
 
         public string characterW = "CharacterW";
         public string uiModeW    = "UIModeW";
@@ -98,6 +99,44 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public InputSettings inputKey;
 
+    [System.Serializable]
+    public class UISoundSettings
+    {
+        [Header("- Windows -")]
+        public AudioClip characterOpenBGM = null;
+        public AudioClip characterCloseBGM = null;
+        public AudioClip inventoryOpenBGM = null;
+        public AudioClip inventoryCloseBGM = null;
+        public AudioClip questOpenBGM = null;
+        public AudioClip questCloseBGM = null;
+        public AudioClip skillListOpenBGM = null;
+        public AudioClip skillListCloseBGM = null;
+        public AudioClip storeOpenBGM = null;
+        public AudioClip storeCloseBGM = null;
+        public AudioClip storageOpenBGM = null;
+        public AudioClip storageCloseBGM = null;
+        public AudioClip uiOpenBGM = null;
+        public AudioClip uiCloseBGM = null;
+
+        [Header("- Item -")]
+        public AudioClip pickupBGM = null;
+        public AudioClip swordBGM;
+        public AudioClip bookBGM;
+        public AudioClip bodyBGM;
+        public AudioClip handBGM;
+        public AudioClip legBGM;
+        public AudioClip potionBGM;
+        public AudioClip useRecoveryPotionBGM;
+        public AudioClip useBffPotionBGM;
+        public AudioClip questItemBGM;
+
+        [Header("- System -")]
+        public AudioClip lockBGM;
+    }
+
+    [SerializeField]
+    public UISoundSettings uiSounds;
+
     public Dictionary<int, UISlotInfo> shortCuts = null;        // 키보드 단축키를 눌렀을때를 위해서.
     public Dictionary<int, UISlotInfo> storeListSlots = null;   // 상점리스트
     public Dictionary<int, UISlotInfo> characterSlots = null;   // 케릭터 슬롯
@@ -132,17 +171,13 @@ public class UIManager : MonoBehaviour
     public GameObject       tempDraggingPanel = null;   // 드래그중인것 복사한거
     public UITexture        tempIcon = null;            // 드래그중인 Icon
 
-    private GameObject      damageTxtHolder = null;     // 데미지 텍스트 부모
-    public List<GameObject> damageTxtObjs = null;       // 데미지 텍스트 풀
+    public GameObject       damageTxtPool = null;     // 데미지 텍스트 풀
+    public List<GameObject> damageTxt3DObjs = null;       // 데미지 텍스트 풀
     private int             damageTxtCount = 0;         // 풀 카운트
 
     // 방어 성공 UI이펙트
     public GameObject       blockTxtObj = null;
     public TweenScale       blockTween = null;
-
-    public AudioClip        windowsOpenBGM = null;
-    public AudioClip        windowsCloseBGM = null;
-    public AudioClip        pickupBGM = null;
 
     private Transform       playerT = null;             // 주인공
     public GameObject       crossHair = null;           // 크로스헤어
@@ -179,15 +214,18 @@ public class UIManager : MonoBehaviour
         blockTween = blockTxtObj.transform.GetChild(0).GetComponent<TweenScale>();
         blockTxtObj.SetActive(false);
 
-        damageTxtHolder = GameObject.Find("DamageHolder");
-        damageTxtObjs = new List<GameObject>();
-        CreateDamageTxt();
+        damageTxtPool = GameObject.Find("DamageTxtPool");
+        damageTxt3DObjs = new List<GameObject>();
+        CreateDamageTxt3D();
     }
 
     void Start()
     {
         gameManager = GameManager.Instance;
         playerInfoData = PlayerInfoData.Instance;
+
+        windowSettings.fadePanel = GameObject.Find("Fade_Panel").GetComponent<UIPanel>();
+        windowSettings.fadePanel.alpha = 1f;
 
         //// window
         FindWindow(ref windowSettings.characterPanel, windowSettings.characterW);
@@ -241,43 +279,37 @@ public class UIManager : MonoBehaviour
     }
 
     // 데미지 텍스트 생성
-    private void CreateDamageTxt()
+    private void CreateDamageTxt3D()
     {
-        var resource = Resources.Load("UI/DamageTxt");
+        var resource = Resources.Load("UI/DamageTxt3D");
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 30; i++)
         {
             GameObject obj = Instantiate(resource) as GameObject;
-            obj.layer = UICamera.mainCamera.gameObject.layer;
-            obj.transform.SetParent(damageTxtHolder.transform);
+            obj.transform.SetParent(damageTxtPool.transform);
             obj.transform.localScale = Vector3.one;
             obj.transform.localRotation = Quaternion.identity;
             obj.transform.localPosition = Vector3.one;
 
             obj.SetActive(false);
-            damageTxtObjs.Add(obj);
+            damageTxt3DObjs.Add(obj);
         }
     }
     
     // 데이미 텍스트 배치
-    public void SetDamageTxt(Transform targetT, float damage)
+    public void SetDamageTxt(Transform targetT, float damage, Color color)
     {
-        if (damageTxtCount == damageTxtObjs.Count)
+        if (damageTxtCount == damageTxt3DObjs.Count)
         {
             damageTxtCount = 0;
         }
 
-        damageTxtObjs[damageTxtCount].SetActive(true);
-        damageTxtObjs[damageTxtCount].GetComponent<UILabel>().text = ((int)damage).ToString();
-        Vector3 p = Camera.main.WorldToViewportPoint(targetT.position);
-        damageTxtObjs[damageTxtCount].transform.position = UICamera.mainCamera.ViewportToWorldPoint(p);
-
-        p = damageTxtObjs[damageTxtCount].transform.localPosition;
-        p.x = Mathf.RoundToInt(p.x + 1f);
-        p.y = Mathf.RoundToInt(p.y + 2f);
-        p.z = 0f;
-
-        damageTxtObjs[damageTxtCount].transform.localPosition = p;
+        damageTxt3DObjs[damageTxtCount].SetActive(true);
+        damageTxt3DObjs[damageTxtCount].transform.SetParent(targetT);
+        damageTxt3DObjs[damageTxtCount].transform.localPosition = new Vector3(0f, 1.5f, 0f);
+        FloatingText floatingTxt = damageTxt3DObjs[damageTxtCount].GetComponent<FloatingText>();
+        floatingTxt.text = damage.ToString();
+        floatingTxt.textColor = color;
 
         damageTxtCount++;
     }
@@ -327,7 +359,7 @@ public class UIManager : MonoBehaviour
         {
             windowSettings.isInventoryW = false;
             showWindowList.Add(windowSettings.inventoryPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.inventoryOpenBGM, uiSounds.inventoryCloseBGM);
         }
 
         // 퀘스트일지창
@@ -335,7 +367,7 @@ public class UIManager : MonoBehaviour
         {
             windowSettings.isQuestListW = false;
             showWindowList.Add(windowSettings.questListPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
         }
 
         // 스킬창
@@ -343,7 +375,7 @@ public class UIManager : MonoBehaviour
         {
             windowSettings.isSkillW = false;
             showWindowList.Add(windowSettings.skillPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.skillListOpenBGM, uiSounds.skillListCloseBGM);
         }
 
         // 케릭터창
@@ -352,7 +384,7 @@ public class UIManager : MonoBehaviour
             windowSettings.isCharacterW = false;
             showWindowList.Add(windowSettings.characterPanel);
             showWindowList.Add(windowSettings.inventoryPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.characterOpenBGM, uiSounds.characterCloseBGM);
         }
 
         //  옵션
@@ -360,14 +392,14 @@ public class UIManager : MonoBehaviour
         {
             windowSettings.isOptionW = false;
             showWindowList.Add(windowSettings.optionPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.characterOpenBGM, uiSounds.characterCloseBGM);
         }
 
         // UI 모드
         if (windowSettings.isUIModeW || Input.GetKeyDown(inputKey.uiChangeLAlt) || Input.GetKeyDown(inputKey.uiChangeESC))
         {
             showWindowList.Add(windowSettings.uiModePanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.uiOpenBGM, uiSounds.uiCloseBGM);
             windowSettings.isUIModeW = false;
         }
 
@@ -375,16 +407,16 @@ public class UIManager : MonoBehaviour
         if (isQuest)
         {
             showWindowList.Add(windowSettings.questPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
             isQuest = false;
         }
 
         // 상점
         if (isStore)
         {
-            ShowStore();
+            ShowStore(uiSounds.storeOpenBGM, uiSounds.storeCloseBGM);
             showWindowList.Add(windowSettings.inventoryPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, null, null);
             isStore = false;
         }
 
@@ -393,7 +425,7 @@ public class UIManager : MonoBehaviour
         {
             showWindowList.Add(windowSettings.storagePanel);
             showWindowList.Add(windowSettings.inventoryPanel);
-            ShowWindow(showWindowList);
+            ShowWindow(showWindowList, uiSounds.storageOpenBGM, uiSounds.storageCloseBGM);
             isStorage = false;
         }
     }
@@ -425,7 +457,7 @@ public class UIManager : MonoBehaviour
         Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
-    public void ShowWindow(List<UIPanel> winList)
+    public void ShowWindow(List<UIPanel> winList, AudioClip openBGM, AudioClip closeBGM)
     {
         if (windowSettings.uiModePanel.alpha == 1f)
         {
@@ -435,7 +467,11 @@ public class UIManager : MonoBehaviour
             {
                 if (winList[i].alpha == 0f)
                 {
-                    SoundManager.Instance.PlaySingleUI(windowsOpenBGM);
+                    if (openBGM != null)
+                    {
+                        SoundManager.Instance.PlaySingleUI(openBGM);
+                    }
+
                     winList[i].alpha = 1f;
                     isActive = true;
                 }
@@ -448,7 +484,10 @@ public class UIManager : MonoBehaviour
         // UI 모드 아니면 UI모드로
         if (!isUIMode)
         {
-            SoundManager.Instance.PlaySingleUI(windowsOpenBGM);
+            if (openBGM != null)
+            {
+                SoundManager.Instance.PlaySingleUI(openBGM);
+            }
 
             // 마우스 커서 상태
             Cursor.lockState = CursorLockMode.None;
@@ -467,7 +506,10 @@ public class UIManager : MonoBehaviour
         // UI 모드이면 UI 해제
         else if (isUIMode)
         {
-            SoundManager.Instance.PlaySingleUI(windowsCloseBGM);
+            if (closeBGM != null)
+            {
+                SoundManager.Instance.PlaySingleUI(closeBGM);
+            }
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -484,23 +526,39 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowStore()
+    public void ShowStore(AudioClip openBGM, AudioClip closeBGM)
     {
         if (windowSettings.uiModePanel.alpha == 1f)
         {
             if (!windowSettings.storeObj.activeSelf)
             {
                 windowSettings.storeObj.SetActive(true);
+
+                if (openBGM != null)
+                {
+                    SoundManager.Instance.PlaySingleUI(openBGM);
+                }
+
                 return;
             }
         }
 
         if (windowSettings.storeObj.activeSelf)
         {
+            if (closeBGM != null)
+            {
+                SoundManager.Instance.PlaySingleUI(closeBGM);
+            }
+
             windowSettings.storeObj.SetActive(false);
         }
         else
         {
+            if (openBGM != null)
+            {
+                SoundManager.Instance.PlaySingleUI(openBGM);
+            }
+
             windowSettings.storeObj.SetActive(true);
         }
     }
@@ -604,6 +662,67 @@ public class UIManager : MonoBehaviour
 
             skillListSlots[skillInfo.Key].slotSettings.upBtnObj.SetActive(true);
             Debug.Log("배울수 있는 : " + skillInfo.Value.name);
+        }
+    }
+
+    public void SetSound(UISlotInfo.SlotInfo slotInfo)
+    {
+        TypeData.ItemType itemType = slotInfo.itemType;
+        ItemData.EquipmentInfo equipmentInfo = ItemData.Instance.equipmentInfos[slotInfo.itemIndex];
+        TypeData.CusomableType cuType = (TypeData.CusomableType)ItemData.Instance.cusomableInfos[slotInfo.itemIndex].cusomableType;
+
+        switch (itemType)
+        {
+            case TypeData.ItemType.장비:
+                {
+                    SetEquipmentSound(equipmentInfo);
+                }
+                break;
+
+            case TypeData.ItemType.소모품:
+                {
+                    SoundManager.Instance.PlaySingleUI(uiSounds.potionBGM);
+                }
+                break;
+
+            case TypeData.ItemType.퀘스트템:
+                {
+                    SoundManager.Instance.PlaySingleUI(uiSounds.questItemBGM);
+                }
+                break;
+        }
+    }
+
+    public void SetEquipmentSound(ItemData.EquipmentInfo equipmentInfo)
+    {
+        TypeData.EquipmentType eqType = (TypeData.EquipmentType)equipmentInfo.equipmentType;
+
+        switch (eqType)
+        {
+            case TypeData.EquipmentType.무기:
+                {
+                    if (equipmentInfo.playerType == (int)TypeData.PlayerType.기사)
+                    {
+                        SoundManager.Instance.PlaySingleUI(uiSounds.swordBGM);
+                    }
+                    else if (equipmentInfo.playerType == (int)TypeData.PlayerType.마법사)
+                    {
+                        SoundManager.Instance.PlaySingleUI(uiSounds.bookBGM);
+                    }
+                }
+                break;
+
+            case TypeData.EquipmentType.갑옷:
+                { SoundManager.Instance.PlaySingleUI(uiSounds.bodyBGM); }
+                break;
+
+            case TypeData.EquipmentType.장갑:
+                { SoundManager.Instance.PlaySingleUI(uiSounds.handBGM); }
+                break;
+
+            case TypeData.EquipmentType.신발:
+                { SoundManager.Instance.PlaySingleUI(uiSounds.legBGM); }
+                break;
         }
     }
 

@@ -80,7 +80,7 @@ public class UICharater : MonoBehaviour
         int index = currentInfo.slotInfo.itemIndex;
         ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index]; // 장착하려는 장비
 
-        SetSound(tempEquipmentInfo);
+        //SetSound(tempEquipmentInfo);
 
         // 무기
         if (targetInfo.slotIndex == 1)

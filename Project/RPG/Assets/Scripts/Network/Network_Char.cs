@@ -249,7 +249,9 @@ public class Network_Char : MonoBehaviour
 
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.nextGameState = TypeData.GameState.시작;
+                    //GameManager.Instance.nextGameState = TypeData.GameState.시작;
+                    GameManager.Instance.isFade = true;
+                    StartCoroutine(GameManager.Instance.Fade());
                 }
             }
 

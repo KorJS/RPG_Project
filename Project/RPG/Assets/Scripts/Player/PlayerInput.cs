@@ -50,6 +50,9 @@ public class PlayerInput : MonoBehaviour
     private int layerMark = 0;
     private Ray rayTest;
 
+    private GameObject miniPlayer = null;
+    private GameObject miniMapCam = null;
+
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
@@ -69,6 +72,14 @@ public class PlayerInput : MonoBehaviour
         playerSlotData = PlayerSlotData.Instance;
 
         UIManager.Instance.SetSkillListUpActive(PlayerInfoData.Instance.infoData.level);
+
+        miniPlayer = Instantiate(Resources.Load("UI/MinimapPlayer")) as GameObject;
+        miniPlayer.transform.SetParent(transform);
+        miniPlayer.transform.localPosition = new Vector3(0f, 20f, 0f);
+
+        miniMapCam = Instantiate(Resources.Load("UI/MinimapCam")) as GameObject;
+        miniMapCam.transform.localPosition = new Vector3(0f, 50f, 0f);
+        miniMapCam.SetActive(false);
     }
 
     void Update()
@@ -81,6 +92,14 @@ public class PlayerInput : MonoBehaviour
         if (playerState.currentState == TypeData.State.죽음)
         {
             return;
+        }
+
+        if (GameManager.Instance.currentGameState == TypeData.GameState.시작)
+        {
+            if (!miniMapCam.activeSelf)
+            {
+                miniMapCam.SetActive(true);
+            }
         }
 
         //InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);

@@ -81,7 +81,7 @@ public class UIItemInfo : MonoBehaviour
             return;
         }
         
-        SoundManager.Instance.PlaySingleUI(UIManager.Instance.pickupBGM);
+        SoundManager.Instance.PlaySingleUI(UIManager.Instance.uiSounds.pickupBGM);
 
         playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemInfo.itemType, itemInfo.itemIndex, itemInfo.quantity);
         Destroy(itemT.gameObject);

@@ -27,6 +27,10 @@ public class GameManager : MonoBehaviour
 
     public AudioClip inGameBGM = null;
 
+    private const float fadeTime = 2f;
+    private float fadeTimer = 0f;
+    public bool isFade = false;
+
     void Awake()
     {
         if (gameManager == null)
@@ -40,7 +44,9 @@ public class GameManager : MonoBehaviour
           
         DontDestroyOnLoad(this);
 
-        nextGameState = TypeData.GameState.시작;
+        isFade = true;
+        fadeTimer = fadeTime;
+        StartCoroutine(Fade());
 
         SoundManager.Instance.PlayBackMusic(inGameBGM);
 
@@ -50,6 +56,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         CheckGameState();
+        Fade();
     }
 
     // 어플을 내렸으때 실행되는 함수
@@ -94,6 +101,28 @@ public class GameManager : MonoBehaviour
         allowQuitting = true;
 
         Application.Quit();
+    }
+
+    public IEnumerator Fade()
+    {
+        yield return new WaitForSeconds(2f);
+
+        while (isFade)
+        {
+            UIManager.Instance.windowSettings.fadePanel.alpha = fadeTimer / fadeTime;
+
+            fadeTimer -= Time.deltaTime;
+
+            if (fadeTimer <= 0f)
+            {
+                nextGameState = TypeData.GameState.시작;
+
+                isFade = false;
+                fadeTimer = fadeTime;
+            }
+
+            yield return null;
+        }
     }
 
     private void CheckGameState()

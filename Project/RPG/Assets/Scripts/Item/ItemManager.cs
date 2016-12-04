@@ -67,6 +67,7 @@ public class ItemManager : MonoBehaviour
         {
             case TypeData.CusomableType.회복:
                 {
+                    SoundManager.Instance.PlaySingleUI(UIManager.Instance.uiSounds.useRecoveryPotionBGM);
                     playerInfoData.SetCurrentHp(cusomableInfo.hp);
                     playerInfoData.SetCurrentMp(cusomableInfo.mp);
                 }
@@ -82,6 +83,7 @@ public class ItemManager : MonoBehaviour
                     // 버프 사용하면
                     if (isCoolTime)
                     {
+                        SoundManager.Instance.PlaySingleUI(UIManager.Instance.uiSounds.useBffPotionBGM);
                         // 같은 아이템의 버프인경우 리턴
                         if (buffStates.Contains(itemIndex))
                         {

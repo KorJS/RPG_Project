@@ -186,8 +186,27 @@ public class UIClick : MonoBehaviour
         // 케릭창이 열여있는 경우
         else if (uiManager.windowSettings.characterPanel.alpha == 1f)
         {
+
             int index = uiSlotInfo.slotInfo.itemIndex;
             ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
+
+            // 직업에 따라 무기 착용할수 있는거 여부 확인하기.
+            TypeData.PlayerType playerType = (TypeData.PlayerType)tempEquipmentInfo.playerType;
+
+            if (playerType != (TypeData.PlayerType)PlayerInfoData.Instance.infoData.playerType)
+            {
+                SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM);
+                return;
+            }
+
+            if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비)
+            {
+                uiManager.SetEquipmentSound(tempEquipmentInfo); // 장비 사운드 출력
+            }
+            else
+            {
+                SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM); // 장비 외에꺼는 Lock 사운드 출력
+            }
 
             int targetIndex = (int)tempEquipmentInfo.equipmentType;
 

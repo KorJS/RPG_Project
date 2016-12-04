@@ -52,6 +52,7 @@ public class UIDragAndDrop : MonoBehaviour
             uiClick.CheckSlotType();
         }
     }
+
     void OnDragStart()
     {
         // 이미 드래그래서 분리중이면 새로운 드래그 못하게.
@@ -82,6 +83,8 @@ public class UIDragAndDrop : MonoBehaviour
         draggedObject = icon;
 
         NGUITools.MarkParentAsChanged(this.gameObject);
+
+        uiManager.SetSound(uiSlotInfo.slotInfo); // 드래그시작시 사운드 출력
     }
 
     void OnDrag(Vector2 delta)

@@ -53,6 +53,7 @@ public sealed class ItemData
         public int cusomableType;                       // 소모품타입
         public int buyGold;                             // 구매가격
         public int sellGold;                            // 판매가격
+        public int level;                               // 착용레벨
         public int att;                                 // 공격력
         public int def;                                 // 방어력
         public int hp;                                  // 체력
@@ -266,6 +267,7 @@ public sealed class ItemData
             cusomableType   = int.Parse(temp[3]),   // 소모품타입
             buyGold         = int.Parse(temp[4]),   // 구매가격
             sellGold        = int.Parse(temp[5]),   // 판매가격
+            level           = int.Parse(temp[7]),   // 착용레벨
             att             = int.Parse(temp[8]),   // 공격력
             def             = int.Parse(temp[9]),   // 방어력
             hp              = int.Parse(temp[10]),  // 체력

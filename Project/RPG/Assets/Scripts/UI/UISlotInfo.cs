@@ -117,6 +117,11 @@ public class UISlotInfo : MonoBehaviour
         }
     }
 
+    void OnHover()
+    {
+
+    }
+
     // 슬롯 인덱스 설정
     private void SetSlotIndex()
     {

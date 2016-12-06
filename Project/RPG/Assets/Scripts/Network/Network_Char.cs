@@ -249,9 +249,9 @@ public class Network_Char : MonoBehaviour
 
                 if (GameManager.Instance != null)
                 {
+                    Debug.Log("?????????????");
                     //GameManager.Instance.nextGameState = TypeData.GameState.시작;
                     GameManager.Instance.isFade = true;
-                    StartCoroutine(GameManager.Instance.Fade());
                 }
             }
 
@@ -320,6 +320,7 @@ public class Network_Char : MonoBehaviour
 
     public void CharCancelBtn()
     {
+        mark.Clear();
         loginObj.SetActive(true);
         idObj.SetActive(true);
         pwObj.SetActive(true);

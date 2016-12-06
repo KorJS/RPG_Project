@@ -34,7 +34,7 @@ public class SoundManager : MonoBehaviour
         }
         else if (soundManager != this)
         {
-            Destroy(soundManager);
+            Destroy(gameObject);
         }
 
         DontDestroyOnLoad(this);

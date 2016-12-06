@@ -70,12 +70,14 @@ public class UIManager : MonoBehaviour
         public GameObject inquirePopup;         // 확인창 (ex: 아이템을 버릴때)
         public GameObject copyPopup;            // 상점에 구매목록 판매목록
         public GameObject warningPopup;         // 경고창
+        public GameObject toolTip;              // 툴팁
 
         public string itemDivW = "ItemDivisionPopup";
         public string goldDivW = "GoldDivisionPopup";
         public string inquireW = "InquirePopup";
         public string copyW = "CopyPopup";
         public string warningW = "WarningPopup";
+        public string toolTipW = "ToolTip";
     }
 
     [SerializeField]
@@ -243,6 +245,7 @@ public class UIManager : MonoBehaviour
         FindObject(ref popupSettings.inquirePopup, popupSettings.inquireW);
         FindObject(ref popupSettings.copyPopup, popupSettings.copyW);
         FindObject(ref popupSettings.warningPopup, popupSettings.warningW);
+        FindObject(ref popupSettings.toolTip, popupSettings.toolTipW);
 
         playerGold = windowSettings.inventoryPanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
         storageGold = windowSettings.storagePanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
@@ -665,6 +668,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 툴팁
+    public void SetToolTip(UISlotInfo uiSlotInfo)
+    {
+        popupSettings.toolTip.SetActive(true);
+        UISlotTooltip uiSlotTooltip = popupSettings.toolTip.GetComponent<UISlotTooltip>();
+        uiSlotTooltip.SetSlotInfo(uiSlotInfo);
+    }
+
     public void SetSound(UISlotInfo.SlotInfo slotInfo)
     {
         TypeData.ItemType itemType = slotInfo.itemType;
@@ -729,7 +740,7 @@ public class UIManager : MonoBehaviour
     // 로그아웃
     public void Logout()
     {
-        gameManager.nextGameState = TypeData.GameState.종료;
+        gameManager.currentGameState = TypeData.GameState.종료;
 
         StartCoroutine(gameManager.LogoutSavePlayerData());
     }
@@ -737,7 +748,7 @@ public class UIManager : MonoBehaviour
     // 게임종료
     public void GameExit()
     {
-        gameManager.nextGameState = TypeData.GameState.종료;
+        gameManager.currentGameState = TypeData.GameState.종료;
 
         StartCoroutine(gameManager.GameExitSavePlayerData());
     }

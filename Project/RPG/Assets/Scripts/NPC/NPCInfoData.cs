@@ -118,6 +118,7 @@ public class NPCInfoData : MonoBehaviour
                 }
 
                 tempSlotInfo.isExist = true;
+                tempSlotInfo.slotInfo.skillIndex = -1;
                 tempSlotInfo.slotInfo.name = itemData.equipmentInfos[itemIndex].name;
                 tempSlotInfo.slotInfo.iconName = itemData.equipmentInfos[itemIndex].iconName;
                 tempSlotInfo.slotInfo.itemIndex = itemIndex;

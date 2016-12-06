@@ -62,7 +62,7 @@ public class PlayerInput : MonoBehaviour
         playerT = GetComponent<Transform>();
         mainCamera = Camera.main;
         layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
-        uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
+        //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
     void Start()
@@ -102,8 +102,8 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);
-        //InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
+        //InputMove(uiJoystick.joyStickPosY, uiJoystick.joyStickPosX);
+        InputMove(Input.GetAxis(inputKey.vertical), Input.GetAxis(inputKey.horizontal));
 
         InputShortCutkey();
         

@@ -82,6 +82,11 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.currentGameState != TypeData.GameState.시작)
+        {
+            return;
+        }
+
         if (target)
         {
             if (Application.isPlaying)

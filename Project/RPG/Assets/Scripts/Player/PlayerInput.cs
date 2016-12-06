@@ -84,7 +84,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
+        if (GameManager.Instance.currentGameState != TypeData.GameState.시작)
         {
             return;
         }

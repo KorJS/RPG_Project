@@ -45,17 +45,20 @@ public class UIClick : MonoBehaviour
         {
             SetSkillDescription();
 
-            // 툴팁
-            switch (uiSlotInfo.slotType)
+            if (uiManager.isUIMode)
             {
-                case TypeData.SlotType.인벤토리:
-                case TypeData.SlotType.단축키:
-                case TypeData.SlotType.창고:
-                case TypeData.SlotType.상점리스트:
-                    {
-                        uiManager.SetToolTip(uiSlotInfo);
-                    }
-                    break;
+                // 툴팁
+                switch (uiSlotInfo.slotType)
+                {
+                    case TypeData.SlotType.인벤토리:
+                    case TypeData.SlotType.단축키:
+                    case TypeData.SlotType.창고:
+                    case TypeData.SlotType.상점리스트:
+                        {
+                            uiManager.SetToolTip(uiSlotInfo);
+                        }
+                        break;
+                }
             }
         }
 

@@ -57,6 +57,8 @@ public class MonsterMovement : MonoBehaviour
 
     void OnEnable()
     {
+        monsterState.nextState = TypeData.MonsterState.대기;
+        monsterState.nextMode = TypeData.MODE.평화;
         charCtrl.enabled = true;
         isRot = false;
         isDamage = false;

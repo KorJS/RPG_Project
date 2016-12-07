@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerMovement playerMovement = null;
     private PlayerSlotData playerSlotData = null;
     private PlayerState playerState = null;
+    private PlayerEffect playerEffect = null;
     private EquipmentHandler equipHandler = null;
     private UIManager uiManager = null;
     private UIInventory uiInventory = null;
@@ -58,6 +59,7 @@ public class PlayerInput : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         equipHandler = GetComponent<EquipmentHandler>();
         playerState = GetComponent<PlayerState>();
+        playerEffect = GetComponent<PlayerEffect>();
 
         playerT = GetComponent<Transform>();
         mainCamera = Camera.main;
@@ -241,7 +243,11 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F5))
         {
-            PlayerInfoData.Instance.SetExp(99999);
+            // 주인공 경험치 습득
+            if (PlayerInfoData.Instance.SetExp(99999))
+            {
+                playerEffect.CheckActiveEffect(playerEffect.effectSettings.levelup, true);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.F6))

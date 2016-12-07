@@ -72,8 +72,8 @@ public class Network_Login : MonoBehaviour
 
     void Start()
     {
-        soundManager = SoundManager.Instance;
-        soundManager.PlayBackMusic(introBGM);
+        //soundManager = SoundManager.Instance;
+        //soundManager.PlayBackMusic(introBGM);
     }
 
     public void RequestLogin()
@@ -157,6 +157,7 @@ public class Network_Login : MonoBehaviour
         id.value = data.acc_id;
         pw.value = null;
         title.text = login_title;
+        login_message.text = "로그인 정보를 입력하세요.";
     }
     public void JoinBtn()
     {

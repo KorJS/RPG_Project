@@ -411,6 +411,6 @@ public class WarriorSkill : MonoBehaviour
 
     public void Shake()
     {
-        cameraCtrl.Shake();
+        cameraCtrl.Shake(0.2f, 0.2f, 0.2f);
     }
 }

@@ -186,7 +186,7 @@ public class EffectSetting : MonoBehaviour
 
     public void Shake()
     {
-        cameraCtrl.Shake();
+        cameraCtrl.Shake(0.7f, 0.7f, 0.7f);
     }
 
     //// TODO : 여러개의 파티클이 있을경우 부모가 끝났고 자식은 아직 실행중일 경우. 버그 발생할듯?..  각 활성화 타이머 지정

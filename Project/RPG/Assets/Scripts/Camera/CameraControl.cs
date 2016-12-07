@@ -286,11 +286,11 @@ public class CameraControl : MonoBehaviour
     }
 
     // 카메라 흔들림
-    public void Shake()
+    public void Shake(float x, float y, float z)
     {
-        float randX = Random.Range(0.7f, -0.7f);
-        float randY = Random.Range(0.7f, -0.7f);
-        float randZ = Random.Range(0.7f, -0.7f);
+        float randX = Random.Range(x, -x);
+        float randY = Random.Range(y, -y);
+        float randZ = Random.Range(z, -z);
 
         transform.position += new Vector3(randX, randY, randZ);
     }

@@ -174,9 +174,9 @@ public class UISlotTooltip : MonoBehaviour
     // 착용레벨 및 사용 가능여부 설정
     private void CheckEquipLevel(int level)
     {
-        toolTipSettings.uiLevel.text = level.ToString();
+        toolTipSettings.uiLevel.text = "Lv " + level.ToString();
 
-        if (PlayerInfoData.Instance.infoData.level >= int.Parse(toolTipSettings.uiLevel.text))
+        if (PlayerInfoData.Instance.infoData.level >= level)
         {
             toolTipSettings.uiIsEquip.text = "[FFFFFFFF]사용가능";
         }

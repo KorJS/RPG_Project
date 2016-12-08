@@ -171,6 +171,7 @@ public class PlayerInput : MonoBehaviour
             {
                 uiManager.isUIMode = false;
                 uiManager.AllCloseWindow();
+                uiManager.showWindowList.Clear();
             }
         }
 

@@ -363,11 +363,13 @@ public class UIManager : MonoBehaviour
             windowSettings.isInventoryW = false;
             showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList, uiSounds.inventoryOpenBGM, uiSounds.inventoryCloseBGM);
+            showWindowList.Clear();
         }
 
         // 퀘스트일지창
         if (windowSettings.isQuestListW || Input.GetKeyDown(inputKey.questList))
         {
+            CloswWindow(windowSettings.questListPanel, false);
             windowSettings.isQuestListW = false;
             showWindowList.Add(windowSettings.questListPanel);
             ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
@@ -376,6 +378,7 @@ public class UIManager : MonoBehaviour
         // 스킬창
         if (windowSettings.isSkillW || Input.GetKeyDown(inputKey.skillList))
         {
+            CloswWindow(windowSettings.skillPanel, false);
             windowSettings.isSkillW = false;
             showWindowList.Add(windowSettings.skillPanel);
             ShowWindow(showWindowList, uiSounds.skillListOpenBGM, uiSounds.skillListCloseBGM);
@@ -384,6 +387,7 @@ public class UIManager : MonoBehaviour
         // 케릭터창
         if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
         {
+            CloswWindow(windowSettings.characterPanel, false);
             windowSettings.isCharacterW = false;
             showWindowList.Add(windowSettings.characterPanel);
             showWindowList.Add(windowSettings.inventoryPanel);
@@ -396,6 +400,7 @@ public class UIManager : MonoBehaviour
             windowSettings.isOptionW = false;
             showWindowList.Add(windowSettings.optionPanel);
             ShowWindow(showWindowList, uiSounds.characterOpenBGM, uiSounds.characterCloseBGM);
+            showWindowList.Clear();
         }
 
         // UI 모드
@@ -404,6 +409,7 @@ public class UIManager : MonoBehaviour
             showWindowList.Add(windowSettings.uiModePanel);
             ShowWindow(showWindowList, uiSounds.uiOpenBGM, uiSounds.uiCloseBGM);
             windowSettings.isUIModeW = false;
+            showWindowList.Clear();
         }
 
         // 퀘스트창
@@ -412,11 +418,13 @@ public class UIManager : MonoBehaviour
             showWindowList.Add(windowSettings.questPanel);
             ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
             isQuest = false;
+            showWindowList.Clear();
         }
 
         // 상점
         if (isStore)
         {
+            CloswWindow(windowSettings.inventoryPanel, true);
             ShowStore(uiSounds.storeOpenBGM, uiSounds.storeCloseBGM);
             showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList, null, null);
@@ -426,6 +434,7 @@ public class UIManager : MonoBehaviour
         // 창고
         if (isStorage)
         {
+            CloswWindow(windowSettings.storagePanel, false);
             showWindowList.Add(windowSettings.storagePanel);
             showWindowList.Add(windowSettings.inventoryPanel);
             ShowWindow(showWindowList, uiSounds.storageOpenBGM, uiSounds.storageCloseBGM);
@@ -460,6 +469,31 @@ public class UIManager : MonoBehaviour
         Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
+    public void CloswWindow(UIPanel winPanel, bool _isStore)
+    {
+        if (_isStore)
+        {
+            return;
+        }
+
+        for (int i = 0; i < showWindowList.Count; i++)
+        {
+            if (showWindowList[i] == winPanel)
+            {
+                return;
+            }
+
+            showWindowList[i].alpha = 0f;
+        }
+
+        showWindowList.Clear();
+
+        if (windowSettings.storeObj.activeSelf)
+        {
+            windowSettings.storeObj.SetActive(false);
+        }
+    }
+
     public void ShowWindow(List<UIPanel> winList, AudioClip openBGM, AudioClip closeBGM)
     {
         if (windowSettings.uiModePanel.alpha == 1f)
@@ -479,7 +513,6 @@ public class UIManager : MonoBehaviour
                     isActive = true;
                 }
             }
-            winList.Clear();
 
             if (isActive) { return; }
         }
@@ -504,7 +537,6 @@ public class UIManager : MonoBehaviour
             {
                 winList[i].alpha = 1f;
             }
-            winList.Clear();
         }
         // UI 모드이면 UI 해제
         else if (isUIMode)
@@ -525,7 +557,6 @@ public class UIManager : MonoBehaviour
             {
                 winList[i].alpha = 0f;
             }
-            winList.Clear();
         }
     }
 

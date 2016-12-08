@@ -106,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (deathTimer <= 0)
             {
-                PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp;
+                PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp * 0.40f;
                 deathTimer = 10f;
                 transform.position = respawnObj.transform.position;
                 transform.rotation = respawnObj.transform.rotation;
@@ -115,6 +115,9 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.layer = LayerMask.NameToLayer("Player");
                 charCtrl.enabled = true;
                 isDeath = false;
+
+                UIManager.Instance.windowSettings.fadePanel.alpha = 1f;
+                GameManager.Instance.isFade = true;
             }
 
             yield return null;

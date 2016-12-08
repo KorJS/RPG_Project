@@ -95,7 +95,6 @@ public class UISlotTooltip : MonoBehaviour
         // 아이템
         else
         {
-            Debug.Log("?");
             toolTipSettings.buyObj.gameObject.SetActive(true);
             toolTipSettings.sellObj.gameObject.SetActive(true);
 

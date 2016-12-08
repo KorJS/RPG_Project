@@ -217,13 +217,13 @@ public class PlayerInput : MonoBehaviour
         // 보유금액 추가
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            PlayerInfoData.Instance.infoData.gold += 2000;
+            PlayerInfoData.Instance.infoData.gold += 999999;
             uiManager.SetGoldLabel(false);
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            PlayerInfoData.Instance.infoData.gold -= 2000;
+            PlayerInfoData.Instance.infoData.gold -= 999999;
             if (PlayerInfoData.Instance.infoData.gold <= 0)
             {
                 PlayerInfoData.Instance.infoData.gold = 0;
@@ -254,11 +254,13 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F6))
         {
             PlayerInfoData.Instance.infoData.currentHp = 1;
+            PlayerInfoData.Instance.infoData.currentMp = 1;
         }
 
         if (Input.GetKeyDown(KeyCode.F7))
         {
             PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp;
+            PlayerInfoData.Instance.infoData.currentMp = PlayerInfoData.Instance.totalMaxMp;
         }
 
         if (Input.GetKeyDown(KeyCode.F8))
@@ -283,13 +285,6 @@ public class PlayerInput : MonoBehaviour
     // 단축키를 눌렀을때 타입 확인
     public int CheckSlotType(int slotIndex, KeyCode keyCode)
     {
-        //// 무기를 장착하지 않았으면 리턴
-        //if (!uiManager.characterSlots[1].isItemExist)
-        //{
-        //    uiManager.SetMessage("무기를 장착하세요.");
-        //    return -1;
-        //}
-
         int index = -1;
 
         // 대상이 단축 슬롯에 정보가 없으면
@@ -310,6 +305,13 @@ public class PlayerInput : MonoBehaviour
         {
             case TypeData.SlotInfoType.스킬:
                 {
+                    // 무기를 장착하지 않았으면 리턴
+                    if (!uiManager.characterSlots[1].isExist)
+                    {
+                        uiManager.SetMessage("무기를 장착하세요.");
+                        return -1;
+                    }
+
                     // 스킬 사용중이면 리턴
                     if (!playerMovement.isIdle)
                     {
@@ -367,6 +369,14 @@ public class PlayerInput : MonoBehaviour
 
             case TypeData.SlotInfoType.아이템:
                 {
+                    // 사용 레벨이 안되면
+                    if (!uiManager.CheckIsUseItem(uiSlotInfo))
+                    {
+                        SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM);
+
+                        return -1;
+                    }
+
                     uiSlotInfo.isCoolTime = true;
 
                     // 단축창에서 스킬 사용시 쿨타임. - 단축창 같은 아이템도 쿨타임 상태로

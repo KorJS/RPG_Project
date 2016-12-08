@@ -707,16 +707,45 @@ public class UIManager : MonoBehaviour
         uiSlotTooltip.SetSlotInfo(uiSlotInfo);
     }
 
+    // 사용 가능한 아이템인지
+    public bool CheckIsUseItem(UISlotInfo uiSlotInfo)
+    {
+        int playerLevel = playerInfoData.infoData.level;
+        int itemLevel = 0;
+
+        switch (uiSlotInfo.slotInfo.itemType)
+        {
+            case TypeData.ItemType.장비:
+                {
+                    itemLevel = ItemData.Instance.equipmentInfos[uiSlotInfo.slotInfo.itemIndex].level;
+                }
+                break;
+
+            case TypeData.ItemType.소모품:
+                {
+                    itemLevel = ItemData.Instance.cusomableInfos[uiSlotInfo.slotInfo.itemIndex].level;
+                }
+                break;
+        }
+
+        // 주인공 레벨이 아이템 레벨보다 높거나 같으면 사용 가능
+        if (playerLevel >= itemLevel)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public void SetSound(UISlotInfo.SlotInfo slotInfo)
     {
         TypeData.ItemType itemType = slotInfo.itemType;
-        ItemData.EquipmentInfo equipmentInfo = ItemData.Instance.equipmentInfos[slotInfo.itemIndex];
-        TypeData.CusomableType cuType = (TypeData.CusomableType)ItemData.Instance.cusomableInfos[slotInfo.itemIndex].cusomableType;
 
         switch (itemType)
         {
             case TypeData.ItemType.장비:
                 {
+                    ItemData.EquipmentInfo equipmentInfo = ItemData.Instance.equipmentInfos[slotInfo.itemIndex];
                     SetEquipmentSound(equipmentInfo);
                 }
                 break;

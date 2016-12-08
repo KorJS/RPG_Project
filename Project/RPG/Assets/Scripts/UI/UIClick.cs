@@ -55,7 +55,11 @@ public class UIClick : MonoBehaviour
                     case TypeData.SlotType.창고:
                     case TypeData.SlotType.상점리스트:
                         {
-                            uiManager.SetToolTip(uiSlotInfo);
+                            // 빈 슬롯이 아닐경우
+                            if (uiSlotInfo.isExist)
+                            {
+                                uiManager.SetToolTip(uiSlotInfo);
+                            }
                         }
                         break;
                 }
@@ -94,6 +98,8 @@ public class UIClick : MonoBehaviour
                         equipHandler.SetWeapon(null, false);
                         equipHandler.SetSubWeapon(null, false);
                     }
+                    
+                    uiManager.SetSound(uiSlotInfo.slotInfo);
 
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
                     playerSlotData.RemoveSlotData(uiSlotInfo);
@@ -212,6 +218,15 @@ public class UIClick : MonoBehaviour
             if (playerType != (TypeData.PlayerType)PlayerInfoData.Instance.infoData.playerType)
             {
                 SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM);
+
+                return;
+            }
+
+            // 착용 레벨이 안되면 리턴
+            if (PlayerInfoData.Instance.infoData.level < tempEquipmentInfo.level)
+            {
+                SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM);
+
                 return;
             }
 
@@ -242,6 +257,14 @@ public class UIClick : MonoBehaviour
 
             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.소모품)
             {
+                // 사용 레벨이 안되면
+                if (!uiManager.CheckIsUseItem(uiSlotInfo))
+                {
+                    SoundManager.Instance.PlaySingleSystem(uiManager.uiSounds.lockBGM);
+
+                    return;
+                }
+
                 //쿨타임
                 uiSlotInfo.isCoolTime = true;
 
@@ -281,7 +304,7 @@ public class UIClick : MonoBehaviour
                         uiManager.SetMessage("무기를 장착하세요.");
                         return;
                     }
-
+                    
                     playerInupt.index = uiSlotInfo.slotInfo.skillIndex;
                     playerInupt.tempKeyCode = uiSlotInfo.slotSettings.slotKeyCode;
                     playerInupt.isClick = isClick;

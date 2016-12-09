@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIInquirePopup : MonoBehaviour
 {
@@ -29,7 +30,8 @@ public class UIInquirePopup : MonoBehaviour
                 {
                     currentInfo.isCoolTime = false;
                     currentInfo.coolTimer = 0f;
-                    playerSlotData.RemoveSlotData(currentInfo);
+                    currentInfo.slotInfo.quantity = 0;
+                    playerSlotData.SetSlotData(TypeData.SlotType.인벤토리, currentInfo.slotIndex, ref currentInfo);
                     currentInfo.ReSetting();
                 }
                 break;

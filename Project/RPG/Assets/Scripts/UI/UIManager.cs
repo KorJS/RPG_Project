@@ -369,7 +369,7 @@ public class UIManager : MonoBehaviour
         // 퀘스트일지창
         if (windowSettings.isQuestListW || Input.GetKeyDown(inputKey.questList))
         {
-            CloswWindow(windowSettings.questListPanel, false);
+            CloseStore();
             windowSettings.isQuestListW = false;
             showWindowList.Add(windowSettings.questListPanel);
             ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
@@ -378,7 +378,7 @@ public class UIManager : MonoBehaviour
         // 스킬창
         if (windowSettings.isSkillW || Input.GetKeyDown(inputKey.skillList))
         {
-            CloswWindow(windowSettings.skillPanel, false);
+            CloseStore();
             windowSettings.isSkillW = false;
             showWindowList.Add(windowSettings.skillPanel);
             ShowWindow(showWindowList, uiSounds.skillListOpenBGM, uiSounds.skillListCloseBGM);
@@ -387,10 +387,15 @@ public class UIManager : MonoBehaviour
         // 케릭터창
         if (windowSettings.isCharacterW || Input.GetKeyDown(inputKey.character))
         {
-            CloswWindow(windowSettings.characterPanel, false);
+            CloseStore();
             windowSettings.isCharacterW = false;
             showWindowList.Add(windowSettings.characterPanel);
-            showWindowList.Add(windowSettings.inventoryPanel);
+
+            if (windowSettings.inventoryPanel.alpha == 0f)
+            {
+                showWindowList.Add(windowSettings.inventoryPanel);
+            }
+
             ShowWindow(showWindowList, uiSounds.characterOpenBGM, uiSounds.characterCloseBGM);
         }
 
@@ -415,6 +420,7 @@ public class UIManager : MonoBehaviour
         // 퀘스트창
         if (isQuest)
         {
+            CloseStore();
             showWindowList.Add(windowSettings.questPanel);
             ShowWindow(showWindowList, uiSounds.questOpenBGM, uiSounds.questCloseBGM);
             isQuest = false;
@@ -424,19 +430,29 @@ public class UIManager : MonoBehaviour
         // 상점
         if (isStore)
         {
-            CloswWindow(windowSettings.inventoryPanel, true);
+            CloseWindwos();
             ShowStore(uiSounds.storeOpenBGM, uiSounds.storeCloseBGM);
-            showWindowList.Add(windowSettings.inventoryPanel);
-            ShowWindow(showWindowList, null, null);
+
+            if (windowSettings.inventoryPanel.alpha == 0f)
+            {
+                showWindowList.Add(windowSettings.inventoryPanel);
+                ShowWindow(showWindowList, null, null);
+            }
+            
             isStore = false;
         }
 
         // 창고
         if (isStorage)
         {
-            CloswWindow(windowSettings.storagePanel, false);
+            CloseStore();
             showWindowList.Add(windowSettings.storagePanel);
-            showWindowList.Add(windowSettings.inventoryPanel);
+
+            if (windowSettings.inventoryPanel.alpha == 0f)
+            {
+                showWindowList.Add(windowSettings.inventoryPanel);
+            }
+
             ShowWindow(showWindowList, uiSounds.storageOpenBGM, uiSounds.storageCloseBGM);
             isStorage = false;
         }
@@ -469,25 +485,18 @@ public class UIManager : MonoBehaviour
         Network_Slot.Instance.RequestSaveSlot(TypeData.SlotType.단축키);
     }
 
-    public void CloswWindow(UIPanel winPanel, bool _isStore)
+    public void CloseWindwos()
     {
-        if (_isStore)
-        {
-            return;
-        }
-
         for (int i = 0; i < showWindowList.Count; i++)
         {
-            if (showWindowList[i] == winPanel)
-            {
-                return;
-            }
-
             showWindowList[i].alpha = 0f;
         }
 
         showWindowList.Clear();
+    }
 
+    public void CloseStore()
+    {
         if (windowSettings.storeObj.activeSelf)
         {
             windowSettings.storeObj.SetActive(false);
@@ -557,6 +566,7 @@ public class UIManager : MonoBehaviour
             {
                 winList[i].alpha = 0f;
             }
+            winList.Clear();
         }
     }
 

@@ -32,6 +32,9 @@ public class CameraControl : MonoBehaviour
         [Header("-Shake-")]
         private float shakeAmount           = 0f;           // 강도
         private float shakeTimer            = 0f;           // 지속시간
+
+        [Header("-Filter-")]
+        public CameraFilterPack_Vision_Blood deathFilter = null; // 죽었을시 카메라 필터 On / Off
     }
 
     [SerializeField]
@@ -82,9 +85,12 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.currentGameState != TypeData.GameState.시작)
+        if (GameManager.Instance != null)
         {
-            return;
+            if (GameManager.Instance.currentGameState != TypeData.GameState.시작)
+            {
+                return;
+            }
         }
 
         if (target)

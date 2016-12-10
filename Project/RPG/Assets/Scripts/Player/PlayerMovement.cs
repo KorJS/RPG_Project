@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public AnimationSettings animationSettings;
 
     public CharacterController charCtrl = null;
+    private CameraControl cameraCtrl = null;
     public Animator animator = null;
     private Camera mainCamera = null;
     private Vector3 rotation = Vector3.zero;
@@ -52,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         charCtrl = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
+        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         isHit = isDamage = false;
         isIdle = true; // 대기상태
@@ -79,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (!isDeath && PlayerInfoData.Instance.infoData.currentHp <= 0)
         {
+            cameraCtrl.cameraSettings.deathFilter.enabled = true;
             isDeath = true;
             gameObject.layer = LayerMask.NameToLayer("Default");
             playerState.nextState = TypeData.State.죽음;
@@ -115,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.layer = LayerMask.NameToLayer("Player");
                 charCtrl.enabled = true;
                 isDeath = false;
+                cameraCtrl.cameraSettings.deathFilter.enabled = false;
 
                 UIManager.Instance.windowSettings.fadePanel.alpha = 1f;
                 GameManager.Instance.isFade = true;

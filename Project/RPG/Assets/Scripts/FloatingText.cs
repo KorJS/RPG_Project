@@ -36,7 +36,9 @@ public class FloatingText : MonoBehaviour
         {
             lifeTimer = 0f;
             transform.SetParent(UIManager.Instance.damageTxtPool.transform);
+
             gameObject.SetActive(false);
+            return;
         }
 
         if (fadeEnd)

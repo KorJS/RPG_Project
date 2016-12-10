@@ -286,7 +286,7 @@ public class UIManager : MonoBehaviour
     {
         var resource = Resources.Load("UI/DamageTxt3D");
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 10; i++)
         {
             GameObject obj = Instantiate(resource) as GameObject;
             obj.transform.SetParent(damageTxtPool.transform);

@@ -346,7 +346,10 @@ public class UIDragAndDrop : MonoBehaviour
             // 케릭슬롯에 아이템 존재하면 교환 / 없으면 교체
             if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.캐릭터))
             {
-                uiCharacter.SetSlotInfo(uiSlotInfo, targetInfo);
+                if (!uiCharacter.SetSlotInfo(uiSlotInfo, targetInfo))
+                {
+                    return;
+                }
             }
             else if ((uiSlotInfo.slotType == TypeData.SlotType.인벤토리) && (targetInfo.slotType == TypeData.SlotType.단축키))
             {

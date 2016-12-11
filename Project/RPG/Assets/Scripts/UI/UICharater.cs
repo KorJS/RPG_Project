@@ -69,16 +69,41 @@ public class UICharater : MonoBehaviour
     }
     
     // 슬롯에 아이템 셋팅. - 이 함수가 호출될때 label에 스텟 +
-    public void SetSlotInfo(UISlotInfo currentInfo, UISlotInfo targetInfo)
+    public bool SetSlotInfo(UISlotInfo currentInfo, UISlotInfo targetInfo)
     {
         if (currentInfo.slotInfo.itemType != TypeData.ItemType.장비)
         {
-            return;
+            return false;
         }
 
 
         int index = currentInfo.slotInfo.itemIndex;
         ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index]; // 장착하려는 장비
+
+        // 다른직업 아이템이면 
+        if (PlayerInfoData.Instance.infoData.playerType != tempEquipmentInfo.playerType)
+        {
+            SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM);
+            return false;
+        }
+
+        // 착용 레벨이 안되면 리턴
+        if (PlayerInfoData.Instance.infoData.level < tempEquipmentInfo.level)
+        {
+            SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM);
+
+            return false;
+        }
+
+        if (currentInfo.slotInfo.itemType == TypeData.ItemType.장비)
+        {
+            UIManager.Instance.SetEquipmentSound(tempEquipmentInfo); // 장비 사운드 출력
+        }
+        else
+        {
+            SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM); // 장비 외에꺼는 Lock 사운드 출력
+            return false;
+        }
 
         //SetSound(tempEquipmentInfo);
 
@@ -123,6 +148,8 @@ public class UICharater : MonoBehaviour
 
         currentInfo.ReSetting();
         targetInfo.ReSetting();
+
+        return true;
     }
 
     public void ChangPlayerStat()

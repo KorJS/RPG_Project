@@ -69,7 +69,7 @@ public class MagicianSkill : MonoBehaviour
 
         currentSkillTpye = SkillType.없음;
 
-        layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
+        layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment") | 1 << LayerMask.NameToLayer("Monster"));
     }
 
     void Start()

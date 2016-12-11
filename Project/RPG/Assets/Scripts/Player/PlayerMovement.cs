@@ -109,6 +109,8 @@ public class PlayerMovement : MonoBehaviour
 
             if (deathTimer <= 0)
             {
+                SoundManager.Instance.voiceSource = null;
+
                 PlayerInfoData.Instance.infoData.currentHp = PlayerInfoData.Instance.totalMaxHp * 0.40f;
                 deathTimer = 10f;
                 transform.position = respawnObj.transform.position;

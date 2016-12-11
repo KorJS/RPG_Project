@@ -10,17 +10,25 @@ public class Floating3D : MonoBehaviour
     private FloatingText floatingText = null;
     public Vector3 origin = Vector3.zero;
 
+    void Awake()
+    {
+        origin = posiotionDirection;
+    }
+
     void Start()
     {
         floatingText = GetComponent<FloatingText>();
         positionTemp = transform.position;
     }
 
+    void OnEnable()
+    {
+        positionTemp = transform.position;
+    }
+
     void OnDisable()
     {
-        positionTemp = Vector3.zero;
-        posiotionDirection = new Vector3(3f, 7f, 0f);
-        transform.localPosition = Vector3.zero;
+        posiotionDirection = origin;
     }
 
     void Update()

@@ -286,7 +286,7 @@ public class UIManager : MonoBehaviour
     {
         var resource = Resources.Load("UI/DamageTxt3D");
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
         {
             GameObject obj = Instantiate(resource) as GameObject;
             obj.transform.SetParent(damageTxtPool.transform);
@@ -307,13 +307,13 @@ public class UIManager : MonoBehaviour
             damageTxtCount = 0;
         }
 
-        damageTxt3DObjs[damageTxtCount].SetActive(true);
         damageTxt3DObjs[damageTxtCount].transform.SetParent(targetT);
         damageTxt3DObjs[damageTxtCount].transform.localPosition = new Vector3(0f, 1.5f, 0f);
         FloatingText floatingTxt = damageTxt3DObjs[damageTxtCount].GetComponent<FloatingText>();
         floatingTxt.text = damage.ToString();
         floatingTxt.textColor = color;
 
+        damageTxt3DObjs[damageTxtCount].SetActive(true);
         damageTxtCount++;
     }
 

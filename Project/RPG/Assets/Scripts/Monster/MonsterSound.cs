@@ -6,6 +6,12 @@ public class MonsterSound : MonoBehaviour
     public AudioSource voiceSource = null;
     public AudioSource efxSource = null;
 
+    void OnDisable()
+    {
+        voiceSource = null;
+        efxSource = null;
+    }
+
     public void PlaySingleEfx(AudioClip clip)
     {
         efxSource.clip = clip;

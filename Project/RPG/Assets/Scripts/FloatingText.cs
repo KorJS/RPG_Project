@@ -15,9 +15,18 @@ public class FloatingText : MonoBehaviour
     private float alpha = 1;
     private float timeTemp = 0;
 
-
-
     void Start()
+    {
+        timeTemp = Time.time;
+
+        if (position3D)
+        {
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            position = new Vector2(screenPos.x, Screen.height - screenPos.y);
+        }
+    }
+
+    void OnEnable()
     {
         timeTemp = Time.time;
 

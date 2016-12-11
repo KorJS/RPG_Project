@@ -86,6 +86,7 @@ public class MonsterMovement : MonoBehaviour
         monsterState.nextState = TypeData.MonsterState.데미지;
         animator.SetTrigger(animationSettings.isDamageTrigger);
         transform.SetParent(tempHoleder);
+        charCtrl.enabled = false;
     }
 
     public void RushEnd()
@@ -93,6 +94,7 @@ public class MonsterMovement : MonoBehaviour
         monsterState.nextMode = TypeData.MODE.전투;
         monsterState.nextState = TypeData.MonsterState.이동;
         transform.SetParent(monsterInfoData.parentT);
+        charCtrl.enabled = true;
 
         if (!nav.enabled)
         {

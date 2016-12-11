@@ -72,8 +72,8 @@ public class Network_Login : MonoBehaviour
 
     void Start()
     {
-        //soundManager = SoundManager.Instance;
-        //soundManager.PlayBackMusic(introBGM);
+        soundManager = SoundManager.Instance;
+        soundManager.PlayBackMusic(introBGM);
     }
 
     public void RequestLogin()

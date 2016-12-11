@@ -211,7 +211,7 @@ public class Network_Char : MonoBehaviour
             rightPanel.alpha = 0f;
         }
 
-        //SoundManager.Instance.PlayBackMusic(introBGM);
+        SoundManager.Instance.PlayBackMusic(introBGM);
 
         PlayerInfoData.Instance.infoData = data.playerInfoData;
         PlayerSkillData.Instance.skillInfos = data.playerSkillInfos;
@@ -292,7 +292,7 @@ public class Network_Char : MonoBehaviour
             return;
         }
 
-        //SoundManager.Instance.PlayBackMusic(introBGM);
+        SoundManager.Instance.PlayBackMusic(introBGM);
         mark.Clear();
         nickname.value = null;
         WarriorBtn();
@@ -336,19 +336,21 @@ public class Network_Char : MonoBehaviour
             message.text = "캐릭생성 불가(슬롯이 부족합니다.)";
             return;
         }
+
+        SoundManager.Instance.PlayBackMusic(warriorBGM);
         createObj.SetActive(true);
     }
 
     public void CreateCancelBtn()
     {
-        //SoundManager.Instance.PlayBackMusic(introBGM);
+        SoundManager.Instance.PlayBackMusic(introBGM);
         createCharacter.nickName.value = null;
         createObj.SetActive(false);
     }
 
     public void WarriorBtn()
     {
-        //SoundManager.Instance.PlayBackMusic(warriorBGM);
+        SoundManager.Instance.PlayBackMusic(warriorBGM);
         message.text = "기사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.기사;
         createCharacter.warriorObj.SetActive(true);
@@ -358,7 +360,7 @@ public class Network_Char : MonoBehaviour
 
     public void MagicianBtn()
     {
-        //SoundManager.Instance.PlayBackMusic(magicianBGM);
+        SoundManager.Instance.PlayBackMusic(magicianBGM);
         message.text = "마법사 캐릭터를 선택 하셨습니다.";
         selectPlayerType = (int)TypeData.PlayerType.마법사;
         createCharacter.warriorObj.SetActive(false);

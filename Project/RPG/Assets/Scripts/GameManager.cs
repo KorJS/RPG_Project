@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         isFade = true;
         fadeTimer = fadeTime;
 
-        //SoundManager.Instance.PlayBackMusic(inGameBGM);
+        SoundManager.Instance.PlayBackMusic(inGameBGM);
 
         CreatePlayer();
     }

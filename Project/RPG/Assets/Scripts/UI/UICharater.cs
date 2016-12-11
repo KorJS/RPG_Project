@@ -73,16 +73,19 @@ public class UICharater : MonoBehaviour
     {
         if (currentInfo.slotInfo.itemType != TypeData.ItemType.장비)
         {
+            SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM); // 장비 외에꺼는 Lock 사운드 출력
             return false;
         }
-
 
         int index = currentInfo.slotInfo.itemIndex;
         ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index]; // 장착하려는 장비
 
-        // 다른직업 아이템이면 
-        if (PlayerInfoData.Instance.infoData.playerType != tempEquipmentInfo.playerType)
+        TypeData.PlayerType playerType = (TypeData.PlayerType)PlayerInfoData.Instance.infoData.playerType;
+
+        // 다른직업 아이템이거나 공용아이템이 아닐때 
+        if (((int)playerType != tempEquipmentInfo.playerType) && (tempEquipmentInfo.playerType != (int)TypeData.PlayerType.없음))
         {
+            Debug.Log("char " + 1);
             SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM);
             return false;
         }
@@ -90,22 +93,13 @@ public class UICharater : MonoBehaviour
         // 착용 레벨이 안되면 리턴
         if (PlayerInfoData.Instance.infoData.level < tempEquipmentInfo.level)
         {
+            Debug.Log("char " + 2);
             SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM);
 
             return false;
         }
 
-        if (currentInfo.slotInfo.itemType == TypeData.ItemType.장비)
-        {
-            UIManager.Instance.SetEquipmentSound(tempEquipmentInfo); // 장비 사운드 출력
-        }
-        else
-        {
-            SoundManager.Instance.PlaySingleSystem(UIManager.Instance.uiSounds.lockBGM); // 장비 외에꺼는 Lock 사운드 출력
-            return false;
-        }
-
-        //SetSound(tempEquipmentInfo);
+        UIManager.Instance.SetEquipmentSound(tempEquipmentInfo); // 장비 사운드 출력
 
         // 무기
         if (targetInfo.slotIndex == 1)

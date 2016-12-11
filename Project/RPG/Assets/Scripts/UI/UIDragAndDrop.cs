@@ -73,6 +73,12 @@ public class UIDragAndDrop : MonoBehaviour
             return;
         }
 
+        // 왼클릭이 아니면 리턴
+        if (UICamera.currentKey != KeyCode.Mouse0)
+        {
+            return;
+        }
+
         isDragging = true; // 드래그 시작
         Debug.Log(uiSlotInfo.name + " : " + uiSlotInfo.slotIndex);
         uiSlotInfo.slotSettings.uiIcon.alpha = 0.5f; // 드래그시작하면 원래있던건 반투명하게

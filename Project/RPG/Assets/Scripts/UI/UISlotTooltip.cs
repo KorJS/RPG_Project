@@ -134,6 +134,7 @@ public class UISlotTooltip : MonoBehaviour
                     int hp = equipInfo.hp;
                     int mp = equipInfo.mp;
 
+                    Debug.Log("equipInfo.playerType : " + equipInfo.playerType);
                     toolTipSettings.uiPlayerType.text = CheckPlayerType((TypeData.PlayerType)equipInfo.playerType);
                     toolTipSettings.uiStat.text = "[00FF00FF]공격력 : " + att + "\n[00FF00FF]방어력 : " + def + "\n[00FF00FF]체력 : " + hp + "\n[00FF00FF]마력 : " + mp;
                     toolTipSettings.uiBuyGold.text = equipInfo.buyGold.ToString();

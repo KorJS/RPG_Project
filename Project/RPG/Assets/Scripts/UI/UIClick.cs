@@ -89,24 +89,35 @@ public class UIClick : MonoBehaviour
         }
     }
 
+    // 슬롯 타입 체크
     public void CheckSlotType()
     {
+        // 클릭한 빈슬롯이면 리턴
+        if (!uiSlotInfo.isExist)
+        {
+            return;
+        }
+
         switch (uiSlotInfo.slotType)
         {
             case TypeData.SlotType.캐릭터:
                 {
+                    // 무기이면 장착한 장비 제거
                     if (uiSlotInfo.slotIndex == 1)
                     {
                         equipHandler.SetWeapon(null, false);
                         equipHandler.SetSubWeapon(null, false);
                     }
                     
-                    uiManager.SetSound(uiSlotInfo.slotInfo);
+                    uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
 
+                    // 인벤에 추가
                     playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, 1);
-                    playerSlotData.RemoveSlotData(uiSlotInfo);
+                    playerSlotData.RemoveSlotData(uiSlotInfo); // 현제 슬롯 제거
+
+                    // 스텟 변경
                     uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>().ChangPlayerStat();
-                    uiSlotInfo.ReSetting();
+                    uiSlotInfo.ReSetting();// 현제 슬롯 갱신
                 }
                 break;
 
@@ -132,6 +143,9 @@ public class UIClick : MonoBehaviour
                 {
                     if (uiSlotInfo.isExist)
                     {
+                        uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
+
+                        // 구매리스트에 1개씩 추가
                         uiManager.windowSettings.storeObj.GetComponent<UIStore>().CopySlotInfo(uiSlotInfo, TypeData.SlotType.구매, 1);
                     }
                 }
@@ -140,6 +154,7 @@ public class UIClick : MonoBehaviour
             case TypeData.SlotType.구매:
             case TypeData.SlotType.판매:
                 {
+                    // 구매>제거 / 판매>인벤으로
                     BuyAndSellSlot();
                 }
                 break;
@@ -173,11 +188,7 @@ public class UIClick : MonoBehaviour
         // 상점창이 열여있는 경우
         if (uiManager.windowSettings.storeObj.activeSelf)
         {
-            // 클릭한 슬롯에 아이템이 없으면 리턴
-            if (!uiSlotInfo.isExist)
-            {
-                return;
-            }
+            uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
 
             UIStore uiStore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
 
@@ -189,13 +200,17 @@ public class UIClick : MonoBehaviour
             {
                 uiStore.changInvenIndexs.Add(uiSlotInfo.slotIndex); // 수량 변화 생긴 슬롯 인덱스 저장 - 정산할때 그 슬롯들 갱신
             }
+
             Debug.Log(uiSlotInfo.slotIndex);
+
             uiSlotInfo.isExist = false;
             uiSlotInfo.StoreReSetting();
         }
         // 창고창이 열여있는 경우
         else if (uiManager.windowSettings.storagePanel.alpha == 1f) // 인벤 > 창고 수량 전부 넣음
         {
+            uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
+
             int quantity = 0;
 
             Debug.Log("itemType : " + uiSlotInfo.slotInfo.itemType);
@@ -212,7 +227,6 @@ public class UIClick : MonoBehaviour
         // 케릭창이 열여있는 경우
         else if (uiManager.windowSettings.characterPanel.alpha == 1f)
         {
-
             int index = uiSlotInfo.slotInfo.itemIndex;
             ItemData.EquipmentInfo tempEquipmentInfo = ItemData.Instance.equipmentInfos[index];
 
@@ -325,6 +339,7 @@ public class UIClick : MonoBehaviour
 
     private void StorageSlot()
     {
+        uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
         int quantity = 0;
 
         if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비) { quantity = 1; }
@@ -338,6 +353,8 @@ public class UIClick : MonoBehaviour
 
     private void BuyAndSellSlot()
     {
+        uiManager.SetSound(uiSlotInfo.slotInfo); // 사운드 출력
+
         UIStore uiStore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
         uiStore.CopySlotInfo(uiSlotInfo, TypeData.SlotType.없음, uiSlotInfo.slotInfo.quantity);
 

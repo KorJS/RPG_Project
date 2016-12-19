@@ -230,7 +230,7 @@ ModelImporter:
     9500000: //RootNode
     13700000: Volcanus_skel
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -2414,7 +2414,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 0
+    meshCompression: 3
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0

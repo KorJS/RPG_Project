@@ -212,7 +212,7 @@ ModelImporter:
     9500000: //RootNode
     13700000: Kumas_begin_ver_skel
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -3476,7 +3476,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 3
+    meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0

@@ -8,6 +8,7 @@ public class UIClick : MonoBehaviour
     private UIManager        uiManager      = null; // UI 매니저
     private SkillData        skillData      = null; // 스킬 정보
     private PlayerInput      playerInupt    = null; // 주인공 입력
+    private PlayerMovement   playerMovement = null; // 주인공 동작
     private PlayerState      playerState    = null; // 주인공 상태
     private PlayerSlotData   playerSlotData = null; // 주인공 슬롯 정보
     private EquipmentHandler equipHandler   = null; // 장비 핸들러
@@ -35,6 +36,7 @@ public class UIClick : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
 
         playerInupt     = playerObj.GetComponent<PlayerInput>();
+        playerMovement  = playerObj.GetComponent<PlayerMovement>();
         playerState     = playerObj.GetComponent<PlayerState>();
         equipHandler    = playerObj.GetComponent<EquipmentHandler>();
     }
@@ -298,8 +300,30 @@ public class UIClick : MonoBehaviour
                         uiManager.SetMessage("무기를 장착하세요.");
                         return;
                     }
-                    
-                    playerInupt.index = uiSlotInfo.slotInfo.skillIndex;
+
+                    // 스킬 사용중이면 리턴
+                    if (!playerMovement.isIdle)
+                    {
+                        return;
+                    }
+
+                    int tempIndex = uiSlotInfo.slotInfo.skillIndex;
+
+                    SkillData.SkillInfo skillInfo = SkillData.Instance.skillInfos[tempIndex];
+
+                    // mp 사용
+                    float currentMp = PlayerInfoData.Instance.infoData.currentMp;
+
+                    // mp가 부족하면 리턴
+                    if (-skillInfo.mp > currentMp)
+                    {
+                        playerState.nextState = TypeData.State.이동;
+                        uiManager.SetMessage("MP가 부족합니다.");
+
+                        return;
+                    }
+
+                    playerInupt.index = tempIndex;
                     playerInupt.tempKeyCode = uiSlotInfo.slotSettings.slotKeyCode;
                     playerInupt.isClick = isClick;
 

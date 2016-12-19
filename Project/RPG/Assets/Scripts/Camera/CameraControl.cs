@@ -72,7 +72,7 @@ public class CameraControl : MonoBehaviour
 
     void Awake()
     {
-        uiJoystick = GameObject.FindGameObjectWithTag("RotJoystick").GetComponent<UIJoystick>();
+        //uiJoystick = GameObject.FindGameObjectWithTag("RotJoystick").GetComponent<UIJoystick>();
 
         mainCamera          = Camera.main;
         pivot               = this.transform.GetChild(0);
@@ -175,11 +175,11 @@ public class CameraControl : MonoBehaviour
             return;
         }
 
-        //newX += cameraSettings.mouseXSensitivity * Input.GetAxis(input.verticalAxis);
-        //newY -= cameraSettings.mouseYSensitivity * Input.GetAxis(input.horizontalAxis);
+        newX += cameraSettings.mouseXSensitivity * Input.GetAxis(input.verticalAxis);
+        newY -= cameraSettings.mouseYSensitivity * Input.GetAxis(input.horizontalAxis);
 
-        newX += cameraSettings.mouseXSensitivity * uiJoystick.joyStickPosX;
-        newY -= cameraSettings.mouseYSensitivity * uiJoystick.joyStickPosY;
+        //newX += cameraSettings.mouseXSensitivity * uiJoystick.joyStickPosX;
+        //newY -= cameraSettings.mouseYSensitivity * uiJoystick.joyStickPosY;
 
         Vector3 eulerAngleAxis = new Vector3();
         eulerAngleAxis.x = newY;

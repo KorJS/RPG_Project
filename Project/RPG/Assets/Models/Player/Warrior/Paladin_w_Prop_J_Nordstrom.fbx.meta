@@ -161,7 +161,7 @@ ModelImporter:
     13700004: Paladin_J_Nordstrom_Shield
     13700006: Paladin_J_Nordstrom_Sword
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:

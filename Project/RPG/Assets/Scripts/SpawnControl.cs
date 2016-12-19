@@ -3,18 +3,17 @@ using System.Collections;
 
 public class SpawnControl : MonoBehaviour
 {
-    // TODO : 자식으로 있는 몬스터 리스폰 시간 체크
-    private GameObject monsterObj = null;
+    private GameObject  monsterObj      = null; // 몬스터
 
-    private const float NORMAL_TIME = 10f;
-    private const float ELITE_TIME = 20f;
-    private const float BOSS_TIME = 30f;
+    private const float NORMAL_TIME     = 10f;  // 일반몬스터 스폰 시간
+    private const float ELITE_TIME      = 20f;  // 정예몬스터 스폰 시간
+    private const float BOSS_TIME       = 30f;  // 보스몬스터 스폰 시간
 
-    private string spawnTag = null;
-    public float respawnTime = 0f;
-    public float respawnTimer = 0f;
+    private string      spawnTag        = null; // 스폰지역 태그(일반,정예,보스)
+    public float        respawnTime     = 0f;   // 리스폰 타임
+    public float        respawnTimer    = 0f;   // 리스폰 타이머
 
-    public bool isRespawn = false; // 몬스터가 죽으면 true가 되면서 리스폰 타이머 시작
+    public bool         isRespawn       = false; // 몬스터가 죽으면 true가 되면서 리스폰 타이머 시작
 
     void Awake()
     {
@@ -27,6 +26,7 @@ public class SpawnControl : MonoBehaviour
         Respawn();
     }
 
+    // 자식 설정
     public void SetChild(GameObject child)
     {
         child.transform.SetParent(transform);
@@ -35,6 +35,7 @@ public class SpawnControl : MonoBehaviour
         child.transform.rotation = transform.rotation;
     }
 
+    // 리스폰 타임 설정
     private void SetRespawnTime()
     {
         switch (spawnTag)
@@ -51,6 +52,7 @@ public class SpawnControl : MonoBehaviour
         }
     }
 
+    // 리스폰
     private void Respawn()
     {
         if (monsterObj.activeSelf)

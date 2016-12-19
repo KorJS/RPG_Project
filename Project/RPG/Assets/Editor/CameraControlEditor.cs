@@ -21,6 +21,7 @@ public class CameraControlEditor : Editor
 
             if (cam)
             {
+                // 카메라 위치 저장
                 Vector3 camPos = cam.transform.localPosition;
                 cameraControl.cameraSettings.camPositionOffset = camPos;
             }

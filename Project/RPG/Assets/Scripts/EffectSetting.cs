@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// 비장착일 경우의 실행하는 스크립트
 public class EffectSetting : MonoBehaviour
 {
     private CameraControl cameraCtrl = null;
@@ -35,24 +34,23 @@ public class EffectSetting : MonoBehaviour
     [System.Serializable]
     public class InfoSettings
     {
-        public Transform effectHoler;
-        public Vector3 effectPosition;
-        public float activeTime;
-        public float shotTime;
+        public Transform    effectHoler;    // 이펙트 부모
+        public Vector3      effectPosition; // 이펙트 위치
+        public float        activeTime;     // 활성화 타임
+        public float        shotTime;       // 발사 타임
 
-        // TODO : 비창작/지속인 스킬 - 다음프로젝트때는 잘생각하고 하자
-        public float skillAngle;
-        public float skillDis;
-        public float skillAtt;
+        public float        skillAngle;     // 스킬 각도
+        public float        skillDis;       // 스킬 거리
+        public float        skillAtt;       // 스킬 공격력
     }
 
     [SerializeField]
     public InfoSettings infoSettings;
 
-    public ParticleSystem particleSys = null;
-    public Animator animator = null;
+    public ParticleSystem   particleSys = null;
+    public Animator         animator    = null;
 
-    public float debugTimer = 0;
+    public float            debugTimer  = 0;    // 디버그 타이머(활성화타임 알기위해)
 
     void Awake()
     {
@@ -89,8 +87,6 @@ public class EffectSetting : MonoBehaviour
     {
         // Debug
         debugTimer += Time.deltaTime;
-
-        //SetActiveAndHolder();
     }
 
     private void SetInfo()
@@ -188,23 +184,4 @@ public class EffectSetting : MonoBehaviour
     {
         cameraCtrl.Shake(0.7f, 0.7f, 0.7f);
     }
-
-    //// TODO : 여러개의 파티클이 있을경우 부모가 끝났고 자식은 아직 실행중일 경우. 버그 발생할듯?..  각 활성화 타이머 지정
-    //private void SetActiveAndHolder()
-    //{
-    //    if (particleSys.isPlaying)
-    //    {
-    //        return;
-    //    }
-
-    //    // 이펙트가 끝나면 다시 부모로. 
-    //    if (particleSys.isStopped)
-    //    {
-    //        if (type == Type.비장착)
-    //        {
-    //            transform.SetParent(infoSettings.effectHoler);
-    //        }
-    //        gameObject.SetActive(false);
-    //    }
-    //}
 }

@@ -20,15 +20,14 @@ public class GameManager : MonoBehaviour
 
     public TypeData.GameState currentGameState = TypeData.GameState.없음;
 
-    private bool bPaused = false;  // 어플리케이션이 내려진 상태인지 아닌지의 스테이트를 저장하기 위한 변수
-    private float showSplashTimout = 2f;
-    private bool allowQuitting = false;
+    private float       delayQuitTime       = 2f;       // 종료 딜레이 타임
+    private bool        isQuit              = false;    // 종료인지 여부
 
-    public AudioClip inGameBGM = null;
+    public  AudioClip   inGameBGM           = null;     // 인트로 사운드
 
-    private const float fadeTime = 4f;
-    public float fadeTimer = 0f;
-    public bool isFade = false;
+    private const float fadeTime            = 4f;       // 페이드인 타임
+    public float        fadeTimer           = 0f;       // 페이드인 타이머
+    public bool         isFade              = false;    // 페이드인 인지 여부
 
     void Awake()
     {
@@ -43,8 +42,8 @@ public class GameManager : MonoBehaviour
           
         DontDestroyOnLoad(this);
 
-        isFade = true;
-        fadeTimer = fadeTime;
+        isFade      = true;
+        fadeTimer   = fadeTime;
 
         SoundManager.Instance.PlayBackMusic(inGameBGM);
 
@@ -56,30 +55,12 @@ public class GameManager : MonoBehaviour
         Fade();
     }
 
-    // 어플을 내렸으때 실행되는 함수
-    void OnApplicationPause(bool pause)
-    {
-        if (pause)
-        {
-            bPaused = true;
-            // todo : 어플리케이션을 내리는 순간에 처리할 행동들 /
-        }
-        else
-        {
-            if (bPaused)
-            {
-                bPaused = false;
-                //todo : 내려놓은 어플리케이션을 다시 올리는 순간에 처리할 행동들 
-            }
-        }
-    }
-
     // 어플을 종료 하는 순간 실행되는 함수
     void OnApplicationQuit()
     {
         StartCoroutine(DelayedQuit());
 
-        if (!allowQuitting)
+        if (!isQuit)
         {
             Application.CancelQuit();
         }
@@ -88,18 +69,20 @@ public class GameManager : MonoBehaviour
     // 종료 딜레이 준다.
     IEnumerator DelayedQuit()
     {
+        // 종료하기 전에 주인공 정보 저장
         if (PlayerInfoData.Instance.infoData != null)
         {
             Network_PlayerInfo.Instance.RequestSavePlayerInfo();
         }
 
-        yield return new WaitForSeconds(showSplashTimout);
+        yield return new WaitForSeconds(delayQuitTime);
 
-        allowQuitting = true;
+        isQuit = true;
 
         Application.Quit();
     }
 
+    // 페이드 인
     public void Fade()
     {
         if (!isFade)
@@ -120,6 +103,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 주인공 프리펩 생성
     public void CreatePlayer()
     {
         TypeData.PlayerType playerType = (TypeData.PlayerType)PlayerInfoData.Instance.infoData.playerType;
@@ -171,6 +155,7 @@ public class GameManager : MonoBehaviour
         StoreItemListData.Instance.DataClear();
     }
 
+    // 로그아웃시 주인공 정보 저장
     public IEnumerator LogoutSavePlayerData()
     {
         yield return new WaitForSeconds(1f);
@@ -184,6 +169,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("LoginScene");
     }
 
+    // 종료
     public IEnumerator GameExitSavePlayerData()
     {
         yield return new WaitForSeconds(2f);

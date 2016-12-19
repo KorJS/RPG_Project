@@ -8,34 +8,31 @@ public class UIUserInfo : MonoBehaviour
     [System.Serializable]
     public class UserInfoSettings
     {
-        public UILabel levelNick;
+        public UILabel       levelNick; // 레벨,닉네임
 
-        public UIProgressBar hpBar;
-        public UILabel hpCurrent;
-        public UILabel hpMAX;
+        public UIProgressBar hpBar;     // 체력바
+        public UILabel       hpCurrent; // 현제 체력
+        public UILabel       hpMAX;     // MAX 체력
 
-        public UIProgressBar mpBar;
-        public UILabel mpCurrent;
-        public UILabel mpMAX;
+        public UIProgressBar mpBar;     // 마력바
+        public UILabel       mpCurrent; // 현재 마력
+        public UILabel       mpMAX;     // MAX 마력
 
-        public UIProgressBar expBar;
-        public UILabel expCurrent;
-        public UILabel expMAX;
+        public UIProgressBar expBar;    // 경험치 바
+        public UILabel       expCurrent;// 현재 경험치
+        public UILabel       expMAX;    // MAX 경험치
     }
 
     [SerializeField]
     public UserInfoSettings userInfoSettings;
 
-    private string levelNick = null;
-    private float hp = 0;
-    private float mp = 0;
+    private string  levelNick   = null; // 레벨, 닉네임
 
     void Awake()
     {
         playerInfoData = PlayerInfoData.Instance;
     }
 
-    // TODO : 레벨은 변경될때 바꾸게 하자
     void Update()
     {
         LevelUpdate();
@@ -44,12 +41,14 @@ public class UIUserInfo : MonoBehaviour
         ExpBarUpdate();
     }
 
+    // 레벨 라벨 갱신
     public void LevelUpdate()
     {
         levelNick = "레벨 " + playerInfoData.infoData.level + " " + playerInfoData.infoData.nick;
         userInfoSettings.levelNick.text = levelNick;
     }
 
+    // 체력바 갱신
     public void HpBarUpdate()
     {
         float currentHp = playerInfoData.infoData.currentHp;
@@ -60,6 +59,7 @@ public class UIUserInfo : MonoBehaviour
         userInfoSettings.hpMAX.text = ((int)totalMaxHp).ToString();
     }
 
+    // 마력바 갱신
     public void MpBarUpdate()
     {
         float currentMp = playerInfoData.infoData.currentMp;
@@ -70,6 +70,7 @@ public class UIUserInfo : MonoBehaviour
         userInfoSettings.mpMAX.text = ((int)totalMaxMp).ToString();
     }
 
+    // 경험치바 갱신
     public void ExpBarUpdate()
     {
         int currentLevel = playerInfoData.infoData.level;

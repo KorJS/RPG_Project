@@ -4,14 +4,14 @@ using System.Collections;
 [ExecuteInEditMode] // 게임 플레이를 하지 않아도 스크립트 내용이 적용되는 기능
 public class CameraControl : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private UIJoystick uiJoystick = null;
+    private UIManager   uiManager   = null; // UI 매니저
+    private UIJoystick  uiJoystick  = null; // 조이스틱
 
     [System.Serializable]
     public class CameraSettings
     {
         [Header("-Position-")]
-        public Vector3 camPositionOffset = Vector3.zero;    // 카메라 오브셋
+        public Vector3 camPositionOffset    = Vector3.zero; // 카메라 오브셋
 
         [Header("-Camera Options-")]
         public float mouseXSensitivity      = 5f;           // X축 회전 감도
@@ -60,27 +60,29 @@ public class CameraControl : MonoBehaviour
     public MovementSettings movement;
 
     // 주인공
-    public  Transform   target                  = null;
-    public  bool        autoTargetPlayer        = false;
+    public  Transform   target                  = null;     // 주인공
+    public  bool        autoTargetPlayer        = false;    // 자동으로 타겟 잡아줄지 여부
 
-    public  LayerMask   wallLayers;
-    private Camera      mainCamera              = null;
-    private Transform   pivot                   = null;
-    private float       newX                    = 0f;
-    private float       newY                    = 0;
+    public  LayerMask   wallLayers;                         // 벽 레이어
+    private Camera      mainCamera              = null;     // 메인 카메라
+    private Transform   pivot                   = null;     // 카메라 회전기준
+    private float       newX                    = 0f;       // 회전_X
+    private float       newY                    = 0;        // 회전_Y
 
 
     void Awake()
     {
         //uiJoystick = GameObject.FindGameObjectWithTag("RotJoystick").GetComponent<UIJoystick>();
 
-        mainCamera = Camera.main;
-        pivot = this.transform.GetChild(0);
+        mainCamera          = Camera.main;
+        pivot               = this.transform.GetChild(0);
+        autoTargetPlayer    = true;
+
         if (GameObject.FindGameObjectWithTag("Player"))
         {
             uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         }
-        autoTargetPlayer = true;
+
     }
 
     void Update()
@@ -92,11 +94,14 @@ public class CameraControl : MonoBehaviour
                 return;
             }
         }
-
+        
+        // 타겟이 존재하면
         if (target)
         {
+            // 플레이중이면
             if (Application.isPlaying)
             {
+                // UI를 클릭했다면
                 if (UICamera.Raycast(Input.mousePosition))
                 {
                     return;
@@ -109,7 +114,7 @@ public class CameraControl : MonoBehaviour
                 }
 
                 CheckWall();
-                CheckMeshRenderer();
+                //CheckMeshRenderer();
                 Zoom(Input.GetAxis(input.zoomAxis));
             }
         }
@@ -240,36 +245,36 @@ public class CameraControl : MonoBehaviour
     }
 
     // 타켓 매쉬 숨기기
-    private void CheckMeshRenderer()
-    {
-        if (!mainCamera || !target)
-        {
-            return;
-        }
+    //private void CheckMeshRenderer()
+    //{
+    //    if (!mainCamera || !target)
+    //    {
+    //        return;
+    //    }
 
-        SkinnedMeshRenderer[] meshes = target.GetComponentsInChildren<SkinnedMeshRenderer>(); // 타겟에 매쉬정보를 가져옴
-        Transform mainCamT = mainCamera.transform;
-        Vector3 mainCamPos = mainCamT.position;
-        Vector3 targetPos = target.position;
+    //    SkinnedMeshRenderer[] meshes = target.GetComponentsInChildren<SkinnedMeshRenderer>(); // 타겟에 매쉬정보를 가져옴
+    //    Transform mainCamT = mainCamera.transform;
+    //    Vector3 mainCamPos = mainCamT.position;
+    //    Vector3 targetPos = target.position;
 
-        float dist = Vector3.Distance(mainCamPos, (targetPos + target.up)); // 거리 측정
+    //    float dist = Vector3.Distance(mainCamPos, (targetPos + target.up)); // 거리 측정
 
-        if (meshes.Length > 0)
-        {
-            for (int i = 0; i < meshes.Length; i++)
-            {
-                // 카메라와 주인공의 거리가 설정한 값보다 작으면 숨기고 아니면 보이게 한다.
-                if (dist <= cameraSettings.hidMeshWheenDistance)
-                {
-                    meshes[i].enabled = false;
-                }
-                else
-                {
-                    meshes[i].enabled = true;
-                }
-            }
-        }
-    }
+    //    if (meshes.Length > 0)
+    //    {
+    //        for (int i = 0; i < meshes.Length; i++)
+    //        {
+    //            // 카메라와 주인공의 거리가 설정한 값보다 작으면 숨기고 아니면 보이게 한다.
+    //            if (dist <= cameraSettings.hidMeshWheenDistance)
+    //            {
+    //                meshes[i].enabled = false;
+    //            }
+    //            else
+    //            {
+    //                meshes[i].enabled = true;
+    //            }
+    //        }
+    //    }
+    //}
     
     // 카메라 줌
     private void Zoom(float zoom)

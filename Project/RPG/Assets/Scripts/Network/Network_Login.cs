@@ -7,73 +7,69 @@ public class Network_Login : MonoBehaviour
 {
     private class RecvLoginData
     {
-        public int acc_index;
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();
+        public int      acc_index;  // 계정 인덱스
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 작동시간
+        public List<Network_Char.CharacterInfoData> characterInfos = new List<Network_Char.CharacterInfoData>();    // 케릭터 정보
     }
 
     private class RecvJoinData
     {
-        public int acc_index;
-        public string acc_id;
-        public int timestamp;
-        public string message;
-        public bool isSuccess;
+        public int      acc_index;  // 계정 인덱스
+        public string   acc_id;     // 아이디
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 작동 시간
     }
 
-    private SoundManager soundManager = null;
-    private Network_Char networkChar = null;
+    private Network_Char    networkChar     = null; // 케릭터관련 네트워크 스크립트
 
-    public GameObject loginObj = null;
-    public GameObject joinObj = null;
-    public GameObject charObj = null;
-    public GameObject createObj = null;
+    public GameObject       loginObj        = null; // 로그인
+    public GameObject       joinObj         = null; // 신규가입
+    public GameObject       charObj         = null; // 캐릭터
 
-    private string char_title = null;
+    private string          char_title      = null; // 타이틀
 
-    public GameObject idObj = null;
-    public GameObject pwObj = null;
-    public GameObject slotsObj = null;
+    public GameObject       idObj           = null; // 아이디
+    public GameObject       pwObj           = null; // 비밀번호
+    public GameObject       slotsObj        = null; // 케릭터 슬롯
 
-    public UIInput id = null;
-    public UIInput pw = null;
-    public UILabel title = null;
+    public UIInput          id              = null; // 아이디 입력
+    public UIInput          pw              = null; // 비밀번호 입력
+    public UILabel          title           = null; // 타이틀
 
-    public UILabel login_message = null;
-    private string login_contents = null;
-    private string login_title = null;
+    public UILabel          login_message   = null; // 로그인 메시지
+    private string          login_contents  = null; // 로그인 php 파일명
+    private string          login_title     = null; // 로그인 타이틀
 
-    public UIInput join_repw = null;
-    public UILabel join_message = null;
-    private string join_contents = null;
-    private string join_title = null;
+    public UIInput          join_repw       = null; // 가입시 다시입력 비밀번호
+    public UILabel          join_message    = null; // 가입 메시지
+    private string          join_contents   = null; // 가입 php 파일명
+    private string          join_title      = null; // 가입 타이틀
 
-    public AudioClip introBGM = null;
+    public AudioClip        introBGM        = null; // 인트로 사운드
 
     void Awake()
     {
-        networkChar = GameObject.Find("Network_Char").GetComponent<Network_Char>();
-        login_contents = "login";
-        login_title = "로그인";
+        networkChar     = GameObject.Find("Network_Char").GetComponent<Network_Char>();
+        login_contents  = "login";
+        login_title     = "로그인";
 
-        join_contents = "join";
-        join_title = "신규가입";
+        join_contents   = "join";
+        join_title      = "신규가입";
 
-        char_title = "캐릭터 선택";
+        char_title      = "캐릭터 선택";
 
-        title.text = login_title;
+        title.text      = login_title;
 
         joinObj.SetActive(false);
         charObj.SetActive(false);
-        createObj.SetActive(false);
     }
 
     void Start()
     {
-        soundManager = SoundManager.Instance;
-        soundManager.PlayBackMusic(introBGM);
+        SoundManager.Instance.PlayBackMusic(introBGM);
     }
 
     public void RequestLogin()

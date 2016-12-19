@@ -3,28 +3,30 @@ using System.Collections;
 
 public class NPCRange : MonoBehaviour
 {
-    private UIManager uiManager = null;
+    private UIManager   uiManager   = null;  // UI 매니저
 
-    private Transform npcT = null;
-    private GameObject effectObj = null; // NPC 발밑 활성화
+    private Transform   npcT        = null;  // NPC
+    private GameObject  effectObj   = null;  // NPC 발밑 활성화
+
     [SerializeField]
-    public GameObject inquireObj = null; // "대화를 하려면 F키를 누르시오"
+    public GameObject   inquireObj  = null;  // "대화를 하려면 F키를 누르시오"
 
-    private Transform targetT = null;
-    private float distance = 0f;
-    public bool isPlayer = false;
+    private Transform   targetT     = null;  // 주인공(타겟)
+    private float       distance    = 0f;    // 거리
+    public  bool        isPlayer    = false; // 범위에 주인공이 있는지 여부
 
     void Awake()
     {
-        npcT = transform;
-        effectObj = transform.FindChild("Aggro").gameObject;
-        distance = 5f;
-        isPlayer = false;
+        npcT        = transform;
+        effectObj   = transform.FindChild("Aggro").gameObject;
+        distance    = 5f;
+        isPlayer    = false;
     }
 
     void Start()
     {
         uiManager = UIManager.Instance;
+
         CreateMessage();
     }
 

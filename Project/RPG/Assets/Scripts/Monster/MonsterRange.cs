@@ -36,33 +36,28 @@ public class MonsterRange : MonoBehaviour
     [SerializeField]
     public MonsterSettings monster;
 
-    private Transform skillPoint = null;
-    private Vector3 skillRnage = Vector3.zero;
-
-    public Vector3 mobPos = Vector3.zero;
-    public Vector3 tPos = Vector3.zero;
-
-    public Collider[] attTargets;
+    private Transform       skillPoint      = null;             // 스킬 기준점
+    private Vector3         skillRnage      = Vector3.zero;     // 스킬 범위
 
     // 어글 잡히는 시간을 체크하는 동안 범위안에 존재하면 범위를 벗어나도 타겟(어글)상태임
-    public float aggroTimer = 0f; // 어글 타이머
-    public bool isTargetAggro = false; // 어글이펙트가 활성화 되어있는지
+    public float            aggroTimer      = 0f;               // 어글 타이머
+    public bool             isTargetAggro   = false;            // 어글이펙트가 활성화 되어있는지
 
-    public AudioClip aggroBGM = null;
+    public AudioClip        aggroBGM        = null;             // 어글 사운드
 
     void Awake()
     {
-        monsterInfoData = GetComponent<MonsterInfoData>();
-        monsterMovement = GetComponent<MonsterMovement>();
-        monsterState = GetComponent<MonsterState>();
+        monsterInfoData     = GetComponent<MonsterInfoData>();
+        monsterMovement     = GetComponent<MonsterMovement>();
+        monsterState        = GetComponent<MonsterState>();
 
-        monster.monsterT = transform;
+        monster.monsterT    = transform;
         
 
         monster.monsterLayer = LayerMask.NameToLayer("Monster");
-        monster.targetLayer = LayerMask.NameToLayer("Player");
+        monster.targetLayer  = LayerMask.NameToLayer("Player");
 
-        skillPoint = monster.monsterT.FindChild("SkillPoint");
+        skillPoint           = monster.monsterT.FindChild("SkillPoint");
     }
 
     void Start()
@@ -78,6 +73,7 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        // 회전 중인때 루트모션 적용후 회전끝나면 루트모션 비활성화
         if (monsterState.currentState != TypeData.MonsterState.회전)
         {
             if (monsterMovement.animator.applyRootMotion)
@@ -100,20 +96,25 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
+        // 몬스터 타겟이 있다면
         if (monster.targetT != null)
         {
+            // 몬스터 타겟이 죽으면(주인공이 죽으면)
             if (monster.targetT.GetComponent<PlayerState>().currentState == TypeData.State.죽음)
             {
+                // 처음 상태로 초기화
                 Reset();
             }
         }
 
+        // 어그로 상태이면 타겟 어그로 활성화 
         if (isTargetAggro)
         {
             if (!playerEffect)
             {
                 Debug.Log("PlayerEffect Script Null");
             }
+
             playerEffect.CheckActiveEffect(playerEffect.effectSettings.aggro, true);
         }
 
@@ -150,22 +151,23 @@ public class MonsterRange : MonoBehaviour
 
         if (playerEffect != null)
         {
-            // TODO : 어글이펙트 비활성화
             playerEffect.CheckActiveEffect(playerEffect.effectSettings.aggro, false);
         }
       
-        monster.targetT = null;
+        monster.targetT     = null;
         monster.tempTargetT = null;
-        isTargetAggro = false;
-        aggroTimer = 0f;
+        isTargetAggro       = false;
+        aggroTimer          = 0f;
+
         if (!monsterMovement.nav.enabled)
         {
             monsterMovement.nav.enabled = true;
         }
-        monsterMovement.nav.ResetPath();
-        monsterInfoData.Reset(false);
-        monsterState.nextState = TypeData.MonsterState.대기;
-        monsterState.nextMode = TypeData.MODE.평화;
+
+        monsterMovement.nav.ResetPath(); // 네비 패치 초기화
+        monsterInfoData.Reset(false); // 위치, 체력, 체력바
+        monsterState.nextState  = TypeData.MonsterState.대기;
+        monsterState.nextMode   = TypeData.MODE.평화;
     }
 
     // 범위내의 타겟이 있는지 검색후 임시 타켓지정
@@ -354,7 +356,9 @@ public class MonsterRange : MonoBehaviour
         Vector3 targetPos = monster.targetT.position;
 
         float dis = Vector3.Distance(monsterPos, targetPos);
+
         //Debug.Log("이동 거리 체크 : " + dis);
+
         // 10m 이상 떨어지면 이동
         if (dis >= monster.moveDis)
         {   
@@ -391,6 +395,7 @@ public class MonsterRange : MonoBehaviour
        
         float dis = Vector3.Distance(monsterPos, targetPos);
 
+        // 공격 범위에 있으면
         if (dis <= monster.atkDis)
         {
             monsterMovement.nav.stoppingDistance = monster.atkDis;
@@ -435,8 +440,6 @@ public class MonsterRange : MonoBehaviour
             return;
         }
 
-        bool isPlayer = false;
-
         Vector3 monsterPos = monster.monsterT.position;
 
         skillPoint.localPosition = new Vector3(skillPos.x, 1f, skillPos.z);
@@ -457,38 +460,6 @@ public class MonsterRange : MonoBehaviour
             // 주인공 Hit
             PlayerMovement playerMovement = target.GetComponent<PlayerMovement>();
             playerMovement.SetDamage(monster.monsterT, -skillAtt);
-            isPlayer = true;
-        }
-
-        //if (!isPlayer)
-        //{
-        //    Rotation();
-        //}
-    }
-
-    private void Rotation()
-    {
-        Vector3 v1 = monster.monsterT.position - monster.targetT.position;
-        Vector3 v2 = monster.monsterT.right;
-        float dp = Vector3.Dot(v1, v2);
-
-        monsterMovement.isRot = true;
-        monsterState.nextState = TypeData.MonsterState.회전;
-
-        if (!monsterMovement.animator.applyRootMotion)
-        {
-            monsterMovement.animator.applyRootMotion = true;
-        }
-
-        // 왼쪽 회전
-        if (dp > 0)
-        {
-            monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isLeftTurnTrigger);
-        }
-        // 오른쪽 회전
-        else
-        {
-            monsterMovement.animator.SetTrigger(monsterMovement.animationSettings.isRightTurnTrigger);
         }
     }
 }

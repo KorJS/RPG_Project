@@ -163,6 +163,7 @@ public class KumasSkill : MonoBehaviour
         }
     }
 
+    // 스킬 범위 (DB로부터 받은 x,y,z 문자열을 Vector3 로 변환)
     private Vector3 stringToVector3(string data)
     {
         Vector3 pos = Vector3.zero;
@@ -176,6 +177,7 @@ public class KumasSkill : MonoBehaviour
         return pos;
     }
 
+    // 스킬 범위 스크립트로 스킬 정보 전달
     private void Hit(int index)
     {
         skillPos = stringToVector3(monsterInfoData.monsterSkillInfos[index].skillPoint);
@@ -232,6 +234,7 @@ public class KumasSkill : MonoBehaviour
         Transform tempT_s = null;
         Transform tempT_e = null;
 
+        // 왼손, 오른손 체크
         if (iceBallCount % 2 == 0)
         {
             tempT_s = effects.rightPoint_s;
@@ -247,7 +250,7 @@ public class KumasSkill : MonoBehaviour
         effects.iceBallObjs[iceBallCount].SetActive(true);
 
         BallControl ballControl = effects.iceBallObjs[iceBallCount].GetComponent<BallControl>();
-        ballControl.SetBall(gameObject.transform, tempT_s.position, tempT_e.position, 5, 15, skillAtt, "IceBall");
+        ballControl.SetBall(gameObject.transform, tempT_s.position, tempT_e.position, 5, 15, skillAtt, "IceBall"); // 스킬 정보 전달
 
         iceBallCount++;
     }

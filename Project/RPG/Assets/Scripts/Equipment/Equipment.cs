@@ -12,35 +12,35 @@ public class Equipment : MonoBehaviour
         보조무기
     };
 
-    public EquipmentType eqType = EquipmentType.없음;
+    public EquipmentType eqType = EquipmentType.없음; // 무기 타입
 
     [System.Serializable]
     public class LocationSettings
     {
         [Header("-Equip Location-")]
-        public Transform equipT;
-        public Vector3 equipPosition;
-        public Vector3 equipRotation;
+        public Transform    equipT;             // 장비 착용시 부모
+        public Vector3      equipPosition;      // 장비 착용시 위치
+        public Vector3      equipRotation;      // 장비 착용시 회전
 
         [Header("-Unequip Location-")]
-        public Transform unequipT;
-        public Vector3 unequipPosition;
-        public Vector3 unequipRotation;
+        public Transform    unequipT;           // 장비 해제시 부모
+        public Vector3      unequipPosition;    // 장비 해제시 위치
+        public Vector3      unequipRotation;    // 장비 해제시 회전
     }
 
     [SerializeField]
     public LocationSettings locationSettings;
 
-    public GameObject slashEffect = null;
+    public GameObject       slashEffect     = null; // 검기 이펙트
 
-    public EquipmentHandler equipHandler = null;
-    private PlayerState playerState = null;
+    public EquipmentHandler equipHandler    = null; // 장비 핸들러 스크립트
+    private PlayerState     playerState     = null; // 주인공 상태
 
-    private TypeData.MODE currentMode = TypeData.MODE.평화;
+    private TypeData.MODE   currentMode     = TypeData.MODE.평화; // 평화, 전투 모드
 
-    private bool isEquipeed = false;
-    private bool isChangMode = false;
-    private bool isEffect = false;
+    private bool            isEquipeed      = false;
+    private bool            isChangMode     = false;
+    private bool            isEffect        = false;
 
     void Awake()
     {
@@ -161,7 +161,6 @@ public class Equipment : MonoBehaviour
 
     public void RemoveEquipment()
     {
-        // TODO : Destory();
         Destroy(this.gameObject);
     }
 }

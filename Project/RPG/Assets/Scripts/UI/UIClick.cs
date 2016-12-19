@@ -5,18 +5,18 @@ using System.Linq;
 
 public class UIClick : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private SkillData skillData = null;
-    private PlayerInput playerInupt = null;
-    private PlayerState playerState = null;
-    private PlayerSlotData playerSlotData = null;
-    private EquipmentHandler equipHandler = null;
+    private UIManager        uiManager      = null; // UI 매니저
+    private SkillData        skillData      = null; // 스킬 정보
+    private PlayerInput      playerInupt    = null; // 주인공 입력
+    private PlayerState      playerState    = null; // 주인공 상태
+    private PlayerSlotData   playerSlotData = null; // 주인공 슬롯 정보
+    private EquipmentHandler equipHandler   = null; // 장비 핸들러
 
-    private UIDragAndDrop uiDragAndDrop = null;
-    public UISlotInfo uiSlotInfo = null;
-    private UISkillList uiSkillList = null;
+    private UIDragAndDrop    uiDragAndDrop  = null; // 드래그앤드롭
+    public  UISlotInfo       uiSlotInfo     = null; // 슬롯 정보
+    private UISkillList      uiSkillList    = null; // 스킬리스트
 
-    public bool isClick = false;
+    public bool              isClick        = false; // 클릭여부
 
     void Awake()
     {
@@ -25,17 +25,18 @@ public class UIClick : MonoBehaviour
     
     void Start()
     {
-        uiManager = UIManager.Instance;
-        skillData = SkillData.Instance;
-        playerSlotData = PlayerSlotData.Instance;
+        uiManager       = UIManager.Instance;
+        skillData       = SkillData.Instance;
+        playerSlotData  = PlayerSlotData.Instance;
 
-        uiDragAndDrop = GetComponent<UIDragAndDrop>();
-        uiSlotInfo = GetComponent<UISlotInfo>();
+        uiDragAndDrop   = GetComponent<UIDragAndDrop>();
+        uiSlotInfo      = GetComponent<UISlotInfo>();
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        playerInupt = playerObj.GetComponent<PlayerInput>();
-        playerState = playerObj.GetComponent<PlayerState>();
-        equipHandler = playerObj.GetComponent<EquipmentHandler>();
+
+        playerInupt     = playerObj.GetComponent<PlayerInput>();
+        playerState     = playerObj.GetComponent<PlayerState>();
+        equipHandler    = playerObj.GetComponent<EquipmentHandler>();
     }
 
     void OnClick()
@@ -75,6 +76,7 @@ public class UIClick : MonoBehaviour
 
     void OnPress(bool isPress)
     {
+        // 안드로이드에서 클릭
         if (!isPress && !uiDragAndDrop.isDragging && Application.platform == RuntimePlatform.Android)
         {
             SetSkillDescription();
@@ -165,6 +167,7 @@ public class UIClick : MonoBehaviour
         uiSkillList.SetDescription(skillInfo.iconName, skillInfo.name, skillInfo.description);
     }
 
+    // 인벤 슬롯
     private void InventorySlot()
     {
         // 상점창이 열여있는 경우
@@ -196,9 +199,10 @@ public class UIClick : MonoBehaviour
             int quantity = 0;
 
             Debug.Log("itemType : " + uiSlotInfo.slotInfo.itemType);
+
             if (uiSlotInfo.slotInfo.itemType == TypeData.ItemType.장비) { quantity = 1; }
-            // 소모품, 퀘스트템일경우
-            else { quantity = uiSlotInfo.slotInfo.quantity; }
+            else { quantity = uiSlotInfo.slotInfo.quantity; } // 소모품, 퀘스트템일경우
+
             Debug.Log("quantity : " + quantity);
 
             playerSlotData.AddSlotData(TypeData.SlotType.창고, uiSlotInfo.slotInfo.itemType, uiSlotInfo.slotInfo.itemIndex, uiSlotInfo.slotInfo.quantity);
@@ -261,6 +265,7 @@ public class UIClick : MonoBehaviour
         }
     }
 
+    // 단축 슬롯
     private void ShortCutSlot()
     {
         // 쿨타임 중이면 리턴

@@ -19,40 +19,41 @@ public class Network_Store : MonoBehaviour
         }
     }
 
+    // 슬롯 정보
     public struct SlotInfo
     {
-        public int item_index;
-        public int item_type;
-        public int quantity;
-        public int gold;
+        public int item_index;  // 아이템 인덱스
+        public int item_type;   // 아이템 타입
+        public int quantity;    // 수량
+        public int gold;        // 골드
     }
 
     public SlotInfo slotInfo;
 
     public class RecvLoadStore
     {
-        public int area_type;
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public List<int> equipments = new List<int>();
-        public List<int> cusomables = new List<int>();
+        public int      area_type;  // 지역
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 동작시간
+        public List<int> equipments = new List<int>(); // 장비
+        public List<int> cusomables = new List<int>(); // 소모품
     }
 
     public class RecvCalculateData
     {
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 작동시간
     }
 
-    private List<SlotInfo> buy_list = null;
-    private List<SlotInfo> sell_list = null;
+    private List<SlotInfo>  buy_list        = null; // 구매 리스트
+    private List<SlotInfo>  sell_list       = null; // 판매 리스트
 
-    private int acc_index = 0;
-    private int char_index = 0;
-    private string store_load_contents = null;
-    private string store_calculate_contents = null;
+    private int             acc_index       = 0;    // 계정 인덱스
+    private int             char_index      = 0;    // 케릭터 인덱스
+    private string store_load_contents      = null; // 상점 불러오기 php 파일명
+    private string store_calculate_contents = null; // 정산 처리 php 파일명
 
     void Awake()
     {
@@ -138,6 +139,7 @@ public class Network_Store : MonoBehaviour
         Debug.Log("성공 : " + data.message);
     }
 
+    // 상점 구매, 판매 슬롯에 정보를 서버로 전달하기 위해 리스트로 만듬
     private void CheckStoreSlot()
     {
         buy_list.Clear();

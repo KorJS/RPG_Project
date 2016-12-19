@@ -34,16 +34,16 @@ public class SkillData
     // 케릭 직업에 맞게 데이터를 받아온다
     public class SkillInfo
     {
-        public int skillIndex;      // 인덱스
-        public int level;           // 습득 필요레벨
-        public float coolTime;      // 쿨타임
-        public float attack;        // 공격력
-        public float mp;            // 소모MP / 습득MP
-        public float angle;         // 각도
-        public float distance;      // 거리
-        public string name;         // 이름
-        public string iconName;     // 아이콘 이름
-        public string description;  // 스킬 설정
+        public int      skillIndex;     // 인덱스
+        public int      level;          // 습득 필요레벨
+        public float    coolTime;       // 쿨타임
+        public float    attack;         // 공격력
+        public float    mp;             // 소모MP / 습득MP
+        public float    angle;          // 각도
+        public float    distance;       // 거리
+        public string   name;           // 이름
+        public string   iconName;       // 아이콘 이름
+        public string   description;    // 스킬 설정
     };
 
     public SkillInfo skillinfo;
@@ -55,6 +55,7 @@ public class SkillData
         skillInfos = new Dictionary<int, SkillInfo>();
     }
 
+    // 스킬 정보 설정
     public void SetSkillInfo(List<SkillInfo> _skillInfos)
     {
         for (int i = 0; i < _skillInfos.Count; i++)
@@ -68,7 +69,7 @@ public class SkillData
             skillInfos.Add(_skillInfos[i].skillIndex, _skillInfos[i]);
         }
 
-        PlayerSlotData.Instance.SetSkillListSlot();
+        PlayerSlotData.Instance.SetSkillListSlot(); // 스킬창 리스트 설정
     }
 
     public string pathForDocumentsFile(string fileName)
@@ -191,15 +192,15 @@ public class SkillData
     {
         skillInfos.Add(index, new SkillInfo
         {
-            skillIndex = int.Parse(temp[0]),    // 스킬인덱스
-            level = int.Parse(temp[2]),         // 습득레벨
-            coolTime = float.Parse(temp[3]),    // 쿨타임
-            attack = float.Parse(temp[4]),      // 공격력
-            mp = float.Parse(temp[5]),          // 소모, 습득 마력
-            angle = float.Parse(temp[6]),       // 각도
-            distance = float.Parse(temp[7]),    // 거리
-            name = temp[8],                     // 이름
-            iconName = temp[9],                 // 아이콘 이름
+            skillIndex  = int.Parse(temp[0]),   // 스킬인덱스
+            level       = int.Parse(temp[2]),   // 습득레벨
+            coolTime    = float.Parse(temp[3]), // 쿨타임
+            attack      = float.Parse(temp[4]), // 공격력
+            mp          = float.Parse(temp[5]), // 소모, 습득 마력
+            angle       = float.Parse(temp[6]), // 각도
+            distance    = float.Parse(temp[7]), // 거리
+            name        = temp[8],              // 이름
+            iconName    = temp[9],              // 아이콘 이름
             description = temp[10]              // 설명
         });
     }

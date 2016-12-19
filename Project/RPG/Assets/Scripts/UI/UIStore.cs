@@ -4,31 +4,31 @@ using System.Collections.Generic;
 
 public class UIStore : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private PlayerInfoData playerInfoData = null;
-    private PlayerSlotData playerSlotData = null;
+    private UIManager      uiManager      = null; // UI 매니저
+    private PlayerInfoData playerInfoData = null; // 주인공 정보
+    private PlayerSlotData playerSlotData = null; // 주인공 슬롯 정보
 
     [System.Serializable]
     public class StoreSettings
     {
-        public UILabel sellAmount;
-        public UILabel buyAmount;
-        public UILabel changeG;
+        public UILabel sellAmount;  // 판매 총금액
+        public UILabel buyAmount;   // 구매 총금액
+        public UILabel changeG;     // 정산후 금액
     }
 
     [SerializeField]
     public StoreSettings storeSettings;
 
-    public List<int> changInvenIndexs = null;
-    private Dictionary<int, int> originalInfos = null;
+    public  List<int>            changInvenIndexs   = null; // 변경된 인벤 슬롯 인덱스
+    private Dictionary<int, int> originalInfos      = null; // 변경전 슬롯 정보
 
-    private UISlotInfo currentInfo = null;
-    private TypeData.SlotType targetType = TypeData.SlotType.없음;
+    private UISlotInfo           currentInfo        = null; // 현제 슬롯 정보
+    private TypeData.SlotType    targetType         = TypeData.SlotType.없음; // 타겟 슬롯 타입
 
-    private int playerGold = 0;
-    private int quantity = 0;
+    private int                  playerGold         = 0;    // 주인공 소지금
+    private int                  quantity           = 0;    // 수량
 
-    public AudioClip calculateBtnBGM = null;
+    public AudioClip             calculateBtnBGM    = null; // 정산 사운드
 
     void Awake()
     {
@@ -221,7 +221,9 @@ public class UIStore : MonoBehaviour
                     Debug.Log("장비index x : " + invenSlot.Key);
                     continue;
                 }
+
                 Debug.Log("장비index o : " + invenSlot.Key);
+
                 int index = invenSlot.Key;
 
                 invenSlot.Value.isExist = true;
@@ -454,6 +456,7 @@ public class UIStore : MonoBehaviour
         }
     }
 
+    // 비활성화가 되었을때 리스트 목록 제거
     public void ResetListSlot()
     {
         foreach (KeyValuePair<int, UISlotInfo> slotList in uiManager.storeListSlots)

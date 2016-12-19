@@ -3,28 +3,30 @@ using System.Collections;
 
 public class PlayerState : MonoBehaviour
 {
-    private PlayerMovement playerMovement = null;   // 주인공 동작 관련
+    private PlayerMovement   playerMovement = null; // 주인공 동작 관련
     private EquipmentHandler equipHandler = null;   // 장비핸들러
 
-    public TypeData.MODE currentMode = TypeData.MODE.없음; // 현재 모드 상태
-    public TypeData.MODE nextMode = TypeData.MODE.없음; // 변화한 모드 상태
+    // 모드
+    public TypeData.MODE currentMode    = TypeData.MODE.없음;
+    public TypeData.MODE nextMode       = TypeData.MODE.없음;
 
-    public TypeData.State currentState = TypeData.State.없음;
-    public TypeData.State nextState = TypeData.State.없음;
+    // 상태
+    public TypeData.State currentState  = TypeData.State.없음;
+    public TypeData.State nextState     = TypeData.State.없음;
 
-    private float noHitCombatTime = 5f; // 전투모드에서 전투가 없을때 평화모드로 전환될 시간
-    public float combatTimer = 0f;
+    private float noHitCombatTime       = 5f; // 전투모드에서 전투가 없을때 평화모드로 전환될 시간
+    public  float combatTimer           = 0f; // 전투모드 타이머
 
     void Awake()
     {
-        playerMovement = GetComponent<PlayerMovement>();
-        equipHandler = GetComponent<EquipmentHandler>();
+        playerMovement  = GetComponent<PlayerMovement>();
+        equipHandler    = GetComponent<EquipmentHandler>();
 
-        currentMode = TypeData.MODE.평화;
-        nextMode = TypeData.MODE.없음;
+        currentMode     = TypeData.MODE.평화;
+        nextMode        = TypeData.MODE.없음;
 
-        currentState = TypeData.State.없음;
-        nextState = TypeData.State.없음;
+        currentState    = TypeData.State.없음;
+        nextState       = TypeData.State.없음;
     }
 
     void Start()
@@ -45,6 +47,7 @@ public class PlayerState : MonoBehaviour
         PeaceFromCombat();
     }
 
+    // 상태 체크
     private void CheckState()
     {
         if (nextState == TypeData.State.없음)
@@ -58,6 +61,7 @@ public class PlayerState : MonoBehaviour
         playerMovement.SetAniState(currentState);
     }
 
+    // 모드 체크
     private void CheckMode()
     {
         if (nextMode == TypeData.MODE.없음)

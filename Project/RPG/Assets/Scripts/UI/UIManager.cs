@@ -50,12 +50,12 @@ public class UIManager : MonoBehaviour
         public string shortCutW  = "ShortCutW";
         public string optionW    = "OptionW";
 
-        public bool isCharacterW = false;
-        public bool isInventoryW = false;
-        public bool isSkillW = false;
-        public bool isQuestListW = false;
-        public bool isOptionW = false;
-        public bool isUIModeW = false;
+        public bool isCharacterW    = false;
+        public bool isInventoryW    = false;
+        public bool isSkillW        = false;
+        public bool isQuestListW    = false;
+        public bool isOptionW       = false;
+        public bool isUIModeW       = false;
     }
 
     public WindowSettings windowSettings;
@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
         public string itemDivW = "ItemDivisionPopup";
         public string goldDivW = "GoldDivisionPopup";
         public string inquireW = "InquirePopup";
-        public string copyW = "CopyPopup";
+        public string copyW    = "CopyPopup";
         public string warningW = "WarningPopup";
         public string toolTipW = "ToolTip";
     }
@@ -105,35 +105,35 @@ public class UIManager : MonoBehaviour
     public class UISoundSettings
     {
         [Header("- Windows -")]
-        public AudioClip characterOpenBGM = null;
-        public AudioClip characterCloseBGM = null;
-        public AudioClip inventoryOpenBGM = null;
-        public AudioClip inventoryCloseBGM = null;
-        public AudioClip questOpenBGM = null;
-        public AudioClip questCloseBGM = null;
-        public AudioClip skillListOpenBGM = null;
-        public AudioClip skillListCloseBGM = null;
-        public AudioClip storeOpenBGM = null;
-        public AudioClip storeCloseBGM = null;
-        public AudioClip storageOpenBGM = null;
-        public AudioClip storageCloseBGM = null;
-        public AudioClip uiOpenBGM = null;
-        public AudioClip uiCloseBGM = null;
+        public AudioClip characterOpenBGM   = null;
+        public AudioClip characterCloseBGM  = null;
+        public AudioClip inventoryOpenBGM   = null;
+        public AudioClip inventoryCloseBGM  = null;
+        public AudioClip questOpenBGM       = null;
+        public AudioClip questCloseBGM      = null;
+        public AudioClip skillListOpenBGM   = null;
+        public AudioClip skillListCloseBGM  = null;
+        public AudioClip storeOpenBGM       = null;
+        public AudioClip storeCloseBGM      = null;
+        public AudioClip storageOpenBGM     = null;
+        public AudioClip storageCloseBGM    = null;
+        public AudioClip uiOpenBGM          = null;
+        public AudioClip uiCloseBGM         = null;
 
         [Header("- Item -")]
-        public AudioClip pickupBGM = null;
-        public AudioClip swordBGM;
-        public AudioClip bookBGM;
-        public AudioClip bodyBGM;
-        public AudioClip handBGM;
-        public AudioClip legBGM;
-        public AudioClip potionBGM;
-        public AudioClip useRecoveryPotionBGM;
-        public AudioClip useBffPotionBGM;
-        public AudioClip questItemBGM;
+        public AudioClip pickupBGM              = null;
+        public AudioClip swordBGM               = null;
+        public AudioClip bookBGM                = null;
+        public AudioClip bodyBGM                = null;
+        public AudioClip handBGM                = null;
+        public AudioClip legBGM                 = null;
+        public AudioClip potionBGM              = null;
+        public AudioClip useRecoveryPotionBGM   = null;
+        public AudioClip useBffPotionBGM        = null;
+        public AudioClip questItemBGM           = null;
 
         [Header("- System -")]
-        public AudioClip lockBGM;
+        public AudioClip lockBGM                = null;
     }
 
     [SerializeField]
@@ -147,35 +147,35 @@ public class UIManager : MonoBehaviour
     public SortedDictionary<int, UISlotInfo> buySlots = null;   // 상점 구매목록슬롯
     public SortedDictionary<int, UISlotInfo> sellSlots = null;  // 상점 판매목록슬롯
 
-    public List<GameObject> wObjects = null;
-    public List<UIPanel> windows = null;
-    public List<UIPanel> showWindowList = null;
-    public List<AudioClip> audioList = null;
+    public List<GameObject> wObjects        = null;     // 상점, 팝업
+    public List<UIPanel>    windows         = null;     // 윈도우
+    public List<UIPanel>    showWindowList  = null;     // 활성화,비활성화(alpha 조절)할 윈도우들
+    public List<AudioClip>  audioList       = null;     // 사운드 리스트
 
-    public GameObject bossHpBarObj = null;
-    public GameObject mobHpBarObj = null;
+    public GameObject       bossHpBarObj    = null;     // 보스 체력바
+    public GameObject       mobHpBarObj     = null;     // 일반, 정예 체력바
 
-    public UILabel playerGold = null;
-    public UILabel storageGold = null;
+    public UILabel          playerGold      = null;     // 소지금
+    public UILabel          storageGold     = null;     // 보관금
 
-    public bool isUIMode = false;
-    public bool isStorage = false;
-    public bool isStore = false;
-    public bool isQuest = false;
-    public bool isFKey = false;
+    public bool             isUIMode        = false;    // UI 모드 
+    public bool             isStorage       = false;    // 창고 클릭여부
+    public bool             isStore         = false;    // 상점 클릭여부
+    public bool             isQuest         = false;    // 퀘스트 클릭여부
+    public bool             isFKey          = false;    // F키 클릭여부
 
-    private const float     MESSAGETIME = 2f;
-    private float           messageTimer = 0f;
-    private bool            isMessage = false;
+    private const float     MESSAGETIME     = 2f;       // 매시지 지속 시간
+    private float           messageTimer    = 0f;       // 매시지 지속 타이머
+    private bool            isMessage       = false;    // 매시지 활성화여부
 
-    public int              divQuantity = 0;            // 분리한 수량
+    public int              divQuantity     = 0;        // 분리한 수량
 
     public GameObject       tempDraggingPanel = null;   // 드래그중인것 복사한거
-    public UITexture        tempIcon = null;            // 드래그중인 Icon
+    public UITexture        tempIcon        = null;     // 드래그중인 Icon
 
-    public GameObject       damageTxtPool = null;     // 데미지 텍스트 풀
-    public List<GameObject> damageTxt3DObjs = null;       // 데미지 텍스트 풀
-    private int             damageTxtCount = 0;         // 풀 카운트
+    public GameObject       damageTxtPool   = null;     // 데미지 텍스트 풀
+    public List<GameObject> damageTxt3DObjs = null;     // 데미지 텍스트 풀
+    private int             damageTxtCount  = 0;        // 풀 카운트
 
     // 방어 성공 UI이펙트
     public GameObject       blockTxtObj = null;
@@ -196,38 +196,38 @@ public class UIManager : MonoBehaviour
             Destroy(uiManager);
         }
 
-        playerT = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        playerInput = playerT.GetComponent<PlayerInput>();
+        playerT         = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        playerInput     = playerT.GetComponent<PlayerInput>();
 
-        shortCuts = new Dictionary<int, UISlotInfo>();
-        storeListSlots = new Dictionary<int, UISlotInfo>();
-        characterSlots = new Dictionary<int, UISlotInfo>();
-        skillListSlots = new Dictionary<int, UISlotInfo>();
-        buySlots = new SortedDictionary<int, UISlotInfo>();
-        sellSlots = new SortedDictionary<int, UISlotInfo>();
-        invenSlots = new SortedDictionary<int, UISlotInfo>();
+        shortCuts       = new Dictionary<int, UISlotInfo>();
+        storeListSlots  = new Dictionary<int, UISlotInfo>();
+        characterSlots  = new Dictionary<int, UISlotInfo>();
+        skillListSlots  = new Dictionary<int, UISlotInfo>();
+        buySlots        = new SortedDictionary<int, UISlotInfo>();
+        sellSlots       = new SortedDictionary<int, UISlotInfo>();
+        invenSlots      = new SortedDictionary<int, UISlotInfo>();
 
-        bossHpBarObj = GameObject.Find("BossPanel");
-        mobHpBarObj = GameObject.Find("MonsterPanel");
+        bossHpBarObj    = GameObject.Find("BossPanel");
+        mobHpBarObj     = GameObject.Find("MonsterPanel");
         bossHpBarObj.SetActive(false);
         mobHpBarObj.SetActive(false);
 
-        blockTxtObj = GameObject.Find("BlockTxtEffect");
-        blockTween = blockTxtObj.transform.GetChild(0).GetComponent<TweenScale>();
+        blockTxtObj     = GameObject.Find("BlockTxtEffect");
+        blockTween      = blockTxtObj.transform.GetChild(0).GetComponent<TweenScale>();
         blockTxtObj.SetActive(false);
 
-        damageTxtPool = GameObject.Find("DamageTxtPool");
+        damageTxtPool   = GameObject.Find("DamageTxtPool");
         damageTxt3DObjs = new List<GameObject>();
         CreateDamageTxt3D();
     }
 
     void Start()
     {
-        gameManager = GameManager.Instance;
-        playerInfoData = PlayerInfoData.Instance;
+        gameManager     = GameManager.Instance;
+        playerInfoData  = PlayerInfoData.Instance;
 
-        windowSettings.fadePanel = GameObject.Find("Fade_Panel").GetComponent<UIPanel>();
-        windowSettings.fadePanel.alpha = 1f;
+        windowSettings.fadePanel        = GameObject.Find("Fade_Panel").GetComponent<UIPanel>();
+        windowSettings.fadePanel.alpha  = 1f;
 
         //// window
         FindWindow(ref windowSettings.characterPanel, windowSettings.characterW);
@@ -247,8 +247,9 @@ public class UIManager : MonoBehaviour
         FindObject(ref popupSettings.warningPopup, popupSettings.warningW);
         FindObject(ref popupSettings.toolTip, popupSettings.toolTipW);
 
-        playerGold = windowSettings.inventoryPanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+        playerGold  = windowSettings.inventoryPanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
         storageGold = windowSettings.storagePanel.gameObject.transform.FindChild("Gold").FindChild("Amount").GetComponent<UILabel>();
+
         SetGoldLabel(true);
     }
 
@@ -259,7 +260,6 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        // TODO : 인벤토리, 케릭터창, 상점, 창고 열려있는 상태에 따라 마우스 우클릭하여 아이템 처리방식이 달라짐
         InputUIkey();
 
         MessageTime(); // 메시지 표시 시간
@@ -317,6 +317,7 @@ public class UIManager : MonoBehaviour
         damageTxtCount++;
     }
 
+    // 윈도우 판넬 찾아 알파값 0 으로 조정
     private void FindWindow(ref UIPanel uiPanel, string name)
     {
         if (uiPanel != null)
@@ -335,6 +336,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 상점, 팝업창 찾아 비활성화
     private void FindObject(ref GameObject obj, string objName)
     {
         if (obj != null)
@@ -458,6 +460,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 켜져 있는 윈도우 끔
     public void AllCloseWindow()
     {
         for (int i = 0; i < windows.Count; i++)
@@ -645,6 +648,7 @@ public class UIManager : MonoBehaviour
         Destroy(tempDraggingPanel); // UI 모드 해제되면 드래그 중인거 제거
     }
 
+    // 체력바 설정
     public void SetHpBar(Transform targetT)
     {
         GameObject tempHpBarObj = null;
@@ -667,6 +671,7 @@ public class UIManager : MonoBehaviour
         tempHpBarObj.GetComponent<UIMonsterHpBar>().SetTarget(targetT);
     }
 
+    // 골드 라벨 설정
     public void SetGoldLabel(bool isInit)
     {
         playerGold.text = playerInfoData.infoData.gold.ToString();
@@ -679,6 +684,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 스킬리스트에서 스킬 배울수 있으면 화살표 활성화
     public void SetSkillListUpActive(int currentLevel)
     {
         PlayerSkillData playerSkilldata = PlayerSkillData.Instance;
@@ -747,6 +753,7 @@ public class UIManager : MonoBehaviour
         return false;
     }
 
+    // 사운드 설정
     public void SetSound(UISlotInfo.SlotInfo slotInfo)
     {
         TypeData.ItemType itemType = slotInfo.itemType;
@@ -774,6 +781,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 장비 사운드 설정
     public void SetEquipmentSound(ItemData.EquipmentInfo equipmentInfo)
     {
         TypeData.EquipmentType eqType = (TypeData.EquipmentType)equipmentInfo.equipmentType;

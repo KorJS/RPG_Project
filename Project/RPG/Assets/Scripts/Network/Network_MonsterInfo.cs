@@ -21,15 +21,15 @@ public class Network_MonsterInfo : MonoBehaviour
 
     private class RecvLoadMonsterData
     {
-        public int area_type;
-        public int timestamp;
-        public string message;
-        public bool isSuccess;
-        public List<MonsterData.MonsterInfo> monsterInfos = new List<MonsterData.MonsterInfo>();
-        public List<MonsterData.MonsterSkillInfo> monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
+        public int      area_type;  // 지역
+        public int      timestamp;  // 작동 시간
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public List<MonsterData.MonsterInfo> monsterInfos = new List<MonsterData.MonsterInfo>();                // 몬스터 정보
+        public List<MonsterData.MonsterSkillInfo> monsterSkillInfos = new List<MonsterData.MonsterSkillInfo>(); // 몬스터 스킬 정보
     }
 
-    private string monster_load_contents = null;
+    private string monster_load_contents = null; // 몬스터 로드 php파일명
 
     void Awake()
     {
@@ -73,6 +73,7 @@ public class Network_MonsterInfo : MonoBehaviour
         }
 
         MonsterData.Instance.monsterSkillInfos = data.monsterSkillInfos;
+
         Debug.Log(MonsterData.Instance.monsterSkillInfos.Count);
         Debug.Log(data.message);
     }

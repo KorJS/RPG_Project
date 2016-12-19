@@ -4,22 +4,22 @@ using System.Collections.Generic;
 
 public class UICopyPopup : MonoBehaviour
 {
-    private PlayerSlotData playerSlotData = null;
-    private UIManager uiManager = null;
-    private UIStore uiStore = null;
-    private UIInput copyQuantity_Input = null; // 입력 수량
+    private PlayerSlotData  playerSlotData  = null; // 주인공 슬롯 정보
+    private UIManager       uiManager       = null; // UI 매니저
+    private UIStore         uiStore         = null; // 상점
+    private UIInput         copyQuantity_Input = null; // 입력 수량
 
-    private int copyQuantityMAX = 0; // 옮길수 있는 최대 수량(현재슬롯 수량)
-    private int copyQuantity = 0; // 분리 창에 적은 분리할 수량
+    private int             copyQuantityMAX = 0;    // 옮길수 있는 최대 수량(현재슬롯 수량)
+    private int             copyQuantity    = 0;    // 분리 창에 적은 분리할 수량
 
-    private UISlotInfo currentInfo = null;
-    private UISlotInfo targetInfo = null;
+    private UISlotInfo      currentInfo     = null; // 현재 슬롯정보
+    private UISlotInfo      targetInfo      = null; // 타겟 슬롯정보
 
     void Awake()
     {
-        playerSlotData = PlayerSlotData.Instance;
-        uiManager = UIManager.Instance;
-        copyQuantity_Input = transform.FindChild("Input").GetComponent<UIInput>();
+        playerSlotData      = PlayerSlotData.Instance;
+        uiManager           = UIManager.Instance;
+        copyQuantity_Input  = transform.FindChild("Input").GetComponent<UIInput>();
     }
 
     void Start()
@@ -54,6 +54,7 @@ public class UICopyPopup : MonoBehaviour
         }
         // 처음 표시 : 현재 옮길수 최대 수량
         copyQuantityMAX = currentInfo.slotInfo.quantity;
+
         Debug.Log("DragAndDropInfo : " + currentInfo.slotInfo.quantity);
     }
 
@@ -99,6 +100,7 @@ public class UICopyPopup : MonoBehaviour
         copyQuantity_Input.value = copyQuantity.ToString();
     }
 
+    // 완료
     public void CopyOk()
     {
         // 분리수량 0인데 확인 누른경우 걍 종료
@@ -111,12 +113,14 @@ public class UICopyPopup : MonoBehaviour
         CheckCopyItem();
     }
 
+    // 취소
     public void CopyCancel()
     {
         uiManager.DisableDragIiem();
         gameObject.SetActive(false);
     }
     
+    // 아이템 체크
     private void CheckCopyItem()
     {
         switch (currentInfo.slotType)

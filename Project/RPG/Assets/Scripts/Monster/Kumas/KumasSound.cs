@@ -8,15 +8,15 @@ public class KumasSound : MonoBehaviour
     [System.Serializable]
     public class AudioSettings
     {
-        public AudioClip[] walkBGM;
-        public AudioClip[] turnBGM;
-        public AudioClip deathBGM;
-        public AudioClip[] attack01BGM;
-        public AudioClip attack02BGM;
-        public AudioClip attack04BGM;
-        public AudioClip[] combo01BGM;
-        public AudioClip breathStartBGM;
-        public AudioClip breathShotBGM;
+        public AudioClip[]  walkBGM;
+        public AudioClip[]  turnBGM;
+        public AudioClip    deathBGM;
+        public AudioClip[]  attack01BGM;
+        public AudioClip    attack02BGM;
+        public AudioClip    attack04BGM;
+        public AudioClip[]  combo01BGM;
+        public AudioClip    breathStartBGM;
+        public AudioClip    breathShotBGM;
     }
 
     [SerializeField]

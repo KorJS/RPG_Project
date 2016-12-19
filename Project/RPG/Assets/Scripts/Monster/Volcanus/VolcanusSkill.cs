@@ -90,6 +90,7 @@ public class VolcanusSkill : MonoBehaviour
         }
     }
 
+    // 스킬 범위 (DB로부터 받은 x,y,z 문자열을 Vector3 로 변환)
     private Vector3 stringToVector3(string data)
     {
         Vector3 pos = Vector3.zero;
@@ -103,6 +104,7 @@ public class VolcanusSkill : MonoBehaviour
         return pos;
     }
 
+    // 스킬 범위 스크립트로 스킬 정보 전달
     private void Hit(int index)
     {
         skillPos = stringToVector3(monsterInfoData.monsterSkillInfos[index].skillPoint);

@@ -21,53 +21,38 @@ public class PlayerInfoData
     // TODO :  리스폰 위치
     public class InfoData
     {
-        public int accIndex;
-        public int charIndex;
-        public string nick;
-        public int playerType;
-        public int level;
-        public float exp;
-        public int gold;
-        public int storageGold;
-        public int att;
-        public int def;
-        public float currentHp;
-        public float currentMp;
-        public int maxHp;
-        public int maxMp;
-        public string spawnPos;
-        public int areaType;
+        public int      accIndex;    // 계정 인덱스
+        public int      charIndex;   // 케릭터 인덱스
+        public string   nick;        // 닉네임
+        public int      playerType;  // 직업
+        public int      level;       // 레벨
+        public float    exp;         // 경험치
+        public int      gold;        // 소지금
+        public int      storageGold; // 창고 보관금
+        public int      att;         // 공격력
+        public int      def;         // 방어력
+        public float    currentHp;   // 현재 체력
+        public float    currentMp;   // 현재 마력
+        public int      maxHp;       // 최대 체력
+        public int      maxMp;       // 최대 마력
+        public string   spawnPos;    // 종료시 주인공 위치
+        public int      areaType;    // 주인공이 있는 지역
     }
 
     public InfoData infoData;
 
-    public int totalAtt = 0;
-    public int totalDef = 0;
-    public int totalMaxHp = 0;
-    public int totalMaxMp = 0;
-    public string buffAtt = null;
-    public string buffDef = null;
-    public string buffHp = null;
-    public string buffMp = null;
+    public int      totalAtt    = 0; // 공격력
+    public int      totalDef    = 0; // 방어력
+    public int      totalMaxHp  = 0; // 체력
+    public int      totalMaxMp  = 0; // 마력
 
-    public PlayerInfoData()
-    {
-        //infoData.accIndex = 1;
-        //infoData.charIndex = 1;
-        //infoData.nick = "테라";
-        //infoData.clas = (int)TypeData.PlayerType.기사;
-        //infoData.level = 10;
-        //infoData.exp = 0;
-        //infoData.glod = 10000;
-        //infoData.att = 100;
-        //infoData.def = 100;
-        //infoData.currentHp = 1000;
-        //infoData.currentMp = 1000;
-        //totalMaxHp = infoData.maxHp = 1000;
-        //totalMaxMp = infoData.maxMp = 1000;
-    }
+    // 케릭터창에 버프 값 출력
+    public string   buffAtt     = null;
+    public string   buffDef     = null;
+    public string   buffHp      = null;
+    public string   buffMp      = null;
 
-    // TODO : 공격력 / 방어력 / HP / MP 계산
+    // 스텟 설정 (장비 착용에 따른)
     public void SetStat(int _att, int _def, int _hp, int _mp)
     {
         totalAtt = infoData.att + _att;
@@ -121,6 +106,7 @@ public class PlayerInfoData
         }
     }
 
+    // 현재 체력 설정
     public void SetCurrentHp(float hpValue)
     {
         Debug.Log("전 : " + hpValue);
@@ -145,6 +131,7 @@ public class PlayerInfoData
         }
     }
 
+    // 현재 마력 설정
     public void SetCurrentMp(float mpValue)
     {
         infoData.currentMp += mpValue;

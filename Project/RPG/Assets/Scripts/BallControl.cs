@@ -16,35 +16,35 @@ public class BallControl : MonoBehaviour
     [System.Serializable]
     public class BallSettings
     {
-        public UserType     userType    = UserType.없음;
+        public UserType     userType    = UserType.없음; // ball 사용한 타입
 
-        public Transform    userT;
-        public Vector3      orignT;
+        public Transform    userT;                      // ball 사용한 오브젝트
+        public Vector3      orignT;                     // ball 처음 위치
 
-        public int          targetLayer;
+        public int          targetLayer;                // 타겟
 
-        public Transform    holder;
-        public string       holderPath;
+        public Transform    holder;                     // ball 부모
 
-        public GameObject   hitEffectObj;
-        public string       hitEffectName;
+        public GameObject   hitEffectObj;               // ball 맞았을시 이펙트 오브젝트
+        public string       hitEffectName;              // ball 맞았을시 이펙트 프리펩 이름
 
-        public float        limitDis;
-        public float        att;
-        public float        speed;
+        public float        limitDis;                   // 최대 거리
+        public float        att;                        // 공격력
+        public float        speed;                      // 속도
     }
 
     [SerializeField]
     public BallSettings ballSettings;
 
-    public Transform ballT = null;
-    public bool isShot = false;
+    public Transform    ballT   = null;  // ball
+    public bool         isShot  = false; // 날라가는 중인지
 
     void Awake()
     {
         ballT = transform;
     }
-
+    
+    // 맞았을시
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.layer == ballSettings.targetLayer)
@@ -69,15 +69,12 @@ public class BallControl : MonoBehaviour
             }
 
             ballSettings.hitEffectObj.SetActive(true);
-            //ballSettings.hitEffectObj.transform.position = ballT.position;
-            //isShot = false;
-            //ballT.gameObject.SetActive(false);
-            //StartCoroutine(HitEffect());
 
             ResetBall();
         }
     }
 
+    // 타겟으로 이동
     IEnumerator UpdatePos()
     {
         while (true)
@@ -96,6 +93,7 @@ public class BallControl : MonoBehaviour
         }
     }
 
+    // 맞았을시 히트 이펙트 활성화
     IEnumerator HitEffect()
     {
         yield return new WaitForSeconds(2f);
@@ -104,6 +102,7 @@ public class BallControl : MonoBehaviour
         ballT.gameObject.SetActive(false);
     }
 
+    // ball 정보 설정
     public void SetBall(Transform userT, Vector3 orignT, Vector3 lookPos, int speed, int limitDis, float att, string hitEffectName)
     {
         ballSettings.userT = userT; // 사용자

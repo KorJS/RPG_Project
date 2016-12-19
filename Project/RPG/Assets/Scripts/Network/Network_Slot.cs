@@ -21,36 +21,35 @@ public class Network_Slot : MonoBehaviour
 
     private class RecvLoadSlotData
     {
-        public string table_name;
-        public int timestamp;
-        public string message;
-        public bool isSuccess;
-        public int slot_type;
-        public List<SlotInfoData> slotInfoDatas = new List<SlotInfoData>();
+        public string   table_name; // 테이블 명
+        public int      timestamp;  // 작동시간
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      slot_type;  // 슬롯 타입
+        public List<SlotInfoData> slotInfoDatas = new List<SlotInfoData>(); // 슬롯 정보
     }
 
     private class RecvSaveSlotData
     {
-        public string table_name;
-        public int timestamp;
-        public string message;
-        public bool isSuccess;
+        public string   table_name; // 테이블 명
+        public int      timestamp;  // 작동시간
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
     }
 
     public class SlotInfoData
     {
-        public int slot_index;
-        public int item_type;
-        public int skill_index;
-        public int item_index;
-        public int quantity;
+        public int slot_index;  // 슬롯 인덱스
+        public int item_type;   // 아이템 타입
+        public int skill_index; // 스킬 인덱스
+        public int item_index;  // 아이템 인덱스
+        public int quantity;    // 수량
     }
 
-    private string load_slot_contents = null;
-    private string save_slot_contents = null;
-    private string delete_slot_contents = null;
+    private string load_slot_contents = null;   // 슬롯 불러오기 php 파일명
+    private string save_slot_contents = null;   // 슬롯 저장 php 파일명
+    private string delete_slot_contents = null; // 슬롯 삭제 php 파일명
 
-    // Awake에서 자신을 인스턴스로 등록 한다.
     void Awake()
     {
         if (network_slot == null)
@@ -65,9 +64,9 @@ public class Network_Slot : MonoBehaviour
         // 다른 씬으로 넘어가더라도 메모리에서 삭제하지 않는다.
         DontDestroyOnLoad(this);
 
-        load_slot_contents = "slot_load";
-        save_slot_contents = "slot_save";
-        delete_slot_contents = "slot_delete";
+        load_slot_contents      = "slot_load";
+        save_slot_contents      = "slot_save";
+        delete_slot_contents    = "slot_delete";
     }
 
     public void RequestLoadSlot(TypeData.SlotType slotType)
@@ -168,6 +167,7 @@ public class Network_Slot : MonoBehaviour
         Debug.Log(data.table_name + " 의 " + data.message);
     }
 
+    // 슬롯 타입에 맞는 테이블명 체크
     private void CheckTable(TypeData.SlotType slotType, ref string table_name)
     {
         switch (slotType)
@@ -198,6 +198,7 @@ public class Network_Slot : MonoBehaviour
         }
     }
 
+    // 저장할 슬롯 정보
     private void CheckSaveSlotType(TypeData.SlotType slotType, ref Dictionary<int, PlayerSlotData.SlotInfoData> slotInfoDatas)
     {
         switch (slotType)
@@ -228,6 +229,7 @@ public class Network_Slot : MonoBehaviour
         }
     }
 
+    // 테이블명으로 어떤 슬롯인지 찾는다
     private void CheckSetSlotType(string table_name, ref List<SlotInfoData> slotInfoDatas)
     {
         switch (table_name)
@@ -257,7 +259,8 @@ public class Network_Slot : MonoBehaviour
                 break;
         }
     }
-
+    
+    // 슬롯 정보 설정
     private void SetSlotInfoData(ref List<SlotInfoData> slotInfoDatas, ref Dictionary<int, PlayerSlotData.SlotInfoData> targetSlotInfoDatas)
     {
         PlayerSlotData.SlotInfoData tempSlotInfoData;

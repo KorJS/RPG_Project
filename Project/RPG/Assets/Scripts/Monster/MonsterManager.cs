@@ -4,22 +4,23 @@ using System.Collections.Generic;
 
 public class MonsterManager : MonoBehaviour
 {
-    private MonsterData.MonsterInfo tempMonsterInfo; // 임시 몬스터 정보를 담아둘 것
-    private List<MonsterData.MonsterSkillInfo> tempMonsterSkillInfos; // 임시 몬스터 스킬 정보를 담아둘 것
+    private MonsterData.MonsterInfo             tempMonsterInfo;        // 임시 몬스터 정보를 담아둘 것
+    private List<MonsterData.MonsterSkillInfo>  tempMonsterSkillInfos;  // 임시 몬스터 스킬 정보를 담아둘 것
 
-    public List<GameObject> monsterObjs = null; // 지역 내에 모든 몬스터 - 지역이 바뀌면 제거하기 위해서
+    public List<GameObject>                     monsterObjs = null;     // 지역 내에 모든 몬스터 - 지역이 바뀌면 제거하기 위해서
 
-    public List<Transform> spawns = null;
+    public List<Transform>                      spawns = null;          // 몬스터 스폰지역
 
     void Awake()
     {
         tempMonsterSkillInfos = new List<MonsterData.MonsterSkillInfo>();
         Transform spawnHolder = GameObject.Find("World").transform.FindChild("Spawns");
 
-        FindSpawn(spawnHolder, spawns);
+        FindSpawn(spawnHolder, spawns); // 스폰지역 찾기
         CreateMonster();
     }
 
+    // 스폰 지역
     private void FindSpawn(Transform holder, List<Transform> _spwans)
     {
         int count = holder.childCount;
@@ -30,6 +31,7 @@ public class MonsterManager : MonoBehaviour
         }
     }
 
+    // 몬스터 생성
     public void CreateMonster()
     {
         for (int i = 0; i < spawns.Count; i++)

@@ -8,13 +8,13 @@ public class MagicianSound : MonoBehaviour
     [System.Serializable]
     public class AudioSettings
     {
-        public AudioClip[] fireballBGM;
-        public AudioClip mpCondensingBGM;
-        public AudioClip teleportBGM;
-        public AudioClip iceStormBGM;
-        public AudioClip meteorAuraBGM;
-        public AudioClip[] meteorShotBGM;
-        public AudioClip[] damageBGM;
+        public AudioClip[]  fireballBGM;
+        public AudioClip    mpCondensingBGM;
+        public AudioClip    teleportBGM;
+        public AudioClip    iceStormBGM;
+        public AudioClip    meteorAuraBGM;
+        public AudioClip[]  meteorShotBGM;
+        public AudioClip[]  damageBGM;
     }
 
     [SerializeField]

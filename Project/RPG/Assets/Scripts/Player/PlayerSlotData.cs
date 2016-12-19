@@ -21,22 +21,22 @@ public class PlayerSlotData
     [System.Serializable]
     public struct SlotInfoData
     {
-        public int itemType;
-        public int itemIndex;
-        public int skillIndex;
-        public int quantity;
+        public int itemType;    // 아이템 타입
+        public int itemIndex;   // 아이템 인덱스
+        public int skillIndex;  // 스킬 인덱스
+        public int quantity;    // 수량
     };
 
     public SlotInfoData slotInfoData;
 
     public Dictionary<int, SlotInfoData> characterInfos = null; // 케릭터슬롯 정보
     public Dictionary<int, SlotInfoData> inventoryInfos = null; // 인벤토리슬롯 정보
-    public Dictionary<int, SlotInfoData> shortCutInfos = null;  // 단축슬롯 정보
-    public Dictionary<int, SlotInfoData> storageInfos = null;   // 창고슬롯 정보
+    public Dictionary<int, SlotInfoData> shortCutInfos  = null; // 단축슬롯 정보
+    public Dictionary<int, SlotInfoData> storageInfos   = null; // 창고슬롯 정보
     public Dictionary<int, SlotInfoData> skillListInfos = null; // 스킬창 리스트 정보
 
-    private Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas = null;
-    private Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas= null;
+    private Dictionary<int, SlotInfoData> tempCurrentSlotInfoDatas  = null;
+    private Dictionary<int, SlotInfoData> tempTargetSlotInfoDatas   = null;
 
     private SortedDictionary<int, UISlotInfo.SlotInfo> invenCusomableMark = null;
     private SortedDictionary<int, UISlotInfo.SlotInfo> invenQuestItemMark = null;
@@ -53,8 +53,8 @@ public class PlayerSlotData
     {
         characterInfos = new Dictionary<int, SlotInfoData>();
         inventoryInfos = new Dictionary<int, SlotInfoData>();
-        shortCutInfos = new Dictionary<int, SlotInfoData>();
-        storageInfos = new Dictionary<int, SlotInfoData>();
+        shortCutInfos  = new Dictionary<int, SlotInfoData>();
+        storageInfos   = new Dictionary<int, SlotInfoData>();
         skillListInfos = new Dictionary<int, SlotInfoData>();
 
         invenCusomableMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
@@ -63,7 +63,7 @@ public class PlayerSlotData
         storageQuestItemMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         shortCutMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
 
-        emptyInvenMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
+        emptyInvenMark   = new SortedDictionary<int, UISlotInfo.SlotInfo>();
         emptyStorageMark = new SortedDictionary<int, UISlotInfo.SlotInfo>();
     }
 
@@ -85,6 +85,7 @@ public class PlayerSlotData
         emptyStorageMark.Clear();
     }
 
+    // 스킬 리스트 슬롯 설정
     public void SetSkillListSlot()
     {
         foreach (KeyValuePair<int, SkillData.SkillInfo> skillInfo in SkillData.Instance.skillInfos)

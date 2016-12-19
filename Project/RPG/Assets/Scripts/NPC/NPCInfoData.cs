@@ -6,11 +6,11 @@ using System.Collections.Generic;
 [RequireComponent(typeof(NPCRange))]
 public class NPCInfoData : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private ItemData itemData = null;
-    private StoreItemListData storeItemListData = null;
-    private NPCMovement npcMovement = null;
-    private NPCRange npcRange = null;
+    private UIManager           uiManager           = null; // UI 매니저
+    private ItemData            itemData            = null; // 아이템 정보
+    private StoreItemListData   storeItemListData   = null; // 상점 리스트 정보
+    private NPCMovement         npcMovement         = null; // NPC 동작
+    private NPCRange            npcRange            = null; // NPC 범위
 
     // NPC - 위치는 정해져 있음
     // 어느 지역인지
@@ -19,11 +19,10 @@ public class NPCInfoData : MonoBehaviour
     [System.Serializable]
     public class NPCInfo
     {
-        public TypeData.NPCType npcType;
-        public TypeData.StoreType storeType;
-        public int questIndex;
-        public List<int> itemIndexs;
-        public AudioClip[] talkBGM;
+        public TypeData.NPCType     npcType;    // NPC 타입
+        public TypeData.StoreType   storeType;  // 상점 타입
+        public List<int>            itemIndexs; // 아이템 인덱스 리스트
+        public AudioClip[]          talkBGM;    // NPC 대화 사운드
     }
 
     [SerializeField]
@@ -36,12 +35,12 @@ public class NPCInfoData : MonoBehaviour
 
     void Awake()
     {
-        uiManager = UIManager.Instance;
-        itemData = ItemData.Instance;
-        storeItemListData = StoreItemListData.Instance;
+        uiManager           = UIManager.Instance;
+        itemData            = ItemData.Instance;
+        storeItemListData   = StoreItemListData.Instance;
 
-        npcMovement = GetComponent<NPCMovement>();
-        npcRange = GetComponent<NPCRange>();
+        npcMovement         = GetComponent<NPCMovement>();
+        npcRange            = GetComponent<NPCRange>();
 
         SetNPCInfo();
     }
@@ -53,24 +52,32 @@ public class NPCInfoData : MonoBehaviour
             return;
         }
 
+        // 주인공이 범위에 있을떄 F키를 누르면
         if (npcRange.isPlayer && (Input.GetKeyDown(KeyCode.F) || uiManager.isFKey))
         {
+            // 대화 모션 애니매이션
             npcMovement.SetAniState();
+
+            // 사운드 출력
             SoundManager.Instance.RandomVoice(npcInfo.talkBGM);
 
+            // NPC 타입이 상인이면
             if (npcInfo.npcType == TypeData.NPCType.상인)
             {
                 uiManager.isStore = true;
                 SetStoreSlotInfo();
             }
+            // NPC 타입이 창고이면
             else if (npcInfo.npcType == TypeData.NPCType.창고)
             {
                 uiManager.isStorage = true;
             }
+
             uiManager.isFKey = false;
         }
     }
 
+    // NPC 정보 설정
     private void SetNPCInfo()
     {
         switch (npcInfo.npcType)
@@ -89,6 +96,7 @@ public class NPCInfoData : MonoBehaviour
         }
     }
 
+    // 상점리스트 슬롯 정보 설정
     public void SetStoreSlotInfo()
     {
         int slotIndex = 0;

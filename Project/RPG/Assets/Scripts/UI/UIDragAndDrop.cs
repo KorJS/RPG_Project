@@ -4,48 +4,49 @@ using System.Collections.Generic;
 
 public class UIDragAndDrop : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private PlayerSlotData playerSlotData = null;
-    private EquipmentHandler equipHandler = null;
-    private UIStore uistore = null;
-    private UICharater uiCharacter = null;
-    private UIInquirePopup uiInquirePopup = null;
-    private UICopyPopup uiCopyPopup = null;
-    private UIDivisionPopup uidivPopup = null;
-    public UISlotInfo uiSlotInfo = null;
-    private UIClick uiClick = null;
+    private UIManager           uiManager       = null; // UI 매니저
+    private PlayerSlotData      playerSlotData  = null; // 주인공 슬롯 정보
+    private EquipmentHandler    equipHandler    = null; // 장비 핸들러
+    private UIStore             uistore         = null; // 상점
+    private UICharater          uiCharacter     = null; // 케릭터창
+    private UIInquirePopup      uiInquirePopup  = null; // 확인매시지 팝업
+    private UICopyPopup         uiCopyPopup     = null; // 복사 팝업
+    private UIDivisionPopup     uidivPopup      = null; // 분리 팝업
+    public  UISlotInfo          uiSlotInfo      = null; // 슬롯 정보
+    private UIClick             uiClick         = null; // 좌,우클릭
 
-    private UIRoot root = null;
-    private Transform parent = null;
-    private GameObject draggedObject = null; // 드래그중인 icon
-    private GameObject tempDraggingPanel = null; // 드래그중인 panel
+    private UIRoot              root            = null;    // UI root
+    private Transform           parent          = null;    // 드래그할때 임시 복사본의 부모
+    private GameObject          draggedObject   = null;    // 드래그중인 icon
+    private GameObject          tempDraggingPanel = null;  // 드래그중인 panel
 
     public bool isDragging = false; // 드래그중인지
 
     void Awake()
     {
-        uiManager = UIManager.Instance;
-        playerSlotData = PlayerSlotData.Instance;
+        uiManager       = UIManager.Instance;
+        playerSlotData  = PlayerSlotData.Instance;
 
-        equipHandler = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
-        uiSlotInfo = GetComponent<UISlotInfo>();
-        uiClick = GetComponent<UIClick>();
-        parent = transform.parent;
-        root = NGUITools.FindInParents<UIRoot>(parent);
+        equipHandler    = GameObject.FindGameObjectWithTag("Player").GetComponent<EquipmentHandler>();
+        uiSlotInfo      = GetComponent<UISlotInfo>();
+        uiClick         = GetComponent<UIClick>();
+        parent          = transform.parent;
+        root            = NGUITools.FindInParents<UIRoot>(parent);
     }
 
     void Start()
     {
-        uiInquirePopup = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
-        uistore = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
-        uiCharacter = uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>();
-        uidivPopup = uiManager.popupSettings.itemDivisionPopup.GetComponent<UIDivisionPopup>();
-        uiCopyPopup = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
+        uiInquirePopup  = uiManager.popupSettings.inquirePopup.GetComponent<UIInquirePopup>();
+        uistore         = uiManager.windowSettings.storeObj.GetComponent<UIStore>();
+        uiCharacter     = uiManager.windowSettings.characterPanel.gameObject.GetComponent<UICharater>();
+        uidivPopup      = uiManager.popupSettings.itemDivisionPopup.GetComponent<UIDivisionPopup>();
+        uiCopyPopup     = uiManager.popupSettings.copyPopup.GetComponent<UICopyPopup>();
     }
 
     void OnPress(bool isPress)
     {
-        // TODO : 아직 버그가..
+
+        // 안드로이드에서.
         if (!isPress && !isDragging && Application.platform == RuntimePlatform.Android)
         {
             uiClick.SetSkillDescription();
@@ -80,7 +81,9 @@ public class UIDragAndDrop : MonoBehaviour
         }
 
         isDragging = true; // 드래그 시작
+
         Debug.Log(uiSlotInfo.name + " : " + uiSlotInfo.slotIndex);
+
         uiSlotInfo.slotSettings.uiIcon.alpha = 0.5f; // 드래그시작하면 원래있던건 반투명하게
         uiManager.tempIcon = uiSlotInfo.slotSettings.uiIcon;
 
@@ -181,6 +184,7 @@ public class UIDragAndDrop : MonoBehaviour
         uiSlotInfo.slotSettings.uiIcon.alpha = 1f;
     }
 
+    // 쿨타임 정보
     private void SetCoolTimeInfo(UISlotInfo targetInfo)
     {
         float tempCoolTimer = 0f;

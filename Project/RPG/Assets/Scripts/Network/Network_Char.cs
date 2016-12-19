@@ -9,77 +9,78 @@ public class Network_Char : MonoBehaviour
     // 슬롯 정보 클래스
     public class CharacterInfoData
     {
-        public int acc_index;
-        public int char_index;
-        public string nickname;
-        public int player_type;
-        public int level;
+        public int      acc_index;      // 계정 인덱스
+        public int      char_index;     // 케릭터 인덱스
+        public string   nickname;       // 닉네임
+        public int      player_type;    // 주인공 타입(직업)
+        public int      level;          // 레벨
     }
 
     private class RecvCreateData
     {
-        public int acc_index;
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public List<CharacterInfoData> characterInfos = new List<CharacterInfoData>();
+        public int      acc_index;      // 계정 인덱스
+        public string   message;        // 메시지
+        public bool     isSuccess;      // 성공여부
+        public int      timestamp;      // 작동시간
+        public List<CharacterInfoData> characterInfos = new List<CharacterInfoData>();  // 케릭터 정보
     }
 
     private class RecvInGameData
     {
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public PlayerInfoData.InfoData playerInfoData;
-        public List<int> playerSkillInfos;
-        public List<SkillData.SkillInfo> skillInfos;
+        public string                    message;           // 메시지
+        public bool                      isSuccess;         // 성공여부
+        public int                       timestamp;         // 작동시간
+        public PlayerInfoData.InfoData   playerInfoData;    // 주인공 정보
+        public List<int>                 playerSkillInfos;  // 주인공 배운 스킬
+        public List<SkillData.SkillInfo> skillInfos;        // 해당 직업 스킬정보
     }
 
-    public GameObject loginObj = null;
-    public GameObject charObj = null;
-    public GameObject createObj = null;
-    public GameObject idObj = null;
-    public GameObject pwObj = null;
-    public GameObject slotsObj = null;
+    public GameObject       loginObj    = null; // 로그인
+    public GameObject       charObj     = null; // 케릭터
+    public GameObject       createObj   = null; // 케릭터 생성
+    public GameObject       idObj       = null; // 아이디
+    public GameObject       pwObj       = null; // 비밀번호
+    public GameObject       slotsObj    = null; // 슬롯
 
-    public UIPanel rightPanel = null;
-    public UIPanel lodingPanel = null;
-    public UIProgressBar lodingBar = null;
-    private const float lodingTime = 5f;
-    private float lodingTimer = 0f;
+    public UIPanel          rightPanel  = null; // 오른쪽 판넬
+    public UIPanel          lodingPanel = null; // 로딩판넬
+    public UIProgressBar    lodingBar   = null; // 로딩 프로그래스바
 
-    public UIInput nickname = null;
-    public UILabel message = null;
+    private const float     lodingTime  = 5f;   // 로딩 시간
+    private float           lodingTimer = 0f;   // 로딩 타이머
+
+    public UIInput          nickname    = null; // 닉네임
+    public UILabel          message     = null; // 메시지 (서버로 부터 받은 메시지 출력)
     
-    public Dictionary<int, UICharSlotInfo> charSlotInfos = null;
-    public List<int> mark = null;
-    public List<CharacterInfoData> slotInfos;
+    public Dictionary<int, UICharSlotInfo>  charSlotInfos   = null; // 케릭터 슬롯 정보
+    public List<int>                        mark            = null; // 케릭터 슬롯 마크
+    public List<CharacterInfoData>          slotInfos       = null; // 슬롯에 케릭터 정보
 
-    private string create_contents = null;
-    private string delete_contents = null;
-    private string charInfo_contents = null;
-    public int acc_index = 0;
-    public int selectSlot = 0;
-    public int selectPlayerType = 0;
+    private string          create_contents     = null; // 케릭터 생성 php 파일명
+    private string          delete_contents     = null; // 케릭터 삭제 php 파일명
+    private string          charInfo_contents   = null; // 케릭터 정보로드 php 파일명
+    public int              acc_index           = 0;    // 계정 인덱스
+    public int              selectSlot          = 0;    // 선택한 슬롯
+    public int              selectPlayerType    = 0;    // 선택한 직업
 
-    public AudioClip introBGM = null;
-    public AudioClip warriorBGM = null;
-    public AudioClip magicianBGM = null;
-    public AudioClip priestBGM = null;
+    public AudioClip        introBGM            = null; // 인트로 사운드
+    public AudioClip        warriorBGM          = null; // 기사 사운드
+    public AudioClip        magicianBGM         = null; // 마법사 사운드
+    public AudioClip        priestBGM           = null; // 사제 사운드
 
     void Awake()
     {
-        charSlotInfos = new Dictionary<int, UICharSlotInfo>();
-        mark = new List<int>();
+        charSlotInfos       = new Dictionary<int, UICharSlotInfo>();
+        mark                = new List<int>();
 
-        selectSlot = -1;
-        selectPlayerType = (int)TypeData.PlayerType.기사;
-        create_contents = "character_create";
-        delete_contents = "character_delete";
-        charInfo_contents = "characterInfo_load";
+        selectSlot          = -1;
+        selectPlayerType    = (int)TypeData.PlayerType.기사;
+        create_contents     = "character_create";
+        delete_contents     = "character_delete";
+        charInfo_contents   = "characterInfo_load";
 
-        lodingPanel.alpha = 0f;
-        lodingBar.value = 0f;
+        lodingPanel.alpha   = 0f;
+        lodingBar.value     = 0f;
     }
 
     // 슬롯 표시할 오브젝트
@@ -176,10 +177,12 @@ public class Network_Char : MonoBehaviour
             message.text = "캐릭터를 선택 하세요.";
             return;
         }
+
         // Login에 acc_index, char_index 로 정보 가져옴
         // 케릭정보, 케릭창 슬롯, 단축슬롯, 인벤토리 슬롯, 창고슬롯
         int char_index = slotInfos[selectSlot].char_index;
         int player_type = slotInfos[selectSlot].player_type;
+
         Debug.Log("player_type : " + player_type);
 
         Dictionary <string, object> sendData = new Dictionary<string, object>();
@@ -230,6 +233,7 @@ public class Network_Char : MonoBehaviour
         StartCoroutine(SceneLoad());
     }
 
+    // 로딩, 씬로드
     IEnumerator SceneLoad()
     {
         yield return new WaitForSeconds(1f);
@@ -249,8 +253,6 @@ public class Network_Char : MonoBehaviour
 
                 if (GameManager.Instance != null)
                 {
-                    Debug.Log("?????????????");
-                    //GameManager.Instance.nextGameState = TypeData.GameState.시작;
                     GameManager.Instance.isFade = true;
                 }
             }

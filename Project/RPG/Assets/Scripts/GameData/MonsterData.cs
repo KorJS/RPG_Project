@@ -23,18 +23,18 @@ public class MonsterData
     [System.Serializable]
     public class MonsterInfo
     {
-        public int monsterIndex;
-        public int monsterType;
-        public int areaTpye;
-        public int def;
-        public float hp;
-        public int exp;
-        public int gold;
-        public string itemType;
-        public string itemIndex;
-        public string quantity;
-        public string name;
-        public string fileName;
+        public int      monsterIndex;   // 몬스터 인덱스
+        public int      monsterType;    // 몬스터 타입
+        public int      areaTpye;       // 지역타입
+        public int      def;            // 방어력
+        public float    hp;             // 체력
+        public int      exp;            // 경험치
+        public int      gold;           // 드랍 골드
+        public string   itemType;       // 드랍 아이템타입
+        public string   itemIndex;      // 드랍 아이템인덱스
+        public string   quantity;       // 드랍 아이템수량
+        public string   name;           // 몬스터 이름
+        public string   fileName;       // 몬스터 리소스파일 이름
     }
 
     public MonsterInfo monsterInfo;
@@ -42,24 +42,25 @@ public class MonsterData
     [System.Serializable]
     public class MonsterSkillInfo
     {
-        public int monsterIndex;
-        public int skillIndex;
-        public string skillPoint;
-        public int att;
-        public string range;
-        public string aniName;
+        public int      monsterIndex;   // 몬스터 인덱스
+        public int      skillIndex;     // 스킬 인덱스
+        public string   skillPoint;     // 스킬 범위 기준점
+        public int      att;            // 스킬 공격력
+        public string   range;          // 스킬 범위
+        public string   aniName;        // 스킬 애니매이션 이름
     }
 
     public MonsterSkillInfo monsterSkillInfo;
 
-    public Dictionary<string, MonsterInfo> monsterInfos = null;
-    public List<MonsterSkillInfo> monsterSkillInfos = null;
+    public Dictionary<string, MonsterInfo>  monsterInfos        = null;
+    public List<MonsterSkillInfo>           monsterSkillInfos   = null;
 
     public MonsterData()
     {
         monsterInfos = new Dictionary<string, MonsterInfo>();
     }
 
+    // 몬스터 정보 설정
     public bool GetMonsterData(string spawnName, ref MonsterInfo monsterInfo)
     {
         // 해당 몬스터 정보가 없다면 리턴
@@ -73,6 +74,7 @@ public class MonsterData
         return true;
     }
 
+    // 해당 몬스터에 스킬정보 설정
     public bool GetMonsterSkillData(int monsterIndex, ref Dictionary<int, MonsterSkillInfo> _monsterSkillInfos)
     {
         if (monsterSkillInfos.Count <= 0)

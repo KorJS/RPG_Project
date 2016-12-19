@@ -8,13 +8,15 @@ using System.Collections.Generic;
 public class MonsterInfoData : MonoBehaviour
 {
     // TODO : 몬스터 스폰될때 몬스터 정보을 이 스크립트에 저장 및 수치계산 관리
-    public MonsterData.MonsterInfo monsterInfo;
-    public Dictionary<int, MonsterData.MonsterSkillInfo> monsterSkillInfos;
-    private MonsterMovement monsterMovemnet = null;
-    private MonsterState monsterState = null;
-    private PlayerEffect playerEffect = null;
-    private ItemManager itemManager = null;
+    public  MonsterData.MonsterInfo     monsterInfo     = null; // 몬스터 정보
+    private MonsterMovement             monsterMovemnet = null; // 몬스터 동작
+    private MonsterState                monsterState    = null; // 몬스터 상태
+    private PlayerEffect                playerEffect    = null; // 주인공 이펙트(어그로)
+    private ItemManager                 itemManager     = null; // 아이템 매니저(드랍아이템)
 
+    public Dictionary<int, MonsterData.MonsterSkillInfo> monsterSkillInfos; // 몬스터 스킬 정보
+
+    // 드랍 아이템 정보
     public struct DropItem
     {
         public TypeData.ItemType itemType;
@@ -22,31 +24,31 @@ public class MonsterInfoData : MonoBehaviour
         public int quantity;
     }
 
-    public DropItem dropItem;
+    public DropItem     dropItem;
 
-    public Dictionary<int, DropItem> dropItems = null;
+    public Dictionary<int, DropItem> dropItems = null;  // 드랍아이템 정보
 
-    private Transform monsterT;
-    public Transform parentT;
+    private Transform   monsterT    = null;     // 몬스터
+    public  Transform   parentT     = null;     // 몬스터 스폰위치
 
-    public float currentHP = 0f;
-    public bool isDeath = false;
+    public float        currentHP   = 0f;       // 몬스터 현재 HP
+    public bool         isDeath     = false;    // 몬스터 죽었는지 여부
 
     void Awake()
     {
-        monsterSkillInfos = new Dictionary<int, MonsterData.MonsterSkillInfo>();
-        dropItems = new Dictionary<int, DropItem>();
-        monsterT = transform;
-        monsterMovemnet = GetComponent<MonsterMovement>();
-        monsterState = GetComponent<MonsterState>();
+        monsterSkillInfos   = new Dictionary<int, MonsterData.MonsterSkillInfo>();
+        dropItems           = new Dictionary<int, DropItem>();
+        monsterT            = transform;
+        monsterMovemnet     = GetComponent<MonsterMovement>();
+        monsterState        = GetComponent<MonsterState>();
     }
 
     void Start()
     {
-        itemManager = ItemManager.Instance;
+        itemManager     = ItemManager.Instance;
 
-        playerEffect = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEffect>();
-        parentT = transform.parent;
+        playerEffect    = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerEffect>();
+        parentT         = transform.parent;
     }
 
     // 리젠되서 활성화가 되면
@@ -96,6 +98,7 @@ public class MonsterInfoData : MonoBehaviour
         string[] itemIndex = monsterInfo.itemIndex.Split(',');
         string[] quantity = monsterInfo.quantity.Split(',');
 
+        // 몬스터 드랍아이템 정보
         for (int i = 0; i < itemTypes.Length; i++)
         {
             dropItem.itemType = (TypeData.ItemType)int.Parse(itemTypes[i]);
@@ -113,6 +116,7 @@ public class MonsterInfoData : MonoBehaviour
         }
     }
 
+    // 현재 체력 설정
     public void SetCurrentHP(float hp)
     {
         if (hp < 0)
@@ -128,6 +132,7 @@ public class MonsterInfoData : MonoBehaviour
         }
     }
 
+    // 체력바 처음상태로 설정
     private void ResetHpBar()
     {
         switch ((TypeData.MonsterType)monsterInfo.monsterType)
@@ -153,6 +158,7 @@ public class MonsterInfoData : MonoBehaviour
         }
     }
 
+    // 평화상태로 돌아가면 위치 체력, 체력바 처음상태로 설정
     public void Reset(bool isDie)
     {
         if (!isDie)

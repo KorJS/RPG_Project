@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class WarriorEffect : MonoBehaviour
 {
-    private PlayerMovement playerMovement = null;
-    private WarriorSkill warriorSkill = null;
-    private WarriorSound warriorSound = null;
-    private UIManager uiManager = null;
+    private PlayerMovement  playerMovement  = null; // 주인공 동작
+    private WarriorSkill    warriorSkill    = null; // 기사 스킬
+    private WarriorSound    warriorSound    = null; // 기사 사운드
+    private UIManager       uiManager       = null; // UI 매니저
 
     [System.Serializable]
     public class EffectSettings
@@ -18,26 +18,24 @@ public class WarriorEffect : MonoBehaviour
         public string rush          = "Rush";
         public string hit           = "Hit";
 
-        public Transform skillHolder;
-        public string effectPath;
+        public Transform skillHolder;   // 스킬 이펙트 부모
+        public string    effectPath;    // 이펙트 프리펩 경로
     }
 
     public EffectSettings effectSettings;
 
     public Dictionary<string, GameObject> effects = null;
 
-
-
     void Awake()
     {
-        playerMovement = GetComponent<PlayerMovement>();
-        warriorSkill = GetComponent<WarriorSkill>();
-        warriorSound = GetComponent<WarriorSound>();
+        playerMovement  = GetComponent<PlayerMovement>();
+        warriorSkill    = GetComponent<WarriorSkill>();
+        warriorSound    = GetComponent<WarriorSound>();
 
-        effects = new Dictionary<string, GameObject>();
+        effects         = new Dictionary<string, GameObject>();
 
-        effectSettings.skillHolder = transform.FindChild("SkillHolder");
-        effectSettings.effectPath = "Effect/Player/Warrior/";
+        effectSettings.skillHolder  = transform.FindChild("SkillHolder");
+        effectSettings.effectPath   = "Effect/Player/Warrior/";
 
         ResourceLoad();
     }
@@ -45,17 +43,6 @@ public class WarriorEffect : MonoBehaviour
     void Start()
     {
         uiManager = UIManager.Instance;
-    }
-
-    void Update()
-    {
-        if (GameManager.Instance.currentGameState == TypeData.GameState.종료)
-        {
-            return;
-        }
-
-        //BlockEffect();
-        //BlockDamageEffect();
     }
 
     // 이펙트 리소스 로드
@@ -93,8 +80,6 @@ public class WarriorEffect : MonoBehaviour
         return obj;
     }
 
-    // TODO : 이펙트 이름으로 이펙트 생성, 위치 설정 ( 각 이펙트 프리펩에 지속시간 설정 )
-
     // 방패막기중 효과
     private void BlockEffect()
     {
@@ -120,22 +105,16 @@ public class WarriorEffect : MonoBehaviour
     // 방패막기중에 맞았을때 효과
     public void BlockDamageEffect()
     {
-        //// 방패막기가 아니거나 / 데미지를 안받았을때
-        //if (!warriorSkill.isBlock || !playerMovement.isDamage)
-        //{
-        //    return;
-        //}
-
         if (uiManager.blockTxtObj.activeSelf)
         {
             uiManager.blockTxtObj.SetActive(false);
             uiManager.blockTween.ResetToBeginning();
         }
+
         uiManager.blockTxtObj.SetActive(true);
         uiManager.blockTween.Play();
         effects[effectSettings.blockDamage].SetActive(true);
 
-        // TODO : 검색.. 계속하게 되는데. 나중에 수정하자
         // 이펙트 발생하고 정지 상태이면 비활성화.
         if (effects[effectSettings.blockDamage].GetComponent<ParticleSystem>().isStopped)
         {
@@ -160,6 +139,7 @@ public class WarriorEffect : MonoBehaviour
             {
                 effects[effectSettings.overpower].transform.SetParent(effectSettings.skillHolder);
             }
+
             effects[effectSettings.overpower].SetActive(false);
         }
 

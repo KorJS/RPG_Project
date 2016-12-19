@@ -3,10 +3,10 @@ using System.Collections;
 
 public class BasiliskSkill : MonoBehaviour
 {
-    private MonsterInfoData monsterInfoData = null;
-    private MonsterState monsterState = null;
-    private MonsterRange monsterRange = null;
-    private MonsterMovement monsterMovement = null;
+    private MonsterInfoData monsterInfoData = null; // 몬스터 정보
+    private MonsterState    monsterState    = null; // 몬스터 상태
+    private MonsterRange    monsterRange    = null; // 몬스터 범위
+    private MonsterMovement monsterMovement = null; // 몬스터 동작
 
     public enum SkillType
     {
@@ -17,17 +17,17 @@ public class BasiliskSkill : MonoBehaviour
         MAX
     }
 
-    public SkillType skillType = SkillType.없음;
+    public SkillType skillType  = SkillType.없음; // 몬스터 스킬타입
 
-    private Vector3 skillPos = Vector3.zero;
-    private Vector3 skillRange = Vector3.zero;
-    private float skillAtt = 0f;
+    private Vector3 skillPos    = Vector3.zero; // 스킬 기준점
+    private Vector3 skillRange  = Vector3.zero; // 스킬 반경
+    private float   skillAtt    = 0f;           // 스킬 공격력
 
     void Awake()
     {
         monsterInfoData = GetComponent<MonsterInfoData>();
-        monsterState = GetComponent<MonsterState>();
-        monsterRange = GetComponent<MonsterRange>();
+        monsterState    = GetComponent<MonsterState>();
+        monsterRange    = GetComponent<MonsterRange>();
         monsterMovement = GetComponent<MonsterMovement>();
 
         skillType = SkillType.없음;
@@ -56,6 +56,7 @@ public class BasiliskSkill : MonoBehaviour
             return;
         }
 
+        // 몬스터 상태가 스킬중이면 코루틴 시작
         if (monsterMovement.isSkill)
         {
             monsterMovement.isSkill = false;
@@ -90,6 +91,7 @@ public class BasiliskSkill : MonoBehaviour
         }
     }
 
+    // 스킬 범위 (DB로부터 받은 x,y,z 문자열을 Vector3 로 변환)
     private Vector3 stringToVector3(string data)
     {
         Vector3 pos = Vector3.zero;
@@ -103,6 +105,7 @@ public class BasiliskSkill : MonoBehaviour
         return pos;
     }
 
+    // 스킬 범위 스크립트로 스킬 정보 전달
     private void Hit(int index)
     {
         skillPos = stringToVector3(monsterInfoData.monsterSkillInfos[index].skillPoint);

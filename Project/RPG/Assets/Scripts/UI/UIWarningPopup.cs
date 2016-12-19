@@ -10,6 +10,7 @@ public class UIWarningPopup : MonoBehaviour
         messageT = transform.FindChild("Message").GetComponent<UILabel>();
     }
 
+    // 경고 메시지
     public void SetMessage(string _message)
     {
         messageT.text = _message;

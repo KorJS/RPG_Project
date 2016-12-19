@@ -51,6 +51,7 @@ public class UISlotTooltip : MonoBehaviour
         CheckType();
     }
 
+    // 툴팁 활성화 타임
     private void ActiveTime()
     {
         // 3초 뒤에 사짐 / UI 모드 아닐때 사라짐
@@ -77,6 +78,7 @@ public class UISlotTooltip : MonoBehaviour
         }
     }
 
+    // 타입 체크
     private void CheckType()
     {
         toolTipSettings.uiIcon.mainTexture = uiSlotInfo.slotSettings.uiIcon.mainTexture;

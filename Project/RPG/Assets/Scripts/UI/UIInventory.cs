@@ -3,9 +3,9 @@ using System.Collections;
 
 public class UIInventory : MonoBehaviour
 {
-    private PlayerInfoData playerInfoData = null;
-    private UIPanel inventoryPanel = null;
-    public UILabel inventoryGold = null;
+    private PlayerInfoData  playerInfoData = null; // 주인공 슬롯 정보
+    private UIPanel         inventoryPanel = null; // 인벤토리 판넬
+    public  UILabel         inventoryGold  = null; // 소지금
 
     void Awake()
     {
@@ -19,6 +19,7 @@ public class UIInventory : MonoBehaviour
         SetHoldingGold();
     }
 
+    // 소지금 설정
     public void SetHoldingGold()
     {
         inventoryGold.text = playerInfoData.infoData.gold.ToString();

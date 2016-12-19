@@ -4,32 +4,31 @@ using System.Collections.Generic;
 
 public class PlayerEffect : MonoBehaviour
 {
-    private PlayerState playerState = null;
+    private PlayerState playerState = null; // 주인공 상태
 
     [System.Serializable]
     public class EffectSettings
     {
-        public string aggro = "Aggro";
-        public string levelup = "LevelUp";
-        public string recoveryPotion = "RecoveryPotion";
-        public string buffPotion = "BuffPotion";
+        public string aggro             = "Aggro";
+        public string levelup           = "LevelUp";
+        public string recoveryPotion    = "RecoveryPotion";
+        public string buffPotion        = "BuffPotion";
     }
 
     [SerializeField]
     public EffectSettings effectSettings;
 
-    public Dictionary<string, GameObject> effects = null;
+    public Dictionary<string, GameObject> effects = null; // 이펙트
 
-    public Transform effectHolder = null;
-
-    public string effectPath = "Effect/Player/";
+    public Transform effectHolder = null;               // 이펙트 부모
+    public string    effectPath   = "Effect/Player/";   // 이펙트 프리펩 경로
 
     void Awake()
     {
-        playerState = GetComponent<PlayerState>();
+        playerState     = GetComponent<PlayerState>();
 
-        effects = new Dictionary<string, GameObject>();
-        effectHolder = transform.FindChild("EffectHolder");
+        effects         = new Dictionary<string, GameObject>();
+        effectHolder    = transform.FindChild("EffectHolder");
 
         ResourceLoad();
     }
@@ -68,6 +67,7 @@ public class PlayerEffect : MonoBehaviour
         return obj;
     }
 
+    // 이펙트 활성화 / 활성화 중이면 리턴
     public void CheckActiveEffect(string effect, bool isEffect)
     {
         if (isEffect && effects[effect].activeSelf)

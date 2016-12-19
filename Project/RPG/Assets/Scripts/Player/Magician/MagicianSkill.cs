@@ -3,28 +3,28 @@ using System.Collections;
 
 public class MagicianSkill : MonoBehaviour
 {
-    private SkillData skillData = null;
-    private PlayerInfoData playerInfoData = null;
-    private PlayerSkillData playerSkillData = null; // 스킬 정보 받아옴
-    private PlayerMovement playerMovement = null;
-    private PlayerInput playerInput = null;
-    private PlayerState playerState = null;
-    private PlayerEffect playerEffect = null;
-    private MagicianEffect magicianEffect = null;
-    private UIManager uiManager = null;
-    private CameraControl cameraCtrl = null;
+    private SkillData       skillData       = null; // 스킬정보
+    private PlayerInfoData  playerInfoData  = null; // 주인공 정보
+    private PlayerSkillData playerSkillData = null; // 주인공 배운 스킬 정보
+    private PlayerMovement  playerMovement  = null; // 주인공 동작 
+    private PlayerInput     playerInput     = null; // 주인공 입력
+    private PlayerState     playerState     = null; // 주인공 상태
+    private PlayerEffect    playerEffect    = null; // 주인공 이펙트
+    private MagicianEffect  magicianEffect  = null; // 마법사 이펙트
+    private UIManager       uiManager       = null; // UI 매니저
+    private CameraControl   cameraCtrl      = null; // 카메라 컨트롤(흔들림)
 
     // 애니메이션 파라미터명 설정
     [System.Serializable]
     public class MagicianAniSettings
     {
-        public string isEndComboTrigger = "isEndCombo";
-        public string isFireBallTrigger = "isFireBall";
+        public string isEndComboTrigger          = "isEndCombo";
+        public string isFireBallTrigger          = "isFireBall";
         public string isStartMpCondensingTrigger = "isStartMpCondensing";
-        public string isEndMpCondensingTrigger = "isEndMpCondensing";
-        public string isTeleport = "isTeleport";
-        public string isIceStorm = "isIceStorm";
-        public string isMeteor = "isMeteor";
+        public string isEndMpCondensingTrigger   = "isEndMpCondensing";
+        public string isTeleport                 = "isTeleport";
+        public string isIceStorm                 = "isIceStorm";
+        public string isMeteor                   = "isMeteor";
     }
 
     [SerializeField]
@@ -42,30 +42,30 @@ public class MagicianSkill : MonoBehaviour
         운석낙하
     };
 
-    public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
+    public SkillType    currentSkillTpye    = SkillType.없음; // 현재 스킬
 
     // TODO : 공격 범위.
-    public float skillAngle = 0f;
-    public float skillDistance = 0f;
+    public float        skillAngle          = 0f;           // 스킬 각도
+    public float        skillDistance       = 0f;           // 스킬 거리
 
-    private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
+    private const float COMBOTIME           = 1.5f;         // 연속공격 입력타임
 
-    public float comboTimer = 0f;           // 연속공격 입력타이머
-    public bool isComboTime = false;        // 콤보 타임이 지났는지
+    public float        comboTimer          = 0f;           // 연속공격 입력타이머
+    public bool         isComboTime         = false;        // 콤보 타임이 지났는지
 
-    public Vector3 telWallPos; // 여기위치에 레이쏨
-    private int layerMark = 0;
+    public Vector3      telWallPos          = Vector3.zero; // 순간이동시 벽에 막혔을시 이동할 위치
+    private int         layerMark           = 0;            // 순간이동시 레이 맞을 레이어
 
     void Awake()
     {
-        playerInfoData = PlayerInfoData.Instance;
+        playerInfoData  = PlayerInfoData.Instance;
         playerSkillData = PlayerSkillData.Instance; // 스킬 정보
-        playerMovement = GetComponent<PlayerMovement>();
-        playerInput = GetComponent<PlayerInput>();
-        playerState = GetComponent<PlayerState>();
-        playerEffect = GetComponent<PlayerEffect>();
-        magicianEffect = GetComponent<MagicianEffect>();
-        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
+        playerMovement  = GetComponent<PlayerMovement>();
+        playerInput     = GetComponent<PlayerInput>();
+        playerState     = GetComponent<PlayerState>();
+        playerEffect    = GetComponent<PlayerEffect>();
+        magicianEffect  = GetComponent<MagicianEffect>();
+        cameraCtrl      = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         currentSkillTpye = SkillType.없음;
 
@@ -153,8 +153,6 @@ public class MagicianSkill : MonoBehaviour
     private void Damage(GameObject enemyObj)
     {
         float attack = playerInfoData.totalAtt * skillInfo.attack;
-
-        //uiManager.SetHpBar(enemyObj.transform);
 
         MonsterMovement mob = enemyObj.GetComponent<MonsterMovement>();
 

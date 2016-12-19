@@ -21,22 +21,22 @@ public class Network_PlayerInfo : MonoBehaviour
 
     private class RecvLoadPlayerInfoData
     {
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
-        public PlayerInfoData.InfoData playerInfoData;
-        public List<int> playerSkillInfos;
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 작동시간
+        public PlayerInfoData.InfoData playerInfoData;  // 주인공 정보
+        public List<int> playerSkillInfos; // 주인공 배운 스킬 정보
     }
 
     private class RecvSavePlayerInfoData
     {
-        public string message;
-        public bool isSuccess;
-        public int timestamp;
+        public string   message;    // 메시지
+        public bool     isSuccess;  // 성공여부
+        public int      timestamp;  // 작동시간
     }
 
-    private string load_charInfo_contents = null;
-    private string save_charInfo_contents = null;
+    private string load_charInfo_contents = null; // 불러오기 php 파일명
+    private string save_charInfo_contents = null; // 저장 php 파일명
 
     void Awake()
     {

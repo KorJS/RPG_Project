@@ -14,8 +14,8 @@ public class NPCMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    public CharacterController charCtrl = null;
-    public Animator animator = null;
+    public CharacterController  charCtrl = null;
+    public Animator             animator = null;
 
     void Awake()
     {

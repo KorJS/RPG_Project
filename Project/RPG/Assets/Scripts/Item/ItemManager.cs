@@ -119,15 +119,15 @@ public class ItemManager : MonoBehaviour
     {
         foreach (KeyValuePair<int, MonsterInfoData.DropItem> dropItem in dropItems)
         {
+            TypeData.ItemType itemType = dropItem.Value.itemType;
             string itemName = null;
             string iconName = null;
-            TypeData.ItemType itemType = dropItem.Value.itemType;
             int itemIndex = dropItem.Value.itemIndex;
             int quantity = dropItem.Value.quantity;
-            Debug.Log("type : " + itemType + " index : " + itemIndex + " quantity : " + quantity);
 
             GameObject resources = null;
 
+            // 아이템 타입으로 아이템 정보 받아옴
             switch (itemType)
             {
                 case TypeData.ItemType.장비:

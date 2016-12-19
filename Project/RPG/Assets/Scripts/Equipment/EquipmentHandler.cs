@@ -73,10 +73,6 @@ public class EquipmentHandler : MonoBehaviour
     // 나중에 매개변수 변경하자
     public void SetWeapon(GameObject _weaponObj, bool _isWeapon)
     {
-        // TODO : 전투모드중이면 장착/ 변경 불가능하게 하기
-
-        // TODO : 프리펩으로 관리해서 생성과 삭제를?
-
         // 기존 착용장비가 존재하고 
         // 착용할 장비가 기존 장비와 다르면
         // 제거

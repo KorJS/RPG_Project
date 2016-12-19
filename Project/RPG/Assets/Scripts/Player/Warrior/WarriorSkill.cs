@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 public class WarriorSkill : MonoBehaviour
 {
-    private SkillData skillData = null;
-    private PlayerInfoData playerInfoData = null;
-    private PlayerSkillData playerSkillData = null; // 스킬 정보 받아옴
-    private PlayerMovement playerMovement = null;
-    private PlayerInput playerInput = null;
-    private PlayerState playerState = null;
-    private PlayerEffect playerEffect = null;
-    private WarriorEffect warriorEffect = null;
-    private WarriorSound warriorSound = null;
-    private UIManager uiManager = null;
-    private CameraControl cameraCtrl = null;
+    private SkillData       skillData       = null; // 해당 클레스의 모든 스킬 정보
+    private PlayerInfoData  playerInfoData  = null; // 주인공 정보
+    private PlayerSkillData playerSkillData = null; // 주인공이 배운 스킬 정보 받아옴
+    private PlayerMovement  playerMovement  = null; // 주인공 동작
+    private PlayerInput     playerInput     = null; // 주인공 입력
+    private PlayerState     playerState     = null; // 주인공 상태
+    private PlayerEffect    playerEffect    = null; // 주인공 이펙트 
+    private WarriorEffect   warriorEffect   = null; // 기사 이펙트
+    private WarriorSound    warriorSound    = null; // 기사 사운드
+    private UIManager       uiManager       = null; // ui 매니저
+    private CameraControl   cameraCtrl      = null; // 카메라 컨트롤(흔들림)
 
     // 애니메이션 파라미터명 설정
     [System.Serializable]
@@ -46,44 +46,45 @@ public class WarriorSkill : MonoBehaviour
 
     public SkillType currentSkillTpye = SkillType.없음; // 현재 스킬
 
-    private const float COMBOTIME = 1.5f;   // 연속공격 입력타임
-    private const float RUSHTIME = 2.5f;    // 난폭한 돌진 지속타임
+    private const float             COMBOTIME       = 1.5f;         // 연속공격 입력타임
+    private const float             RUSHTIME        = 2.5f;         // 난폭한 돌진 지속타임
 
-    public float comboTimer = 0f;           // 연속공격 입력타이머
-    public bool isComboTime = false;        // 콤보 타임이 지났는지
-    public bool isCombo = false;            // 몇번 콤보 공격인지
+    public float                    comboTimer      = 0f;           // 연속공격 입력타이머
+    public bool                     isComboTime     = false;        // 콤보 타임이 지났는지
+    public bool                     isCombo         = false;        // 몇번 콤보 공격인지
 
-    public float rushTimer = RUSHTIME;      // 난폭한 돌진 지속타이머
-    public bool isRush = false;             // 난폭한 돌진 중인지
-    public bool isBlock = false;            // 방패막기 중인지
+    private KeyCode                 blockKeyCode    = KeyCode.None; // 방패막기 단축키
+    public  bool                    isBlock         = false;        // 방패막기 중인지
 
-    // TODO : 공격 범위.
-    public float skillAngle = 0f;
-    public float skillDistance = 0f;
+    // 스킬 범위.
+    public float                    skillAngle      = 0f;           // 각도
+    public float                    skillDistance   = 0f;           // 거리
 
-    private KeyCode blockKeyCode = KeyCode.None;
 
-    private Transform rushHolder = null;
-    public List<MonsterMovement> rushMob = null;
+    // 난폭한 돌진
+    public  List<MonsterMovement>   rushMob         = null;         // 난폭한 돌진중에 붙딛힌 몬스터 스크립트
+    private Transform               rushHolder      = null;         // 난폭한 돌진중에 붙딛힌 몬스터의 부모
+    public  float                   rushTimer       = RUSHTIME;     // 난폭한 돌진 지속타이머
+    public  bool                    isRush          = false;        // 난폭한 돌진 중인지
 
-    public AudioClip[] hitsBGN = null;
+    public AudioClip[]              hitsBGN         = null;         // 히트 사운드
 
     void Awake()
     {
-        playerInfoData = PlayerInfoData.Instance;
-        playerSkillData = PlayerSkillData.Instance; // 스킬 정보
-        playerMovement = GetComponent<PlayerMovement>();
-        playerInput = GetComponent<PlayerInput>();
-        playerState = GetComponent<PlayerState>();
-        playerEffect = GetComponent<PlayerEffect>();
-        warriorEffect = GetComponent<WarriorEffect>();
-        warriorSound = GetComponent<WarriorSound>();
-        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
+        playerInfoData  = PlayerInfoData.Instance;
+        playerSkillData = PlayerSkillData.Instance;
+        playerMovement  = GetComponent<PlayerMovement>();
+        playerInput     = GetComponent<PlayerInput>();
+        playerState     = GetComponent<PlayerState>();
+        playerEffect    = GetComponent<PlayerEffect>();
+        warriorEffect   = GetComponent<WarriorEffect>();
+        warriorSound    = GetComponent<WarriorSound>();
+        cameraCtrl      = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         currentSkillTpye = SkillType.없음;
 
-        rushHolder = transform.FindChild("RushHolder");
-        rushMob = new List<MonsterMovement>();
+        rushHolder      = transform.FindChild("RushHolder");
+        rushMob         = new List<MonsterMovement>();
     }
 
     void Start()
@@ -114,12 +115,6 @@ public class WarriorSkill : MonoBehaviour
         SwitchSkill();
         CheckComboTime();
         ChekRushTime();
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(this.transform.position, skillDistance);
     }
 
     private void CheckCurrentAniState()
@@ -201,13 +196,17 @@ public class WarriorSkill : MonoBehaviour
         // TODO : SKillInfo의 데미지를 적용
         if (currentSkillTpye == SkillType.난폭한돌진)
         {
+            // 난폭한 돌진에 맞은 몬스터 리스트에 추가
             if (!rushMob.Contains(mob))
             {
                 rushMob.Add(mob);
             }
+
             mob.RushDamage(rushHolder);
+
             return;
         }
+
         mob.SetDamage(gameObject.transform, -attack);
     }
 
@@ -337,6 +336,7 @@ public class WarriorSkill : MonoBehaviour
     // 긴급회피
     private void Tumbling()
     {
+        // 회피기, 무적 이므로 캐릭터 컨트롤러 비활성화
         playerMovement.charCtrl.enabled = false;
         playerMovement.SetAniSkill((int)currentSkillTpye);
         playerMovement.animator.SetTrigger(warriorAniSettings.isTumblingTrigger);
@@ -364,10 +364,13 @@ public class WarriorSkill : MonoBehaviour
     {
         skillAngle = 90f;
         skillDistance = 4f;
+
         warriorSound.SetRushBGM();
+
         playerMovement.SetAniSkill((int)currentSkillTpye);
-        isRush = true;
         playerMovement.animator.SetBool(warriorAniSettings.isRushBool, isRush);
+
+        isRush = true;
     }
 
     // 난폭한 돌진 유지시간 체크

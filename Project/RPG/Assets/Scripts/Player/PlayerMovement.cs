@@ -29,36 +29,35 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     public AnimationSettings animationSettings;
 
-    public CharacterController charCtrl = null;
-    private CameraControl cameraCtrl = null;
-    public Animator animator = null;
-    private Camera mainCamera = null;
-    private Vector3 rotation = Vector3.zero;
+    public  CharacterController charCtrl    = null;
+    private CameraControl       cameraCtrl  = null;
+    public  Animator            animator    = null;
+    private Camera              mainCamera  = null;
 
-    public bool isHit = false;              // 공격해 맞혔으면 true - 각 스킬스크립트에서 전달 받자
-    public bool isDamage = false;           // 공격에 맞았으면 true - 몬스터로부터 맞았으면.
-    public bool isIdle = false;             // 스킬 끝나고 idle 상태
-    public bool isBlock = false;            // 방패막기 중에는 공격 안받음
+    private Vector3             rotation    = Vector3.zero; // 케릭터 회전
 
-    private GameObject respawnObj = null;
-    private float deathTimer = 10;
-    private bool isDeath = false;
+    public bool                 isHit       = false;        // 공격해 맞혔으면 true - 각 스킬스크립트에서 전달 받자
+    public bool                 isDamage    = false;        // 공격에 맞았으면 true - 몬스터로부터 맞았으면.
+    public bool                 isIdle      = false;        // 스킬 끝나고 idle 상태
+    public bool                 isBlock     = false;        // 방패막기 중에는 공격 안받음
 
-    public AudioClip deathBGM = null;
+    private GameObject          respawnObj  = null;         // 부활 지점
+    private float               deathTimer  = 10;           // 부활 타이머
+    private bool                isDeath     = false;        // 죽었는지 여부
+
+    public AudioClip            deathBGM    = null;         // 죽음 사운드
 
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         playerState = GetComponent<PlayerState>();
-        charCtrl = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        mainCamera = Camera.main;
-        cameraCtrl = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
+        charCtrl    = GetComponent<CharacterController>();
+        animator    = GetComponent<Animator>();
+        mainCamera  = Camera.main;
+        cameraCtrl  = GameObject.FindGameObjectWithTag("CameraCtrl").GetComponent<CameraControl>();
 
         isHit = isDamage = false;
         isIdle = true; // 대기상태
-
-        //SetAnimator();
 
         // 마지막에 저장된 위치에 스폰.
         string[] strPos = PlayerInfoData.Instance.infoData.spawnPos.Split(',');
@@ -81,13 +80,15 @@ public class PlayerMovement : MonoBehaviour
 
         if (!isDeath && PlayerInfoData.Instance.infoData.currentHp <= 0)
         {
-            cameraCtrl.cameraSettings.deathFilter.enabled = true;
+            SoundManager.Instance.PlaySingleVoice(deathBGM);
+
             isDeath = true;
+            charCtrl.enabled = false;
+            cameraCtrl.cameraSettings.deathFilter.enabled = true;
             gameObject.layer = LayerMask.NameToLayer("Default");
             playerState.nextState = TypeData.State.죽음;
+
             animator.SetTrigger(animationSettings.isDeathTrigger);
-            SoundManager.Instance.PlaySingleVoice(deathBGM);
-            charCtrl.enabled = false;
             StartCoroutine(Death());
         }
 
@@ -99,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool(animationSettings.hitBool, isHit);
     }
 
+    // 죽음
     IEnumerator Death()
     {
         while (isDeath)
@@ -134,10 +136,6 @@ public class PlayerMovement : MonoBehaviour
     // 데미지
     public void SetDamage(Transform monsterT, float damage)
     {
-        //if (playerState.currentMode == TypeData.MODE.평화 || playerState.currentState == TypeData.State.스킬)
-        {
-        }
-
         if (isBlock)
         {
             if (CheckRange(monsterT))
@@ -217,7 +215,6 @@ public class PlayerMovement : MonoBehaviour
         right = right.normalized;
 
         // 카메라 방향에 따라 변하므로 방향 보정
-        // TODO : 백터 공부하자.
         Vector3 dir = h * right + v * forword;
 
         if (dir != Vector3.zero)
@@ -235,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
         isIdle = true;
     }
 
-    // 방패막기
+    // 방패막기 - 전방만 방어 가능하게
     private bool CheckRange(Transform monsterT)
     {
         Vector3 heading = transform.TransformDirection(Vector3.forward);

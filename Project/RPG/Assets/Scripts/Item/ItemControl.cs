@@ -29,15 +29,15 @@ public class ItemControl : MonoBehaviour
 
     public ItemSettings itemSettings;
 
-    private GameObject itemNameHolder = null;
+    private GameObject  itemNameHolder  = null;   // 아이템 이름 부모
 
-    private bool isUIName = false;  // 아이템이 카레마에 보이는지 여부
+    private bool        isUIName        = false;  // 아이템이 카레마에 보이는지 여부
 
     void Awake()
     {
-        itemSettings.itemT = transform;
-        itemSettings.distance = 5f;
-        itemSettings.isPlayer = false;
+        itemSettings.itemT      = transform;
+        itemSettings.distance   = 5f;
+        itemSettings.isPlayer   = false;
     }
 
     void Start()
@@ -67,8 +67,6 @@ public class ItemControl : MonoBehaviour
             Debug.Log(itemSettings.quantity);
             playerSlotData.AddSlotData(TypeData.SlotType.인벤토리, itemSettings.itemType, itemSettings.itemIndex, itemSettings.quantity);
 
-            // 단축슬롯 검색
-            CheckShortCutInfo();
             Destroy(itemSettings.uiItemNameObj);
             Destroy(gameObject);
         }
@@ -77,24 +75,6 @@ public class ItemControl : MonoBehaviour
         if (itemSettings.uiItemNameObj != null)
         {
             itemSettings.uiItemNameObj.SetActive(isUIName);
-        }
-    }
-
-    private void CheckShortCutInfo()
-    {
-        foreach (KeyValuePair<int, UISlotInfo> shortcut in UIManager.Instance.shortCuts)
-        {
-            if (itemSettings.itemType != shortcut.Value.slotInfo.itemType)
-            {
-                continue;
-            }
-
-            if (itemSettings.itemIndex != shortcut.Value.slotInfo.itemIndex)
-            {
-                continue;
-            }
-
-            
         }
     }
 

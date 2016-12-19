@@ -12,49 +12,49 @@ public class MagicianEffect : MonoBehaviour
     [System.Serializable]
     public class MagicianEffectSettings
     {
-        public string fireBall = "FireBall";
-        public string startMpCondensing = "StartMpCondensing";
-        public string loopMpCondensing = "LoopMpCondensing";
-        public string endMpCondensing = "EndMpCondensing";
-        public string startTeleport = "StartTeleport";
-        public string endTeleport = "EndTeleport";
-        public string iceStorm = "IceStorm";
-        public string meteor = "Meteor";
+        public string       fireBall              = "FireBall";
+        public string       startMpCondensing     = "StartMpCondensing";
+        public string       loopMpCondensing      = "LoopMpCondensing";
+        public string       endMpCondensing       = "EndMpCondensing";
+        public string       startTeleport         = "StartTeleport";
+        public string       endTeleport           = "EndTeleport";
+        public string       iceStorm              = "IceStorm";
+        public string       meteor                = "Meteor";
 
-        public Transform leftPoint;
-        public Transform rightPoint;
-        public Transform skillHolder;
-        public string effectPath;
-        public List<GameObject> fireBallObjs;
+        public Transform    leftPoint;          // 왼손
+        public Transform    rightPoint;         // 오른손
+        public Transform    skillHolder;        // 스킬 이펙트 부모
+        public string       effectPath;         // 이펙트 프리펩 경로
+        public List<GameObject> fireBallObjs;   // 파이어볼 풀
     }
 
     [SerializeField]
     public MagicianEffectSettings effectSettings;
 
-    public Dictionary<string, GameObject> effects = null;
+    public Dictionary<string, GameObject>   effects         = null; // 이펙트
 
-    private SkinnedMeshRenderer[] meshes = null;
+    private SkinnedMeshRenderer[]           meshes          = null; // 메쉬(텔포때 잠시 투명화)
 
-    private Transform teleportPointT;
-    public Vector3 telWallPos;
+    private Transform                       teleportPointT  = null; // 순간이동 위치
+    public  Vector3                         telWallPos      = Vector3.zero; // 벽에 막혔을때 순간이동 위치
 
     private int fireBallCount = 0;
 
     void Awake()
     {
-        magicianSkill = GetComponent<MagicianSkill>();
-        playerState = GetComponent<PlayerState>();
-        playerMovement = GetComponent<PlayerMovement>();
-        playerInfoData = PlayerInfoData.Instance;
+        magicianSkill   = GetComponent<MagicianSkill>();
+        playerState     = GetComponent<PlayerState>();
+        playerMovement  = GetComponent<PlayerMovement>();
+        playerInfoData  = PlayerInfoData.Instance;
 
-        effects = new Dictionary<string, GameObject>();
+        effects         = new Dictionary<string, GameObject>();
 
-        meshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+        meshes          = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        teleportPointT = transform.FindChild("TeleportPoint");
+        teleportPointT  = transform.FindChild("TeleportPoint");
 
-        effectSettings.skillHolder = transform.FindChild("SkillHolder");
-        effectSettings.effectPath = "Effect/Player/Magician/";
+        effectSettings.skillHolder  = transform.FindChild("SkillHolder");
+        effectSettings.effectPath   = "Effect/Player/Magician/";
 
         // 스킬 이펙트 생성
         FireBallEffect();
@@ -116,6 +116,7 @@ public class MagicianEffect : MonoBehaviour
         return obj;
     }
 
+    // 파이어볼 생성
     private void FireBallEffect()
     {
         var resource = Resources.Load("Effect/Player/Magician/FireBall");
@@ -130,6 +131,7 @@ public class MagicianEffect : MonoBehaviour
         }
     }
 
+    // 파이어볼 리셋
     public void FireBallResetEffect()
     {
         for (int i = 0; i < effectSettings.fireBallObjs.Count; i++)
@@ -143,6 +145,7 @@ public class MagicianEffect : MonoBehaviour
         }
     }
 
+    // 파이어볼 스킬 사용
     public void FireBall(Vector3 lookPos, float skillAtt)
     {
         if (fireBallCount >= effectSettings.fireBallObjs.Count)
@@ -160,6 +163,7 @@ public class MagicianEffect : MonoBehaviour
         fireBallCount++;
     }
 
+    // 마력응집
     IEnumerator MpCondensingEffect()
     {
         if (effects[effectSettings.startMpCondensing].activeSelf)
@@ -199,6 +203,7 @@ public class MagicianEffect : MonoBehaviour
 
     }
 
+    // 순간이동 시작
     public void StartTeleportEffect(Vector3 _telWallPos)
     {
         if (effects[effectSettings.startTeleport].activeSelf)
@@ -214,6 +219,7 @@ public class MagicianEffect : MonoBehaviour
         effects[effectSettings.startTeleport].SetActive(true);
     }
 
+    // 순간이동시 메쉬 감춤
     IEnumerator TeleportMeshDisable()
     {
         yield return new WaitForSeconds(1f);
@@ -224,6 +230,7 @@ public class MagicianEffect : MonoBehaviour
         }
     }
 
+    // 순간이동 끝
     public void EndTeleportEffect()
     {
         if (effects[effectSettings.endTeleport].activeSelf)
@@ -233,6 +240,7 @@ public class MagicianEffect : MonoBehaviour
 
         effects[effectSettings.endTeleport].SetActive(true);
 
+        // 플레이어 메쉬 On
         for (int i = 0; i < meshes.Length; i++)
         {
             meshes[i].enabled = true;
@@ -253,6 +261,7 @@ public class MagicianEffect : MonoBehaviour
         playerMovement.charCtrl.enabled = true;
     }
 
+    // 얼음폭풍
     public void IceStormEffect(float skillAngle, float skillDistance, float skillAtt)
     {
         if (effects[effectSettings.iceStorm].activeSelf)
@@ -268,9 +277,10 @@ public class MagicianEffect : MonoBehaviour
         effects[effectSettings.iceStorm].SetActive(true);
 
         EffectSetting effect = effects[effectSettings.iceStorm].GetComponent<EffectSetting>();
-        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt);
+        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt); // 스킬 정보 전달
     }
 
+    // 운석낙하
     public void MeteorEffect(float skillAngle, float skillDistance, float skillAtt)
     {
         if (effects[effectSettings.meteor].activeSelf)
@@ -287,6 +297,6 @@ public class MagicianEffect : MonoBehaviour
         effects[effectSettings.meteor].SetActive(true);
      
         EffectSetting effect = effects[effectSettings.meteor].GetComponent<EffectSetting>();
-        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt);
+        effect.SetSkillInfo(skillAngle, skillDistance, skillAtt); // 스킬 정보 전달
     }
 }

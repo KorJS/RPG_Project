@@ -3,27 +3,28 @@ using System.Collections;
 
 public class UIDivisionPopup : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private PlayerSlotData playerSlotData = null;
-    private PlayerInfoData playerInfoData = null;
+    private UIManager       uiManager           = null; // UI 매니저
+    private PlayerSlotData  playerSlotData      = null; // 주인공 슬롯 정보
+    private PlayerInfoData  playerInfoData      = null; // 주인공 정보
 
-    private UIInput divQuantity_Input = null; // 입력 수량
+    private UIInput         divQuantity_Input   = null; // 입력 수량
 
-    private int divQuantityMAX = 0; // 옮길수 있는 최대 수량(현재슬롯 수량)
-    private int divQuantity = 0; // 분리 창에 적은 분리할 수량
+    private int             divQuantityMAX      = 0;    // 옮길수 있는 최대 수량(현재슬롯 수량)
+    private int             divQuantity         = 0;    // 분리 창에 적은 분리할 수량
 
-    public UISlotInfo currentInfo = null;
-    public UISlotInfo targetInfo = null;
+    public UISlotInfo       currentInfo         = null; // 현재 슬롯 정보
+    public UISlotInfo       targetInfo          = null; // 타겟 슬롯 정보
 
-    public TypeData.PopupType popupType = TypeData.PopupType.없음;
-    public bool isDeposit = false;
+    public TypeData.PopupType popupType         = TypeData.PopupType.없음; // 팝업 타입
+
+    public bool             isDeposit           = false; // 입출금 여부
 
     void Awake()
     {
-        uiManager = UIManager.Instance;
-        playerSlotData = PlayerSlotData.Instance;
-        playerInfoData = PlayerInfoData.Instance;
-        divQuantity_Input = transform.FindChild("Input").GetComponent<UIInput>();
+        uiManager           = UIManager.Instance;
+        playerSlotData      = PlayerSlotData.Instance;
+        playerInfoData      = PlayerInfoData.Instance;
+        divQuantity_Input   = transform.FindChild("Input").GetComponent<UIInput>();
     }
 
     void OnEnable()
@@ -38,6 +39,7 @@ public class UIDivisionPopup : MonoBehaviour
         targetInfo = null;
     }
 
+    // 드래그앤드롭 정보
     public void DragAndDropInfo(UISlotInfo _currentSlot, UISlotInfo _targetSlot)
     {
         currentInfo = _currentSlot;
@@ -57,6 +59,7 @@ public class UIDivisionPopup : MonoBehaviour
             divQuantity_Input.value = divQuantityMAX.ToString();
             divQuantity = divQuantityMAX;
         }
+
         Debug.Log("divQuantityMAX : " + divQuantityMAX + " divQuantity : " + divQuantity);
     }
 

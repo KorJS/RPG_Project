@@ -8,12 +8,12 @@ public class VolcanusSound : MonoBehaviour
     [System.Serializable]
     public class AudioSettings
     {
-        public AudioClip skillWait01BGM;
-        public AudioClip skillWait02BGM;
-        public AudioClip[] walkBGM;
-        public AudioClip[] turnBGM;
-        public AudioClip deathBGM;
-        public AudioClip attack01BGM;
+        public AudioClip    skillWait01BGM;
+        public AudioClip    skillWait02BGM;
+        public AudioClip[]  walkBGM;
+        public AudioClip[]  turnBGM;
+        public AudioClip    deathBGM;
+        public AudioClip    attack01BGM;
     }
 
     [SerializeField]

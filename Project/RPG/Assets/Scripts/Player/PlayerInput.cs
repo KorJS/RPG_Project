@@ -4,15 +4,13 @@ using System.Collections.Generic;
 
 public class PlayerInput : MonoBehaviour
 {
-    private PlayerInfoData playerInfoData = null;
-    private PlayerMovement playerMovement = null;
-    private PlayerSlotData playerSlotData = null;
-    private PlayerState playerState = null;
-    private PlayerEffect playerEffect = null;
-    private EquipmentHandler equipHandler = null;
-    private UIManager uiManager = null;
-    private UIInventory uiInventory = null;
-    public UIJoystick uiJoystick = null;
+    private PlayerInfoData   playerInfoData = null; // 주인공 정보
+    private PlayerMovement   playerMovement = null; // 주인공 동작
+    private PlayerSlotData   playerSlotData = null; // 주인공 슬롯정보
+    private PlayerState      playerState    = null; // 주인공 상태
+    private PlayerEffect     playerEffect   = null; // 주인공 이펙트
+    private UIManager        uiManager      = null; // UI 매니저
+    public UIJoystick        uiJoystick     = null; // 조이스틱
 
     // 키 입력 정보
     [System.Serializable]
@@ -22,6 +20,8 @@ public class PlayerInput : MonoBehaviour
         public string horizontal    = "Horizontal";     // 좌우
 
         public KeyCode jump         = KeyCode.Space;    // 점프
+
+        // 단축슬롯
         public KeyCode mouse0       = KeyCode.Mouse0;
         public KeyCode mouse1       = KeyCode.Mouse1;
         public KeyCode c            = KeyCode.C;
@@ -36,42 +36,37 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     public InputSettings inputKey;
 
-    public KeyCode tempKeyCode = KeyCode.Mouse1;
+    public KeyCode      tempKeyCode = KeyCode.Mouse1;   // 방패막기 같은 누르고 있어야될 스킬
 
-    // Test용
-    public GameObject weapon = null;
-    public GameObject shield = null;
+    public int          index       = -1;               // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
+    public bool         isClick     = false;            // 방패막기 클릭
 
-    public int  index = -1; // 단축키 클릭시 스킬or아이템의 인덱스를 저장해둘 변수
-    public bool isClick = false;
+    public Vector3      targetPos   = Vector3.zero;     // 타겟 위치
+    private Transform   playerT     = null;             // 주인공
+    private Camera      mainCamera  = null;             // 카메라
+    private int         layerMark   = 0;                // 레이 타켓 레이어
 
-    public Vector3 targetPos = Vector3.zero;
-    private Transform playerT = null;
-    private Camera mainCamera = null;
-    private int layerMark = 0;
-    private Ray rayTest;
-
-    private GameObject miniPlayer = null;
-    private GameObject miniMapCam = null;
+    private GameObject miniPlayer = null;               // 미니맵에 표시될 주인공
+    private GameObject miniMapCam = null;               // 미니맵 카메라
 
     void Awake()
     {
-        playerMovement = GetComponent<PlayerMovement>();
-        equipHandler = GetComponent<EquipmentHandler>();
-        playerState = GetComponent<PlayerState>();
-        playerEffect = GetComponent<PlayerEffect>();
+        playerMovement  = GetComponent<PlayerMovement>();
+        playerState     = GetComponent<PlayerState>();
+        playerEffect    = GetComponent<PlayerEffect>();
 
-        playerT = GetComponent<Transform>();
-        mainCamera = Camera.main;
-        layerMark = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
+        playerT         = GetComponent<Transform>();
+        mainCamera      = Camera.main;
+        layerMark       = (-1) - (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Environment"));
+
         //uiJoystick = GameObject.FindGameObjectWithTag("PosJoystick").GetComponent<UIJoystick>();
     }
 
     void Start()
     {
-        uiManager = UIManager.Instance;
-        playerInfoData = PlayerInfoData.Instance;
-        playerSlotData = PlayerSlotData.Instance;
+        uiManager       = UIManager.Instance;
+        playerInfoData  = PlayerInfoData.Instance;
+        playerSlotData  = PlayerSlotData.Instance;
 
         UIManager.Instance.SetSkillListUpActive(PlayerInfoData.Instance.infoData.level);
 
@@ -109,7 +104,7 @@ public class PlayerInput : MonoBehaviour
 
         InputShortCutkey();
         
-        // Test
+        // 치트키
         InputKey();
 
         CheckCrossHairDistance();
@@ -141,7 +136,6 @@ public class PlayerInput : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(x, y));
 
         RaycastHit hit;
-        rayTest = ray;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMark))
         {
@@ -211,7 +205,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(inputKey.mouse1)) { index = CheckSlotType(8, inputKey.mouse1); }
     }
 
-    // Test 
+    // 치트키
     private void InputKey()
     {
         // 보유금액 추가
@@ -272,11 +266,6 @@ public class PlayerInput : MonoBehaviour
         {
             playerState.nextMode = TypeData.MODE.전투;
             playerMovement.SetDamage(null, 0);
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.N))
-        {
-            Debug.Log("aaaaaaaaaaaaaa");
         }
     }
 

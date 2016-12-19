@@ -3,22 +3,22 @@ using System.Collections;
 
 public class UISlotInfo : MonoBehaviour
 {
-    private UIManager uiManager = null;
-    private PlayerSlotData playerSlotData = null;
+    private UIManager        uiManager      = null; // UI 매니저
+    private PlayerSlotData   playerSlotData = null; // 주인공 슬롯 정보
 
-    public TypeData.SlotType slotType = TypeData.SlotType.없음;
+    public TypeData.SlotType slotType       = TypeData.SlotType.없음; // 슬롯 타입
 
     [System.Serializable]
     public struct SlotInfo
     {
-        public int skillIndex;
-        public int itemIndex;
-        public float coolTime;
-        public int quantity;
-        public string name;
-        public string iconName;
-        public TypeData.ItemType itemType;
-        public TypeData.SlotInfoType slotInfoType;
+        public int                      skillIndex;     // 스킬 인덱스
+        public int                      itemIndex;      // 아이템 인덱스
+        public float                    coolTime;       // 쿨타임
+        public int                      quantity;       // 수량
+        public string                   name;           // 스킬or아이템 이름
+        public string                   iconName;       // 아이콘
+        public TypeData.ItemType        itemType;       // 아이템 타입
+        public TypeData.SlotInfoType    slotInfoType;   // 슬롯정보 타입
     }
 
     public SlotInfo slotInfo;
@@ -26,47 +26,43 @@ public class UISlotInfo : MonoBehaviour
     [System.Serializable]
     public class SlotSettings
     {
-        public UITexture uiIcon;
-        public UILabel uiName;
-        public UILabel uiLevel;
-        public UISprite uiCoolTime;
-        public UILabel uiCoolTimeLabel;
-        public UILabel uiQuantity;
-        public UILabel uiSellGold;
-        public UILabel uiBuyGold;
-        public GameObject overlapObj;
-        public GameObject upBtnObj;
-        public KeyCode slotKeyCode;
+        public UITexture    uiIcon;             // 아이콘
+        public UILabel      uiName;             // 이름
+        public UILabel      uiLevel;            // 레벨
+        public UISprite     uiCoolTime;         // 쿨타임 텍스쳐
+        public UILabel      uiCoolTimeLabel;    // 쿨타임
+        public UILabel      uiQuantity;         // 수량
+        public UILabel      uiSellGold;         // 판매 금액
+        public UILabel      uiBuyGold;          // 구매 금액
+        public GameObject   overlapObj;         // 스킬리스트 배우지 않은 스킬 클릭 막기
+        public GameObject   upBtnObj;           // 스킬리스트 배울수 있는 스킬 화살표
+        public KeyCode      slotKeyCode;        // 슬롯 키코드(방패막기 같은 지속클릭)
     }
 
     [SerializeField]
     public SlotSettings slotSettings;
 
-    public readonly int QUANTITY_MAX = 99; // 인벤토리 슬롯당 최대 수량 - 소모품, 퀘스트템
+    public readonly int QUANTITY_MAX    = 99;    // 인벤토리 슬롯당 최대 수량 - 소모품, 퀘스트템
 
-    public int slotIndex = 0; // 슬롯 인덱스
-    public bool isExist = false;  // 해당 슬롯에 아이템이 있는지
-    public bool isAddDiv = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
-    public bool isSkillLearn = false; // 스킬리스트, 배운 스킬인지 아닌지.
+    public int          slotIndex       = 0;     // 슬롯 인덱스
+    public bool         isExist         = false; // 해당 슬롯에 아이템이 있는지
+    public bool         isAddDiv        = false; // 해당 슬롯 아이템이 소모품,재료인경우 합치고 나누는게 가능
+    public bool         isSkillLearn    = false; // 스킬리스트, 배운 스킬인지 아닌지.
 
-    public float coolTimer = 0f;
-    public bool isCoolTime = false;
-
-    // TODO : 다음 프로젝트때 쿨타임 구조 신경쓸것
-    // 1개인 소모품인 경우 사용시 삭제후 바로 습득하게 되면 쿨타임 초기화 되는 버그 발생.
-    // 1개인경우 화면에 안보이게 하고 쿨타임은 적용 - 쿨타임 종료시 슬롯에서 제거
+    public float        coolTimer       = 0f;    // 쿨타임 타이머
+    public bool         isCoolTime      = false; // 쿨타임 중인지 여부
 
     void Awake()
     {
-        uiManager = UIManager.Instance;
-        playerSlotData = PlayerSlotData.Instance;
+        uiManager       = UIManager.Instance;
+        playerSlotData  = PlayerSlotData.Instance;
 
-        isExist = false;
+        isExist         = false;
 
         SetSlotIndex(); // 슬롯 인덱스 설정
-        CheckType(); // 슬롯 정보 설정
-        SetSlotIcon(); // 슬롯 아이콘 설정
-        SetSlotName(); // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
+        CheckType();    // 슬롯 정보 설정
+        SetSlotIcon();  // 슬롯 아이콘 설정
+        SetSlotName();  // 슬롯 아이콘 이름 설정 - 스킬리스트, 상점리스트
 
         SetSlotMark();
     }

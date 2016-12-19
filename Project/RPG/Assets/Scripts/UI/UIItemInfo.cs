@@ -41,6 +41,7 @@ public class UIItemInfo : MonoBehaviour
 
         if (UICamera.currentKey == KeyCode.Mouse0)
         {
+            // 드랍아이템 마우스 좌클릭시 습득
             DropItemClick();
         }
     }

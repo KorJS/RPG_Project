@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 public class UIInquirePopup : MonoBehaviour
 {
-    private PlayerSlotData playerSlotData = null;
+    private PlayerSlotData  playerSlotData  = null; // 주인공 슬롯 정보
 
-    public UILabel message = null;
-    public UISlotInfo currentInfo = null;
+    public UILabel          message         = null; // 출력할 메시지
+    public UISlotInfo       currentInfo     = null; // 현제 슬롯 정보
 
     void Awake()
     {
-        playerSlotData = PlayerSlotData.Instance;
-
-        message = transform.FindChild("Message").GetComponent<UILabel>();
+        playerSlotData  = PlayerSlotData.Instance;
+        message         = transform.FindChild("Message").GetComponent<UILabel>();
     }
 
     public void SetMessage(UISlotInfo _currentInfo, string _message)
     {
-        currentInfo = _currentInfo;
+        currentInfo  = _currentInfo;
         message.text = _message;
     }
 

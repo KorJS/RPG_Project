@@ -30,6 +30,7 @@ public class UISkillList : MonoBehaviour
         skillListSettings.skillDescription.text = skillInfo.description;
     }
 
+    // 스킬 설명 설정
     public void SetDescription(string iconName, string skillName, string description)
     {
         skillListSettings.skillIcon.mainTexture = Resources.Load("Icon/" + iconName) as Texture2D;
